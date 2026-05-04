@@ -163,6 +163,7 @@ docs/                            Authoring guidance, examples, roadmap, and usag
 
 Important starting points:
 
+- `docs/repository-and-architecture.md`
 - `docs/authoring-guide.md`
 - `docs/roadmap/pc-contract-backlog.md`
 - `references/odcs/pc/README.md`
@@ -201,6 +202,8 @@ Gold marts, semantic models, APIs, events, and AI-ready datasets
 
 The ODCS contracts in `references/odcs/` should act as the stable agreement between data producers, platform engineers, data product owners, and consumers.
 
+See `docs/repository-and-architecture.md` for the full medallion architecture data flow diagram.
+
 ---
 
 ## P&C Operating Lifecycle
@@ -233,6 +236,7 @@ Canonical contracts   = the stable agreement between both
 
 Lifecycle-specific guidance lives in:
 
+- `docs/repository-and-architecture.md`
 - `references/patterns/pc/submission-lifecycle-pattern.md`
 - `references/patterns/pc/policy-lifecycle-pattern.md`
 - `references/design-decisions/pc/submission-modeling.md`
