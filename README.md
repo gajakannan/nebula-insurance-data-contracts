@@ -1,6 +1,3 @@
-Here is a detailed root `README.md` you can use.
-
-````markdown
 # Nebula Insurance Data Contracts
 
 Nebula Insurance Data Contracts is a platform-neutral canonical data contract library for insurance data products.
