@@ -1,0 +1,141 @@
+apiVersion: v3.0.2
+kind: DataContract
+id: pc.policy-document
+name: PolicyDocument
+version: 0.1.0
+status: draft
+description: Canonical contract for documents associated with a Property and Casualty policy.
+
+domain: property-and-casualty
+
+schema:
+  - name: policy_document
+    physicalType: table
+    description: Canonical policy document record that captures document identity, type, status, timing, and policy relationship context.
+    properties:
+      - name: policy_document_id
+        businessName: Policy Document Identifier
+        logicalType: string
+        required: true
+        primaryKey: true
+        description: Stable identifier for the canonical policy document record.
+      - name: policy_id
+        businessName: Policy Identifier
+        logicalType: string
+        required: true
+        description: Identifier for the policy associated with the document.
+      - name: policy_term_id
+        businessName: Policy Term Identifier
+        logicalType: string
+        required: false
+        description: Identifier for the policy term associated with the document when term context is known.
+      - name: policy_transaction_id
+        businessName: Policy Transaction Identifier
+        logicalType: string
+        required: false
+        description: Identifier for the policy transaction associated with the document when transaction context is known.
+      - name: document_type_code
+        businessName: Document Type Code
+        logicalType: string
+        required: true
+        description: Classification of the policy document type.
+      - name: document_status_code
+        businessName: Document Status Code
+        logicalType: string
+        required: true
+        description: Current lifecycle status of the policy document.
+      - name: document_name
+        businessName: Document Name
+        logicalType: string
+        required: false
+        description: Business-facing name or label for the policy document.
+      - name: document_reference
+        businessName: Document Reference
+        logicalType: string
+        required: false
+        description: Source-neutral business reference used to locate or reconcile the policy document.
+      - name: issued_datetime
+        businessName: Issued Datetime
+        logicalType: datetime
+        required: false
+        description: Datetime when the policy document was issued or generated.
+      - name: received_datetime
+        businessName: Received Datetime
+        logicalType: datetime
+        required: false
+        description: Datetime when the policy document was received when applicable.
+      - name: effective_date
+        businessName: Effective Date
+        logicalType: date
+        required: false
+        description: Date when the policy document becomes effective for business use.
+      - name: expiration_date
+        businessName: Expiration Date
+        logicalType: date
+        required: false
+        description: Date when the policy document stops being effective for business use.
+      - name: created_datetime
+        businessName: Created Datetime
+        logicalType: datetime
+        required: false
+        description: Datetime when the canonical policy document record was created.
+      - name: updated_datetime
+        businessName: Updated Datetime
+        logicalType: datetime
+        required: false
+        description: Datetime when the canonical policy document record was last updated.
+
+relationships:
+  - name: policy_document_to_policy
+    description: Relates a policy document to the policy associated with the document.
+    relationshipType: many-to-one
+    targetContractId: pc.policy
+    sourceFields:
+      - policy_id
+    targetFields:
+      - policy_id
+  - name: policy_document_to_policy_term
+    description: Relates a policy document to the policy term associated with the document when term context is known.
+    relationshipType: many-to-one
+    targetContractId: pc.policy-term
+    sourceFields:
+      - policy_term_id
+    targetFields:
+      - policy_term_id
+  - name: policy_document_to_policy_transaction
+    description: Relates a policy document to the policy transaction associated with the document when transaction context is known.
+    relationshipType: many-to-one
+    targetContractId: pc.policy-transaction
+    sourceFields:
+      - policy_transaction_id
+    targetFields:
+      - policy_transaction_id
+
+quality:
+  - rule: policy_document_id_required
+    description: Policy document identifier must be populated.
+    dimension: completeness
+    severity: error
+  - rule: policy_document_policy_id_required
+    description: Policy identifier must be populated for every policy document.
+    dimension: completeness
+    severity: error
+  - rule: policy_document_type_code_required
+    description: Document type code must be populated for every policy document.
+    dimension: completeness
+    severity: error
+  - rule: policy_document_status_code_required
+    description: Document status code must be populated for every policy document.
+    dimension: completeness
+    severity: error
+  - rule: policy_document_effective_date_not_after_expiration_date
+    description: Effective date must not be later than expiration date when both dates are populated.
+    dimension: consistency
+    severity: error
+
+customProperties:
+  canonicalLayer: silver
+  contractFamily: property-and-casualty
+  domainPackage: pc
+  subjectArea: policy
+  supportsPolicyLifecyclePattern: true
