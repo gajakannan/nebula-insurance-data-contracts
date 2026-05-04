@@ -1,0 +1,55 @@
+# Copy this template when authoring a new Property and Casualty contract.
+# Replace every example value with the canonical business concept being modeled.
+
+apiVersion: v3.0.2
+kind: DataContract
+id: pc.example-contract
+name: ExampleContract
+version: 0.1.0
+status: draft
+description: Canonical contract for an example Property and Casualty business concept.
+
+domain: property-and-casualty
+
+schema:
+  - name: example_contract
+    physicalType: table
+    description: Canonical example contract record.
+    properties:
+      - name: example_contract_id
+        businessName: Example Contract Identifier
+        logicalType: string
+        required: true
+        primaryKey: true
+        description: Stable identifier for the canonical example contract record.
+      - name: status_code
+        businessName: Status Code
+        logicalType: string
+        required: false
+        description: Current lifecycle status for the example contract record.
+      - name: effective_date
+        businessName: Effective Date
+        logicalType: date
+        required: false
+        description: Date when the example contract record becomes effective.
+
+relationships:
+  - name: example_contract_to_related_contract
+    description: Relates this example contract to another canonical contract when applicable.
+    relationshipType: many-to-one
+    targetContractId: pc.related-contract
+    sourceFields:
+      - related_contract_id
+    targetFields:
+      - related_contract_id
+
+quality:
+  - rule: example_contract_id_required
+    description: Example contract identifier must be populated.
+    dimension: completeness
+    severity: error
+
+customProperties:
+  canonicalLayer: silver
+  contractFamily: property-and-casualty
+  domainPackage: pc

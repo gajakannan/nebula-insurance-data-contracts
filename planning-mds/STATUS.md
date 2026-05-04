@@ -32,13 +32,14 @@ Complete the repository intent: a platform-neutral canonical insurance data cont
 | W001 | Fix policy placeholder path mismatch | Done | `Policy` now lives under `references/odcs/pc/policy/`. |
 | W002 | Add planning tracker | Done | This file tracks execution status. |
 | W003 | Add implementation plan | Done | See `planning-mds/IMPLEMENTATION_PLAN.md`. |
-| W004 | Create ODCS authoring template | Not started | Needed before scaling contract authoring. |
-| W005 | Add contract validation tooling | Not started | Validate YAML shape, required metadata, naming, and source-neutrality checks. |
-| W006 | Author first milestone contracts | Not started | Party, Policy, Coverage, Exposure, Claim, FinancialTransaction. |
+| W004 | Create ODCS authoring template | Done | Template lives at `references/odcs/templates/pc-contract-template.odcs.yaml`. |
+| W005 | Add contract validation tooling | Done | `scripts/validation/validate-contracts.py` validates YAML shape, required metadata, naming, primary keys, descriptions, custom properties, and source-neutrality guardrails. |
+| W006 | Author first milestone contracts | In progress | `Party`, `PartyRole`, and `PartyRelationship` are complete and pass validation. Policy, Coverage, Exposure, Claim, and FinancialTransaction remain placeholders. |
 | W007 | Add glossary starter set | Not started | Canonical terms only, written in original language. |
 | W008 | Add target type mapping guidance | Not started | Start with Fabric and dbt after canonical contracts stabilize. |
 | W009 | Define semantic and ontology projection approach | Not started | Treat ontology as derived semantic view, not as the canonical source of truth. |
+| W010 | Add missing `Coverage` placeholder | Done | Roadmap and first milestone now align to `references/odcs/pc/coverage/coverage.odcs.yaml`. |
 
 ## Next Recommended Step
 
-Create the ODCS authoring template and validation checklist, then replace the `Party` placeholder with the first complete contract. `Party` should go first because role, policy, claim, account, and relationship contracts depend on it.
+Complete `Policy` next, using the core identity contracts as relationship anchors. The policy contract should pass `python3 scripts/validation/validate-contracts.py references/odcs/pc/policy/policy.odcs.yaml` before broader full-repo validation is expected to pass.

@@ -17,6 +17,20 @@ When adding or changing a contract:
 9. Validate the contract when validation tooling exists.
 10. Update examples, glossary terms, or documentation when needed.
 
+Use `references/odcs/templates/pc-contract-template.odcs.yaml` as the starting point for new P&C contracts.
+
+Validate one contract while authoring:
+
+```bash
+python3 scripts/validation/validate-contracts.py references/odcs/pc/core/party.odcs.yaml
+```
+
+Validate all tracked contract files:
+
+```bash
+python3 scripts/validation/validate-contracts.py
+```
+
 ## Contract Naming
 
 Use clear, singular, business-meaningful names.
