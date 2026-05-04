@@ -1,6 +1,13 @@
 ---
 name: nebula-insurance-data-contracts
-description: Work on Nebula's platform-neutral canonical insurance data contracts. Use when designing, editing, validating, documenting, or generating ODCS v3 YAML contracts, modeling patterns, design decisions, glossary terms, or target-specific implementation guidance for this repository.
+description: "Work on Nebula's platform-neutral canonical insurance data contracts. Use when designing, editing, validating, documenting, or generating ODCS v3 YAML contracts, modeling patterns, design decisions, glossary terms, or target-specific implementation guidance for this repository."
+compatibility: ["manual-orchestration-contract"]
+metadata:
+  allowed-tools: "Read Write Edit Bash(git:*) Bash(rg:*) Bash(find:*) Bash(sed:*) Bash(python3:*)"
+  version: "0.1.0"
+  author: "Nebula Framework Team"
+  tags: ["insurance", "data-contracts", "odcs", "canonical-modeling"]
+  last_updated: "2026-05-04"
 ---
 
 # Nebula Insurance Data Contracts
