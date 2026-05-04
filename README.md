@@ -2,7 +2,7 @@
 
 Nebula Insurance Data Contracts is a platform-neutral canonical data contract library for insurance data products.
 
-The contracts are authored in **ODCS v3 YAML** and organized by insurance domain. The first domain package focuses on **Property & Casualty (P&C)** insurance, with room to expand later into Life, Health, Annuity, Reinsurance, and shared cross-domain insurance concepts.
+The contracts are authored in **ODCS v3 YAML** and organized by insurance domain. The first domain package focuses on **Property and Casualty (P&C)** insurance, with room to expand later into Life, Health, Annuity, Reinsurance, and shared cross-domain insurance concepts.
 
 This repository is part of the broader Nebula ecosystem: an effort to make AI-assisted insurance software delivery more structured, inspectable, reusable, and governed.
 
@@ -31,7 +31,7 @@ These contracts are intended to support:
 
 ---
 
-## Core idea
+## Core Idea
 
 The repository follows a contract-first approach:
 
@@ -43,15 +43,15 @@ Canonical insurance entity
 ODCS data contract
     ↓
 Target-specific implementation
-````
+```
 
 The canonical contracts define the intended business shape of the data.
 
-Platform-specific targets such as Microsoft Fabric, Databricks, Snowflake, dbt, Kafka, Postgres, APIs, or semantic models should be generated from or aligned to these contracts, not the other way around.
+Platform-specific targets such as Fabric, Databricks, Snowflake, dbt, Kafka, Postgres, APIs, or semantic models should be generated from or aligned to these contracts, not the other way around.
 
 ---
 
-## Design posture
+## Design Posture
 
 This repository is:
 
@@ -77,17 +77,17 @@ A raw source-system model
 A one-to-one translation of any external standard
 ```
 
+Detailed modeling rationale belongs under `references/design-decisions/`.
+
 ---
 
-## Provenance boundary
+## Provenance Boundary
 
-The distributable contents of this repository should not include raw artifact names, or external source URLs.
+The distributable contents of this repository should not include raw artifact names, external source URLs, copied definitions, raw source schemas, or private source review notes.
 
 The contracts should stand on their own as original canonical insurance data contracts.
 
-Research, comparison work, source review, downloaded artifacts, and scratch mappings must remain outside the committed repository.
-
-Use private/local folders such as:
+Research, comparison work, source review, downloaded artifacts, and scratch mappings must remain outside the committed repository in ignored local folders such as:
 
 ```text
 _private-research/
@@ -96,7 +96,7 @@ _source-review/
 _scratch/
 ```
 
-These folders are intentionally excluded through `.gitignore`.
+See `docs/authoring-guide.md` and `SKILL.md` for contribution and agent-specific handling rules.
 
 ---
 
@@ -108,388 +108,74 @@ In this repository, ODCS is the authoring format for canonical contracts. The re
 
 The contracts may later be used to generate or align:
 
-* Lakehouse tables
-* Warehouse tables
-* dbt models
-* Kafka schemas
-* JSON Schema
-* Avro schemas
-* API specifications
-* Semantic models
-* Data quality rules
-* Data product documentation
+- Lakehouse tables
+- Warehouse tables
+- dbt models
+- Kafka schemas
+- JSON Schema
+- Avro schemas
+- API specifications
+- Semantic models
+- Data quality rules
+- Data product documentation
 
 ---
 
-## Current domain focus
+## Current Domain Focus
 
-The first domain package is **Property & Casualty insurance**.
+The first domain package is **Property and Casualty insurance**.
 
 The initial P&C modeling spine is:
 
 ```text
-Party
-PartyRole
-PartyRelationship
-
-Account
-Agreement
-
-Submission
-SubmissionPartyRole
-SubmissionRisk
-SubmissionAssessment
-SubmissionDocument
-
-Policy
-PolicyTerm
-PolicyPartyRole
-PolicyLifecycleEvent
-PolicyTransaction
-PolicyDocument
-
-Product
-Coverage
-PolicyCoverage
-PolicyLimit
-PolicyDeductible
-
-InsurableObject
-InsurableObjectClassification
-
-Exposure
-VehicleExposure
-PropertyExposure
-WorkersCompExposure
-
-Claim
-ClaimEvent
-ClaimCoverage
-ClaimPartyRole
-ClaimDocument
-
-FinancialTransaction
-PolicyFinancialTransaction
-ClaimFinancialTransaction
-FinancialTransactionClassification
-
-GeographicLocation
-LocationAddress
-
-Assessment
-RiskAssessment
-UnderwritingAssessment
+Party, PartyRole, PartyRelationship
+Account, Agreement
+Submission, SubmissionPartyRole, SubmissionRisk, SubmissionAssessment, SubmissionDocument
+Policy, PolicyTerm, PolicyPartyRole, PolicyLifecycleEvent, PolicyTransaction, PolicyDocument
+Product, Coverage, PolicyCoverage, PolicyLimit, PolicyDeductible
+InsurableObject, InsurableObjectClassification
+Exposure, VehicleExposure, PropertyExposure, WorkersCompExposure
+Claim, ClaimEvent, ClaimCoverage, ClaimPartyRole, ClaimDocument
+FinancialTransaction, PolicyFinancialTransaction, ClaimFinancialTransaction, FinancialTransactionClassification
+GeographicLocation, LocationAddress
+Assessment, RiskAssessment, UnderwritingAssessment
 ```
 
-This shape is intentional. It favors business usability and data product clarity over mechanically reproducing source-system tables or deeply normalized subtype structures.
+This shape favors business usability and data product clarity over mechanically reproducing source-system tables or deeply normalized subtype structures.
+
+See `docs/roadmap/pc-contract-backlog.md` for the suggested first contract set.
 
 ---
 
-## Key modeling principles
-
-### 1. Canonical contracts are not source tables
-
-A canonical contract should not be copied from a source system, physical DDL, vendor model, external schema, or reporting mart.
-
-Source structures may inform design thinking, but canonical contracts must use stable insurance business concepts.
-
-### 2. Exposures are first-class concepts
-
-In insurance, exposure is where much of the analytical and underwriting value lives.
-
-A policy is the contractual container.
-Coverage defines what protection applies.
-An insurable object identifies what may be insured.
-An exposure describes the measurable risk basis.
-
-Examples:
+## Repository Map
 
 ```text
-Exposure
-VehicleExposure
-PropertyExposure
-WorkersCompExposure
+SKILL.md                         Agent and orchestrator guidance
+README.md                        Project overview
+references/odcs/                 Canonical ODCS contracts
+references/glossary/             Canonical business terms
+references/design-decisions/     Modeling rationale
+references/patterns/             Reusable modeling patterns
+targets/                         Platform-specific implementation guidance
+scripts/                         Validation, generation, linting, and inspection scripts
+docs/                            Authoring guidance, examples, roadmap, and usage docs
 ```
 
-This is preferred over blindly modeling every insured-object subtype as its own top-level canonical contract.
+Important starting points:
 
-### 3. Financial activity should be transaction-oriented
-
-Financial concepts should not explode into one contract per money subtype.
-
-Prefer a cleaner model:
-
-```text
-FinancialTransaction
-PolicyFinancialTransaction
-ClaimFinancialTransaction
-FinancialTransactionClassification
-```
-
-Premium, fee, tax, surcharge, loss payment, reserve, salvage, subrogation, and recovery can often be modeled as transaction types, amount classifications, or financial dimensions.
-
-### 4. Roles should be explicit
-
-A party may participate in different contexts:
-
-```text
-Insured
-Producer
-Broker
-Agent
-Claimant
-Adjuster
-LossPayee
-ServiceProvider
-Underwriter
-```
-
-The canonical model should separate the party from the role the party plays.
-
-### 5. Subtypes are design input, not mandatory boundaries
-
-Subtype concepts are useful for understanding the domain, but they should not automatically become separate canonical contracts.
-
-Use subtype concepts to inform:
-
-* Classifications
-* Specialized exposure contracts
-* Reference data
-* Optional extensions
-* Data quality rules
-* Semantic relationships
-
-### 6. Platform-specific details belong in targets
-
-The core ODCS contracts should remain platform-neutral.
-
-Fabric, Databricks, Snowflake, dbt, Kafka, API, and other implementation guidance belongs under `targets/`.
+- `docs/authoring-guide.md`
+- `docs/roadmap/pc-contract-backlog.md`
+- `references/odcs/pc/README.md`
+- `references/patterns/README.md`
+- `references/design-decisions/README.md`
+- `targets/README.md`
+- `SKILL.md`
 
 ---
 
-## Repository structure
+## Architecture Alignment
 
-```text
-nebula-insurance-data-contracts/
-├── SKILL.md
-├── README.md
-├── LICENSE
-├── references/
-│   ├── odcs/
-│   │   ├── pc/
-│   │   │   ├── core/
-│   │   │   │   ├── party.odcs.yaml
-│   │   │   │   ├── party-role.odcs.yaml
-│   │   │   │   ├── party-relationship.odcs.yaml
-│   │   │   │   ├── account.odcs.yaml
-│   │   │   │   └── agreement.odcs.yaml
-│   │   │   │
-│   │   │   ├── submission/
-│   │   │   │   ├── submission.odcs.yaml
-│   │   │   │   ├── submission-party-role.odcs.yaml
-│   │   │   │   ├── submission-risk.odcs.yaml
-│   │   │   │   ├── submission-assessment.odcs.yaml
-│   │   │   │   ├── submission-document.odcs.yaml
-│   │   │   │   └── submission-lifecycle-event.odcs.yaml
-│   │   │   │
-│   │   │   ├── policy/
-│   │   │   │   ├── policy.odcs.yaml
-│   │   │   │   ├── policy-term.odcs.yaml
-│   │   │   │   ├── policy-party-role.odcs.yaml
-│   │   │   │   ├── policy-lifecycle-event.odcs.yaml
-│   │   │   │   ├── policy-transaction.odcs.yaml
-│   │   │   │   └── policy-document.odcs.yaml
-│   │   │   │
-│   │   │   ├── coverage/
-│   │   │   │   ├── product.odcs.yaml
-│   │   │   │   ├── coverage.odcs.yaml
-│   │   │   │   ├── policy-coverage.odcs.yaml
-│   │   │   │   ├── policy-limit.odcs.yaml
-│   │   │   │   └── policy-deductible.odcs.yaml
-│   │   │   │
-│   │   │   ├── exposure/
-│   │   │   │   ├── insurable-object.odcs.yaml
-│   │   │   │   ├── insurable-object-classification.odcs.yaml
-│   │   │   │   ├── exposure.odcs.yaml
-│   │   │   │   ├── vehicle-exposure.odcs.yaml
-│   │   │   │   ├── property-exposure.odcs.yaml
-│   │   │   │   └── workers-comp-exposure.odcs.yaml
-│   │   │   │
-│   │   │   ├── claims/
-│   │   │   │   ├── claim.odcs.yaml
-│   │   │   │   ├── claim-event.odcs.yaml
-│   │   │   │   ├── claim-coverage.odcs.yaml
-│   │   │   │   ├── claim-party-role.odcs.yaml
-│   │   │   │   └── claim-document.odcs.yaml
-│   │   │   │
-│   │   │   ├── financial/
-│   │   │   │   ├── financial-transaction.odcs.yaml
-│   │   │   │   ├── policy-financial-transaction.odcs.yaml
-│   │   │   │   ├── claim-financial-transaction.odcs.yaml
-│   │   │   │   └── financial-transaction-classification.odcs.yaml
-│   │   │   │
-│   │   │   └── reference-data/
-│   │   │       ├── geographic-location.odcs.yaml
-│   │   │       ├── location-address.odcs.yaml
-│   │   │       ├── line-of-business.odcs.yaml
-│   │   │       ├── transaction-type.odcs.yaml
-│   │   │       ├── lifecycle-status.odcs.yaml
-│   │   │       └── lifecycle-event-type.odcs.yaml
-│   │   │
-│   │   ├── life/
-│   │   ├── health/
-│   │   ├── annuity/
-│   │   ├── reinsurance/
-│   │   └── shared/
-│   │
-│   ├── glossary/
-│   │   ├── README.md
-│   │   └── pc/
-│   │
-│   ├── design-decisions/
-│   │   ├── README.md
-│   │   └── pc/
-│   │       ├── entity-boundaries.md
-│   │       ├── submission-modeling.md
-│   │       ├── policy-lifecycle-modeling.md
-│   │       ├── exposure-modeling.md
-│   │       ├── financial-modeling.md
-│   │       └── role-modeling.md
-│   │
-│   └── patterns/
-│       ├── README.md
-│       └── pc/
-│           ├── party-role-pattern.md
-│           ├── submission-lifecycle-pattern.md
-│           ├── policy-lifecycle-pattern.md
-│           ├── policy-coverage-pattern.md
-│           ├── exposure-pattern.md
-│           └── financial-transaction-pattern.md
-│
-├── targets/
-│   ├── README.md
-│   ├── fabric/
-│   ├── databricks/
-│   ├── snowflake/
-│   ├── dbt/
-│   ├── kafka/
-│   └── api/
-│
-├── scripts/
-│   ├── README.md
-│   ├── validation/
-│   └── generation/
-│
-└── docs/
-    ├── README.md
-    ├── examples/
-    └── roadmap/
-```
-
----
-
-## Folder guide
-
-### `SKILL.md`
-
-Defines the behavior for AI agents working with this repository.
-
-The skill should describe how to design, validate, and evolve canonical insurance data contracts. It should not mention source standards, vendor models, raw research artifacts, or provenance.
-
-The skill is platform-neutral by default.
-
-### `references/odcs/`
-
-Canonical ODCS contracts.
-
-The first domain is:
-
-```text
-references/odcs/pc/
-```
-
-Future domains may include:
-
-```text
-references/odcs/life/
-references/odcs/health/
-references/odcs/annuity/
-references/odcs/reinsurance/
-references/odcs/shared/
-```
-
-### `references/glossary/`
-
-Canonical business terms used by the contracts.
-
-Definitions should be written in original language for this repository. Avoid copying external definitions verbatim.
-
-### `references/design-decisions/`
-
-Records of canonical modeling decisions.
-
-Examples:
-
-```text
-entity-boundaries.md
-exposure-modeling.md
-financial-modeling.md
-role-modeling.md
-lifecycle-event-modeling.md
-```
-
-Use this area to explain why certain modeling choices were made.
-
-### `references/patterns/`
-
-Reusable modeling patterns.
-
-Examples:
-
-```text
-party-role-pattern.md
-policy-coverage-pattern.md
-exposure-pattern.md
-financial-transaction-pattern.md
-event-pattern.md
-```
-
-Patterns should help future contributors design consistent contracts.
-
-### `targets/`
-
-Platform-specific implementation guidance.
-
-The core contracts are platform-neutral. Target folders explain how to implement or generate platform-specific artifacts.
-
-Examples:
-
-```text
-targets/fabric/
-targets/databricks/
-targets/snowflake/
-targets/dbt/
-targets/kafka/
-targets/api/
-```
-
-### `scripts/`
-
-Automation scripts for validation, generation, linting, and contract inspection.
-
-Scripts should support canonical contracts without making the contracts platform-specific.
-
-### `docs/`
-
-General documentation, examples, roadmap notes, and usage guidance.
-
----
-
-## Medallion architecture alignment
-
-The contracts are especially useful in medallion-style data architecture.
-
-A recommended interpretation:
+The contracts are especially useful in medallion-style data architecture:
 
 ```text
 Bronze = raw, source-shaped, immutable landing data
@@ -497,188 +183,11 @@ Silver = canonical, domain-conformed insurance data contracts
 Gold   = consumption-specific marts, semantic models, reports, and analytical products
 ```
 
-This repository primarily defines the Silver canonical contract layer.
-
-Bronze should preserve the source shape.
-Gold should serve specific consumption needs.
-
-Silver should provide the stable canonical insurance language between the two.
-
-
-### Data flow
-```
-+-----------------------------+
-| Source Systems              |
-|                             |
-| Policy Admin                |
-| Submission / Intake         |
-| Claims                      |
-| Billing                     |
-| CRM                         |
-| Broker / Agency Systems     |
-| Spreadsheets / Files        |
-| Events / APIs               |
-+-------------+---------------+
-              |
-              v
-+-----------------------------+
-| Bronze Layer                |
-|                             |
-| Raw source-shaped data      |
-| Immutable landing records   |
-| Minimal transformation      |
-| Source contract stamping    |
-+-------------+---------------+
-              |
-              | validate, standardize, map, conform
-              v
-+---------------------------------------------------+
-| Silver Layer                                      |
-|                                                   |
-| Canonical insurance data contracts                |
-| Authored in ODCS v3 YAML                          |
-|                                                   |
-| Core examples:                                    |
-| Party                                             |
-| Submission                                        |
-| Policy                                            |
-| PolicyLifecycleEvent                              |
-| PolicyTransaction                                 |
-| Coverage                                          |
-| Exposure                                          |
-| Claim                                             |
-| FinancialTransaction                              |
-+-------------+-------------------------------------+
-              |
-              | publish, project, aggregate, serve
-              v
-+-----------------------------+
-| Gold Layer                  |
-|                             |
-| Data marts                  |
-| Semantic models             |
-| Dashboards                  |
-| AI/RAG-ready datasets       |
-| Regulatory reporting        |
-| Underwriting analytics      |
-| Submission analytics        |
-| Policy lifecycle analytics  |
-| Claims analytics            |
-+-------------+---------------+
-              |
-              v
-+-----------------------------+
-| Consumers                   |
-|                             |
-| Analysts                    |
-| Underwriters                |
-| Claims teams                |
-| Actuaries                   |
-| Data scientists             |
-| AI agents                   |
-| Applications                |
-+-----------------------------+
-```
-
-### P&C operating lifecycle flow
-
-The medallion view explains where the contracts fit in the data platform. The operating lifecycle view explains how the first P&C domain package is expected to behave from an insurance business perspective.
-
-```
-+-----------------------------+
-| Submission                  |
-|                             |
-| Intake                      |
-| Producer / broker context   |
-| Applicant / insured context |
-| Initial risk information    |
-| Documents                   |
-+-------------+---------------+
-              |
-              v
-+-----------------------------+
-| Underwriting Assessment     |
-|                             |
-| Clearance                   |
-| Triage                      |
-| Risk review                 |
-| Referral                    |
-| Declination                 |
-+-------------+---------------+
-              |
-              v
-+-----------------------------+
-| Quote / Indication          |
-|                             |
-| Proposed terms              |
-| Proposed coverage           |
-| Proposed pricing            |
-| Subjectivities              |
-+-------------+---------------+
-              |
-              v
-+-----------------------------+
-| Bind                        |
-|                             |
-| Coverage intent             |
-| Binder period               |
-| Bound terms                 |
-| Bind authority              |
-+-------------+---------------+
-              |
-              v
-+-----------------------------+
-| Issue Policy                |
-|                             |
-| Legal contract              |
-| Policy term                 |
-| Policy coverage             |
-| Policy parties              |
-| Policy documents            |
-+-------------+---------------+
-              |
-              v
-+---------------------------------------------------+
-| Policy Lifecycle                                  |
-|                                                   |
-| Endorsement                                       |
-| Renewal                                           |
-| Cancellation                                      |
-| Reinstatement                                     |
-| Non-renewal                                       |
-| Rewrite                                           |
-| Audit                                             |
-| Expiration                                        |
-+-------------+-------------------------------------+
-              |
-              v
-+-----------------------------+
-| Claim                       |
-|                             |
-| Loss event                  |
-| Claim intake                |
-| Coverage association        |
-| Claim parties               |
-| Reserves / payments         |
-| Recovery / salvage          |
-+-----------------------------+
-```
-
-The canonical model should support both views:
-
-Medallion view        = how data moves through the platform
-Operating lifecycle   = how insurance work moves through the business
-Canonical contracts   = the stable agreement between both
-
-### How this repository fits
-
-This repository does not define Bronze ingestion.
-This repository does not define Gold reporting marts.
-
-It defines the canonical Silver contracts that sit between raw source data and downstream consumption.
+This repository defines the Silver canonical contract layer. It does not define Bronze ingestion or Gold reporting marts.
 
 The intended ecosystem flow is:
-```
+
+```text
 Source data
     ↓
 Bronze landing
@@ -690,295 +199,71 @@ Silver domain-conformed tables
 Gold marts, semantic models, APIs, events, and AI-ready datasets
 ```
 
-The ODCS contracts in references/odcs/ should act as the stable agreement between data producers, platform engineers, data product owners, and consumers.
-
-Platform-specific implementations belong under targets/.
-
-Examples:
-```
-targets/fabric/
-targets/databricks/
-targets/snowflake/
-targets/dbt/
-targets/kafka/
-targets/api/
-```
-
-The core contract should remain platform-neutral. Target folders describe how those contracts may be implemented in a specific ecosystem.
+The ODCS contracts in `references/odcs/` should act as the stable agreement between data producers, platform engineers, data product owners, and consumers.
 
 ---
 
-## Example: P&C exposure modeling
+## P&C Operating Lifecycle
 
-Instead of mechanically creating separate canonical contracts for every possible insured object subtype, this repository favors an exposure-centered design.
-
-Example:
+The first P&C domain package should support the business lifecycle from submission through underwriting, quote or indication, bind, policy issue, policy lifecycle changes, and claims.
 
 ```text
-InsurableObject
-InsurableObjectClassification
-Exposure
-VehicleExposure
-PropertyExposure
-WorkersCompExposure
-```
-
-This supports questions like:
-
-* What is being insured?
-* What type of risk basis is being measured?
-* Which coverage applies?
-* Which policy term does the exposure belong to?
-* Which claim arose from which exposure?
-* Which rating, underwriting, or loss analytics should use this exposure?
-
----
-
-## Example: financial modeling
-
-Instead of creating separate top-level contracts for every money subtype, use a financial transaction pattern.
-
-Example:
-
-```text
-FinancialTransaction
-PolicyFinancialTransaction
-ClaimFinancialTransaction
-FinancialTransactionClassification
-```
-
-Possible transaction classifications:
-
-```text
-Premium
-Fee
-Tax
-Surcharge
-Commission
-LossPayment
-ExpensePayment
-ClaimReserve
-LossReserve
-ExpenseReserve
-Salvage
-Subrogation
-Recovery
-DeductibleRecovery
-ReinsuranceRecovery
-```
-
-This gives consumers a cleaner, more queryable model.
-
----
-
-## Example: role modeling
-
-A person or organization should not be duplicated across every business context.
-
-Use a party-role pattern:
-
-```text
-Party
-PartyRole
-PartyRelationship
-PolicyPartyRole
-ClaimPartyRole
-InsurableObjectPartyRole
-```
-
-This makes it possible to represent a party as:
-
-```text
-Named insured on one policy
-Producer on another policy
-Claimant on a claim
-Loss payee on a coverage
-Service provider on a claim
-```
-
-without duplicating the party itself.
-
----
-
-## Contract naming conventions
-
-Use clear, singular, business-meaningful names.
-
-Preferred:
-
-```text
-Policy
+Submission
+    ↓
+Underwriting Assessment
+    ↓
+Quote / Indication
+    ↓
+Bind
+    ↓
+Issue Policy
+    ↓
+Policy Lifecycle
+    ↓
 Claim
-Coverage
-Exposure
-FinancialTransaction
-InsurableObject
-GeographicLocation
 ```
 
-Avoid:
+The canonical model should support both views:
 
 ```text
-Policies
-ClaimTbl
-tblPolicy
-PolicyHeader
-PolicyFact
-DimPolicy
-SourcePolicy
-AdminPolicy
-VendorPolicy
+Medallion view        = how data moves through the platform
+Operating lifecycle   = how insurance work moves through the business
+Canonical contracts   = the stable agreement between both
 ```
 
-Contract names should represent canonical business concepts, not source-system or implementation details.
+Lifecycle-specific guidance lives in:
+
+- `references/patterns/pc/submission-lifecycle-pattern.md`
+- `references/patterns/pc/policy-lifecycle-pattern.md`
+- `references/design-decisions/pc/submission-modeling.md`
+- `references/design-decisions/pc/policy-lifecycle-modeling.md`
 
 ---
 
-## Field naming conventions
+## Modeling References
 
-Field names should be clear, consistent, and implementation-friendly.
+Use the detailed references instead of expanding the root README:
 
-Preferred style:
+- Entity boundaries: `references/design-decisions/pc/entity-boundaries.md`
+- Exposure modeling: `references/design-decisions/pc/exposure-modeling.md`
+- Financial modeling: `references/design-decisions/pc/financial-modeling.md`
+- Role modeling: `references/design-decisions/pc/role-modeling.md`
+- Exposure pattern: `references/patterns/pc/exposure-pattern.md`
+- Financial transaction pattern: `references/patterns/pc/financial-transaction-pattern.md`
+- Party role pattern: `references/patterns/pc/party-role-pattern.md`
+- Policy coverage pattern: `references/patterns/pc/policy-coverage-pattern.md`
 
-```text
-policy_id
-policy_number
-effective_date
-expiration_date
-status_code
-coverage_id
-claim_id
-transaction_amount
-transaction_currency_code
-```
+Authoring rules for naming, fields, ODCS expectations, versioning, status lifecycle, and contribution boundaries live in `docs/authoring-guide.md`.
 
-General rules:
-
-* Use lowercase snake_case for physical field names.
-* Use singular names.
-* Use `_id` for identifiers.
-* Use `_code` for coded values.
-* Use `_date` for dates.
-* Use `_datetime` or `_timestamp` only when time precision is required.
-* Use `_amount` for monetary amounts.
-* Use `_count` for counts.
-* Use `_indicator` for yes/no or true/false business indicators.
-* Avoid abbreviations unless they are widely understood in insurance or finance.
+Agent and orchestration behavior lives in `SKILL.md`.
 
 ---
 
-## ODCS contract expectations
+## Target Implementations
 
-Each ODCS contract should include:
+The core contracts remain platform-neutral.
 
-* Contract identity
-* Version
-* Status
-* Description
-* Business domain
-* Schema
-* Fields
-* Logical types
-* Required/optional indicators
-* Primary keys where applicable
-* Relationships where applicable
-* Data quality rules
-* Ownership/support metadata where appropriate
-* Custom properties for domain and target hints
-
-Example skeleton:
-
-```yaml
-apiVersion: v3.0.2
-kind: DataContract
-id: pc.policy
-name: Policy
-version: 0.1.0
-status: draft
-description: Canonical contract for a Property & Casualty insurance policy.
-
-domain: property-and-casualty
-
-schema:
-  - name: policy
-    physicalType: table
-    description: Canonical policy record.
-    properties:
-      - name: policy_id
-        businessName: Policy Identifier
-        logicalType: string
-        required: true
-        primaryKey: true
-
-quality:
-  - rule: policy_effective_date_required
-    description: Policy effective date must be populated.
-    dimension: completeness
-    severity: error
-
-customProperties:
-  canonicalLayer: silver
-  contractFamily: property-and-casualty
-```
-
----
-
-## Versioning
-
-Contracts should follow semantic versioning where practical:
-
-```text
-MAJOR.MINOR.PATCH
-```
-
-Suggested interpretation:
-
-```text
-PATCH = documentation, metadata, or non-breaking clarification
-MINOR = additive, backward-compatible field or rule
-MAJOR = breaking schema, meaning, or compatibility change
-```
-
-Examples:
-
-```text
-0.1.0 = initial draft
-0.2.0 = adds optional fields
-1.0.0 = stable first release
-2.0.0 = breaking redesign
-```
-
----
-
-## Contract status lifecycle
-
-Recommended statuses:
-
-```text
-draft
-review
-approved
-deprecated
-retired
-```
-
-Suggested meaning:
-
-* `draft`: actively being shaped
-* `review`: ready for domain/data review
-* `approved`: stable enough for implementation
-* `deprecated`: still available but should not be used for new work
-* `retired`: no longer active
-
----
-
-## Target implementation posture
-
-The repository should remain platform-neutral by default.
-
-When a user or agent requests a target implementation, use the relevant target folder.
-
-Examples:
+Target-specific implementation guidance belongs under `targets/`:
 
 ```text
 targets/fabric/
@@ -989,106 +274,13 @@ targets/kafka/
 targets/api/
 ```
 
-Target implementations may define:
-
-* Type mappings
-* Naming conventions
-* Deployment patterns
-* Table/view generation
-* Notebook generation
-* dbt model generation
-* Kafka topic/schema generation
-* API schema generation
-* Semantic model guidance
-
-But the target should not change the canonical business meaning of the contract.
+See `targets/README.md` for target implementation rules.
 
 ---
 
-## AI agent usage
+## Future Domain Expansion
 
-This repository is intended to be usable by AI coding agents.
-
-The `SKILL.md` file defines the expected agent behavior.
-
-An agent working in this repository should:
-
-* Prefer canonical contracts over platform artifacts.
-* Avoid copying source schemas directly.
-* Keep contracts platform-neutral unless a target is requested.
-* Use design decisions and patterns before inventing new modeling rules.
-* Add new P&C contracts under `references/odcs/pc/`.
-* Add reusable modeling logic under `references/patterns/`.
-* Add rationale under `references/design-decisions/`.
-* Avoid adding private research or external source material to the repo.
-* Validate ODCS files before completing changes.
-
----
-
-## Suggested first P&C contracts
-
-The first contract set should cover the full P&C operating spine: party, submission, policy, coverage, exposure, claim, financial activity, and reference data. Submission and policy lifecycle are first-class because many submissions never become policies, and policies continue to evolve after issuance through endorsements, renewals, cancellations, reinstatements, audits, and expiration.
-
-```text
-references/odcs/pc/core/party.odcs.yaml
-references/odcs/pc/core/party-role.odcs.yaml
-references/odcs/pc/core/party-relationship.odcs.yaml
-references/odcs/pc/core/account.odcs.yaml
-references/odcs/pc/core/agreement.odcs.yaml
-
-references/odcs/pc/submission/submission.odcs.yaml
-references/odcs/pc/submission/submission-party-role.odcs.yaml
-references/odcs/pc/submission/submission-risk.odcs.yaml
-references/odcs/pc/submission/submission-assessment.odcs.yaml
-references/odcs/pc/submission/submission-document.odcs.yaml
-references/odcs/pc/submission/submission-lifecycle-event.odcs.yaml
-
-references/odcs/pc/policy/policy.odcs.yaml
-references/odcs/pc/policy/policy-term.odcs.yaml
-references/odcs/pc/policy/policy-party-role.odcs.yaml
-references/odcs/pc/policy/policy-lifecycle-event.odcs.yaml
-references/odcs/pc/policy/policy-transaction.odcs.yaml
-references/odcs/pc/policy/policy-document.odcs.yaml
-
-references/odcs/pc/coverage/product.odcs.yaml
-references/odcs/pc/coverage/coverage.odcs.yaml
-references/odcs/pc/coverage/policy-coverage.odcs.yaml
-references/odcs/pc/coverage/policy-limit.odcs.yaml
-references/odcs/pc/coverage/policy-deductible.odcs.yaml
-
-references/odcs/pc/exposure/insurable-object.odcs.yaml
-references/odcs/pc/exposure/insurable-object-classification.odcs.yaml
-references/odcs/pc/exposure/exposure.odcs.yaml
-references/odcs/pc/exposure/vehicle-exposure.odcs.yaml
-references/odcs/pc/exposure/property-exposure.odcs.yaml
-references/odcs/pc/exposure/workers-comp-exposure.odcs.yaml
-
-references/odcs/pc/claims/claim.odcs.yaml
-references/odcs/pc/claims/claim-event.odcs.yaml
-references/odcs/pc/claims/claim-coverage.odcs.yaml
-references/odcs/pc/claims/claim-party-role.odcs.yaml
-references/odcs/pc/claims/claim-document.odcs.yaml
-
-references/odcs/pc/financial/financial-transaction.odcs.yaml
-references/odcs/pc/financial/policy-financial-transaction.odcs.yaml
-references/odcs/pc/financial/claim-financial-transaction.odcs.yaml
-references/odcs/pc/financial/financial-transaction-classification.odcs.yaml
-
-references/odcs/pc/reference-data/geographic-location.odcs.yaml
-references/odcs/pc/reference-data/location-address.odcs.yaml
-references/odcs/pc/reference-data/line-of-business.odcs.yaml
-references/odcs/pc/reference-data/transaction-type.odcs.yaml
-references/odcs/pc/reference-data/lifecycle-status.odcs.yaml
-references/odcs/pc/reference-data/lifecycle-event-type.odcs.yaml
-```
-
----
-
-## Future domain expansion
-
-This repository starts with P&C, but the structure allows future expansion.
-
-Potential future domains:
+This repository starts with P&C, but the structure allows future expansion into:
 
 ```text
 life/
@@ -1098,78 +290,20 @@ reinsurance/
 shared/
 ```
 
-The `shared/` package should contain reusable concepts that apply across insurance domains, such as:
-
-```text
-Party
-PartyRole
-Location
-FinancialTransaction
-Document
-CommunicationPreference
-Organization
-Producer
-DistributionChannel
-```
-
-Be careful not to move concepts into `shared/` too early. Start domain-specific, then promote shared concepts when reuse is proven.
+The `shared/` package should contain reusable concepts only after reuse is proven across insurance domains. Start domain-specific, then promote shared concepts deliberately.
 
 ---
 
-## Contribution guidance
+## Project Status
 
-When adding or changing a contract:
+Early stage.
 
-1. Start with the business concept.
-2. Decide whether it belongs to an existing contract or requires a new one.
-3. Check existing patterns.
-4. Add or update the ODCS YAML.
-5. Add data quality rules.
-6. Add design rationale if the modeling choice is significant.
-7. Keep platform-specific guidance out of the core contract.
-8. Validate the contract.
-9. Update examples or documentation if needed.
+The initial focus is establishing the repository structure, canonical modeling principles, the P&C contract spine, and the first ODCS contract examples.
 
----
-
-## What not to commit
-
-Do not commit:
-
-```text
-Raw DDL exports
-Raw ontology files
-External PDFs
-Scratch mappings
-Research notes
-Source review notes
-Credentials
-Generated data files
-```
-
-These belong outside the distributable repository.
+The first meaningful milestone is tracked in `docs/roadmap/pc-contract-backlog.md`.
 
 ---
 
 ## License
 
 See `LICENSE`.
-
----
-
-## Project status
-
-Early stage.
-
-The initial focus is establishing the repository structure, canonical modeling principles, the P&C contract spine, and the first ODCS contract examples.
-
-The first meaningful milestone is a usable P&C Silver-layer contract set for:
-
-```text
-Party
-Policy
-Coverage
-Exposure
-Claim
-FinancialTransaction
-```
