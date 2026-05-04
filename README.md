@@ -132,13 +132,27 @@ Party
 PartyRole
 PartyRelationship
 
+Account
 Agreement
+
+Submission
+SubmissionPartyRole
+SubmissionRisk
+SubmissionAssessment
+SubmissionDocument
+
 Policy
 PolicyTerm
+PolicyPartyRole
+PolicyLifecycleEvent
+PolicyTransaction
+PolicyDocument
 
 Product
 Coverage
 PolicyCoverage
+PolicyLimit
+PolicyDeductible
 
 InsurableObject
 InsurableObjectClassification
@@ -151,6 +165,8 @@ WorkersCompExposure
 Claim
 ClaimEvent
 ClaimCoverage
+ClaimPartyRole
+ClaimDocument
 
 FinancialTransaction
 PolicyFinancialTransaction
