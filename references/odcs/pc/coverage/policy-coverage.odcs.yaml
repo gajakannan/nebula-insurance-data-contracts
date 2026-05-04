@@ -1,1 +1,180 @@
-# Placeholder for Policy Coverage canonical data contract.
+apiVersion: v3.0.2
+kind: DataContract
+id: pc.policy-coverage
+name: PolicyCoverage
+version: 0.1.0
+status: draft
+description: Canonical contract for coverage selected or applied within a Property and Casualty policy context.
+
+domain: property-and-casualty
+
+schema:
+  - name: policy_coverage
+    physicalType: table
+    description: Canonical policy coverage record that connects a policy to a reusable coverage definition and captures the coverage selection context.
+    properties:
+      - name: policy_coverage_id
+        businessName: Policy Coverage Identifier
+        logicalType: string
+        required: true
+        primaryKey: true
+        description: Stable identifier for the canonical policy coverage record.
+      - name: policy_id
+        businessName: Policy Identifier
+        logicalType: string
+        required: true
+        description: Identifier for the policy where the coverage is selected or applied.
+      - name: coverage_id
+        businessName: Coverage Identifier
+        logicalType: string
+        required: true
+        description: Identifier for the reusable coverage definition selected or applied on the policy.
+      - name: policy_term_id
+        businessName: Policy Term Identifier
+        logicalType: string
+        required: false
+        description: Identifier for the policy term where the coverage applies when term detail is represented separately.
+      - name: exposure_id
+        businessName: Exposure Identifier
+        logicalType: string
+        required: false
+        description: Identifier for the exposure to which the coverage applies when coverage is exposure-specific.
+      - name: policy_limit_id
+        businessName: Policy Limit Identifier
+        logicalType: string
+        required: false
+        description: Identifier for the policy limit detail associated with the coverage when represented separately.
+      - name: policy_deductible_id
+        businessName: Policy Deductible Identifier
+        logicalType: string
+        required: false
+        description: Identifier for the policy deductible detail associated with the coverage when represented separately.
+      - name: coverage_sequence_number
+        businessName: Coverage Sequence Number
+        logicalType: integer
+        required: false
+        description: Ordering value used when multiple coverage records must be presented or processed in sequence within the policy context.
+      - name: coverage_status_code
+        businessName: Coverage Status Code
+        logicalType: string
+        required: true
+        description: Current lifecycle status of the coverage within the policy context.
+      - name: coverage_level_code
+        businessName: Coverage Level Code
+        logicalType: string
+        required: false
+        description: Classification of the level where the coverage applies, such as policy, term, location, item, exposure, or coverage part.
+      - name: coverage_basis_code
+        businessName: Coverage Basis Code
+        logicalType: string
+        required: false
+        description: Classification of the basis used to apply the coverage within the policy context.
+      - name: selected_indicator
+        businessName: Selected Indicator
+        logicalType: boolean
+        required: false
+        description: Indicates whether the coverage was selected for the policy context.
+      - name: mandatory_indicator
+        businessName: Mandatory Indicator
+        logicalType: boolean
+        required: false
+        description: Indicates whether the coverage is mandatory within the policy context.
+      - name: effective_date
+        businessName: Effective Date
+        logicalType: date
+        required: false
+        description: Date when the coverage becomes effective within the policy context.
+      - name: expiration_date
+        businessName: Expiration Date
+        logicalType: date
+        required: false
+        description: Date when the coverage stops being effective within the policy context.
+      - name: created_datetime
+        businessName: Created Datetime
+        logicalType: datetime
+        required: false
+        description: Datetime when the canonical policy coverage record was created.
+      - name: updated_datetime
+        businessName: Updated Datetime
+        logicalType: datetime
+        required: false
+        description: Datetime when the canonical policy coverage record was last updated.
+
+relationships:
+  - name: policy_coverage_to_policy
+    description: Relates a policy coverage record to the policy where the coverage is selected or applied.
+    relationshipType: many-to-one
+    targetContractId: pc.policy
+    sourceFields:
+      - policy_id
+    targetFields:
+      - policy_id
+  - name: policy_coverage_to_coverage
+    description: Relates a policy coverage record to the reusable coverage definition.
+    relationshipType: many-to-one
+    targetContractId: pc.coverage
+    sourceFields:
+      - coverage_id
+    targetFields:
+      - coverage_id
+  - name: policy_coverage_to_policy_term
+    description: Relates a policy coverage record to the policy term where the coverage applies when term detail is available.
+    relationshipType: many-to-one
+    targetContractId: pc.policy-term
+    sourceFields:
+      - policy_term_id
+    targetFields:
+      - policy_term_id
+  - name: policy_coverage_to_exposure
+    description: Relates a policy coverage record to the exposure where the coverage applies when coverage is exposure-specific.
+    relationshipType: many-to-one
+    targetContractId: pc.exposure
+    sourceFields:
+      - exposure_id
+    targetFields:
+      - exposure_id
+  - name: policy_coverage_to_policy_limit
+    description: Relates a policy coverage record to structured limit detail when represented separately.
+    relationshipType: many-to-one
+    targetContractId: pc.policy-limit
+    sourceFields:
+      - policy_limit_id
+    targetFields:
+      - policy_limit_id
+  - name: policy_coverage_to_policy_deductible
+    description: Relates a policy coverage record to structured deductible detail when represented separately.
+    relationshipType: many-to-one
+    targetContractId: pc.policy-deductible
+    sourceFields:
+      - policy_deductible_id
+    targetFields:
+      - policy_deductible_id
+
+quality:
+  - rule: policy_coverage_id_required
+    description: Policy coverage identifier must be populated.
+    dimension: completeness
+    severity: error
+  - rule: policy_coverage_policy_id_required
+    description: Policy identifier must be populated for every policy coverage record.
+    dimension: completeness
+    severity: error
+  - rule: policy_coverage_coverage_id_required
+    description: Coverage identifier must be populated for every policy coverage record.
+    dimension: completeness
+    severity: error
+  - rule: policy_coverage_status_code_required
+    description: Coverage status code must be populated for every policy coverage record.
+    dimension: completeness
+    severity: error
+  - rule: policy_coverage_effective_date_not_after_expiration_date
+    description: Effective date must not be later than expiration date when both dates are populated.
+    dimension: consistency
+    severity: error
+
+customProperties:
+  canonicalLayer: silver
+  contractFamily: property-and-casualty
+  domainPackage: pc
+  subjectArea: coverage
+  supportsPolicyCoveragePattern: true

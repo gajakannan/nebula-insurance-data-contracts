@@ -1,1 +1,125 @@
-# Placeholder for Property Exposure canonical data contract.
+apiVersion: v3.0.2
+kind: DataContract
+id: pc.property-exposure
+name: PropertyExposure
+version: 0.1.0
+status: draft
+description: Canonical contract for property-specific exposure attributes in Property and Casualty insurance.
+
+domain: property-and-casualty
+
+schema:
+  - name: property_exposure
+    physicalType: table
+    description: Canonical property exposure detail that extends the shared exposure record for property-based risk.
+    properties:
+      - name: property_exposure_id
+        businessName: Property Exposure Identifier
+        logicalType: string
+        required: true
+        primaryKey: true
+        description: Stable identifier for the canonical property exposure detail record.
+      - name: exposure_id
+        businessName: Exposure Identifier
+        logicalType: string
+        required: true
+        description: Identifier for the shared exposure record that this property detail extends.
+      - name: property_location_id
+        businessName: Property Location Identifier
+        logicalType: string
+        required: false
+        description: Identifier for the geographic location of the property.
+      - name: property_use_code
+        businessName: Property Use Code
+        logicalType: string
+        required: false
+        description: Classification of how the property is used in the insured context.
+      - name: occupancy_type_code
+        businessName: Occupancy Type Code
+        logicalType: string
+        required: false
+        description: Classification of the occupancy associated with the property exposure.
+      - name: construction_type_code
+        businessName: Construction Type Code
+        logicalType: string
+        required: false
+        description: Classification of the construction type associated with the property exposure.
+      - name: protection_class_code
+        businessName: Protection Class Code
+        logicalType: string
+        required: false
+        description: Fire protection or public protection classification associated with the property exposure when applicable.
+      - name: year_built_number
+        businessName: Year Built Number
+        logicalType: integer
+        required: false
+        description: Year the property structure was built.
+      - name: square_footage_count
+        businessName: Square Footage Count
+        logicalType: integer
+        required: false
+        description: Area of the property structure measured in square feet when applicable.
+      - name: building_value_amount
+        businessName: Building Value Amount
+        logicalType: decimal
+        required: false
+        description: Valuation amount for the building or structure when used for underwriting, rating, or analytics.
+      - name: contents_value_amount
+        businessName: Contents Value Amount
+        logicalType: decimal
+        required: false
+        description: Valuation amount for contents associated with the property exposure when applicable.
+      - name: created_datetime
+        businessName: Created Datetime
+        logicalType: datetime
+        required: false
+        description: Datetime when the canonical property exposure detail record was created.
+      - name: updated_datetime
+        businessName: Updated Datetime
+        logicalType: datetime
+        required: false
+        description: Datetime when the canonical property exposure detail record was last updated.
+
+relationships:
+  - name: property_exposure_to_exposure
+    description: Relates property exposure detail to the shared exposure record.
+    relationshipType: many-to-one
+    targetContractId: pc.exposure
+    sourceFields:
+      - exposure_id
+    targetFields:
+      - exposure_id
+  - name: property_exposure_to_property_location
+    description: Relates property exposure detail to the property location when available.
+    relationshipType: many-to-one
+    targetContractId: pc.geographic-location
+    sourceFields:
+      - property_location_id
+    targetFields:
+      - geographic_location_id
+
+quality:
+  - rule: property_exposure_id_required
+    description: Property exposure identifier must be populated.
+    dimension: completeness
+    severity: error
+  - rule: property_exposure_exposure_id_required
+    description: Exposure identifier must be populated for every property exposure detail record.
+    dimension: completeness
+    severity: error
+  - rule: property_exposure_square_footage_not_negative
+    description: Square footage count should not be negative when populated.
+    dimension: validity
+    severity: warning
+  - rule: property_exposure_value_amounts_not_negative
+    description: Building value amount and contents value amount should not be negative when populated.
+    dimension: validity
+    severity: warning
+
+customProperties:
+  canonicalLayer: silver
+  contractFamily: property-and-casualty
+  domainPackage: pc
+  subjectArea: exposure
+  exposureSubtype: property
+  supportsExposurePattern: true

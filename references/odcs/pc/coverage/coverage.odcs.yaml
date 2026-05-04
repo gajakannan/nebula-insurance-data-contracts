@@ -1,1 +1,124 @@
-# Placeholder for Coverage canonical data contract.
+apiVersion: v3.0.2
+kind: DataContract
+id: pc.coverage
+name: Coverage
+version: 0.1.0
+status: draft
+description: Canonical contract for a reusable Property and Casualty coverage concept.
+
+domain: property-and-casualty
+
+schema:
+  - name: coverage
+    physicalType: table
+    description: Canonical coverage definition that describes a reusable protection concept before it is selected or applied on a policy.
+    properties:
+      - name: coverage_id
+        businessName: Coverage Identifier
+        logicalType: string
+        required: true
+        primaryKey: true
+        description: Stable identifier for the canonical coverage definition.
+      - name: coverage_code
+        businessName: Coverage Code
+        logicalType: string
+        required: true
+        description: Business-facing code that classifies the coverage definition.
+      - name: coverage_name
+        businessName: Coverage Name
+        logicalType: string
+        required: true
+        description: Business-facing name of the coverage definition.
+      - name: coverage_description
+        businessName: Coverage Description
+        logicalType: string
+        required: false
+        description: Source-neutral business description of the protection provided by the coverage.
+      - name: coverage_type_code
+        businessName: Coverage Type Code
+        logicalType: string
+        required: false
+        description: Classification of the coverage by protection type or coverage family.
+      - name: coverage_category_code
+        businessName: Coverage Category Code
+        logicalType: string
+        required: false
+        description: Higher-level grouping used to organize related coverage definitions.
+      - name: line_of_business_code
+        businessName: Line Of Business Code
+        logicalType: string
+        required: true
+        description: Classification of the insurance line of business where the coverage is generally offered.
+      - name: product_id
+        businessName: Product Identifier
+        logicalType: string
+        required: false
+        description: Identifier for the product that offers the coverage when the coverage is product-specific.
+      - name: coverage_status_code
+        businessName: Coverage Status Code
+        logicalType: string
+        required: true
+        description: Current lifecycle status of the coverage definition.
+      - name: effective_date
+        businessName: Effective Date
+        logicalType: date
+        required: false
+        description: Date when the coverage definition becomes effective for canonical use.
+      - name: expiration_date
+        businessName: Expiration Date
+        logicalType: date
+        required: false
+        description: Date when the coverage definition stops being effective for canonical use.
+      - name: created_datetime
+        businessName: Created Datetime
+        logicalType: datetime
+        required: false
+        description: Datetime when the canonical coverage definition was created.
+      - name: updated_datetime
+        businessName: Updated Datetime
+        logicalType: datetime
+        required: false
+        description: Datetime when the canonical coverage definition was last updated.
+
+relationships:
+  - name: coverage_to_product
+    description: Relates a coverage definition to the product that offers it when the coverage is product-specific.
+    relationshipType: many-to-one
+    targetContractId: pc.product
+    sourceFields:
+      - product_id
+    targetFields:
+      - product_id
+
+quality:
+  - rule: coverage_id_required
+    description: Coverage identifier must be populated.
+    dimension: completeness
+    severity: error
+  - rule: coverage_code_required
+    description: Coverage code must be populated.
+    dimension: completeness
+    severity: error
+  - rule: coverage_name_required
+    description: Coverage name must be populated.
+    dimension: completeness
+    severity: error
+  - rule: coverage_line_of_business_code_required
+    description: Line of business code must be populated for every coverage definition.
+    dimension: completeness
+    severity: error
+  - rule: coverage_status_code_required
+    description: Coverage status code must be populated.
+    dimension: completeness
+    severity: error
+  - rule: coverage_effective_date_not_after_expiration_date
+    description: Effective date must not be later than expiration date when both dates are populated.
+    dimension: consistency
+    severity: error
+
+customProperties:
+  canonicalLayer: silver
+  contractFamily: property-and-casualty
+  domainPackage: pc
+  subjectArea: coverage
+  supportsPolicyCoveragePattern: true

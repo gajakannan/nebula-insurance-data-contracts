@@ -19,8 +19,8 @@ Complete the repository intent: a platform-neutral canonical insurance data cont
 
 - Repository structure is established.
 - README, authoring guide, architecture notes, patterns, design decisions, and backlog exist.
-- First ODCS contract files are placeholders rather than complete ODCS contracts.
-- Validation and generation script folders exist but do not yet contain tooling.
+- The tracked P&C ODCS contract files are complete enough to pass repository validation.
+- Validation tooling exists; generation and target implementation folders still need content.
 - Target folders exist but do not yet contain target guidance.
 - Glossary folders exist but do not yet contain canonical terms.
 - The policy placeholder path has been moved from the core area to the policy area.
@@ -34,7 +34,7 @@ Complete the repository intent: a platform-neutral canonical insurance data cont
 | W003 | Add implementation plan | Done | See `planning-mds/IMPLEMENTATION_PLAN.md`. |
 | W004 | Create ODCS authoring template | Done | Template lives at `references/odcs/templates/pc-contract-template.odcs.yaml`. |
 | W005 | Add contract validation tooling | Done | `scripts/validation/validate-contracts.py` validates YAML shape, required metadata, naming, primary keys, descriptions, custom properties, and source-neutrality guardrails. |
-| W006 | Author first milestone contracts | In progress | `Party`, `PartyRole`, and `PartyRelationship` are complete and pass validation. Policy, Coverage, Exposure, Claim, and FinancialTransaction remain placeholders. |
+| W006 | Author first milestone contracts | Done | `Party`, `PartyRole`, `PartyRelationship`, `Policy`, `Coverage`, `PolicyCoverage`, `Exposure`, exposure subtypes, `Claim`, and `FinancialTransaction` are complete and pass validation. |
 | W007 | Add glossary starter set | Not started | Canonical terms only, written in original language. |
 | W008 | Add target type mapping guidance | Not started | Start with Fabric and dbt after canonical contracts stabilize. |
 | W009 | Define semantic and ontology projection approach | Not started | Treat ontology as derived semantic view, not as the canonical source of truth. |
@@ -42,4 +42,4 @@ Complete the repository intent: a platform-neutral canonical insurance data cont
 
 ## Next Recommended Step
 
-Complete `Policy` next, using the core identity contracts as relationship anchors. The policy contract should pass `python3 scripts/validation/validate-contracts.py references/odcs/pc/policy/policy.odcs.yaml` before broader full-repo validation is expected to pass.
+Add the glossary starter set next, using only canonical terms from the completed contracts. After glossary terms are in place, fill in dependent contracts around the first milestone spine such as policy term, policy lifecycle event, claim event, and financial transaction classification.
