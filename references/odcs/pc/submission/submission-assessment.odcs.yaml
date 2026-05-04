@@ -1,0 +1,127 @@
+apiVersion: v3.0.2
+kind: DataContract
+id: pc.submission-assessment
+name: SubmissionAssessment
+version: 0.1.0
+status: draft
+description: Canonical contract for underwriting, triage, clearance, referral, or risk assessment activity within a Property and Casualty submission.
+
+domain: property-and-casualty
+
+schema:
+  - name: submission_assessment
+    physicalType: table
+    description: Canonical submission assessment record that captures assessment result, rationale, dates, and relationship context.
+    properties:
+      - name: submission_assessment_id
+        businessName: Submission Assessment Identifier
+        logicalType: string
+        required: true
+        primaryKey: true
+        description: Stable identifier for the canonical submission assessment record.
+      - name: submission_id
+        businessName: Submission Identifier
+        logicalType: string
+        required: true
+        description: Identifier for the submission being assessed.
+      - name: submission_risk_id
+        businessName: Submission Risk Identifier
+        logicalType: string
+        required: false
+        description: Identifier for the submitted risk being assessed when the assessment is risk-specific.
+      - name: assessment_type_code
+        businessName: Assessment Type Code
+        logicalType: string
+        required: true
+        description: Classification of the assessment type.
+      - name: assessment_status_code
+        businessName: Assessment Status Code
+        logicalType: string
+        required: true
+        description: Current lifecycle status of the assessment.
+      - name: assessment_result_code
+        businessName: Assessment Result Code
+        logicalType: string
+        required: false
+        description: Result or outcome classification for the assessment.
+      - name: assessed_by_party_id
+        businessName: Assessed By Party Identifier
+        logicalType: string
+        required: false
+        description: Identifier for the party that performed or is accountable for the assessment when known.
+      - name: assessment_datetime
+        businessName: Assessment Datetime
+        logicalType: datetime
+        required: false
+        description: Datetime when the assessment was performed or completed.
+      - name: referral_indicator
+        businessName: Referral Indicator
+        logicalType: boolean
+        required: false
+        description: Indicates whether the assessment resulted in or required referral.
+      - name: assessment_summary
+        businessName: Assessment Summary
+        logicalType: string
+        required: false
+        description: Source-neutral summary of the assessment rationale or result.
+      - name: created_datetime
+        businessName: Created Datetime
+        logicalType: datetime
+        required: false
+        description: Datetime when the canonical submission assessment record was created.
+      - name: updated_datetime
+        businessName: Updated Datetime
+        logicalType: datetime
+        required: false
+        description: Datetime when the canonical submission assessment record was last updated.
+
+relationships:
+  - name: submission_assessment_to_submission
+    description: Relates a submission assessment to the submission being assessed.
+    relationshipType: many-to-one
+    targetContractId: pc.submission
+    sourceFields:
+      - submission_id
+    targetFields:
+      - submission_id
+  - name: submission_assessment_to_submission_risk
+    description: Relates a submission assessment to a submitted risk when the assessment is risk-specific.
+    relationshipType: many-to-one
+    targetContractId: pc.submission-risk
+    sourceFields:
+      - submission_risk_id
+    targetFields:
+      - submission_risk_id
+  - name: submission_assessment_to_assessed_by_party
+    description: Relates a submission assessment to the party that performed or is accountable for the assessment when known.
+    relationshipType: many-to-one
+    targetContractId: pc.party
+    sourceFields:
+      - assessed_by_party_id
+    targetFields:
+      - party_id
+
+quality:
+  - rule: submission_assessment_id_required
+    description: Submission assessment identifier must be populated.
+    dimension: completeness
+    severity: error
+  - rule: submission_assessment_submission_id_required
+    description: Submission identifier must be populated for every submission assessment.
+    dimension: completeness
+    severity: error
+  - rule: submission_assessment_type_code_required
+    description: Assessment type code must be populated for every submission assessment.
+    dimension: completeness
+    severity: error
+  - rule: submission_assessment_status_code_required
+    description: Assessment status code must be populated for every submission assessment.
+    dimension: completeness
+    severity: error
+
+customProperties:
+  canonicalLayer: silver
+  contractFamily: property-and-casualty
+  domainPackage: pc
+  subjectArea: submission
+  supportsSubmissionLifecyclePattern: true

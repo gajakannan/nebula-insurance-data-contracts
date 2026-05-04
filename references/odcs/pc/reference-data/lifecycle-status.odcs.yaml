@@ -1,0 +1,104 @@
+apiVersion: v3.0.2
+kind: DataContract
+id: pc.lifecycle-status
+name: LifecycleStatus
+version: 0.1.0
+status: draft
+description: Canonical contract for lifecycle status reference data used across Property and Casualty contracts.
+
+domain: property-and-casualty
+
+schema:
+  - name: lifecycle_status
+    physicalType: table
+    description: Canonical lifecycle status reference record used to classify current-state status values for business entities and activities.
+    properties:
+      - name: lifecycle_status_id
+        businessName: Lifecycle Status Identifier
+        logicalType: string
+        required: true
+        primaryKey: true
+        description: Stable identifier for the canonical lifecycle status record.
+      - name: lifecycle_status_code
+        businessName: Lifecycle Status Code
+        logicalType: string
+        required: true
+        description: Business-facing code for the lifecycle status.
+      - name: lifecycle_status_name
+        businessName: Lifecycle Status Name
+        logicalType: string
+        required: true
+        description: Business-facing name of the lifecycle status.
+      - name: lifecycle_subject_code
+        businessName: Lifecycle Subject Code
+        logicalType: string
+        required: true
+        description: Classification of the business subject to which the lifecycle status applies.
+      - name: lifecycle_status_description
+        businessName: Lifecycle Status Description
+        logicalType: string
+        required: false
+        description: Source-neutral business description of the lifecycle status.
+      - name: active_status_indicator
+        businessName: Active Status Indicator
+        logicalType: boolean
+        required: false
+        description: Indicates whether the lifecycle status represents an active business state.
+      - name: terminal_status_indicator
+        businessName: Terminal Status Indicator
+        logicalType: boolean
+        required: false
+        description: Indicates whether the lifecycle status represents a terminal business state.
+      - name: reference_status_code
+        businessName: Reference Status Code
+        logicalType: string
+        required: true
+        description: Current lifecycle status of the lifecycle status reference record.
+      - name: effective_date
+        businessName: Effective Date
+        logicalType: date
+        required: false
+        description: Date when the lifecycle status reference record becomes effective for canonical use.
+      - name: expiration_date
+        businessName: Expiration Date
+        logicalType: date
+        required: false
+        description: Date when the lifecycle status reference record stops being effective for canonical use.
+      - name: created_datetime
+        businessName: Created Datetime
+        logicalType: datetime
+        required: false
+        description: Datetime when the canonical lifecycle status record was created.
+      - name: updated_datetime
+        businessName: Updated Datetime
+        logicalType: datetime
+        required: false
+        description: Datetime when the canonical lifecycle status record was last updated.
+
+quality:
+  - rule: lifecycle_status_id_required
+    description: Lifecycle status identifier must be populated.
+    dimension: completeness
+    severity: error
+  - rule: lifecycle_status_code_required
+    description: Lifecycle status code must be populated.
+    dimension: completeness
+    severity: error
+  - rule: lifecycle_status_name_required
+    description: Lifecycle status name must be populated.
+    dimension: completeness
+    severity: error
+  - rule: lifecycle_status_subject_code_required
+    description: Lifecycle subject code must be populated.
+    dimension: completeness
+    severity: error
+  - rule: lifecycle_status_effective_date_not_after_expiration_date
+    description: Effective date must not be later than expiration date when both dates are populated.
+    dimension: consistency
+    severity: error
+
+customProperties:
+  canonicalLayer: silver
+  contractFamily: property-and-casualty
+  domainPackage: pc
+  subjectArea: reference-data

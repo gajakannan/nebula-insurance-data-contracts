@@ -1,0 +1,119 @@
+apiVersion: v3.0.2
+kind: DataContract
+id: pc.policy-limit
+name: PolicyLimit
+version: 0.1.0
+status: draft
+description: Canonical contract for structured limit detail associated with a Property and Casualty policy coverage.
+
+domain: property-and-casualty
+
+schema:
+  - name: policy_limit
+    physicalType: table
+    description: Canonical policy limit record that describes monetary or non-monetary limits applied within a policy coverage context.
+    properties:
+      - name: policy_limit_id
+        businessName: Policy Limit Identifier
+        logicalType: string
+        required: true
+        primaryKey: true
+        description: Stable identifier for the canonical policy limit record.
+      - name: policy_coverage_id
+        businessName: Policy Coverage Identifier
+        logicalType: string
+        required: true
+        description: Identifier for the policy coverage associated with the limit.
+      - name: limit_type_code
+        businessName: Limit Type Code
+        logicalType: string
+        required: true
+        description: Classification of the limit type.
+      - name: limit_basis_code
+        businessName: Limit Basis Code
+        logicalType: string
+        required: false
+        description: Classification of the basis to which the limit applies, such as occurrence, aggregate, person, item, location, or policy term.
+      - name: limit_amount
+        businessName: Limit Amount
+        logicalType: decimal
+        required: false
+        description: Monetary amount of the limit when represented as a single amount.
+      - name: limit_currency_code
+        businessName: Limit Currency Code
+        logicalType: string
+        required: false
+        description: Currency code for the limit amount.
+      - name: limit_quantity
+        businessName: Limit Quantity
+        logicalType: decimal
+        required: false
+        description: Non-monetary quantity for the limit when applicable.
+      - name: limit_unit_code
+        businessName: Limit Unit Code
+        logicalType: string
+        required: false
+        description: Unit of measure for the limit quantity.
+      - name: effective_date
+        businessName: Effective Date
+        logicalType: date
+        required: false
+        description: Date when the policy limit becomes effective within the policy coverage context.
+      - name: expiration_date
+        businessName: Expiration Date
+        logicalType: date
+        required: false
+        description: Date when the policy limit stops being effective within the policy coverage context.
+      - name: created_datetime
+        businessName: Created Datetime
+        logicalType: datetime
+        required: false
+        description: Datetime when the canonical policy limit record was created.
+      - name: updated_datetime
+        businessName: Updated Datetime
+        logicalType: datetime
+        required: false
+        description: Datetime when the canonical policy limit record was last updated.
+
+relationships:
+  - name: policy_limit_to_policy_coverage
+    description: Relates a policy limit to the policy coverage where the limit applies.
+    relationshipType: many-to-one
+    targetContractId: pc.policy-coverage
+    sourceFields:
+      - policy_coverage_id
+    targetFields:
+      - policy_coverage_id
+
+quality:
+  - rule: policy_limit_id_required
+    description: Policy limit identifier must be populated.
+    dimension: completeness
+    severity: error
+  - rule: policy_limit_policy_coverage_id_required
+    description: Policy coverage identifier must be populated for every policy limit.
+    dimension: completeness
+    severity: error
+  - rule: policy_limit_type_code_required
+    description: Limit type code must be populated for every policy limit.
+    dimension: completeness
+    severity: error
+  - rule: policy_limit_amount_not_negative
+    description: Limit amount should not be negative when populated.
+    dimension: validity
+    severity: warning
+  - rule: policy_limit_quantity_not_negative
+    description: Limit quantity should not be negative when populated.
+    dimension: validity
+    severity: warning
+  - rule: policy_limit_effective_date_not_after_expiration_date
+    description: Effective date must not be later than expiration date when both dates are populated.
+    dimension: consistency
+    severity: error
+
+customProperties:
+  canonicalLayer: silver
+  contractFamily: property-and-casualty
+  domainPackage: pc
+  subjectArea: coverage
+  supportsPolicyCoveragePattern: true

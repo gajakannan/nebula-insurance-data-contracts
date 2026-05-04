@@ -1,0 +1,109 @@
+apiVersion: v3.0.2
+kind: DataContract
+id: pc.line-of-business
+name: LineOfBusiness
+version: 0.1.0
+status: draft
+description: Canonical contract for Property and Casualty line of business reference data.
+
+domain: property-and-casualty
+
+schema:
+  - name: line_of_business
+    physicalType: table
+    description: Canonical line of business reference record used to classify policies, coverages, products, exposures, claims, and financial transactions.
+    properties:
+      - name: line_of_business_id
+        businessName: Line Of Business Identifier
+        logicalType: string
+        required: true
+        primaryKey: true
+        description: Stable identifier for the canonical line of business record.
+      - name: line_of_business_code
+        businessName: Line Of Business Code
+        logicalType: string
+        required: true
+        description: Business-facing code for the line of business.
+      - name: line_of_business_name
+        businessName: Line Of Business Name
+        logicalType: string
+        required: true
+        description: Business-facing name of the line of business.
+      - name: line_of_business_description
+        businessName: Line Of Business Description
+        logicalType: string
+        required: false
+        description: Source-neutral business description of the line of business.
+      - name: business_segment_code
+        businessName: Business Segment Code
+        logicalType: string
+        required: false
+        description: Higher-level business segment classification for the line of business.
+      - name: parent_line_of_business_id
+        businessName: Parent Line Of Business Identifier
+        logicalType: string
+        required: false
+        description: Identifier for a parent line of business when a hierarchy is used.
+      - name: status_code
+        businessName: Status Code
+        logicalType: string
+        required: true
+        description: Current lifecycle status of the line of business reference record.
+      - name: effective_date
+        businessName: Effective Date
+        logicalType: date
+        required: false
+        description: Date when the line of business reference record becomes effective for canonical use.
+      - name: expiration_date
+        businessName: Expiration Date
+        logicalType: date
+        required: false
+        description: Date when the line of business reference record stops being effective for canonical use.
+      - name: created_datetime
+        businessName: Created Datetime
+        logicalType: datetime
+        required: false
+        description: Datetime when the canonical line of business record was created.
+      - name: updated_datetime
+        businessName: Updated Datetime
+        logicalType: datetime
+        required: false
+        description: Datetime when the canonical line of business record was last updated.
+
+relationships:
+  - name: line_of_business_to_parent_line_of_business
+    description: Relates a line of business to a parent line of business when a hierarchy is used.
+    relationshipType: many-to-one
+    targetContractId: pc.line-of-business
+    sourceFields:
+      - parent_line_of_business_id
+    targetFields:
+      - line_of_business_id
+
+quality:
+  - rule: line_of_business_id_required
+    description: Line of business identifier must be populated.
+    dimension: completeness
+    severity: error
+  - rule: line_of_business_code_required
+    description: Line of business code must be populated.
+    dimension: completeness
+    severity: error
+  - rule: line_of_business_name_required
+    description: Line of business name must be populated.
+    dimension: completeness
+    severity: error
+  - rule: line_of_business_status_code_required
+    description: Status code must be populated for every line of business reference record.
+    dimension: completeness
+    severity: error
+  - rule: line_of_business_effective_date_not_after_expiration_date
+    description: Effective date must not be later than expiration date when both dates are populated.
+    dimension: consistency
+    severity: error
+
+customProperties:
+  canonicalLayer: silver
+  contractFamily: property-and-casualty
+  domainPackage: pc
+  subjectArea: reference-data

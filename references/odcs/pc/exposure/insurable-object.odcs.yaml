@@ -1,0 +1,114 @@
+apiVersion: v3.0.2
+kind: DataContract
+id: pc.insurable-object
+name: InsurableObject
+version: 0.1.0
+status: draft
+description: Canonical contract for an object, property, vehicle, operation, interest, or location that may be insured in Property and Casualty insurance.
+
+domain: property-and-casualty
+
+schema:
+  - name: insurable_object
+    physicalType: table
+    description: Canonical insurable object record that identifies what may be insured separately from the measurable exposure associated with it.
+    properties:
+      - name: insurable_object_id
+        businessName: Insurable Object Identifier
+        logicalType: string
+        required: true
+        primaryKey: true
+        description: Stable identifier for the canonical insurable object record.
+      - name: insurable_object_type_code
+        businessName: Insurable Object Type Code
+        logicalType: string
+        required: true
+        description: Classification of the thing, operation, interest, or location that may be insured.
+      - name: insurable_object_name
+        businessName: Insurable Object Name
+        logicalType: string
+        required: false
+        description: Business-facing name or label for the insurable object.
+      - name: insurable_object_classification_id
+        businessName: Insurable Object Classification Identifier
+        logicalType: string
+        required: false
+        description: Identifier for the durable classification associated with the insurable object when classification detail is represented separately.
+      - name: geographic_location_id
+        businessName: Geographic Location Identifier
+        logicalType: string
+        required: false
+        description: Identifier for the geographic location associated with the insurable object when location context is available.
+      - name: insurable_object_status_code
+        businessName: Insurable Object Status Code
+        logicalType: string
+        required: true
+        description: Current lifecycle status of the insurable object.
+      - name: insurable_object_description
+        businessName: Insurable Object Description
+        logicalType: string
+        required: false
+        description: Source-neutral business description of the insurable object when additional context is needed.
+      - name: effective_date
+        businessName: Effective Date
+        logicalType: date
+        required: false
+        description: Date when the insurable object becomes effective in the business context.
+      - name: expiration_date
+        businessName: Expiration Date
+        logicalType: date
+        required: false
+        description: Date when the insurable object stops being effective in the business context.
+      - name: created_datetime
+        businessName: Created Datetime
+        logicalType: datetime
+        required: false
+        description: Datetime when the canonical insurable object record was created.
+      - name: updated_datetime
+        businessName: Updated Datetime
+        logicalType: datetime
+        required: false
+        description: Datetime when the canonical insurable object record was last updated.
+
+relationships:
+  - name: insurable_object_to_classification
+    description: Relates an insurable object to its durable classification when classification detail is available.
+    relationshipType: many-to-one
+    targetContractId: pc.insurable-object-classification
+    sourceFields:
+      - insurable_object_classification_id
+    targetFields:
+      - insurable_object_classification_id
+  - name: insurable_object_to_geographic_location
+    description: Relates an insurable object to its geographic location when location context is available.
+    relationshipType: many-to-one
+    targetContractId: pc.geographic-location
+    sourceFields:
+      - geographic_location_id
+    targetFields:
+      - geographic_location_id
+
+quality:
+  - rule: insurable_object_id_required
+    description: Insurable object identifier must be populated.
+    dimension: completeness
+    severity: error
+  - rule: insurable_object_type_code_required
+    description: Insurable object type code must be populated.
+    dimension: completeness
+    severity: error
+  - rule: insurable_object_status_code_required
+    description: Insurable object status code must be populated.
+    dimension: completeness
+    severity: error
+  - rule: insurable_object_effective_date_not_after_expiration_date
+    description: Effective date must not be later than expiration date when both dates are populated.
+    dimension: consistency
+    severity: error
+
+customProperties:
+  canonicalLayer: silver
+  contractFamily: property-and-casualty
+  domainPackage: pc
+  subjectArea: exposure
+  supportsExposurePattern: true

@@ -19,9 +19,10 @@ Complete the repository intent: a platform-neutral canonical insurance data cont
 
 - Repository structure is established.
 - README, authoring guide, architecture notes, patterns, design decisions, and backlog exist.
-- The tracked P&C ODCS contract files are complete enough to pass repository validation.
+- The tracked P&C ODCS contract files pass current repository validation, and authored relationship targets resolve to tracked contracts.
 - Validation tooling exists; generation and target implementation folders still need content.
 - Target folders exist but do not yet contain target guidance.
+- Submission and reference-data ODCS folders now contain starter contract sets.
 - Glossary folders exist but do not yet contain canonical terms.
 - The policy placeholder path has been moved from the core area to the policy area.
 
@@ -39,7 +40,9 @@ Complete the repository intent: a platform-neutral canonical insurance data cont
 | W008 | Add target type mapping guidance | Not started | Start with Fabric and dbt after canonical contracts stabilize. |
 | W009 | Define semantic and ontology projection approach | Not started | Treat ontology as derived semantic view, not as the canonical source of truth. |
 | W010 | Add missing `Coverage` placeholder | Done | Roadmap and first milestone now align to `references/odcs/pc/coverage/coverage.odcs.yaml`. |
+| W011 | Add missing referenced and dependent contracts | Done | Reference data plus `PolicyTerm`, `Product`, `PolicyLimit`, `PolicyDeductible`, `InsurableObject`, and `InsurableObjectClassification` are complete and pass validation. |
+| W012 | Add submission contract set | Done | `Submission`, `SubmissionPartyRole`, `SubmissionRisk`, `SubmissionAssessment`, `SubmissionDocument`, and `SubmissionLifecycleEvent` are complete and pass validation. |
 
 ## Next Recommended Step
 
-Add the glossary starter set next, using only canonical terms from the completed contracts. After glossary terms are in place, fill in dependent contracts around the first milestone spine such as policy term, policy lifecycle event, claim event, and financial transaction classification.
+Add the glossary starter set next, using canonical terms from the completed contracts. After glossary terms are in place, continue with remaining backlog contracts such as account, agreement, policy lifecycle detail, claim event detail, and financial transaction classification.

@@ -1,0 +1,144 @@
+apiVersion: v3.0.2
+kind: DataContract
+id: pc.submission-risk
+name: SubmissionRisk
+version: 0.1.0
+status: draft
+description: Canonical contract for risk information presented within a Property and Casualty submission.
+
+domain: property-and-casualty
+
+schema:
+  - name: submission_risk
+    physicalType: table
+    description: Canonical submission risk record that captures submitted risk context before or during underwriting assessment.
+    properties:
+      - name: submission_risk_id
+        businessName: Submission Risk Identifier
+        logicalType: string
+        required: true
+        primaryKey: true
+        description: Stable identifier for the canonical submission risk record.
+      - name: submission_id
+        businessName: Submission Identifier
+        logicalType: string
+        required: true
+        description: Identifier for the submission associated with the risk.
+      - name: risk_type_code
+        businessName: Risk Type Code
+        logicalType: string
+        required: true
+        description: Classification of the submitted risk.
+      - name: risk_status_code
+        businessName: Risk Status Code
+        logicalType: string
+        required: true
+        description: Current lifecycle status of the submitted risk.
+      - name: exposure_id
+        businessName: Exposure Identifier
+        logicalType: string
+        required: false
+        description: Identifier for an exposure associated with the submitted risk when exposure context is available.
+      - name: insurable_object_id
+        businessName: Insurable Object Identifier
+        logicalType: string
+        required: false
+        description: Identifier for an insurable object associated with the submitted risk when object context is available.
+      - name: geographic_location_id
+        businessName: Geographic Location Identifier
+        logicalType: string
+        required: false
+        description: Identifier for a geographic location associated with the submitted risk when location context is available.
+      - name: requested_coverage_indicator
+        businessName: Requested Coverage Indicator
+        logicalType: boolean
+        required: false
+        description: Indicates whether coverage was requested for the submitted risk.
+      - name: risk_description
+        businessName: Risk Description
+        logicalType: string
+        required: false
+        description: Source-neutral business description of the submitted risk when additional context is needed.
+      - name: effective_date
+        businessName: Effective Date
+        logicalType: date
+        required: false
+        description: Date when the submitted risk becomes effective in the submission context.
+      - name: expiration_date
+        businessName: Expiration Date
+        logicalType: date
+        required: false
+        description: Date when the submitted risk stops being effective in the submission context.
+      - name: created_datetime
+        businessName: Created Datetime
+        logicalType: datetime
+        required: false
+        description: Datetime when the canonical submission risk record was created.
+      - name: updated_datetime
+        businessName: Updated Datetime
+        logicalType: datetime
+        required: false
+        description: Datetime when the canonical submission risk record was last updated.
+
+relationships:
+  - name: submission_risk_to_submission
+    description: Relates a submitted risk to the submission where the risk was presented.
+    relationshipType: many-to-one
+    targetContractId: pc.submission
+    sourceFields:
+      - submission_id
+    targetFields:
+      - submission_id
+  - name: submission_risk_to_exposure
+    description: Relates a submitted risk to an exposure when exposure context is available.
+    relationshipType: many-to-one
+    targetContractId: pc.exposure
+    sourceFields:
+      - exposure_id
+    targetFields:
+      - exposure_id
+  - name: submission_risk_to_insurable_object
+    description: Relates a submitted risk to an insurable object when object context is available.
+    relationshipType: many-to-one
+    targetContractId: pc.insurable-object
+    sourceFields:
+      - insurable_object_id
+    targetFields:
+      - insurable_object_id
+  - name: submission_risk_to_geographic_location
+    description: Relates a submitted risk to a geographic location when location context is available.
+    relationshipType: many-to-one
+    targetContractId: pc.geographic-location
+    sourceFields:
+      - geographic_location_id
+    targetFields:
+      - geographic_location_id
+
+quality:
+  - rule: submission_risk_id_required
+    description: Submission risk identifier must be populated.
+    dimension: completeness
+    severity: error
+  - rule: submission_risk_submission_id_required
+    description: Submission identifier must be populated for every submission risk.
+    dimension: completeness
+    severity: error
+  - rule: submission_risk_type_code_required
+    description: Risk type code must be populated for every submission risk.
+    dimension: completeness
+    severity: error
+  - rule: submission_risk_status_code_required
+    description: Risk status code must be populated for every submission risk.
+    dimension: completeness
+    severity: error
+  - rule: submission_risk_effective_date_not_after_expiration_date
+    description: Effective date must not be later than expiration date when both dates are populated.
+    dimension: consistency
+    severity: error
+
+customProperties:
+  canonicalLayer: silver
+  contractFamily: property-and-casualty
+  domainPackage: pc
+  subjectArea: submission
+  supportsSubmissionLifecyclePattern: true

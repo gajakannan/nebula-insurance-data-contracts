@@ -1,0 +1,143 @@
+apiVersion: v3.0.2
+kind: DataContract
+id: pc.submission
+name: Submission
+version: 0.1.0
+status: draft
+description: Canonical contract for Property and Casualty submission intake and current submission summary.
+
+domain: property-and-casualty
+
+schema:
+  - name: submission
+    physicalType: table
+    description: Canonical submission record that represents a request for insurance consideration before, and whether or not, it becomes a policy.
+    properties:
+      - name: submission_id
+        businessName: Submission Identifier
+        logicalType: string
+        required: true
+        primaryKey: true
+        description: Stable identifier for the canonical submission record.
+      - name: submission_number
+        businessName: Submission Number
+        logicalType: string
+        required: true
+        description: Business-facing number assigned to the submission.
+      - name: submission_status_code
+        businessName: Submission Status Code
+        logicalType: string
+        required: true
+        description: Current lifecycle status of the submission.
+      - name: submission_type_code
+        businessName: Submission Type Code
+        logicalType: string
+        required: false
+        description: Classification of the submission type, such as new business, renewal, rewrite, or other recognized intake type.
+      - name: line_of_business_code
+        businessName: Line Of Business Code
+        logicalType: string
+        required: true
+        description: Line of business associated with the submission.
+      - name: product_id
+        businessName: Product Identifier
+        logicalType: string
+        required: false
+        description: Identifier for the product associated with the submission when a product is known.
+      - name: related_policy_id
+        businessName: Related Policy Identifier
+        logicalType: string
+        required: false
+        description: Identifier for a policy associated with the submission when the submission binds, issues, renews, or rewrites policy context.
+      - name: received_date
+        businessName: Received Date
+        logicalType: date
+        required: true
+        description: Date when the submission was received for consideration.
+      - name: requested_effective_date
+        businessName: Requested Effective Date
+        logicalType: date
+        required: false
+        description: Requested effective date for the insurance being submitted.
+      - name: quote_date
+        businessName: Quote Date
+        logicalType: date
+        required: false
+        description: Date when a quote was provided for the submission.
+      - name: bind_date
+        businessName: Bind Date
+        logicalType: date
+        required: false
+        description: Date when the submission was bound when applicable.
+      - name: decline_date
+        businessName: Decline Date
+        logicalType: date
+        required: false
+        description: Date when the submission was declined when applicable.
+      - name: withdrawn_date
+        businessName: Withdrawn Date
+        logicalType: date
+        required: false
+        description: Date when the submission was withdrawn when applicable.
+      - name: submission_description
+        businessName: Submission Description
+        logicalType: string
+        required: false
+        description: Source-neutral business description of the submission when additional context is needed.
+      - name: created_datetime
+        businessName: Created Datetime
+        logicalType: datetime
+        required: false
+        description: Datetime when the canonical submission record was created.
+      - name: updated_datetime
+        businessName: Updated Datetime
+        logicalType: datetime
+        required: false
+        description: Datetime when the canonical submission record was last updated.
+
+relationships:
+  - name: submission_to_product
+    description: Relates a submission to the product being considered when product context is available.
+    relationshipType: many-to-one
+    targetContractId: pc.product
+    sourceFields:
+      - product_id
+    targetFields:
+      - product_id
+  - name: submission_to_related_policy
+    description: Relates a submission to policy context when the submission binds, issues, renews, or rewrites a policy.
+    relationshipType: many-to-one
+    targetContractId: pc.policy
+    sourceFields:
+      - related_policy_id
+    targetFields:
+      - policy_id
+
+quality:
+  - rule: submission_id_required
+    description: Submission identifier must be populated.
+    dimension: completeness
+    severity: error
+  - rule: submission_number_required
+    description: Submission number must be populated.
+    dimension: completeness
+    severity: error
+  - rule: submission_status_code_required
+    description: Submission status code must be populated.
+    dimension: completeness
+    severity: error
+  - rule: submission_line_of_business_code_required
+    description: Line of business code must be populated for every submission.
+    dimension: completeness
+    severity: error
+  - rule: submission_received_date_required
+    description: Received date must be populated for every submission.
+    dimension: completeness
+    severity: error
+
+customProperties:
+  canonicalLayer: silver
+  contractFamily: property-and-casualty
+  domainPackage: pc
+  subjectArea: submission
+  supportsSubmissionLifecyclePattern: true

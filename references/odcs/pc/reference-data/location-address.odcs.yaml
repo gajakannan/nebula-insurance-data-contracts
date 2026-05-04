@@ -1,0 +1,115 @@
+apiVersion: v3.0.2
+kind: DataContract
+id: pc.location-address
+name: LocationAddress
+version: 0.1.0
+status: draft
+description: Canonical contract for address reference data associated with a geographic location in Property and Casualty insurance.
+
+domain: property-and-casualty
+
+schema:
+  - name: location_address
+    physicalType: table
+    description: Canonical address record used to describe the addressable details of a geographic location.
+    properties:
+      - name: location_address_id
+        businessName: Location Address Identifier
+        logicalType: string
+        required: true
+        primaryKey: true
+        description: Stable identifier for the canonical location address record.
+      - name: geographic_location_id
+        businessName: Geographic Location Identifier
+        logicalType: string
+        required: true
+        description: Identifier for the geographic location described by the address.
+      - name: address_type_code
+        businessName: Address Type Code
+        logicalType: string
+        required: false
+        description: Classification of the address use or address type.
+      - name: address_line_1
+        businessName: Address Line 1
+        logicalType: string
+        required: false
+        description: First address line for the location address.
+      - name: address_line_2
+        businessName: Address Line 2
+        logicalType: string
+        required: false
+        description: Second address line for the location address.
+      - name: city_name
+        businessName: City Name
+        logicalType: string
+        required: false
+        description: City, town, municipality, or comparable locality name for the address.
+      - name: country_subdivision_code
+        businessName: Country Subdivision Code
+        logicalType: string
+        required: false
+        description: State, province, territory, or other first-level country subdivision code for the address.
+      - name: postal_code
+        businessName: Postal Code
+        logicalType: string
+        required: false
+        description: Postal or ZIP code for the address.
+      - name: country_code
+        businessName: Country Code
+        logicalType: string
+        required: true
+        description: Country code for the address.
+      - name: effective_date
+        businessName: Effective Date
+        logicalType: date
+        required: false
+        description: Date when the address becomes effective for canonical use.
+      - name: expiration_date
+        businessName: Expiration Date
+        logicalType: date
+        required: false
+        description: Date when the address stops being effective for canonical use.
+      - name: created_datetime
+        businessName: Created Datetime
+        logicalType: datetime
+        required: false
+        description: Datetime when the canonical location address record was created.
+      - name: updated_datetime
+        businessName: Updated Datetime
+        logicalType: datetime
+        required: false
+        description: Datetime when the canonical location address record was last updated.
+
+relationships:
+  - name: location_address_to_geographic_location
+    description: Relates a location address to the geographic location it describes.
+    relationshipType: many-to-one
+    targetContractId: pc.geographic-location
+    sourceFields:
+      - geographic_location_id
+    targetFields:
+      - geographic_location_id
+
+quality:
+  - rule: location_address_id_required
+    description: Location address identifier must be populated.
+    dimension: completeness
+    severity: error
+  - rule: location_address_geographic_location_id_required
+    description: Geographic location identifier must be populated for every location address.
+    dimension: completeness
+    severity: error
+  - rule: location_address_country_code_required
+    description: Country code must be populated for every location address.
+    dimension: completeness
+    severity: error
+  - rule: location_address_effective_date_not_after_expiration_date
+    description: Effective date must not be later than expiration date when both dates are populated.
+    dimension: consistency
+    severity: error
+
+customProperties:
+  canonicalLayer: silver
+  contractFamily: property-and-casualty
+  domainPackage: pc
+  subjectArea: reference-data
