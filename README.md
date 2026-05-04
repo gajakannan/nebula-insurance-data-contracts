@@ -400,13 +400,118 @@ Silver = canonical, domain-conformed insurance data contracts
 Gold   = consumption-specific marts, semantic models, reports, and analytical products
 ```
 
-The ODCS contracts in this repository primarily define the **Silver canonical layer**.
+This repository primarily defines the Silver canonical contract layer.
 
 Bronze should preserve the source shape.
-
 Gold should serve specific consumption needs.
 
 Silver should provide the stable canonical insurance language between the two.
+
+
+### Data flow
+```
++-----------------------------+
+| Source Systems              |
+|                             |
+| Policy Admin                |
+| Claims                      |
+| Billing                     |
+| CRM                         |
+| Broker / Agency Systems     |
+| Spreadsheets / Files        |
+| Events / APIs               |
++-------------+---------------+
+              |
+              v
++-----------------------------+
+| Bronze Layer                |
+|                             |
+| Raw source-shaped data      |
+| Immutable landing records   |
+| Minimal transformation      |
+| Source contract stamping    |
++-------------+---------------+
+              |
+              | validate, standardize, map, conform
+              v
++---------------------------------------------------+
+| Silver Layer                                      |
+|                                                   |
+| Canonical insurance data contracts                |
+| Authored in ODCS v3 YAML                          |
+|                                                   |
+| Examples:                                         |
+| Party                                             |
+| Policy                                            |
+| Coverage                                          |
+| Exposure                                          |
+| Claim                                             |
+| FinancialTransaction                              |
++-------------+-------------------------------------+
+              |
+              | publish, project, aggregate, serve
+              v
++-----------------------------+
+| Gold Layer                  |
+|                             |
+| Data marts                  |
+| Semantic models             |
+| Dashboards                  |
+| AI/RAG-ready datasets       |
+| Regulatory reporting        |
+| Underwriting analytics      |
+| Claims analytics            |
++-------------+---------------+
+              |
+              v
++-----------------------------+
+| Consumers                   |
+|                             |
+| Analysts                    |
+| Underwriters                |
+| Claims teams                |
+| Actuaries                   |
+| Data scientists             |
+| AI agents                   |
+| Applications                |
++-----------------------------+
+```
+
+### How this repository fits
+
+This repository does not define Bronze ingestion.
+This repository does not define Gold reporting marts.
+
+It defines the canonical Silver contracts that sit between raw source data and downstream consumption.
+
+The intended ecosystem flow is:
+```
+Source data
+    ↓
+Bronze landing
+    ↓
+Canonical contract validation
+    ↓
+Silver domain-conformed tables
+    ↓
+Gold marts, semantic models, APIs, events, and AI-ready datasets
+```
+
+The ODCS contracts in references/odcs/ should act as the stable agreement between data producers, platform engineers, data product owners, and consumers.
+
+Platform-specific implementations belong under targets/.
+
+Examples:
+```
+targets/fabric/
+targets/databricks/
+targets/snowflake/
+targets/dbt/
+targets/kafka/
+targets/api/
+```
+
+The core contract should remain platform-neutral. Target folders describe how those contracts may be implemented in a specific ecosystem.
 
 ---
 
@@ -849,7 +954,4 @@ Coverage
 Exposure
 Claim
 FinancialTransaction
-```
-
-```
 ```
