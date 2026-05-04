@@ -257,15 +257,62 @@ Fabric, Databricks, Snowflake, dbt, Kafka, API, and other implementation guidanc
 nebula-insurance-data-contracts/
 ├── SKILL.md
 ├── README.md
-├── references/
-│   ├── odcs/
-│   │   ├── pc/
-│   │   │   ├── core/
-│   │   │   ├── coverage/
-│   │   │   ├── exposure/
-│   │   │   ├── claims/
-│   │   │   ├── financial/
-│   │   │   └── reference-data/
+references/
+└── odcs/
+│   └── pc/
+│   │   ├── core/
+│   │   │   ├── party.odcs.yaml
+│   │   │   ├── account.odcs.yaml
+│   │   │   └── agreement.odcs.yaml
+│   │   │
+│   │   ├── submission/
+│   │   │   ├── submission.odcs.yaml
+│   │   │   ├── submission-party-role.odcs.yaml
+│   │   │   ├── submission-risk.odcs.yaml
+│   │   │   ├── submission-document.odcs.yaml
+│   │   │   └── submission-assessment.odcs.yaml
+│   │   │
+│   │   ├── policy/
+│   │   │   ├── policy.odcs.yaml
+│   │   │   ├── policy-term.odcs.yaml
+│   │   │   ├── policy-party-role.odcs.yaml
+│   │   │   ├── policy-lifecycle-event.odcs.yaml
+│   │   │   ├── policy-transaction.odcs.yaml
+│   │   │   └── policy-document.odcs.yaml
+│   │   │
+│   │   ├── coverage/
+│   │   │   ├── product.odcs.yaml
+│   │   │   ├── coverage.odcs.yaml
+│   │   │   ├── policy-coverage.odcs.yaml
+│   │   │   ├── policy-limit.odcs.yaml
+│   │   │   └── policy-deductible.odcs.yaml
+│   │   │
+│   │   ├── exposure/
+│   │   │   ├── insurable-object.odcs.yaml
+│   │   │   ├── insurable-object-classification.odcs.yaml
+│   │   │   ├── exposure.odcs.yaml
+│   │   │   ├── vehicle-exposure.odcs.yaml
+│   │   │   ├── property-exposure.odcs.yaml
+│   │   │   └── workers-comp-exposure.odcs.yaml
+│   │   │
+│   │   ├── claims/
+│   │   │   ├── claim.odcs.yaml
+│   │   │   ├── claim-event.odcs.yaml
+│   │   │   ├── claim-coverage.odcs.yaml
+│   │   │   ├── claim-party-role.odcs.yaml
+│   │   │   └── claim-document.odcs.yaml
+│   │   │
+│   │   ├── financial/
+│   │   │   ├── financial-transaction.odcs.yaml
+│   │   │   ├── policy-financial-transaction.odcs.yaml
+│   │   │   └── claim-financial-transaction.odcs.yaml
+│   │   │
+│   │   ├── reference-data/
+│   │   │   ├── geographic-location.odcs.yaml
+│   │   │   ├── location-address.odcs.yaml
+│   │   │   ├── line-of-business.odcs.yaml
+│   │   │   ├── transaction-type.odcs.yaml
+│   │   │   └── lifecycle-status.odcs.yaml
 │   │   ├── life/
 │   │   ├── health/
 │   │   ├── annuity/
