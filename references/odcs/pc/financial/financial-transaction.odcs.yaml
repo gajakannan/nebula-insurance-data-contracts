@@ -2,190 +2,280 @@ apiVersion: v3.0.2
 kind: DataContract
 id: pc.financial-transaction
 name: FinancialTransaction
-version: 0.1.0
+version: 0.2.0
 status: draft
 description: Canonical contract for monetary activity associated with Property and Casualty policy, claim, coverage, party, and exposure context.
-
 domain: property-and-casualty
-
 schema:
-  - name: financial_transaction
-    physicalType: table
-    description: Canonical financial transaction record that represents policy and claim monetary movement without creating one contract per money subtype.
-    properties:
-      - name: financial_transaction_id
-        businessName: Financial Transaction Identifier
-        logicalType: string
-        required: true
-        primaryKey: true
-        description: Stable identifier for the canonical financial transaction record.
-      - name: transaction_number
-        businessName: Transaction Number
-        logicalType: string
-        required: false
-        description: Business-facing number or reference assigned to the financial transaction when available.
-      - name: transaction_type_code
-        businessName: Transaction Type Code
-        logicalType: string
-        required: true
-        description: Classification of the financial transaction type.
-      - name: transaction_classification_code
-        businessName: Transaction Classification Code
-        logicalType: string
-        required: false
-        description: Classification of the monetary movement, such as premium, fee, tax, commission, payment, reserve, recovery, salvage, or subrogation.
-      - name: transaction_status_code
-        businessName: Transaction Status Code
-        logicalType: string
-        required: true
-        description: Current lifecycle status of the financial transaction.
-      - name: transaction_effective_date
-        businessName: Transaction Effective Date
-        logicalType: date
-        required: false
-        description: Date when the financial transaction becomes effective for business purposes.
-      - name: transaction_posted_date
-        businessName: Transaction Posted Date
-        logicalType: date
-        required: false
-        description: Date when the financial transaction was posted or recorded.
-      - name: accounting_period_code
-        businessName: Accounting Period Code
-        logicalType: string
-        required: false
-        description: Accounting period associated with the financial transaction.
-      - name: transaction_amount
-        businessName: Transaction Amount
-        logicalType: decimal
-        required: true
-        description: Monetary amount of the financial transaction.
-      - name: transaction_currency_code
-        businessName: Transaction Currency Code
-        logicalType: string
-        required: true
-        description: Currency code for the transaction amount.
-      - name: debit_credit_code
-        businessName: Debit Credit Code
-        logicalType: string
-        required: false
-        description: Classification indicating whether the transaction is a debit, credit, or other recognized accounting direction.
-      - name: policy_id
-        businessName: Policy Identifier
-        logicalType: string
-        required: false
-        description: Identifier for the policy associated with the financial transaction when policy context is available.
-      - name: claim_id
-        businessName: Claim Identifier
-        logicalType: string
-        required: false
-        description: Identifier for the claim associated with the financial transaction when claim context is available.
-      - name: policy_coverage_id
-        businessName: Policy Coverage Identifier
-        logicalType: string
-        required: false
-        description: Identifier for the policy coverage associated with the financial transaction when coverage context is known.
-      - name: party_id
-        businessName: Party Identifier
-        logicalType: string
-        required: false
-        description: Identifier for the party associated with the financial transaction when party context is known.
-      - name: exposure_id
-        businessName: Exposure Identifier
-        logicalType: string
-        required: false
-        description: Identifier for the exposure associated with the financial transaction when exposure context is known.
-      - name: source_transaction_reference
-        businessName: Source Transaction Reference
-        logicalType: string
-        required: false
-        description: Source-neutral business reference that helps reconcile the financial transaction across processing contexts.
-      - name: transaction_description
-        businessName: Transaction Description
-        logicalType: string
-        required: false
-        description: Source-neutral business description of the financial transaction when additional context is needed.
-      - name: created_datetime
-        businessName: Created Datetime
-        logicalType: datetime
-        required: false
-        description: Datetime when the canonical financial transaction record was created.
-      - name: updated_datetime
-        businessName: Updated Datetime
-        logicalType: datetime
-        required: false
-        description: Datetime when the canonical financial transaction record was last updated.
-
+- name: financial_transaction
+  physicalType: table
+  description: Canonical financial transaction record that represents policy and claim monetary movement without creating one contract per money subtype.
+  properties:
+  - name: financial_transaction_uid
+    businessName: Financial Transaction Identifier
+    logicalType: string
+    required: true
+    primaryKey: true
+    description: Immutable system-generated GUID that uniquely identifies the canonical financial transaction record across snapshots and source systems.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: transaction_number
+    businessName: Transaction Number
+    logicalType: string
+    required: false
+    description: Business-facing number or reference assigned to the financial transaction when available.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: transaction_type_code
+    businessName: Transaction Type Code
+    logicalType: string
+    required: true
+    description: Classification of the financial transaction type.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: transaction_classification_code
+    businessName: Transaction Classification Code
+    logicalType: string
+    required: false
+    description: Classification of the monetary movement, such as premium, fee, tax, commission, payment, reserve, recovery, salvage, or subrogation.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: transaction_status_code
+    businessName: Transaction Status Code
+    logicalType: string
+    required: true
+    description: Current lifecycle status of the financial transaction.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: transaction_effective_date
+    businessName: Transaction Effective Date
+    logicalType: date
+    required: false
+    description: Date when the financial transaction becomes effective for business purposes.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: transaction_posted_date
+    businessName: Transaction Posted Date
+    logicalType: date
+    required: false
+    description: Date when the financial transaction was posted or recorded.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: accounting_period_code
+    businessName: Accounting Period Code
+    logicalType: string
+    required: false
+    description: Accounting period associated with the financial transaction.
+    customProperties:
+      classifications:
+        sensitivity: RESTRICTED
+        regulatoryTags:
+        - PII
+  - name: transaction_amount
+    businessName: Transaction Amount
+    logicalType: decimal
+    required: true
+    description: Monetary amount of the financial transaction.
+    customProperties:
+      classifications:
+        sensitivity: CONFIDENTIAL
+        regulatoryTags:
+        - FINANCIAL
+  - name: transaction_currency_code
+    businessName: Transaction Currency Code
+    logicalType: string
+    required: true
+    description: Currency code for the transaction amount.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: debit_credit_code
+    businessName: Debit Credit Code
+    logicalType: string
+    required: false
+    description: Classification indicating whether the transaction is a debit, credit, or other recognized accounting direction.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: policy_uid
+    businessName: Policy Identifier
+    logicalType: string
+    required: false
+    description: Identifier (GUID reference) for the policy associated with the financial transaction when policy context is available.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: claim_uid
+    businessName: Claim Identifier
+    logicalType: string
+    required: false
+    description: Identifier (GUID reference) for the claim associated with the financial transaction when claim context is available.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: policy_coverage_uid
+    businessName: Policy Coverage Identifier
+    logicalType: string
+    required: false
+    description: Identifier (GUID reference) for the policy coverage associated with the financial transaction when coverage context is known.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: party_uid
+    businessName: Party Identifier
+    logicalType: string
+    required: false
+    description: Identifier (GUID reference) for the party associated with the financial transaction when party context is known.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: exposure_uid
+    businessName: Exposure Identifier
+    logicalType: string
+    required: false
+    description: Identifier (GUID reference) for the exposure associated with the financial transaction when exposure context is known.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: source_transaction_reference
+    businessName: Source Transaction Reference
+    logicalType: string
+    required: false
+    description: Source-neutral business reference that helps reconcile the financial transaction across processing contexts.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: transaction_description
+    businessName: Transaction Description
+    logicalType: string
+    required: false
+    description: Source-neutral business description of the financial transaction when additional context is needed.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: created_datetime
+    businessName: Created Datetime
+    logicalType: datetime
+    required: false
+    description: Datetime when the canonical financial transaction record was created.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: updated_datetime
+    businessName: Updated Datetime
+    logicalType: datetime
+    required: false
+    description: Datetime when the canonical financial transaction record was last updated.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: lifecycle_event_uid
+    businessName: Lifecycle Event Identifier
+    logicalType: string
+    required: false
+    description: Optional reference to the lifecycle event that this transaction realizes (per the event-and-transaction ADR).
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: correction_indicator
+    businessName: Correction Indicator
+    logicalType: boolean
+    required: true
+    description: True when this row corrects a previously emitted row. False for original (uncorrected) rows.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: corrects_financial_transaction_uid
+    businessName: Corrects Record Identifier
+    logicalType: string
+    required: false
+    description: Reference to the prior row that this row corrects. Populated only when correction_indicator is true.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
 relationships:
-  - name: financial_transaction_to_policy
-    description: Relates a financial transaction to the policy associated with the monetary movement when policy context is available.
-    relationshipType: many-to-one
-    targetContractId: pc.policy
-    sourceFields:
-      - policy_id
-    targetFields:
-      - policy_id
-  - name: financial_transaction_to_claim
-    description: Relates a financial transaction to the claim associated with the monetary movement when claim context is available.
-    relationshipType: many-to-one
-    targetContractId: pc.claim
-    sourceFields:
-      - claim_id
-    targetFields:
-      - claim_id
-  - name: financial_transaction_to_policy_coverage
-    description: Relates a financial transaction to policy coverage when coverage context is known.
-    relationshipType: many-to-one
-    targetContractId: pc.policy-coverage
-    sourceFields:
-      - policy_coverage_id
-    targetFields:
-      - policy_coverage_id
-  - name: financial_transaction_to_party
-    description: Relates a financial transaction to a party associated with the monetary movement when party context is known.
-    relationshipType: many-to-one
-    targetContractId: pc.party
-    sourceFields:
-      - party_id
-    targetFields:
-      - party_id
-  - name: financial_transaction_to_exposure
-    description: Relates a financial transaction to an exposure associated with the monetary movement when exposure context is known.
-    relationshipType: many-to-one
-    targetContractId: pc.exposure
-    sourceFields:
-      - exposure_id
-    targetFields:
-      - exposure_id
-
+- name: financial_transaction_to_policy
+  description: Relates a financial transaction to the policy associated with the monetary movement when policy context is available.
+  relationshipType: many-to-one
+  targetContractId: pc.policy
+  sourceFields:
+  - policy_uid
+  targetFields:
+  - policy_uid
+- name: financial_transaction_to_claim
+  description: Relates a financial transaction to the claim associated with the monetary movement when claim context is available.
+  relationshipType: many-to-one
+  targetContractId: pc.claim
+  sourceFields:
+  - claim_uid
+  targetFields:
+  - claim_uid
+- name: financial_transaction_to_policy_coverage
+  description: Relates a financial transaction to policy coverage when coverage context is known.
+  relationshipType: many-to-one
+  targetContractId: pc.policy-coverage
+  sourceFields:
+  - policy_coverage_uid
+  targetFields:
+  - policy_coverage_uid
+- name: financial_transaction_to_party
+  description: Relates a financial transaction to a party associated with the monetary movement when party context is known.
+  relationshipType: many-to-one
+  targetContractId: pc.party
+  sourceFields:
+  - party_uid
+  targetFields:
+  - party_uid
+- name: financial_transaction_to_exposure
+  description: Relates a financial transaction to an exposure associated with the monetary movement when exposure context is known.
+  relationshipType: many-to-one
+  targetContractId: pc.exposure
+  sourceFields:
+  - exposure_uid
+  targetFields:
+  - exposure_uid
 quality:
-  - rule: financial_transaction_id_required
-    description: Financial transaction identifier must be populated.
-    dimension: completeness
-    severity: error
-  - rule: financial_transaction_type_code_required
-    description: Transaction type code must be populated.
-    dimension: completeness
-    severity: error
-  - rule: financial_transaction_status_code_required
-    description: Transaction status code must be populated.
-    dimension: completeness
-    severity: error
-  - rule: financial_transaction_amount_required
-    description: Transaction amount must be populated.
-    dimension: completeness
-    severity: error
-  - rule: financial_transaction_currency_code_required
-    description: Transaction currency code must be populated.
-    dimension: completeness
-    severity: error
-  - rule: financial_transaction_has_business_context
-    description: At least one policy, claim, coverage, party, or exposure context should be populated for the financial transaction.
-    dimension: completeness
-    severity: warning
-
+- rule: financial_transaction_uid_required
+  description: financial_transaction_uid must be populated for every record.
+  dimension: completeness
+  severity: error
+- rule: financial_transaction_type_code_required
+  description: Transaction type code must be populated.
+  dimension: completeness
+  severity: error
+- rule: financial_transaction_status_code_required
+  description: Transaction status code must be populated.
+  dimension: completeness
+  severity: error
+- rule: financial_transaction_amount_required
+  description: Transaction amount must be populated.
+  dimension: completeness
+  severity: error
+- rule: financial_transaction_currency_code_required
+  description: Transaction currency code must be populated.
+  dimension: completeness
+  severity: error
+- rule: financial_transaction_has_business_context
+  description: At least one policy, claim, coverage, party, or exposure context should be populated for the financial transaction.
+  dimension: completeness
+  severity: warning
+- rule: correction_indicator_required
+  description: correction_indicator must be populated for every event or transaction row.
+  dimension: completeness
+  severity: error
 customProperties:
   canonicalLayer: silver
   contractFamily: property-and-casualty
   domainPackage: pc
   subjectArea: financial
   supportsFinancialTransactionPattern: true
+  classificationProfile: RESTRICTED
+  changelog:
+  - '0.2.0: Apply cross-cutting ADRs (identifier strategy, SCD2 temporal, record state, classifications, codeset references, source attribution).'

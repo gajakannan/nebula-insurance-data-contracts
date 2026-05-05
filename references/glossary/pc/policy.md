@@ -6,11 +6,11 @@ A durable insurance contract identity and current policy summary for Property an
 
 ## Policy Identifier
 
-A stable canonical identifier for a policy record.
+The system identity column on a policy record (`policy_uid`). An immutable GUID generated upstream and used as the join key for every reference to the policy.
 
 ## Policy Number
 
-A business-facing number used to identify a policy.
+The business-friendly identifier the business or operations assigns to a policy. Distinct from the policy identifier; not used as the primary key or relationship join key.
 
 ## Policy Status
 

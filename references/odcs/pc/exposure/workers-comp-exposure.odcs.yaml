@@ -2,120 +2,220 @@ apiVersion: v3.0.2
 kind: DataContract
 id: pc.workers-comp-exposure
 name: WorkersCompExposure
-version: 0.1.0
+version: 0.2.0
 status: draft
 description: Canonical contract for workers compensation exposure attributes in Property and Casualty insurance.
-
 domain: property-and-casualty
-
 schema:
-  - name: workers_comp_exposure
-    physicalType: table
-    description: Canonical workers compensation exposure detail that extends the shared exposure record for payroll, employee, and work classification risk.
-    properties:
-      - name: workers_comp_exposure_id
-        businessName: Workers Comp Exposure Identifier
-        logicalType: string
-        required: true
-        primaryKey: true
-        description: Stable identifier for the canonical workers compensation exposure detail record.
-      - name: exposure_id
-        businessName: Exposure Identifier
-        logicalType: string
-        required: true
-        description: Identifier for the shared exposure record that this workers compensation detail extends.
-      - name: jurisdiction_code
-        businessName: Jurisdiction Code
-        logicalType: string
-        required: false
-        description: Jurisdiction associated with the workers compensation exposure.
-      - name: classification_code
-        businessName: Classification Code
-        logicalType: string
-        required: true
-        description: Work classification code associated with the workers compensation exposure.
-      - name: governing_class_indicator
-        businessName: Governing Class Indicator
-        logicalType: boolean
-        required: false
-        description: Indicates whether the classification is the governing class for the workers compensation exposure context.
-      - name: job_duty_description
-        businessName: Job Duty Description
-        logicalType: string
-        required: false
-        description: Source-neutral description of the job duties or work activities represented by the exposure.
-      - name: payroll_amount
-        businessName: Payroll Amount
-        logicalType: decimal
-        required: false
-        description: Payroll amount associated with the workers compensation exposure.
-      - name: employee_count
-        businessName: Employee Count
-        logicalType: integer
-        required: false
-        description: Number of employees associated with the workers compensation exposure.
-      - name: full_time_equivalent_count
-        businessName: Full Time Equivalent Count
-        logicalType: decimal
-        required: false
-        description: Full-time equivalent employee count associated with the workers compensation exposure.
-      - name: payroll_period_start_date
-        businessName: Payroll Period Start Date
-        logicalType: date
-        required: false
-        description: Start date of the payroll period represented by the exposure detail.
-      - name: payroll_period_end_date
-        businessName: Payroll Period End Date
-        logicalType: date
-        required: false
-        description: End date of the payroll period represented by the exposure detail.
-      - name: created_datetime
-        businessName: Created Datetime
-        logicalType: datetime
-        required: false
-        description: Datetime when the canonical workers compensation exposure detail record was created.
-      - name: updated_datetime
-        businessName: Updated Datetime
-        logicalType: datetime
-        required: false
-        description: Datetime when the canonical workers compensation exposure detail record was last updated.
-
+- name: workers_comp_exposure
+  physicalType: table
+  description: Canonical workers compensation exposure detail that extends the shared exposure record for payroll, employee, and work classification risk.
+  properties:
+  - name: workers_comp_exposure_uid
+    businessName: Workers Comp Exposure Identifier
+    logicalType: string
+    required: true
+    primaryKey: true
+    description: Immutable system-generated GUID that uniquely identifies the canonical workers comp exposure record across snapshots and source systems.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: source_system_code
+    businessName: Source System Code
+    logicalType: string
+    required: false
+    description: Identifier of the upstream system that produced or last asserted this record. Used for multi-source mastering and lineage.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: source_natural_key
+    businessName: Source Natural Key
+    logicalType: string
+    required: false
+    description: Natural key assigned by the source system. Captured for provenance; not used as the canonical primary key.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: exposure_uid
+    businessName: Exposure Identifier
+    logicalType: string
+    required: true
+    description: Identifier (GUID reference) for the shared exposure record that this workers compensation detail extends.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: jurisdiction_code
+    businessName: Jurisdiction Code
+    logicalType: string
+    required: false
+    description: Jurisdiction associated with the workers compensation exposure.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: classification_code
+    businessName: Classification Code
+    logicalType: string
+    required: true
+    description: Work classification code associated with the workers compensation exposure.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: governing_class_indicator
+    businessName: Governing Class Indicator
+    logicalType: boolean
+    required: false
+    description: Indicates whether the classification is the governing class for the workers compensation exposure context.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: job_duty_description
+    businessName: Job Duty Description
+    logicalType: string
+    required: false
+    description: Source-neutral description of the job duties or work activities represented by the exposure.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: payroll_amount
+    businessName: Payroll Amount
+    logicalType: decimal
+    required: false
+    description: Payroll amount associated with the workers compensation exposure.
+    customProperties:
+      classifications:
+        sensitivity: CONFIDENTIAL
+        regulatoryTags:
+        - FINANCIAL
+  - name: employee_count
+    businessName: Employee Count
+    logicalType: integer
+    required: false
+    description: Number of employees associated with the workers compensation exposure.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: full_time_equivalent_count
+    businessName: Full Time Equivalent Count
+    logicalType: decimal
+    required: false
+    description: Full-time equivalent employee count associated with the workers compensation exposure.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: payroll_period_start_date
+    businessName: Payroll Period Start Date
+    logicalType: date
+    required: false
+    description: Start date of the payroll period represented by the exposure detail.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: payroll_period_end_date
+    businessName: Payroll Period End Date
+    logicalType: date
+    required: false
+    description: End date of the payroll period represented by the exposure detail.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: created_datetime
+    businessName: Created Datetime
+    logicalType: datetime
+    required: false
+    description: Datetime when the canonical workers compensation exposure detail record was created.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: updated_datetime
+    businessName: Updated Datetime
+    logicalType: datetime
+    required: false
+    description: Datetime when the canonical workers compensation exposure detail record was last updated.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: record_status_code
+    businessName: Record Status Code
+    logicalType: string
+    required: true
+    description: Warehouse-level state of the record. References the RecordStatusCode codeset (ACTIVE, SUPERSEDED, SOFT_DELETED, RESTATED, MERGED).
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: valid_from_datetime
+    businessName: Valid From Datetime
+    logicalType: datetime
+    required: true
+    description: System-time start of the SCD2 window for this record version.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: valid_to_datetime
+    businessName: Valid To Datetime
+    logicalType: datetime
+    required: false
+    description: System-time end of the SCD2 window for this record version. Null indicates the current row.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: is_current_indicator
+    businessName: Is Current Indicator
+    logicalType: boolean
+    required: true
+    description: True for exactly one row per logical key, indicating the current record version.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
 relationships:
-  - name: workers_comp_exposure_to_exposure
-    description: Relates workers compensation exposure detail to the shared exposure record.
-    relationshipType: many-to-one
-    targetContractId: pc.exposure
-    sourceFields:
-      - exposure_id
-    targetFields:
-      - exposure_id
-
+- name: workers_comp_exposure_to_exposure
+  description: Relates workers compensation exposure detail to the shared exposure record.
+  relationshipType: many-to-one
+  targetContractId: pc.exposure
+  sourceFields:
+  - exposure_uid
+  targetFields:
+  - exposure_uid
 quality:
-  - rule: workers_comp_exposure_id_required
-    description: Workers compensation exposure identifier must be populated.
-    dimension: completeness
-    severity: error
-  - rule: workers_comp_exposure_exposure_id_required
-    description: Exposure identifier must be populated for every workers compensation exposure detail record.
-    dimension: completeness
-    severity: error
-  - rule: workers_comp_exposure_classification_code_required
-    description: Classification code must be populated for every workers compensation exposure detail record.
-    dimension: completeness
-    severity: error
-  - rule: workers_comp_exposure_payroll_amount_not_negative
-    description: Payroll amount should not be negative when populated.
-    dimension: validity
-    severity: warning
-  - rule: workers_comp_exposure_employee_counts_not_negative
-    description: Employee count and full-time equivalent count should not be negative when populated.
-    dimension: validity
-    severity: warning
-  - rule: workers_comp_exposure_payroll_period_start_not_after_end
-    description: Payroll period start date must not be later than payroll period end date when both dates are populated.
-    dimension: consistency
-    severity: error
-
+- rule: workers_comp_exposure_uid_required
+  description: workers_comp_exposure_uid must be populated for every record.
+  dimension: completeness
+  severity: error
+- rule: workers_comp_exposure_exposure_uid_required
+  description: Exposure identifier must be populated for every workers compensation exposure detail record.
+  dimension: completeness
+  severity: error
+- rule: workers_comp_exposure_classification_code_required
+  description: Classification code must be populated for every workers compensation exposure detail record.
+  dimension: completeness
+  severity: error
+- rule: workers_comp_exposure_payroll_amount_not_negative
+  description: Payroll amount should not be negative when populated.
+  dimension: validity
+  severity: warning
+- rule: workers_comp_exposure_employee_counts_not_negative
+  description: Employee count and full-time equivalent count should not be negative when populated.
+  dimension: validity
+  severity: warning
+- rule: workers_comp_exposure_payroll_period_start_not_after_end
+  description: Payroll period start date must not be later than payroll period end date when both dates are populated.
+  dimension: consistency
+  severity: error
+- rule: valid_from_datetime_required
+  description: valid_from_datetime must be populated for every record version.
+  dimension: completeness
+  severity: error
+- rule: valid_window_consistent
+  description: valid_to_datetime must be greater than valid_from_datetime when populated.
+  dimension: consistency
+  severity: error
+- rule: single_current_row_per_key
+  description: Exactly one row per logical key has is_current_indicator equal to true.
+  dimension: uniqueness
+  severity: error
+- rule: record_status_code_required
+  description: record_status_code must be populated for every record.
+  dimension: completeness
+  severity: error
 customProperties:
   canonicalLayer: silver
   contractFamily: property-and-casualty
@@ -123,3 +223,6 @@ customProperties:
   subjectArea: exposure
   exposureSubtype: workers-compensation
   supportsExposurePattern: true
+  classificationProfile: CONFIDENTIAL
+  changelog:
+  - '0.2.0: Apply cross-cutting ADRs (identifier strategy, SCD2 temporal, record state, classifications, codeset references, source attribution).'

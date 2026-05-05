@@ -22,7 +22,7 @@ The measurable risk basis associated with a policy, coverage, claim, submission,
 
 ## Exposure Identifier
 
-A stable canonical identifier for an exposure record.
+The system identity column on an exposure record (`exposure_uid`). An immutable GUID used as the join key for every reference to the exposure.
 
 ## Exposure Type
 

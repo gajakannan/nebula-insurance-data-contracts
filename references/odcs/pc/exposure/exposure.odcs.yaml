@@ -2,171 +2,286 @@ apiVersion: v3.0.2
 kind: DataContract
 id: pc.exposure
 name: Exposure
-version: 0.1.0
+version: 0.2.0
 status: draft
 description: Canonical contract for the measurable risk basis associated with Property and Casualty policy, coverage, claim, underwriting, or analytics context.
-
 domain: property-and-casualty
-
 schema:
-  - name: exposure
-    physicalType: table
-    description: Canonical exposure record that represents the shared measurable risk basis across policies, coverages, insurable objects, claims, underwriting, and analytics.
-    properties:
-      - name: exposure_id
-        businessName: Exposure Identifier
-        logicalType: string
-        required: true
-        primaryKey: true
-        description: Stable identifier for the canonical exposure record.
-      - name: exposure_type_code
-        businessName: Exposure Type Code
-        logicalType: string
-        required: true
-        description: Classification of the exposure by risk basis or insured-object type.
-      - name: exposure_basis_code
-        businessName: Exposure Basis Code
-        logicalType: string
-        required: false
-        description: Classification of the measurement basis used for the exposure, such as vehicle, property value, payroll, sales, area, or unit count.
-      - name: exposure_status_code
-        businessName: Exposure Status Code
-        logicalType: string
-        required: true
-        description: Current lifecycle status of the exposure.
-      - name: policy_id
-        businessName: Policy Identifier
-        logicalType: string
-        required: false
-        description: Identifier for the policy associated with the exposure when policy context is available.
-      - name: policy_term_id
-        businessName: Policy Term Identifier
-        logicalType: string
-        required: false
-        description: Identifier for the policy term associated with the exposure when term detail is represented separately.
-      - name: policy_coverage_id
-        businessName: Policy Coverage Identifier
-        logicalType: string
-        required: false
-        description: Identifier for the policy coverage associated with the exposure when coverage context is known.
-      - name: insurable_object_id
-        businessName: Insurable Object Identifier
-        logicalType: string
-        required: false
-        description: Identifier for the object, property, vehicle, operation, or interest that may be insured when represented separately.
-      - name: geographic_location_id
-        businessName: Geographic Location Identifier
-        logicalType: string
-        required: false
-        description: Identifier for the location associated with the exposure when a canonical geographic location is available.
-      - name: exposure_quantity
-        businessName: Exposure Quantity
-        logicalType: decimal
-        required: false
-        description: Measured quantity for the exposure when the exposure basis can be represented as a numeric value.
-      - name: exposure_unit_code
-        businessName: Exposure Unit Code
-        logicalType: string
-        required: false
-        description: Unit of measure for the exposure quantity.
-      - name: rating_territory_code
-        businessName: Rating Territory Code
-        logicalType: string
-        required: false
-        description: Territory classification used for rating or risk analysis when applicable.
-      - name: exposure_description
-        businessName: Exposure Description
-        logicalType: string
-        required: false
-        description: Source-neutral business description of the exposure when additional context is needed.
-      - name: effective_date
-        businessName: Effective Date
-        logicalType: date
-        required: false
-        description: Date when the exposure becomes effective in the business context.
-      - name: expiration_date
-        businessName: Expiration Date
-        logicalType: date
-        required: false
-        description: Date when the exposure stops being effective in the business context.
-      - name: created_datetime
-        businessName: Created Datetime
-        logicalType: datetime
-        required: false
-        description: Datetime when the canonical exposure record was created.
-      - name: updated_datetime
-        businessName: Updated Datetime
-        logicalType: datetime
-        required: false
-        description: Datetime when the canonical exposure record was last updated.
-
+- name: exposure
+  physicalType: table
+  description: Canonical exposure record that represents the shared measurable risk basis across policies, coverages, insurable objects, claims, underwriting, and analytics.
+  properties:
+  - name: exposure_uid
+    businessName: Exposure Identifier
+    logicalType: string
+    required: true
+    primaryKey: true
+    description: Immutable system-generated GUID that uniquely identifies the canonical exposure record across snapshots and source systems.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: source_system_code
+    businessName: Source System Code
+    logicalType: string
+    required: false
+    description: Identifier of the upstream system that produced or last asserted this record. Used for multi-source mastering and lineage.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: source_natural_key
+    businessName: Source Natural Key
+    logicalType: string
+    required: false
+    description: Natural key assigned by the source system. Captured for provenance; not used as the canonical primary key.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: exposure_type_code
+    businessName: Exposure Type Code
+    logicalType: string
+    required: true
+    description: Classification of the exposure by risk basis or insured-object type.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: exposure_basis_code
+    businessName: Exposure Basis Code
+    logicalType: string
+    required: false
+    description: Classification of the measurement basis used for the exposure, such as vehicle, property value, payroll, sales, area, or unit count.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: exposure_status_code
+    businessName: Exposure Status Code
+    logicalType: string
+    required: true
+    description: Current lifecycle status of the exposure.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: policy_uid
+    businessName: Policy Identifier
+    logicalType: string
+    required: false
+    description: Identifier (GUID reference) for the policy associated with the exposure when policy context is available.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: policy_term_uid
+    businessName: Policy Term Identifier
+    logicalType: string
+    required: false
+    description: Identifier (GUID reference) for the policy term associated with the exposure when term detail is represented separately.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: policy_coverage_uid
+    businessName: Policy Coverage Identifier
+    logicalType: string
+    required: false
+    description: Identifier (GUID reference) for the policy coverage associated with the exposure when coverage context is known.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: insurable_object_uid
+    businessName: Insurable Object Identifier
+    logicalType: string
+    required: false
+    description: Identifier (GUID reference) for the object, property, vehicle, operation, or interest that may be insured when represented separately.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: geographic_location_uid
+    businessName: Geographic Location Identifier
+    logicalType: string
+    required: false
+    description: Identifier (GUID reference) for the location associated with the exposure when a canonical geographic location is available.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: exposure_quantity
+    businessName: Exposure Quantity
+    logicalType: decimal
+    required: false
+    description: Measured quantity for the exposure when the exposure basis can be represented as a numeric value.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: exposure_unit_code
+    businessName: Exposure Unit Code
+    logicalType: string
+    required: false
+    description: Unit of measure for the exposure quantity.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: rating_territory_code
+    businessName: Rating Territory Code
+    logicalType: string
+    required: false
+    description: Territory classification used for rating or risk analysis when applicable.
+    customProperties:
+      classifications:
+        sensitivity: RESTRICTED
+        regulatoryTags:
+        - PII
+  - name: exposure_description
+    businessName: Exposure Description
+    logicalType: string
+    required: false
+    description: Source-neutral business description of the exposure when additional context is needed.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: effective_date
+    businessName: Effective Date
+    logicalType: date
+    required: false
+    description: Date when the exposure becomes effective in the business context.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: expiration_date
+    businessName: Expiration Date
+    logicalType: date
+    required: false
+    description: Date when the exposure stops being effective in the business context.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: created_datetime
+    businessName: Created Datetime
+    logicalType: datetime
+    required: false
+    description: Datetime when the canonical exposure record was created.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: updated_datetime
+    businessName: Updated Datetime
+    logicalType: datetime
+    required: false
+    description: Datetime when the canonical exposure record was last updated.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: record_status_code
+    businessName: Record Status Code
+    logicalType: string
+    required: true
+    description: Warehouse-level state of the record. References the RecordStatusCode codeset (ACTIVE, SUPERSEDED, SOFT_DELETED, RESTATED, MERGED).
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: valid_from_datetime
+    businessName: Valid From Datetime
+    logicalType: datetime
+    required: true
+    description: System-time start of the SCD2 window for this record version.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: valid_to_datetime
+    businessName: Valid To Datetime
+    logicalType: datetime
+    required: false
+    description: System-time end of the SCD2 window for this record version. Null indicates the current row.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: is_current_indicator
+    businessName: Is Current Indicator
+    logicalType: boolean
+    required: true
+    description: True for exactly one row per logical key, indicating the current record version.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
 relationships:
-  - name: exposure_to_policy
-    description: Relates an exposure to the policy associated with the risk basis when policy context is available.
-    relationshipType: many-to-one
-    targetContractId: pc.policy
-    sourceFields:
-      - policy_id
-    targetFields:
-      - policy_id
-  - name: exposure_to_policy_term
-    description: Relates an exposure to the policy term associated with the risk basis when term detail is available.
-    relationshipType: many-to-one
-    targetContractId: pc.policy-term
-    sourceFields:
-      - policy_term_id
-    targetFields:
-      - policy_term_id
-  - name: exposure_to_policy_coverage
-    description: Relates an exposure to the policy coverage associated with the risk basis when coverage context is known.
-    relationshipType: many-to-one
-    targetContractId: pc.policy-coverage
-    sourceFields:
-      - policy_coverage_id
-    targetFields:
-      - policy_coverage_id
-  - name: exposure_to_insurable_object
-    description: Relates an exposure to the insurable object that may be insured when object detail is represented separately.
-    relationshipType: many-to-one
-    targetContractId: pc.insurable-object
-    sourceFields:
-      - insurable_object_id
-    targetFields:
-      - insurable_object_id
-  - name: exposure_to_geographic_location
-    description: Relates an exposure to the geographic location associated with the risk basis when location detail is available.
-    relationshipType: many-to-one
-    targetContractId: pc.geographic-location
-    sourceFields:
-      - geographic_location_id
-    targetFields:
-      - geographic_location_id
-
+- name: exposure_to_policy
+  description: Relates an exposure to the policy associated with the risk basis when policy context is available.
+  relationshipType: many-to-one
+  targetContractId: pc.policy
+  sourceFields:
+  - policy_uid
+  targetFields:
+  - policy_uid
+- name: exposure_to_policy_term
+  description: Relates an exposure to the policy term associated with the risk basis when term detail is available.
+  relationshipType: many-to-one
+  targetContractId: pc.policy-term
+  sourceFields:
+  - policy_term_uid
+  targetFields:
+  - policy_term_uid
+- name: exposure_to_policy_coverage
+  description: Relates an exposure to the policy coverage associated with the risk basis when coverage context is known.
+  relationshipType: many-to-one
+  targetContractId: pc.policy-coverage
+  sourceFields:
+  - policy_coverage_uid
+  targetFields:
+  - policy_coverage_uid
+- name: exposure_to_insurable_object
+  description: Relates an exposure to the insurable object that may be insured when object detail is represented separately.
+  relationshipType: many-to-one
+  targetContractId: pc.insurable-object
+  sourceFields:
+  - insurable_object_uid
+  targetFields:
+  - insurable_object_uid
+- name: exposure_to_geographic_location
+  description: Relates an exposure to the geographic location associated with the risk basis when location detail is available.
+  relationshipType: many-to-one
+  targetContractId: pc.geographic-location
+  sourceFields:
+  - geographic_location_uid
+  targetFields:
+  - geographic_location_uid
 quality:
-  - rule: exposure_id_required
-    description: Exposure identifier must be populated.
-    dimension: completeness
-    severity: error
-  - rule: exposure_type_code_required
-    description: Exposure type code must be populated.
-    dimension: completeness
-    severity: error
-  - rule: exposure_status_code_required
-    description: Exposure status code must be populated.
-    dimension: completeness
-    severity: error
-  - rule: exposure_quantity_not_negative
-    description: Exposure quantity should not be negative when populated.
-    dimension: validity
-    severity: warning
-  - rule: exposure_effective_date_not_after_expiration_date
-    description: Effective date must not be later than expiration date when both dates are populated.
-    dimension: consistency
-    severity: error
-
+- rule: exposure_uid_required
+  description: exposure_uid must be populated for every record.
+  dimension: completeness
+  severity: error
+- rule: exposure_type_code_required
+  description: Exposure type code must be populated.
+  dimension: completeness
+  severity: error
+- rule: exposure_status_code_required
+  description: Exposure status code must be populated.
+  dimension: completeness
+  severity: error
+- rule: exposure_quantity_not_negative
+  description: Exposure quantity should not be negative when populated.
+  dimension: validity
+  severity: warning
+- rule: exposure_effective_date_not_after_expiration_date
+  description: Effective date must not be later than expiration date when both dates are populated.
+  dimension: consistency
+  severity: error
+- rule: valid_from_datetime_required
+  description: valid_from_datetime must be populated for every record version.
+  dimension: completeness
+  severity: error
+- rule: valid_window_consistent
+  description: valid_to_datetime must be greater than valid_from_datetime when populated.
+  dimension: consistency
+  severity: error
+- rule: single_current_row_per_key
+  description: Exactly one row per logical key has is_current_indicator equal to true.
+  dimension: uniqueness
+  severity: error
+- rule: record_status_code_required
+  description: record_status_code must be populated for every record.
+  dimension: completeness
+  severity: error
 customProperties:
   canonicalLayer: silver
   contractFamily: property-and-casualty
   domainPackage: pc
   subjectArea: exposure
   supportsExposurePattern: true
+  classificationProfile: RESTRICTED
+  changelog:
+  - '0.2.0: Apply cross-cutting ADRs (identifier strategy, SCD2 temporal, record state, classifications, codeset references, source attribution).'

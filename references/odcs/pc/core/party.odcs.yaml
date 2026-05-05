@@ -2,119 +2,239 @@ apiVersion: v3.0.2
 kind: DataContract
 id: pc.party
 name: Party
-version: 0.1.0
+version: 0.2.0
 status: draft
 description: Canonical contract for a reusable person, organization, or group identity in Property and Casualty insurance.
-
 domain: property-and-casualty
-
 schema:
-  - name: party
-    physicalType: table
-    description: Canonical party identity record used across submissions, policies, claims, accounts, agreements, and relationships.
-    properties:
-      - name: party_id
-        businessName: Party Identifier
-        logicalType: string
-        required: true
-        primaryKey: true
-        description: Stable identifier for the canonical party record.
-      - name: party_type_code
-        businessName: Party Type Code
-        logicalType: string
-        required: true
-        description: Classification of the party as a person, organization, household, trust, or other recognized party type.
-      - name: party_display_name
-        businessName: Party Display Name
-        logicalType: string
-        required: true
-        description: Name used to identify the party in business-facing contexts.
-      - name: legal_name
-        businessName: Legal Name
-        logicalType: string
-        required: false
-        description: Legal name for the party when it differs from the display name or is required for contractual context.
-      - name: given_name
-        businessName: Given Name
-        logicalType: string
-        required: false
-        description: Given or first name for a party that represents an individual person.
-      - name: middle_name
-        businessName: Middle Name
-        logicalType: string
-        required: false
-        description: Middle name or initial for a party that represents an individual person.
-      - name: family_name
-        businessName: Family Name
-        logicalType: string
-        required: false
-        description: Family or last name for a party that represents an individual person.
-      - name: birth_date
-        businessName: Birth Date
-        logicalType: date
-        required: false
-        description: Date of birth for a party that represents an individual person.
-      - name: organization_name
-        businessName: Organization Name
-        logicalType: string
-        required: false
-        description: Registered or commonly used organization name for a party that represents an organization.
-      - name: organization_type_code
-        businessName: Organization Type Code
-        logicalType: string
-        required: false
-        description: Classification of an organization party, such as carrier, agency, employer, vendor, or public entity.
-      - name: status_code
-        businessName: Status Code
-        logicalType: string
-        required: true
-        description: Current lifecycle status of the party identity record.
-      - name: effective_date
-        businessName: Effective Date
-        logicalType: date
-        required: false
-        description: Date when the party identity record becomes effective for canonical use.
-      - name: expiration_date
-        businessName: Expiration Date
-        logicalType: date
-        required: false
-        description: Date when the party identity record stops being effective for canonical use.
-      - name: created_datetime
-        businessName: Created Datetime
-        logicalType: datetime
-        required: false
-        description: Datetime when the canonical party record was created.
-      - name: updated_datetime
-        businessName: Updated Datetime
-        logicalType: datetime
-        required: false
-        description: Datetime when the canonical party record was last updated.
-
+- name: party
+  physicalType: table
+  description: Canonical party identity record used across submissions, policies, claims, accounts, agreements, and relationships.
+  properties:
+  - name: party_uid
+    businessName: Party Identifier
+    logicalType: string
+    required: true
+    primaryKey: true
+    description: Immutable system-generated GUID that uniquely identifies the canonical party record across snapshots and source systems.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: source_system_code
+    businessName: Source System Code
+    logicalType: string
+    required: false
+    description: Identifier of the upstream system that produced or last asserted this record. Used for multi-source mastering and lineage.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: source_natural_key
+    businessName: Source Natural Key
+    logicalType: string
+    required: false
+    description: Natural key assigned by the source system. Captured for provenance; not used as the canonical primary key.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: party_type_code
+    businessName: Party Type Code
+    logicalType: string
+    required: true
+    description: Classification of the party as a person, organization, household, trust, or other recognized party type.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: party_display_name
+    businessName: Party Display Name
+    logicalType: string
+    required: true
+    description: Name used to identify the party in business-facing contexts.
+    customProperties:
+      classifications:
+        sensitivity: CONFIDENTIAL
+        regulatoryTags:
+        - PII
+  - name: legal_name
+    businessName: Legal Name
+    logicalType: string
+    required: false
+    description: Legal name for the party when it differs from the display name or is required for contractual context.
+    customProperties:
+      classifications:
+        sensitivity: CONFIDENTIAL
+        regulatoryTags:
+        - PII
+  - name: given_name
+    businessName: Given Name
+    logicalType: string
+    required: false
+    description: Given or first name for a party that represents an individual person.
+    customProperties:
+      classifications:
+        sensitivity: CONFIDENTIAL
+        regulatoryTags:
+        - PII
+  - name: middle_name
+    businessName: Middle Name
+    logicalType: string
+    required: false
+    description: Middle name or initial for a party that represents an individual person.
+    customProperties:
+      classifications:
+        sensitivity: CONFIDENTIAL
+        regulatoryTags:
+        - PII
+  - name: family_name
+    businessName: Family Name
+    logicalType: string
+    required: false
+    description: Family or last name for a party that represents an individual person.
+    customProperties:
+      classifications:
+        sensitivity: CONFIDENTIAL
+        regulatoryTags:
+        - PII
+  - name: birth_date
+    businessName: Birth Date
+    logicalType: date
+    required: false
+    description: Date of birth for a party that represents an individual person.
+    customProperties:
+      classifications:
+        sensitivity: RESTRICTED
+        regulatoryTags:
+        - PII
+  - name: organization_name
+    businessName: Organization Name
+    logicalType: string
+    required: false
+    description: Registered or commonly used organization name for a party that represents an organization.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: organization_type_code
+    businessName: Organization Type Code
+    logicalType: string
+    required: false
+    description: Classification of an organization party, such as carrier, agency, employer, vendor, or public entity.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: status_code
+    businessName: Status Code
+    logicalType: string
+    required: true
+    description: Current lifecycle status of the party identity record.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: effective_date
+    businessName: Effective Date
+    logicalType: date
+    required: false
+    description: Date when the party identity record becomes effective for canonical use.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: expiration_date
+    businessName: Expiration Date
+    logicalType: date
+    required: false
+    description: Date when the party identity record stops being effective for canonical use.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: created_datetime
+    businessName: Created Datetime
+    logicalType: datetime
+    required: false
+    description: Datetime when the canonical party record was created.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: updated_datetime
+    businessName: Updated Datetime
+    logicalType: datetime
+    required: false
+    description: Datetime when the canonical party record was last updated.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: record_status_code
+    businessName: Record Status Code
+    logicalType: string
+    required: true
+    description: Warehouse-level state of the record. References the RecordStatusCode codeset (ACTIVE, SUPERSEDED, SOFT_DELETED, RESTATED, MERGED).
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: valid_from_datetime
+    businessName: Valid From Datetime
+    logicalType: datetime
+    required: true
+    description: System-time start of the SCD2 window for this record version.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: valid_to_datetime
+    businessName: Valid To Datetime
+    logicalType: datetime
+    required: false
+    description: System-time end of the SCD2 window for this record version. Null indicates the current row.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: is_current_indicator
+    businessName: Is Current Indicator
+    logicalType: boolean
+    required: true
+    description: True for exactly one row per logical key, indicating the current record version.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
 quality:
-  - rule: party_id_required
-    description: Party identifier must be populated.
-    dimension: completeness
-    severity: error
-  - rule: party_type_code_required
-    description: Party type code must be populated.
-    dimension: completeness
-    severity: error
-  - rule: party_display_name_required
-    description: Party display name must be populated.
-    dimension: completeness
-    severity: error
-  - rule: party_effective_date_not_after_expiration_date
-    description: Effective date must not be later than expiration date when both dates are populated.
-    dimension: consistency
-    severity: error
-  - rule: party_person_name_or_organization_name_present
-    description: A person party should include person name fields and an organization party should include organization name.
-    dimension: completeness
-    severity: warning
-
+- rule: party_uid_required
+  description: party_uid must be populated for every record.
+  dimension: completeness
+  severity: error
+- rule: party_type_code_required
+  description: Party type code must be populated.
+  dimension: completeness
+  severity: error
+- rule: party_display_name_required
+  description: Party display name must be populated.
+  dimension: completeness
+  severity: error
+- rule: party_effective_date_not_after_expiration_date
+  description: Effective date must not be later than expiration date when both dates are populated.
+  dimension: consistency
+  severity: error
+- rule: party_person_name_or_organization_name_present
+  description: A person party should include person name fields and an organization party should include organization name.
+  dimension: completeness
+  severity: warning
+- rule: valid_from_datetime_required
+  description: valid_from_datetime must be populated for every record version.
+  dimension: completeness
+  severity: error
+- rule: valid_window_consistent
+  description: valid_to_datetime must be greater than valid_from_datetime when populated.
+  dimension: consistency
+  severity: error
+- rule: single_current_row_per_key
+  description: Exactly one row per logical key has is_current_indicator equal to true.
+  dimension: uniqueness
+  severity: error
+- rule: record_status_code_required
+  description: record_status_code must be populated for every record.
+  dimension: completeness
+  severity: error
 customProperties:
   canonicalLayer: silver
   contractFamily: property-and-casualty
   domainPackage: pc
   subjectArea: core
   supportsPartyRolePattern: true
+  classificationProfile: RESTRICTED
+  changelog:
+  - '0.2.0: Apply cross-cutting ADRs (identifier strategy, SCD2 temporal, record state, classifications, codeset references, source attribution).'

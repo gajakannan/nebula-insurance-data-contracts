@@ -38,6 +38,8 @@ Use `Party` for reusable person or organization identity.
 
 Use context-specific role contracts for participation in submissions, policies, claims, coverages, and insurable objects.
 
-Role contracts should carry role type, effective dates, status, relationship keys, and context-specific participation fields.
+Role contracts should carry role type, effective dates, status, relationship keys, and context-specific participation fields. The role-type code references the `PartyRoleTypeCode` codeset.
 
 Use `PartyRelationship` for relationships between parties when the relationship exists outside a single policy, claim, or submission context.
+
+Party identity carries PII; role contracts carry context. See `references/design-decisions/pc/data-classification.md` for field-level sensitivity tagging that applies across the party-role contract family.

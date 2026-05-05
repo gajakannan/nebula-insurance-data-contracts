@@ -2,120 +2,220 @@ apiVersion: v3.0.2
 kind: DataContract
 id: pc.vehicle-exposure
 name: VehicleExposure
-version: 0.1.0
+version: 0.2.0
 status: draft
 description: Canonical contract for vehicle-specific exposure attributes in Property and Casualty insurance.
-
 domain: property-and-casualty
-
 schema:
-  - name: vehicle_exposure
-    physicalType: table
-    description: Canonical vehicle exposure detail that extends the shared exposure record for vehicle-based risk.
-    properties:
-      - name: vehicle_exposure_id
-        businessName: Vehicle Exposure Identifier
-        logicalType: string
-        required: true
-        primaryKey: true
-        description: Stable identifier for the canonical vehicle exposure detail record.
-      - name: exposure_id
-        businessName: Exposure Identifier
-        logicalType: string
-        required: true
-        description: Identifier for the shared exposure record that this vehicle detail extends.
-      - name: vehicle_identifier
-        businessName: Vehicle Identifier
-        logicalType: string
-        required: false
-        description: Business-facing identifier for the vehicle when available.
-      - name: vehicle_year_number
-        businessName: Vehicle Year Number
-        logicalType: integer
-        required: false
-        description: Model year of the vehicle.
-      - name: vehicle_make_name
-        businessName: Vehicle Make Name
-        logicalType: string
-        required: false
-        description: Manufacturer or make name of the vehicle.
-      - name: vehicle_model_name
-        businessName: Vehicle Model Name
-        logicalType: string
-        required: false
-        description: Model name of the vehicle.
-      - name: vehicle_use_code
-        businessName: Vehicle Use Code
-        logicalType: string
-        required: false
-        description: Classification of how the vehicle is used in the insured context.
-      - name: vehicle_class_code
-        businessName: Vehicle Class Code
-        logicalType: string
-        required: false
-        description: Rating, underwriting, or analytical classification of the vehicle.
-      - name: garaging_location_id
-        businessName: Garaging Location Identifier
-        logicalType: string
-        required: false
-        description: Identifier for the geographic location where the vehicle is principally garaged.
-      - name: radius_code
-        businessName: Radius Code
-        logicalType: string
-        required: false
-        description: Classification of the operating radius or distance band for the vehicle when applicable.
-      - name: stated_value_amount
-        businessName: Stated Value Amount
-        logicalType: decimal
-        required: false
-        description: Stated value of the vehicle when used for underwriting, rating, or analytics.
-      - name: created_datetime
-        businessName: Created Datetime
-        logicalType: datetime
-        required: false
-        description: Datetime when the canonical vehicle exposure detail record was created.
-      - name: updated_datetime
-        businessName: Updated Datetime
-        logicalType: datetime
-        required: false
-        description: Datetime when the canonical vehicle exposure detail record was last updated.
-
+- name: vehicle_exposure
+  physicalType: table
+  description: Canonical vehicle exposure detail that extends the shared exposure record for vehicle-based risk.
+  properties:
+  - name: vehicle_exposure_uid
+    businessName: Vehicle Exposure Identifier
+    logicalType: string
+    required: true
+    primaryKey: true
+    description: Immutable system-generated GUID that uniquely identifies the canonical vehicle exposure record across snapshots and source systems.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: source_system_code
+    businessName: Source System Code
+    logicalType: string
+    required: false
+    description: Identifier of the upstream system that produced or last asserted this record. Used for multi-source mastering and lineage.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: source_natural_key
+    businessName: Source Natural Key
+    logicalType: string
+    required: false
+    description: Natural key assigned by the source system. Captured for provenance; not used as the canonical primary key.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: exposure_uid
+    businessName: Exposure Identifier
+    logicalType: string
+    required: true
+    description: Identifier (GUID reference) for the shared exposure record that this vehicle detail extends.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: vehicle_identifier
+    businessName: Vehicle Identifier
+    logicalType: string
+    required: false
+    description: Business-facing identifier for the vehicle when available.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: vehicle_year_number
+    businessName: Vehicle Year Number
+    logicalType: integer
+    required: false
+    description: Model year of the vehicle.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: vehicle_make_name
+    businessName: Vehicle Make Name
+    logicalType: string
+    required: false
+    description: Manufacturer or make name of the vehicle.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: vehicle_model_name
+    businessName: Vehicle Model Name
+    logicalType: string
+    required: false
+    description: Model name of the vehicle.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: vehicle_use_code
+    businessName: Vehicle Use Code
+    logicalType: string
+    required: false
+    description: Classification of how the vehicle is used in the insured context.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: vehicle_class_code
+    businessName: Vehicle Class Code
+    logicalType: string
+    required: false
+    description: Rating, underwriting, or analytical classification of the vehicle.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: garaging_location_uid
+    businessName: Garaging Location Identifier
+    logicalType: string
+    required: false
+    description: Identifier (GUID reference) for the geographic location where the vehicle is principally garaged.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: radius_code
+    businessName: Radius Code
+    logicalType: string
+    required: false
+    description: Classification of the operating radius or distance band for the vehicle when applicable.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: stated_value_amount
+    businessName: Stated Value Amount
+    logicalType: decimal
+    required: false
+    description: Stated value of the vehicle when used for underwriting, rating, or analytics.
+    customProperties:
+      classifications:
+        sensitivity: CONFIDENTIAL
+        regulatoryTags:
+        - FINANCIAL
+  - name: created_datetime
+    businessName: Created Datetime
+    logicalType: datetime
+    required: false
+    description: Datetime when the canonical vehicle exposure detail record was created.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: updated_datetime
+    businessName: Updated Datetime
+    logicalType: datetime
+    required: false
+    description: Datetime when the canonical vehicle exposure detail record was last updated.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: record_status_code
+    businessName: Record Status Code
+    logicalType: string
+    required: true
+    description: Warehouse-level state of the record. References the RecordStatusCode codeset (ACTIVE, SUPERSEDED, SOFT_DELETED, RESTATED, MERGED).
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: valid_from_datetime
+    businessName: Valid From Datetime
+    logicalType: datetime
+    required: true
+    description: System-time start of the SCD2 window for this record version.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: valid_to_datetime
+    businessName: Valid To Datetime
+    logicalType: datetime
+    required: false
+    description: System-time end of the SCD2 window for this record version. Null indicates the current row.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: is_current_indicator
+    businessName: Is Current Indicator
+    logicalType: boolean
+    required: true
+    description: True for exactly one row per logical key, indicating the current record version.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
 relationships:
-  - name: vehicle_exposure_to_exposure
-    description: Relates vehicle exposure detail to the shared exposure record.
-    relationshipType: many-to-one
-    targetContractId: pc.exposure
-    sourceFields:
-      - exposure_id
-    targetFields:
-      - exposure_id
-  - name: vehicle_exposure_to_garaging_location
-    description: Relates vehicle exposure detail to the vehicle garaging location when available.
-    relationshipType: many-to-one
-    targetContractId: pc.geographic-location
-    sourceFields:
-      - garaging_location_id
-    targetFields:
-      - geographic_location_id
-
+- name: vehicle_exposure_to_exposure
+  description: Relates vehicle exposure detail to the shared exposure record.
+  relationshipType: many-to-one
+  targetContractId: pc.exposure
+  sourceFields:
+  - exposure_uid
+  targetFields:
+  - exposure_uid
+- name: vehicle_exposure_to_garaging_location
+  description: Relates vehicle exposure detail to the vehicle garaging location when available.
+  relationshipType: many-to-one
+  targetContractId: pc.geographic-location
+  sourceFields:
+  - garaging_location_uid
+  targetFields:
+  - geographic_location_uid
 quality:
-  - rule: vehicle_exposure_id_required
-    description: Vehicle exposure identifier must be populated.
-    dimension: completeness
-    severity: error
-  - rule: vehicle_exposure_exposure_id_required
-    description: Exposure identifier must be populated for every vehicle exposure detail record.
-    dimension: completeness
-    severity: error
-  - rule: vehicle_exposure_year_valid
-    description: Vehicle year number should be a reasonable model year when populated.
-    dimension: validity
-    severity: warning
-  - rule: vehicle_exposure_stated_value_not_negative
-    description: Stated value amount should not be negative when populated.
-    dimension: validity
-    severity: warning
-
+- rule: vehicle_exposure_uid_required
+  description: vehicle_exposure_uid must be populated for every record.
+  dimension: completeness
+  severity: error
+- rule: vehicle_exposure_exposure_uid_required
+  description: Exposure identifier must be populated for every vehicle exposure detail record.
+  dimension: completeness
+  severity: error
+- rule: vehicle_exposure_year_valid
+  description: Vehicle year number should be a reasonable model year when populated.
+  dimension: validity
+  severity: warning
+- rule: vehicle_exposure_stated_value_not_negative
+  description: Stated value amount should not be negative when populated.
+  dimension: validity
+  severity: warning
+- rule: valid_from_datetime_required
+  description: valid_from_datetime must be populated for every record version.
+  dimension: completeness
+  severity: error
+- rule: valid_window_consistent
+  description: valid_to_datetime must be greater than valid_from_datetime when populated.
+  dimension: consistency
+  severity: error
+- rule: single_current_row_per_key
+  description: Exactly one row per logical key has is_current_indicator equal to true.
+  dimension: uniqueness
+  severity: error
+- rule: record_status_code_required
+  description: record_status_code must be populated for every record.
+  dimension: completeness
+  severity: error
 customProperties:
   canonicalLayer: silver
   contractFamily: property-and-casualty
@@ -123,3 +223,6 @@ customProperties:
   subjectArea: exposure
   exposureSubtype: vehicle
   supportsExposurePattern: true
+  classificationProfile: CONFIDENTIAL
+  changelog:
+  - '0.2.0: Apply cross-cutting ADRs (identifier strategy, SCD2 temporal, record state, classifications, codeset references, source attribution).'

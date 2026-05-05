@@ -1,0 +1,217 @@
+apiVersion: v3.0.2
+kind: DataContract
+id: pc.claim-feature
+name: ClaimFeature
+version: 0.1.0
+status: draft
+description: Canonical contract for a claim feature, partitioning a claim into independent handling streams by coverage, peril, claimant, or other business dimension.
+domain: property-and-casualty
+schema:
+- name: claim_feature
+  physicalType: table
+  description: Canonical claim feature record used when a carrier handles distinct coverages, perils, or claimants on a single claim through separate feature streams.
+  properties:
+  - name: claim_feature_uid
+    businessName: Claim Feature Identifier
+    logicalType: string
+    required: true
+    primaryKey: true
+    description: Immutable system-generated GUID that uniquely identifies the canonical claim feature record across snapshots and source systems.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: source_system_code
+    businessName: Source System Code
+    logicalType: string
+    required: false
+    description: Identifier of the upstream system that produced or last asserted this record. Used for multi-source mastering and lineage.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: source_natural_key
+    businessName: Source Natural Key
+    logicalType: string
+    required: false
+    description: Natural key assigned by the source system. Captured for provenance; not used as the canonical primary key.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: claim_uid
+    businessName: Claim Identifier
+    logicalType: string
+    required: true
+    description: Identifier (GUID reference) for the claim that this feature partitions.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: feature_number
+    businessName: Feature Number
+    logicalType: string
+    required: false
+    description: Business-friendly identifier for the feature within the claim.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: feature_status_code
+    businessName: Feature Status Code
+    logicalType: string
+    required: true
+    description: Current lifecycle status of the claim feature.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: cause_of_loss_code
+    businessName: Cause Of Loss Code
+    logicalType: string
+    required: false
+    description: Cause of loss classification associated with the feature when known. References the CauseOfLossCode codeset.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: policy_coverage_uid
+    businessName: Policy Coverage Identifier
+    logicalType: string
+    required: false
+    description: Identifier (GUID reference) for the policy coverage that this feature primarily responds to when known.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: exposure_uid
+    businessName: Exposure Identifier
+    logicalType: string
+    required: false
+    description: Identifier (GUID reference) for the exposure associated with the feature when exposure context is known.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: opened_date
+    businessName: Opened Date
+    logicalType: date
+    required: false
+    description: Date when the claim feature was opened for handling.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: closed_date
+    businessName: Closed Date
+    logicalType: date
+    required: false
+    description: Date when the claim feature was closed.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: feature_description
+    businessName: Feature Description
+    logicalType: string
+    required: false
+    description: Source-neutral business description of the claim feature when additional context is needed.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: record_status_code
+    businessName: Record Status Code
+    logicalType: string
+    required: true
+    description: Warehouse-level state of the record. References the RecordStatusCode codeset.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: valid_from_datetime
+    businessName: Valid From Datetime
+    logicalType: datetime
+    required: true
+    description: System-time start of the SCD2 window for this record version.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: valid_to_datetime
+    businessName: Valid To Datetime
+    logicalType: datetime
+    required: false
+    description: System-time end of the SCD2 window for this record version. Null indicates the current row.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: is_current_indicator
+    businessName: Is Current Indicator
+    logicalType: boolean
+    required: true
+    description: True for exactly one row per logical key, indicating the current record version.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+relationships:
+- name: claim_feature_to_claim
+  description: Relates a claim feature to the claim that it partitions.
+  relationshipType: many-to-one
+  targetContractId: pc.claim
+  sourceFields:
+  - claim_uid
+  targetFields:
+  - claim_uid
+- name: claim_feature_to_policy_coverage
+  description: Relates a claim feature to the policy coverage it primarily responds to when known.
+  relationshipType: many-to-one
+  targetContractId: pc.policy-coverage
+  sourceFields:
+  - policy_coverage_uid
+  targetFields:
+  - policy_coverage_uid
+- name: claim_feature_to_exposure
+  description: Relates a claim feature to its associated exposure when exposure context is known.
+  relationshipType: many-to-one
+  targetContractId: pc.exposure
+  sourceFields:
+  - exposure_uid
+  targetFields:
+  - exposure_uid
+- name: claim_feature_to_cause_of_loss
+  description: Relates a claim feature to the CauseOfLossCode codeset.
+  relationshipType: many-to-one
+  targetContractId: pc.cause-of-loss-code
+  sourceFields:
+  - cause_of_loss_code
+  targetFields:
+  - code_value
+quality:
+- rule: claim_feature_uid_required
+  description: claim_feature_uid must be populated for every record.
+  dimension: completeness
+  severity: error
+- rule: claim_feature_claim_uid_required
+  description: Claim identifier must be populated for every claim feature record.
+  dimension: completeness
+  severity: error
+- rule: claim_feature_status_code_required
+  description: Feature status code must be populated for every claim feature record.
+  dimension: completeness
+  severity: error
+- rule: claim_feature_closed_not_before_opened
+  description: Closed date must not be earlier than opened date when both dates are populated.
+  dimension: consistency
+  severity: error
+- rule: valid_from_datetime_required
+  description: valid_from_datetime must be populated for every record version.
+  dimension: completeness
+  severity: error
+- rule: valid_window_consistent
+  description: valid_to_datetime must be greater than valid_from_datetime when populated.
+  dimension: consistency
+  severity: error
+- rule: single_current_row_per_key
+  description: Exactly one row per logical key has is_current_indicator equal to true.
+  dimension: uniqueness
+  severity: error
+- rule: record_status_code_required
+  description: record_status_code must be populated for every record.
+  dimension: completeness
+  severity: error
+customProperties:
+  canonicalLayer: silver
+  contractFamily: property-and-casualty
+  domainPackage: pc
+  subjectArea: claims
+  supportsClaimLifecyclePattern: true
+  classificationProfile: INTERNAL
+  changelog:
+  - '0.1.0: Initial claim feature contract per claims-modeling ADR.'

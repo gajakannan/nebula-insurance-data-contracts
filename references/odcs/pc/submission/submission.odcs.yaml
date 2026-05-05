@@ -2,142 +2,252 @@ apiVersion: v3.0.2
 kind: DataContract
 id: pc.submission
 name: Submission
-version: 0.1.0
+version: 0.2.0
 status: draft
 description: Canonical contract for Property and Casualty submission intake and current submission summary.
-
 domain: property-and-casualty
-
 schema:
-  - name: submission
-    physicalType: table
-    description: Canonical submission record that represents a request for insurance consideration before, and whether or not, it becomes a policy.
-    properties:
-      - name: submission_id
-        businessName: Submission Identifier
-        logicalType: string
-        required: true
-        primaryKey: true
-        description: Stable identifier for the canonical submission record.
-      - name: submission_number
-        businessName: Submission Number
-        logicalType: string
-        required: true
-        description: Business-facing number assigned to the submission.
-      - name: submission_status_code
-        businessName: Submission Status Code
-        logicalType: string
-        required: true
-        description: Current lifecycle status of the submission.
-      - name: submission_type_code
-        businessName: Submission Type Code
-        logicalType: string
-        required: false
-        description: Classification of the submission type, such as new business, renewal, rewrite, or other recognized intake type.
-      - name: line_of_business_code
-        businessName: Line Of Business Code
-        logicalType: string
-        required: true
-        description: Line of business associated with the submission.
-      - name: product_id
-        businessName: Product Identifier
-        logicalType: string
-        required: false
-        description: Identifier for the product associated with the submission when a product is known.
-      - name: related_policy_id
-        businessName: Related Policy Identifier
-        logicalType: string
-        required: false
-        description: Identifier for a policy associated with the submission when the submission binds, issues, renews, or rewrites policy context.
-      - name: received_date
-        businessName: Received Date
-        logicalType: date
-        required: true
-        description: Date when the submission was received for consideration.
-      - name: requested_effective_date
-        businessName: Requested Effective Date
-        logicalType: date
-        required: false
-        description: Requested effective date for the insurance being submitted.
-      - name: quote_date
-        businessName: Quote Date
-        logicalType: date
-        required: false
-        description: Date when a quote was provided for the submission.
-      - name: bind_date
-        businessName: Bind Date
-        logicalType: date
-        required: false
-        description: Date when the submission was bound when applicable.
-      - name: decline_date
-        businessName: Decline Date
-        logicalType: date
-        required: false
-        description: Date when the submission was declined when applicable.
-      - name: withdrawn_date
-        businessName: Withdrawn Date
-        logicalType: date
-        required: false
-        description: Date when the submission was withdrawn when applicable.
-      - name: submission_description
-        businessName: Submission Description
-        logicalType: string
-        required: false
-        description: Source-neutral business description of the submission when additional context is needed.
-      - name: created_datetime
-        businessName: Created Datetime
-        logicalType: datetime
-        required: false
-        description: Datetime when the canonical submission record was created.
-      - name: updated_datetime
-        businessName: Updated Datetime
-        logicalType: datetime
-        required: false
-        description: Datetime when the canonical submission record was last updated.
-
+- name: submission
+  physicalType: table
+  description: Canonical submission record that represents a request for insurance consideration before, and whether or not, it becomes a policy.
+  properties:
+  - name: submission_uid
+    businessName: Submission Identifier
+    logicalType: string
+    required: true
+    primaryKey: true
+    description: Immutable system-generated GUID that uniquely identifies the canonical submission record across snapshots and source systems.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: source_system_code
+    businessName: Source System Code
+    logicalType: string
+    required: false
+    description: Identifier of the upstream system that produced or last asserted this record. Used for multi-source mastering and lineage.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: source_natural_key
+    businessName: Source Natural Key
+    logicalType: string
+    required: false
+    description: Natural key assigned by the source system. Captured for provenance; not used as the canonical primary key.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: submission_number
+    businessName: Submission Number
+    logicalType: string
+    required: true
+    description: Business-facing number assigned to the submission.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: submission_status_code
+    businessName: Submission Status Code
+    logicalType: string
+    required: true
+    description: Current lifecycle status of the submission.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: submission_type_code
+    businessName: Submission Type Code
+    logicalType: string
+    required: false
+    description: Classification of the submission type, such as new business, renewal, rewrite, or other recognized intake type.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: line_of_business_code
+    businessName: Line Of Business Code
+    logicalType: string
+    required: true
+    description: Line of business associated with the submission.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: product_uid
+    businessName: Product Identifier
+    logicalType: string
+    required: false
+    description: Identifier (GUID reference) for the product associated with the submission when a product is known.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: related_policy_uid
+    businessName: Related Policy Identifier
+    logicalType: string
+    required: false
+    description: Identifier (GUID reference) for a policy associated with the submission when the submission binds, issues, renews, or rewrites policy context.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: received_date
+    businessName: Received Date
+    logicalType: date
+    required: true
+    description: Date when the submission was received for consideration.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: requested_effective_date
+    businessName: Requested Effective Date
+    logicalType: date
+    required: false
+    description: Requested effective date for the insurance being submitted.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: quote_date
+    businessName: Quote Date
+    logicalType: date
+    required: false
+    description: Date when a quote was provided for the submission.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: bind_date
+    businessName: Bind Date
+    logicalType: date
+    required: false
+    description: Date when the submission was bound when applicable.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: decline_date
+    businessName: Decline Date
+    logicalType: date
+    required: false
+    description: Date when the submission was declined when applicable.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: withdrawn_date
+    businessName: Withdrawn Date
+    logicalType: date
+    required: false
+    description: Date when the submission was withdrawn when applicable.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: submission_description
+    businessName: Submission Description
+    logicalType: string
+    required: false
+    description: Source-neutral business description of the submission when additional context is needed.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: created_datetime
+    businessName: Created Datetime
+    logicalType: datetime
+    required: false
+    description: Datetime when the canonical submission record was created.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: updated_datetime
+    businessName: Updated Datetime
+    logicalType: datetime
+    required: false
+    description: Datetime when the canonical submission record was last updated.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: record_status_code
+    businessName: Record Status Code
+    logicalType: string
+    required: true
+    description: Warehouse-level state of the record. References the RecordStatusCode codeset (ACTIVE, SUPERSEDED, SOFT_DELETED, RESTATED, MERGED).
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: valid_from_datetime
+    businessName: Valid From Datetime
+    logicalType: datetime
+    required: true
+    description: System-time start of the SCD2 window for this record version.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: valid_to_datetime
+    businessName: Valid To Datetime
+    logicalType: datetime
+    required: false
+    description: System-time end of the SCD2 window for this record version. Null indicates the current row.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: is_current_indicator
+    businessName: Is Current Indicator
+    logicalType: boolean
+    required: true
+    description: True for exactly one row per logical key, indicating the current record version.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
 relationships:
-  - name: submission_to_product
-    description: Relates a submission to the product being considered when product context is available.
-    relationshipType: many-to-one
-    targetContractId: pc.product
-    sourceFields:
-      - product_id
-    targetFields:
-      - product_id
-  - name: submission_to_related_policy
-    description: Relates a submission to policy context when the submission binds, issues, renews, or rewrites a policy.
-    relationshipType: many-to-one
-    targetContractId: pc.policy
-    sourceFields:
-      - related_policy_id
-    targetFields:
-      - policy_id
-
+- name: submission_to_product
+  description: Relates a submission to the product being considered when product context is available.
+  relationshipType: many-to-one
+  targetContractId: pc.product
+  sourceFields:
+  - product_uid
+  targetFields:
+  - product_uid
+- name: submission_to_related_policy
+  description: Relates a submission to policy context when the submission binds, issues, renews, or rewrites a policy.
+  relationshipType: many-to-one
+  targetContractId: pc.policy
+  sourceFields:
+  - related_policy_uid
+  targetFields:
+  - policy_uid
 quality:
-  - rule: submission_id_required
-    description: Submission identifier must be populated.
-    dimension: completeness
-    severity: error
-  - rule: submission_number_required
-    description: Submission number must be populated.
-    dimension: completeness
-    severity: error
-  - rule: submission_status_code_required
-    description: Submission status code must be populated.
-    dimension: completeness
-    severity: error
-  - rule: submission_line_of_business_code_required
-    description: Line of business code must be populated for every submission.
-    dimension: completeness
-    severity: error
-  - rule: submission_received_date_required
-    description: Received date must be populated for every submission.
-    dimension: completeness
-    severity: error
-
+- rule: submission_uid_required
+  description: submission_uid must be populated for every record.
+  dimension: completeness
+  severity: error
+- rule: submission_number_required
+  description: Submission number must be populated.
+  dimension: completeness
+  severity: error
+- rule: submission_status_code_required
+  description: Submission status code must be populated.
+  dimension: completeness
+  severity: error
+- rule: submission_line_of_business_code_required
+  description: Line of business code must be populated for every submission.
+  dimension: completeness
+  severity: error
+- rule: submission_received_date_required
+  description: Received date must be populated for every submission.
+  dimension: completeness
+  severity: error
+- rule: valid_from_datetime_required
+  description: valid_from_datetime must be populated for every record version.
+  dimension: completeness
+  severity: error
+- rule: valid_window_consistent
+  description: valid_to_datetime must be greater than valid_from_datetime when populated.
+  dimension: consistency
+  severity: error
+- rule: single_current_row_per_key
+  description: Exactly one row per logical key has is_current_indicator equal to true.
+  dimension: uniqueness
+  severity: error
+- rule: record_status_code_required
+  description: record_status_code must be populated for every record.
+  dimension: completeness
+  severity: error
 customProperties:
   canonicalLayer: silver
   contractFamily: property-and-casualty
   domainPackage: pc
   subjectArea: submission
   supportsSubmissionLifecyclePattern: true
+  classificationProfile: INTERNAL
+  changelog:
+  - '0.2.0: Apply cross-cutting ADRs (identifier strategy, SCD2 temporal, record state, classifications, codeset references, source attribution).'

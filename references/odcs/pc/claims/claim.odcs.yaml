@@ -2,173 +2,292 @@ apiVersion: v3.0.2
 kind: DataContract
 id: pc.claim
 name: Claim
-version: 0.1.0
+version: 0.2.0
 status: draft
 description: Canonical contract for Property and Casualty claim identity, loss context, and current claim summary.
-
 domain: property-and-casualty
-
 schema:
-  - name: claim
-    physicalType: table
-    description: Canonical claim record that identifies a claim and captures loss, policy, coverage, exposure, and current status context without replacing claim event, role, document, or financial detail.
-    properties:
-      - name: claim_id
-        businessName: Claim Identifier
-        logicalType: string
-        required: true
-        primaryKey: true
-        description: Stable identifier for the canonical claim record.
-      - name: claim_number
-        businessName: Claim Number
-        logicalType: string
-        required: true
-        description: Business-facing number assigned to the claim.
-      - name: claim_status_code
-        businessName: Claim Status Code
-        logicalType: string
-        required: true
-        description: Current lifecycle status of the claim.
-      - name: claim_type_code
-        businessName: Claim Type Code
-        logicalType: string
-        required: false
-        description: Classification of the claim by handling, coverage, or operational type.
-      - name: loss_type_code
-        businessName: Loss Type Code
-        logicalType: string
-        required: false
-        description: Classification of the loss or occurrence giving rise to the claim.
-      - name: policy_id
-        businessName: Policy Identifier
-        logicalType: string
-        required: false
-        description: Identifier for the policy associated with the claim when policy context is available.
-      - name: policy_coverage_id
-        businessName: Policy Coverage Identifier
-        logicalType: string
-        required: false
-        description: Identifier for the policy coverage associated with the claim when coverage context is known.
-      - name: exposure_id
-        businessName: Exposure Identifier
-        logicalType: string
-        required: false
-        description: Identifier for the exposure associated with the claim when exposure context is known.
-      - name: loss_location_id
-        businessName: Loss Location Identifier
-        logicalType: string
-        required: false
-        description: Identifier for the geographic location where the loss occurred when location detail is available.
-      - name: loss_date
-        businessName: Loss Date
-        logicalType: date
-        required: false
-        description: Date when the loss occurred or began.
-      - name: reported_datetime
-        businessName: Reported Datetime
-        logicalType: datetime
-        required: false
-        description: Datetime when the claim or loss notice was reported.
-      - name: opened_date
-        businessName: Opened Date
-        logicalType: date
-        required: false
-        description: Date when the claim was opened for handling.
-      - name: closed_date
-        businessName: Closed Date
-        logicalType: date
-        required: false
-        description: Date when the claim was closed.
-      - name: catastrophe_code
-        businessName: Catastrophe Code
-        logicalType: string
-        required: false
-        description: Catastrophe or event classification associated with the claim when applicable.
-      - name: catastrophe_indicator
-        businessName: Catastrophe Indicator
-        logicalType: boolean
-        required: false
-        description: Indicates whether the claim is associated with a catastrophe or similar large-scale event.
-      - name: litigation_indicator
-        businessName: Litigation Indicator
-        logicalType: boolean
-        required: false
-        description: Indicates whether the claim is involved in litigation.
-      - name: claim_description
-        businessName: Claim Description
-        logicalType: string
-        required: false
-        description: Source-neutral business description of the claim or loss when additional context is needed.
-      - name: created_datetime
-        businessName: Created Datetime
-        logicalType: datetime
-        required: false
-        description: Datetime when the canonical claim record was created.
-      - name: updated_datetime
-        businessName: Updated Datetime
-        logicalType: datetime
-        required: false
-        description: Datetime when the canonical claim record was last updated.
-
+- name: claim
+  physicalType: table
+  description: Canonical claim record that identifies a claim and captures loss, policy, coverage, exposure, and current status context without replacing claim event, role, document, or financial detail.
+  properties:
+  - name: claim_uid
+    businessName: Claim Identifier
+    logicalType: string
+    required: true
+    primaryKey: true
+    description: Immutable system-generated GUID that uniquely identifies the canonical claim record across snapshots and source systems.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: source_system_code
+    businessName: Source System Code
+    logicalType: string
+    required: false
+    description: Identifier of the upstream system that produced or last asserted this record. Used for multi-source mastering and lineage.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: source_natural_key
+    businessName: Source Natural Key
+    logicalType: string
+    required: false
+    description: Natural key assigned by the source system. Captured for provenance; not used as the canonical primary key.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: claim_number
+    businessName: Claim Number
+    logicalType: string
+    required: true
+    description: Business-facing number assigned to the claim.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: claim_status_code
+    businessName: Claim Status Code
+    logicalType: string
+    required: true
+    description: Current lifecycle status of the claim.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: claim_type_code
+    businessName: Claim Type Code
+    logicalType: string
+    required: false
+    description: Classification of the claim by handling, coverage, or operational type.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: loss_type_code
+    businessName: Loss Type Code
+    logicalType: string
+    required: false
+    description: Classification of the loss or occurrence giving rise to the claim.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: policy_uid
+    businessName: Policy Identifier
+    logicalType: string
+    required: false
+    description: Identifier (GUID reference) for the policy associated with the claim when policy context is available.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: policy_coverage_uid
+    businessName: Policy Coverage Identifier
+    logicalType: string
+    required: false
+    description: Identifier (GUID reference) for the policy coverage associated with the claim when coverage context is known.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: exposure_uid
+    businessName: Exposure Identifier
+    logicalType: string
+    required: false
+    description: Identifier (GUID reference) for the exposure associated with the claim when exposure context is known.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: loss_location_uid
+    businessName: Loss Location Identifier
+    logicalType: string
+    required: false
+    description: Identifier (GUID reference) for the geographic location where the loss occurred when location detail is available.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: loss_date
+    businessName: Loss Date
+    logicalType: date
+    required: false
+    description: Date when the loss occurred or began.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: reported_datetime
+    businessName: Reported Datetime
+    logicalType: datetime
+    required: false
+    description: Datetime when the claim or loss notice was reported.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: opened_date
+    businessName: Opened Date
+    logicalType: date
+    required: false
+    description: Date when the claim was opened for handling.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: closed_date
+    businessName: Closed Date
+    logicalType: date
+    required: false
+    description: Date when the claim was closed.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: catastrophe_code
+    businessName: Catastrophe Code
+    logicalType: string
+    required: false
+    description: Catastrophe or event classification associated with the claim when applicable.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: catastrophe_indicator
+    businessName: Catastrophe Indicator
+    logicalType: boolean
+    required: false
+    description: Indicates whether the claim is associated with a catastrophe or similar large-scale event.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: litigation_indicator
+    businessName: Litigation Indicator
+    logicalType: boolean
+    required: false
+    description: Indicates whether the claim is involved in litigation.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: claim_description
+    businessName: Claim Description
+    logicalType: string
+    required: false
+    description: Source-neutral business description of the claim or loss when additional context is needed.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: created_datetime
+    businessName: Created Datetime
+    logicalType: datetime
+    required: false
+    description: Datetime when the canonical claim record was created.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: updated_datetime
+    businessName: Updated Datetime
+    logicalType: datetime
+    required: false
+    description: Datetime when the canonical claim record was last updated.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: record_status_code
+    businessName: Record Status Code
+    logicalType: string
+    required: true
+    description: Warehouse-level state of the record. References the RecordStatusCode codeset (ACTIVE, SUPERSEDED, SOFT_DELETED, RESTATED, MERGED).
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: valid_from_datetime
+    businessName: Valid From Datetime
+    logicalType: datetime
+    required: true
+    description: System-time start of the SCD2 window for this record version.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: valid_to_datetime
+    businessName: Valid To Datetime
+    logicalType: datetime
+    required: false
+    description: System-time end of the SCD2 window for this record version. Null indicates the current row.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: is_current_indicator
+    businessName: Is Current Indicator
+    logicalType: boolean
+    required: true
+    description: True for exactly one row per logical key, indicating the current record version.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
 relationships:
-  - name: claim_to_policy
-    description: Relates a claim to the policy associated with the loss when policy context is available.
-    relationshipType: many-to-one
-    targetContractId: pc.policy
-    sourceFields:
-      - policy_id
-    targetFields:
-      - policy_id
-  - name: claim_to_policy_coverage
-    description: Relates a claim to the policy coverage associated with claim handling when coverage context is known.
-    relationshipType: many-to-one
-    targetContractId: pc.policy-coverage
-    sourceFields:
-      - policy_coverage_id
-    targetFields:
-      - policy_coverage_id
-  - name: claim_to_exposure
-    description: Relates a claim to the exposure associated with the loss when exposure context is known.
-    relationshipType: many-to-one
-    targetContractId: pc.exposure
-    sourceFields:
-      - exposure_id
-    targetFields:
-      - exposure_id
-  - name: claim_to_loss_location
-    description: Relates a claim to the geographic location where the loss occurred when location detail is available.
-    relationshipType: many-to-one
-    targetContractId: pc.geographic-location
-    sourceFields:
-      - loss_location_id
-    targetFields:
-      - geographic_location_id
-
+- name: claim_to_policy
+  description: Relates a claim to the policy associated with the loss when policy context is available.
+  relationshipType: many-to-one
+  targetContractId: pc.policy
+  sourceFields:
+  - policy_uid
+  targetFields:
+  - policy_uid
+- name: claim_to_policy_coverage
+  description: Relates a claim to the policy coverage associated with claim handling when coverage context is known.
+  relationshipType: many-to-one
+  targetContractId: pc.policy-coverage
+  sourceFields:
+  - policy_coverage_uid
+  targetFields:
+  - policy_coverage_uid
+- name: claim_to_exposure
+  description: Relates a claim to the exposure associated with the loss when exposure context is known.
+  relationshipType: many-to-one
+  targetContractId: pc.exposure
+  sourceFields:
+  - exposure_uid
+  targetFields:
+  - exposure_uid
+- name: claim_to_loss_location
+  description: Relates a claim to the geographic location where the loss occurred when location detail is available.
+  relationshipType: many-to-one
+  targetContractId: pc.geographic-location
+  sourceFields:
+  - loss_location_uid
+  targetFields:
+  - geographic_location_uid
 quality:
-  - rule: claim_id_required
-    description: Claim identifier must be populated.
-    dimension: completeness
-    severity: error
-  - rule: claim_number_required
-    description: Claim number must be populated.
-    dimension: completeness
-    severity: error
-  - rule: claim_status_code_required
-    description: Claim status code must be populated.
-    dimension: completeness
-    severity: error
-  - rule: claim_closed_date_not_before_opened_date
-    description: Closed date must not be earlier than opened date when both dates are populated.
-    dimension: consistency
-    severity: error
-  - rule: claim_reported_datetime_not_before_loss_date
-    description: Reported datetime should not be earlier than the loss date unless the claim type explicitly supports prospective reporting.
-    dimension: consistency
-    severity: warning
-
+- rule: claim_uid_required
+  description: claim_uid must be populated for every record.
+  dimension: completeness
+  severity: error
+- rule: claim_number_required
+  description: Claim number must be populated.
+  dimension: completeness
+  severity: error
+- rule: claim_status_code_required
+  description: Claim status code must be populated.
+  dimension: completeness
+  severity: error
+- rule: claim_closed_date_not_before_opened_date
+  description: Closed date must not be earlier than opened date when both dates are populated.
+  dimension: consistency
+  severity: error
+- rule: claim_reported_datetime_not_before_loss_date
+  description: Reported datetime should not be earlier than the loss date unless the claim type explicitly supports prospective reporting.
+  dimension: consistency
+  severity: warning
+- rule: valid_from_datetime_required
+  description: valid_from_datetime must be populated for every record version.
+  dimension: completeness
+  severity: error
+- rule: valid_window_consistent
+  description: valid_to_datetime must be greater than valid_from_datetime when populated.
+  dimension: consistency
+  severity: error
+- rule: single_current_row_per_key
+  description: Exactly one row per logical key has is_current_indicator equal to true.
+  dimension: uniqueness
+  severity: error
+- rule: record_status_code_required
+  description: record_status_code must be populated for every record.
+  dimension: completeness
+  severity: error
 customProperties:
   canonicalLayer: silver
   contractFamily: property-and-casualty
   domainPackage: pc
   subjectArea: claims
   supportsClaimLifecyclePattern: true
+  classificationProfile: INTERNAL
+  changelog:
+  - '0.2.0: Apply cross-cutting ADRs (identifier strategy, SCD2 temporal, record state, classifications, codeset references, source attribution).'

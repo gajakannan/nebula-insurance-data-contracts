@@ -2,143 +2,244 @@ apiVersion: v3.0.2
 kind: DataContract
 id: pc.submission-risk
 name: SubmissionRisk
-version: 0.1.0
+version: 0.2.0
 status: draft
 description: Canonical contract for risk information presented within a Property and Casualty submission.
-
 domain: property-and-casualty
-
 schema:
-  - name: submission_risk
-    physicalType: table
-    description: Canonical submission risk record that captures submitted risk context before or during underwriting assessment.
-    properties:
-      - name: submission_risk_id
-        businessName: Submission Risk Identifier
-        logicalType: string
-        required: true
-        primaryKey: true
-        description: Stable identifier for the canonical submission risk record.
-      - name: submission_id
-        businessName: Submission Identifier
-        logicalType: string
-        required: true
-        description: Identifier for the submission associated with the risk.
-      - name: risk_type_code
-        businessName: Risk Type Code
-        logicalType: string
-        required: true
-        description: Classification of the submitted risk.
-      - name: risk_status_code
-        businessName: Risk Status Code
-        logicalType: string
-        required: true
-        description: Current lifecycle status of the submitted risk.
-      - name: exposure_id
-        businessName: Exposure Identifier
-        logicalType: string
-        required: false
-        description: Identifier for an exposure associated with the submitted risk when exposure context is available.
-      - name: insurable_object_id
-        businessName: Insurable Object Identifier
-        logicalType: string
-        required: false
-        description: Identifier for an insurable object associated with the submitted risk when object context is available.
-      - name: geographic_location_id
-        businessName: Geographic Location Identifier
-        logicalType: string
-        required: false
-        description: Identifier for a geographic location associated with the submitted risk when location context is available.
-      - name: requested_coverage_indicator
-        businessName: Requested Coverage Indicator
-        logicalType: boolean
-        required: false
-        description: Indicates whether coverage was requested for the submitted risk.
-      - name: risk_description
-        businessName: Risk Description
-        logicalType: string
-        required: false
-        description: Source-neutral business description of the submitted risk when additional context is needed.
-      - name: effective_date
-        businessName: Effective Date
-        logicalType: date
-        required: false
-        description: Date when the submitted risk becomes effective in the submission context.
-      - name: expiration_date
-        businessName: Expiration Date
-        logicalType: date
-        required: false
-        description: Date when the submitted risk stops being effective in the submission context.
-      - name: created_datetime
-        businessName: Created Datetime
-        logicalType: datetime
-        required: false
-        description: Datetime when the canonical submission risk record was created.
-      - name: updated_datetime
-        businessName: Updated Datetime
-        logicalType: datetime
-        required: false
-        description: Datetime when the canonical submission risk record was last updated.
-
+- name: submission_risk
+  physicalType: table
+  description: Canonical submission risk record that captures submitted risk context before or during underwriting assessment.
+  properties:
+  - name: submission_risk_uid
+    businessName: Submission Risk Identifier
+    logicalType: string
+    required: true
+    primaryKey: true
+    description: Immutable system-generated GUID that uniquely identifies the canonical submission risk record across snapshots and source systems.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: source_system_code
+    businessName: Source System Code
+    logicalType: string
+    required: false
+    description: Identifier of the upstream system that produced or last asserted this record. Used for multi-source mastering and lineage.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: source_natural_key
+    businessName: Source Natural Key
+    logicalType: string
+    required: false
+    description: Natural key assigned by the source system. Captured for provenance; not used as the canonical primary key.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: submission_uid
+    businessName: Submission Identifier
+    logicalType: string
+    required: true
+    description: Identifier (GUID reference) for the submission associated with the risk.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: risk_type_code
+    businessName: Risk Type Code
+    logicalType: string
+    required: true
+    description: Classification of the submitted risk.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: risk_status_code
+    businessName: Risk Status Code
+    logicalType: string
+    required: true
+    description: Current lifecycle status of the submitted risk.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: exposure_uid
+    businessName: Exposure Identifier
+    logicalType: string
+    required: false
+    description: Identifier (GUID reference) for an exposure associated with the submitted risk when exposure context is available.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: insurable_object_uid
+    businessName: Insurable Object Identifier
+    logicalType: string
+    required: false
+    description: Identifier (GUID reference) for an insurable object associated with the submitted risk when object context is available.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: geographic_location_uid
+    businessName: Geographic Location Identifier
+    logicalType: string
+    required: false
+    description: Identifier (GUID reference) for a geographic location associated with the submitted risk when location context is available.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: requested_coverage_indicator
+    businessName: Requested Coverage Indicator
+    logicalType: boolean
+    required: false
+    description: Indicates whether coverage was requested for the submitted risk.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: risk_description
+    businessName: Risk Description
+    logicalType: string
+    required: false
+    description: Source-neutral business description of the submitted risk when additional context is needed.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: effective_date
+    businessName: Effective Date
+    logicalType: date
+    required: false
+    description: Date when the submitted risk becomes effective in the submission context.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: expiration_date
+    businessName: Expiration Date
+    logicalType: date
+    required: false
+    description: Date when the submitted risk stops being effective in the submission context.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: created_datetime
+    businessName: Created Datetime
+    logicalType: datetime
+    required: false
+    description: Datetime when the canonical submission risk record was created.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: updated_datetime
+    businessName: Updated Datetime
+    logicalType: datetime
+    required: false
+    description: Datetime when the canonical submission risk record was last updated.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: record_status_code
+    businessName: Record Status Code
+    logicalType: string
+    required: true
+    description: Warehouse-level state of the record. References the RecordStatusCode codeset (ACTIVE, SUPERSEDED, SOFT_DELETED, RESTATED, MERGED).
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: valid_from_datetime
+    businessName: Valid From Datetime
+    logicalType: datetime
+    required: true
+    description: System-time start of the SCD2 window for this record version.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: valid_to_datetime
+    businessName: Valid To Datetime
+    logicalType: datetime
+    required: false
+    description: System-time end of the SCD2 window for this record version. Null indicates the current row.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: is_current_indicator
+    businessName: Is Current Indicator
+    logicalType: boolean
+    required: true
+    description: True for exactly one row per logical key, indicating the current record version.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
 relationships:
-  - name: submission_risk_to_submission
-    description: Relates a submitted risk to the submission where the risk was presented.
-    relationshipType: many-to-one
-    targetContractId: pc.submission
-    sourceFields:
-      - submission_id
-    targetFields:
-      - submission_id
-  - name: submission_risk_to_exposure
-    description: Relates a submitted risk to an exposure when exposure context is available.
-    relationshipType: many-to-one
-    targetContractId: pc.exposure
-    sourceFields:
-      - exposure_id
-    targetFields:
-      - exposure_id
-  - name: submission_risk_to_insurable_object
-    description: Relates a submitted risk to an insurable object when object context is available.
-    relationshipType: many-to-one
-    targetContractId: pc.insurable-object
-    sourceFields:
-      - insurable_object_id
-    targetFields:
-      - insurable_object_id
-  - name: submission_risk_to_geographic_location
-    description: Relates a submitted risk to a geographic location when location context is available.
-    relationshipType: many-to-one
-    targetContractId: pc.geographic-location
-    sourceFields:
-      - geographic_location_id
-    targetFields:
-      - geographic_location_id
-
+- name: submission_risk_to_submission
+  description: Relates a submitted risk to the submission where the risk was presented.
+  relationshipType: many-to-one
+  targetContractId: pc.submission
+  sourceFields:
+  - submission_uid
+  targetFields:
+  - submission_uid
+- name: submission_risk_to_exposure
+  description: Relates a submitted risk to an exposure when exposure context is available.
+  relationshipType: many-to-one
+  targetContractId: pc.exposure
+  sourceFields:
+  - exposure_uid
+  targetFields:
+  - exposure_uid
+- name: submission_risk_to_insurable_object
+  description: Relates a submitted risk to an insurable object when object context is available.
+  relationshipType: many-to-one
+  targetContractId: pc.insurable-object
+  sourceFields:
+  - insurable_object_uid
+  targetFields:
+  - insurable_object_uid
+- name: submission_risk_to_geographic_location
+  description: Relates a submitted risk to a geographic location when location context is available.
+  relationshipType: many-to-one
+  targetContractId: pc.geographic-location
+  sourceFields:
+  - geographic_location_uid
+  targetFields:
+  - geographic_location_uid
 quality:
-  - rule: submission_risk_id_required
-    description: Submission risk identifier must be populated.
-    dimension: completeness
-    severity: error
-  - rule: submission_risk_submission_id_required
-    description: Submission identifier must be populated for every submission risk.
-    dimension: completeness
-    severity: error
-  - rule: submission_risk_type_code_required
-    description: Risk type code must be populated for every submission risk.
-    dimension: completeness
-    severity: error
-  - rule: submission_risk_status_code_required
-    description: Risk status code must be populated for every submission risk.
-    dimension: completeness
-    severity: error
-  - rule: submission_risk_effective_date_not_after_expiration_date
-    description: Effective date must not be later than expiration date when both dates are populated.
-    dimension: consistency
-    severity: error
-
+- rule: submission_risk_uid_required
+  description: submission_risk_uid must be populated for every record.
+  dimension: completeness
+  severity: error
+- rule: submission_risk_submission_uid_required
+  description: Submission identifier must be populated for every submission risk.
+  dimension: completeness
+  severity: error
+- rule: submission_risk_type_code_required
+  description: Risk type code must be populated for every submission risk.
+  dimension: completeness
+  severity: error
+- rule: submission_risk_status_code_required
+  description: Risk status code must be populated for every submission risk.
+  dimension: completeness
+  severity: error
+- rule: submission_risk_effective_date_not_after_expiration_date
+  description: Effective date must not be later than expiration date when both dates are populated.
+  dimension: consistency
+  severity: error
+- rule: valid_from_datetime_required
+  description: valid_from_datetime must be populated for every record version.
+  dimension: completeness
+  severity: error
+- rule: valid_window_consistent
+  description: valid_to_datetime must be greater than valid_from_datetime when populated.
+  dimension: consistency
+  severity: error
+- rule: single_current_row_per_key
+  description: Exactly one row per logical key has is_current_indicator equal to true.
+  dimension: uniqueness
+  severity: error
+- rule: record_status_code_required
+  description: record_status_code must be populated for every record.
+  dimension: completeness
+  severity: error
 customProperties:
   canonicalLayer: silver
   contractFamily: property-and-casualty
   domainPackage: pc
   subjectArea: submission
   supportsSubmissionLifecyclePattern: true
+  classificationProfile: INTERNAL
+  changelog:
+  - '0.2.0: Apply cross-cutting ADRs (identifier strategy, SCD2 temporal, record state, classifications, codeset references, source attribution).'

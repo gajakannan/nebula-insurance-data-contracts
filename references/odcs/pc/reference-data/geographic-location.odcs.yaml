@@ -2,122 +2,232 @@ apiVersion: v3.0.2
 kind: DataContract
 id: pc.geographic-location
 name: GeographicLocation
-version: 0.1.0
+version: 0.2.0
 status: draft
 description: Canonical contract for geographic location reference data used across Property and Casualty insurance contexts.
-
 domain: property-and-casualty
-
 schema:
-  - name: geographic_location
-    physicalType: table
-    description: Canonical geographic location reference record for policy, exposure, claim, address, rating, and analytical context.
-    properties:
-      - name: geographic_location_id
-        businessName: Geographic Location Identifier
-        logicalType: string
-        required: true
-        primaryKey: true
-        description: Stable identifier for the canonical geographic location record.
-      - name: location_type_code
-        businessName: Location Type Code
-        logicalType: string
-        required: true
-        description: Classification of the geographic location, such as country, jurisdiction, county, city, postal area, territory, coordinates, or addressable place.
-      - name: location_name
-        businessName: Location Name
-        logicalType: string
-        required: false
-        description: Business-facing name for the geographic location.
-      - name: country_code
-        businessName: Country Code
-        logicalType: string
-        required: true
-        description: Country code associated with the geographic location.
-      - name: country_subdivision_code
-        businessName: Country Subdivision Code
-        logicalType: string
-        required: false
-        description: State, province, territory, or other first-level country subdivision code associated with the geographic location.
-      - name: county_name
-        businessName: County Name
-        logicalType: string
-        required: false
-        description: County, parish, borough, or comparable local jurisdiction name associated with the geographic location.
-      - name: city_name
-        businessName: City Name
-        logicalType: string
-        required: false
-        description: City, town, municipality, or comparable locality name associated with the geographic location.
-      - name: postal_code
-        businessName: Postal Code
-        logicalType: string
-        required: false
-        description: Postal or ZIP code associated with the geographic location.
-      - name: latitude_number
-        businessName: Latitude Number
-        logicalType: decimal
-        required: false
-        description: Latitude coordinate associated with the geographic location.
-      - name: longitude_number
-        businessName: Longitude Number
-        logicalType: decimal
-        required: false
-        description: Longitude coordinate associated with the geographic location.
-      - name: geocode_precision_code
-        businessName: Geocode Precision Code
-        logicalType: string
-        required: false
-        description: Classification of the precision level for the geographic coordinates when coordinates are populated.
-      - name: effective_date
-        businessName: Effective Date
-        logicalType: date
-        required: false
-        description: Date when the geographic location reference record becomes effective for canonical use.
-      - name: expiration_date
-        businessName: Expiration Date
-        logicalType: date
-        required: false
-        description: Date when the geographic location reference record stops being effective for canonical use.
-      - name: created_datetime
-        businessName: Created Datetime
-        logicalType: datetime
-        required: false
-        description: Datetime when the canonical geographic location record was created.
-      - name: updated_datetime
-        businessName: Updated Datetime
-        logicalType: datetime
-        required: false
-        description: Datetime when the canonical geographic location record was last updated.
-
+- name: geographic_location
+  physicalType: table
+  description: Canonical geographic location reference record for policy, exposure, claim, address, rating, and analytical context.
+  properties:
+  - name: geographic_location_uid
+    businessName: Geographic Location Identifier
+    logicalType: string
+    required: true
+    primaryKey: true
+    description: Immutable system-generated GUID that uniquely identifies the canonical geographic location record across snapshots and source systems.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: source_system_code
+    businessName: Source System Code
+    logicalType: string
+    required: false
+    description: Identifier of the upstream system that produced or last asserted this record. Used for multi-source mastering and lineage.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: source_natural_key
+    businessName: Source Natural Key
+    logicalType: string
+    required: false
+    description: Natural key assigned by the source system. Captured for provenance; not used as the canonical primary key.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: location_type_code
+    businessName: Location Type Code
+    logicalType: string
+    required: true
+    description: Classification of the geographic location, such as country, jurisdiction, county, city, postal area, territory, coordinates, or addressable place.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: location_name
+    businessName: Location Name
+    logicalType: string
+    required: false
+    description: Business-facing name for the geographic location.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: country_code
+    businessName: Country Code
+    logicalType: string
+    required: true
+    description: Country code associated with the geographic location.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: country_subdivision_code
+    businessName: Country Subdivision Code
+    logicalType: string
+    required: false
+    description: State, province, territory, or other first-level country subdivision code associated with the geographic location.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: county_name
+    businessName: County Name
+    logicalType: string
+    required: false
+    description: County, parish, borough, or comparable local jurisdiction name associated with the geographic location.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: city_name
+    businessName: City Name
+    logicalType: string
+    required: false
+    description: City, town, municipality, or comparable locality name associated with the geographic location.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: postal_code
+    businessName: Postal Code
+    logicalType: string
+    required: false
+    description: Postal or ZIP code associated with the geographic location.
+    customProperties:
+      classifications:
+        sensitivity: CONFIDENTIAL
+        regulatoryTags:
+        - PII
+  - name: latitude_number
+    businessName: Latitude Number
+    logicalType: decimal
+    required: false
+    description: Latitude coordinate associated with the geographic location.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: longitude_number
+    businessName: Longitude Number
+    logicalType: decimal
+    required: false
+    description: Longitude coordinate associated with the geographic location.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: geocode_precision_code
+    businessName: Geocode Precision Code
+    logicalType: string
+    required: false
+    description: Classification of the precision level for the geographic coordinates when coordinates are populated.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: effective_date
+    businessName: Effective Date
+    logicalType: date
+    required: false
+    description: Date when the geographic location reference record becomes effective for canonical use.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: expiration_date
+    businessName: Expiration Date
+    logicalType: date
+    required: false
+    description: Date when the geographic location reference record stops being effective for canonical use.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: created_datetime
+    businessName: Created Datetime
+    logicalType: datetime
+    required: false
+    description: Datetime when the canonical geographic location record was created.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: updated_datetime
+    businessName: Updated Datetime
+    logicalType: datetime
+    required: false
+    description: Datetime when the canonical geographic location record was last updated.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: record_status_code
+    businessName: Record Status Code
+    logicalType: string
+    required: true
+    description: Warehouse-level state of the record. References the RecordStatusCode codeset (ACTIVE, SUPERSEDED, SOFT_DELETED, RESTATED, MERGED).
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: valid_from_datetime
+    businessName: Valid From Datetime
+    logicalType: datetime
+    required: true
+    description: System-time start of the SCD2 window for this record version.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: valid_to_datetime
+    businessName: Valid To Datetime
+    logicalType: datetime
+    required: false
+    description: System-time end of the SCD2 window for this record version. Null indicates the current row.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: is_current_indicator
+    businessName: Is Current Indicator
+    logicalType: boolean
+    required: true
+    description: True for exactly one row per logical key, indicating the current record version.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
 quality:
-  - rule: geographic_location_id_required
-    description: Geographic location identifier must be populated.
-    dimension: completeness
-    severity: error
-  - rule: geographic_location_type_code_required
-    description: Location type code must be populated.
-    dimension: completeness
-    severity: error
-  - rule: geographic_location_country_code_required
-    description: Country code must be populated.
-    dimension: completeness
-    severity: error
-  - rule: geographic_location_latitude_range_valid
-    description: Latitude number should be between -90 and 90 when populated.
-    dimension: validity
-    severity: warning
-  - rule: geographic_location_longitude_range_valid
-    description: Longitude number should be between -180 and 180 when populated.
-    dimension: validity
-    severity: warning
-  - rule: geographic_location_effective_date_not_after_expiration_date
-    description: Effective date must not be later than expiration date when both dates are populated.
-    dimension: consistency
-    severity: error
-
+- rule: geographic_location_uid_required
+  description: geographic_location_uid must be populated for every record.
+  dimension: completeness
+  severity: error
+- rule: geographic_location_type_code_required
+  description: Location type code must be populated.
+  dimension: completeness
+  severity: error
+- rule: geographic_location_country_code_required
+  description: Country code must be populated.
+  dimension: completeness
+  severity: error
+- rule: geographic_location_latitude_range_valid
+  description: Latitude number should be between -90 and 90 when populated.
+  dimension: validity
+  severity: warning
+- rule: geographic_location_longitude_range_valid
+  description: Longitude number should be between -180 and 180 when populated.
+  dimension: validity
+  severity: warning
+- rule: geographic_location_effective_date_not_after_expiration_date
+  description: Effective date must not be later than expiration date when both dates are populated.
+  dimension: consistency
+  severity: error
+- rule: valid_from_datetime_required
+  description: valid_from_datetime must be populated for every record version.
+  dimension: completeness
+  severity: error
+- rule: valid_window_consistent
+  description: valid_to_datetime must be greater than valid_from_datetime when populated.
+  dimension: consistency
+  severity: error
+- rule: single_current_row_per_key
+  description: Exactly one row per logical key has is_current_indicator equal to true.
+  dimension: uniqueness
+  severity: error
+- rule: record_status_code_required
+  description: record_status_code must be populated for every record.
+  dimension: completeness
+  severity: error
 customProperties:
   canonicalLayer: silver
   contractFamily: property-and-casualty
   domainPackage: pc
   subjectArea: reference-data
+  classificationProfile: CONFIDENTIAL
+  changelog:
+  - '0.2.0: Apply cross-cutting ADRs (identifier strategy, SCD2 temporal, record state, classifications, codeset references, source attribution).'

@@ -2,126 +2,190 @@ apiVersion: v3.0.2
 kind: DataContract
 id: pc.submission-lifecycle-event
 name: SubmissionLifecycleEvent
-version: 0.1.0
+version: 0.2.0
 status: draft
 description: Canonical contract for meaningful lifecycle events in a Property and Casualty submission.
-
 domain: property-and-casualty
-
 schema:
-  - name: submission_lifecycle_event
-    physicalType: table
-    description: Canonical submission lifecycle event record that preserves event history separately from current submission status.
-    properties:
-      - name: submission_lifecycle_event_id
-        businessName: Submission Lifecycle Event Identifier
-        logicalType: string
-        required: true
-        primaryKey: true
-        description: Stable identifier for the canonical submission lifecycle event record.
-      - name: submission_id
-        businessName: Submission Identifier
-        logicalType: string
-        required: true
-        description: Identifier for the submission associated with the lifecycle event.
-      - name: lifecycle_event_type_id
-        businessName: Lifecycle Event Type Identifier
-        logicalType: string
-        required: false
-        description: Identifier for the lifecycle event type when reference data is available.
-      - name: lifecycle_event_type_code
-        businessName: Lifecycle Event Type Code
-        logicalType: string
-        required: true
-        description: Business-facing code for the lifecycle event type.
-      - name: lifecycle_event_status_code
-        businessName: Lifecycle Event Status Code
-        logicalType: string
-        required: false
-        description: Current lifecycle status of the lifecycle event record.
-      - name: prior_status_code
-        businessName: Prior Status Code
-        logicalType: string
-        required: false
-        description: Submission status before the lifecycle event when known.
-      - name: resulting_status_code
-        businessName: Resulting Status Code
-        logicalType: string
-        required: false
-        description: Submission status after the lifecycle event when known.
-      - name: event_datetime
-        businessName: Event Datetime
-        logicalType: datetime
-        required: true
-        description: Datetime when the lifecycle event occurred.
-      - name: initiated_by_party_id
-        businessName: Initiated By Party Identifier
-        logicalType: string
-        required: false
-        description: Identifier for the party that initiated the lifecycle event when known.
-      - name: event_description
-        businessName: Event Description
-        logicalType: string
-        required: false
-        description: Source-neutral business description of the lifecycle event when additional context is needed.
-      - name: created_datetime
-        businessName: Created Datetime
-        logicalType: datetime
-        required: false
-        description: Datetime when the canonical submission lifecycle event record was created.
-      - name: updated_datetime
-        businessName: Updated Datetime
-        logicalType: datetime
-        required: false
-        description: Datetime when the canonical submission lifecycle event record was last updated.
-
+- name: submission_lifecycle_event
+  physicalType: table
+  description: Canonical submission lifecycle event record that preserves event history separately from current submission status.
+  properties:
+  - name: submission_lifecycle_event_uid
+    businessName: Submission Lifecycle Event Identifier
+    logicalType: string
+    required: true
+    primaryKey: true
+    description: Immutable system-generated GUID that uniquely identifies the canonical submission lifecycle event record across snapshots and source systems.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: submission_uid
+    businessName: Submission Identifier
+    logicalType: string
+    required: true
+    description: Identifier (GUID reference) for the submission associated with the lifecycle event.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: lifecycle_event_type_uid
+    businessName: Lifecycle Event Type Identifier
+    logicalType: string
+    required: false
+    description: Identifier (GUID reference) for the lifecycle event type when reference data is available.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: lifecycle_event_type_code
+    businessName: Lifecycle Event Type Code
+    logicalType: string
+    required: true
+    description: Business-facing code for the lifecycle event type.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: lifecycle_event_status_code
+    businessName: Lifecycle Event Status Code
+    logicalType: string
+    required: false
+    description: Current lifecycle status of the lifecycle event record.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: prior_status_code
+    businessName: Prior Status Code
+    logicalType: string
+    required: false
+    description: Submission status before the lifecycle event when known.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: resulting_status_code
+    businessName: Resulting Status Code
+    logicalType: string
+    required: false
+    description: Submission status after the lifecycle event when known.
+    customProperties:
+      classifications:
+        sensitivity: RESTRICTED
+        regulatoryTags:
+        - PII
+  - name: event_datetime
+    businessName: Event Datetime
+    logicalType: datetime
+    required: true
+    description: Datetime when the lifecycle event occurred.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: initiated_by_party_uid
+    businessName: Initiated By Party Identifier
+    logicalType: string
+    required: false
+    description: Identifier (GUID reference) for the party that initiated the lifecycle event when known.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: event_description
+    businessName: Event Description
+    logicalType: string
+    required: false
+    description: Source-neutral business description of the lifecycle event when additional context is needed.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: created_datetime
+    businessName: Created Datetime
+    logicalType: datetime
+    required: false
+    description: Datetime when the canonical submission lifecycle event record was created.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: updated_datetime
+    businessName: Updated Datetime
+    logicalType: datetime
+    required: false
+    description: Datetime when the canonical submission lifecycle event record was last updated.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: triggering_transaction_uid
+    businessName: Triggering Transaction Identifier
+    logicalType: string
+    required: false
+    description: Optional reference to the transaction that produced this lifecycle event, when the event is the consequence of a processed transaction.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: correction_indicator
+    businessName: Correction Indicator
+    logicalType: boolean
+    required: true
+    description: True when this row corrects a previously emitted row. False for original (uncorrected) rows.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: corrects_submission_lifecycle_event_uid
+    businessName: Corrects Record Identifier
+    logicalType: string
+    required: false
+    description: Reference to the prior row that this row corrects. Populated only when correction_indicator is true.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
 relationships:
-  - name: submission_lifecycle_event_to_submission
-    description: Relates a submission lifecycle event to the submission whose lifecycle changed.
-    relationshipType: many-to-one
-    targetContractId: pc.submission
-    sourceFields:
-      - submission_id
-    targetFields:
-      - submission_id
-  - name: submission_lifecycle_event_to_lifecycle_event_type
-    description: Relates a submission lifecycle event to lifecycle event type reference data when available.
-    relationshipType: many-to-one
-    targetContractId: pc.lifecycle-event-type
-    sourceFields:
-      - lifecycle_event_type_id
-    targetFields:
-      - lifecycle_event_type_id
-  - name: submission_lifecycle_event_to_initiating_party
-    description: Relates a submission lifecycle event to the party that initiated it when known.
-    relationshipType: many-to-one
-    targetContractId: pc.party
-    sourceFields:
-      - initiated_by_party_id
-    targetFields:
-      - party_id
-
+- name: submission_lifecycle_event_to_submission
+  description: Relates a submission lifecycle event to the submission whose lifecycle changed.
+  relationshipType: many-to-one
+  targetContractId: pc.submission
+  sourceFields:
+  - submission_uid
+  targetFields:
+  - submission_uid
+- name: submission_lifecycle_event_to_lifecycle_event_type
+  description: Relates a submission lifecycle event to lifecycle event type reference data when available.
+  relationshipType: many-to-one
+  targetContractId: pc.lifecycle-event-type
+  sourceFields:
+  - lifecycle_event_type_uid
+  targetFields:
+  - lifecycle_event_type_uid
+- name: submission_lifecycle_event_to_initiating_party
+  description: Relates a submission lifecycle event to the party that initiated it when known.
+  relationshipType: many-to-one
+  targetContractId: pc.party
+  sourceFields:
+  - initiated_by_party_uid
+  targetFields:
+  - party_uid
 quality:
-  - rule: submission_lifecycle_event_id_required
-    description: Submission lifecycle event identifier must be populated.
-    dimension: completeness
-    severity: error
-  - rule: submission_lifecycle_event_submission_id_required
-    description: Submission identifier must be populated for every submission lifecycle event.
-    dimension: completeness
-    severity: error
-  - rule: submission_lifecycle_event_type_code_required
-    description: Lifecycle event type code must be populated for every submission lifecycle event.
-    dimension: completeness
-    severity: error
-  - rule: submission_lifecycle_event_datetime_required
-    description: Event datetime must be populated for every submission lifecycle event.
-    dimension: completeness
-    severity: error
-
+- rule: submission_lifecycle_event_uid_required
+  description: submission_lifecycle_event_uid must be populated for every record.
+  dimension: completeness
+  severity: error
+- rule: submission_lifecycle_event_submission_uid_required
+  description: Submission identifier must be populated for every submission lifecycle event.
+  dimension: completeness
+  severity: error
+- rule: submission_lifecycle_event_type_code_required
+  description: Lifecycle event type code must be populated for every submission lifecycle event.
+  dimension: completeness
+  severity: error
+- rule: submission_lifecycle_event_datetime_required
+  description: Event datetime must be populated for every submission lifecycle event.
+  dimension: completeness
+  severity: error
+- rule: correction_indicator_required
+  description: correction_indicator must be populated for every event or transaction row.
+  dimension: completeness
+  severity: error
 customProperties:
   canonicalLayer: silver
   contractFamily: property-and-casualty
   domainPackage: pc
   subjectArea: submission
   supportsSubmissionLifecyclePattern: true
+  classificationProfile: RESTRICTED
+  changelog:
+  - '0.2.0: Apply cross-cutting ADRs (identifier strategy, SCD2 temporal, record state, classifications, codeset references, source attribution).'

@@ -2,118 +2,216 @@ apiVersion: v3.0.2
 kind: DataContract
 id: pc.product
 name: Product
-version: 0.1.0
+version: 0.2.0
 status: draft
 description: Canonical contract for Property and Casualty insurance product reference and offering context.
-
 domain: property-and-casualty
-
 schema:
-  - name: product
-    physicalType: table
-    description: Canonical product record that represents a marketed, filed, or otherwise recognized insurance product.
-    properties:
-      - name: product_id
-        businessName: Product Identifier
-        logicalType: string
-        required: true
-        primaryKey: true
-        description: Stable identifier for the canonical product record.
-      - name: product_code
-        businessName: Product Code
-        logicalType: string
-        required: true
-        description: Business-facing code for the product.
-      - name: product_name
-        businessName: Product Name
-        logicalType: string
-        required: true
-        description: Business-facing name of the product.
-      - name: product_type_code
-        businessName: Product Type Code
-        logicalType: string
-        required: false
-        description: Classification of the product type or product family.
-      - name: line_of_business_code
-        businessName: Line Of Business Code
-        logicalType: string
-        required: true
-        description: Line of business where the product is offered.
-      - name: issuing_jurisdiction_code
-        businessName: Issuing Jurisdiction Code
-        logicalType: string
-        required: false
-        description: Jurisdiction where the product is filed, offered, or primarily governed.
-      - name: product_status_code
-        businessName: Product Status Code
-        logicalType: string
-        required: true
-        description: Current lifecycle status of the product.
-      - name: product_description
-        businessName: Product Description
-        logicalType: string
-        required: false
-        description: Source-neutral business description of the product.
-      - name: effective_date
-        businessName: Effective Date
-        logicalType: date
-        required: false
-        description: Date when the product becomes effective for canonical use.
-      - name: expiration_date
-        businessName: Expiration Date
-        logicalType: date
-        required: false
-        description: Date when the product stops being effective for canonical use.
-      - name: created_datetime
-        businessName: Created Datetime
-        logicalType: datetime
-        required: false
-        description: Datetime when the canonical product record was created.
-      - name: updated_datetime
-        businessName: Updated Datetime
-        logicalType: datetime
-        required: false
-        description: Datetime when the canonical product record was last updated.
-
+- name: product
+  physicalType: table
+  description: Canonical product record that represents a marketed, filed, or otherwise recognized insurance product.
+  properties:
+  - name: product_uid
+    businessName: Product Identifier
+    logicalType: string
+    required: true
+    primaryKey: true
+    description: Immutable system-generated GUID that uniquely identifies the canonical product record across snapshots and source systems.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: source_system_code
+    businessName: Source System Code
+    logicalType: string
+    required: false
+    description: Identifier of the upstream system that produced or last asserted this record. Used for multi-source mastering and lineage.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: source_natural_key
+    businessName: Source Natural Key
+    logicalType: string
+    required: false
+    description: Natural key assigned by the source system. Captured for provenance; not used as the canonical primary key.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: product_code
+    businessName: Product Code
+    logicalType: string
+    required: true
+    description: Business-facing code for the product.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: product_name
+    businessName: Product Name
+    logicalType: string
+    required: true
+    description: Business-facing name of the product.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: product_type_code
+    businessName: Product Type Code
+    logicalType: string
+    required: false
+    description: Classification of the product type or product family.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: line_of_business_code
+    businessName: Line Of Business Code
+    logicalType: string
+    required: true
+    description: Line of business where the product is offered.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: issuing_jurisdiction_code
+    businessName: Issuing Jurisdiction Code
+    logicalType: string
+    required: false
+    description: Jurisdiction where the product is filed, offered, or primarily governed.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: product_status_code
+    businessName: Product Status Code
+    logicalType: string
+    required: true
+    description: Current lifecycle status of the product.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: product_description
+    businessName: Product Description
+    logicalType: string
+    required: false
+    description: Source-neutral business description of the product.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: effective_date
+    businessName: Effective Date
+    logicalType: date
+    required: false
+    description: Date when the product becomes effective for canonical use.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: expiration_date
+    businessName: Expiration Date
+    logicalType: date
+    required: false
+    description: Date when the product stops being effective for canonical use.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: created_datetime
+    businessName: Created Datetime
+    logicalType: datetime
+    required: false
+    description: Datetime when the canonical product record was created.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: updated_datetime
+    businessName: Updated Datetime
+    logicalType: datetime
+    required: false
+    description: Datetime when the canonical product record was last updated.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: record_status_code
+    businessName: Record Status Code
+    logicalType: string
+    required: true
+    description: Warehouse-level state of the record. References the RecordStatusCode codeset (ACTIVE, SUPERSEDED, SOFT_DELETED, RESTATED, MERGED).
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: valid_from_datetime
+    businessName: Valid From Datetime
+    logicalType: datetime
+    required: true
+    description: System-time start of the SCD2 window for this record version.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: valid_to_datetime
+    businessName: Valid To Datetime
+    logicalType: datetime
+    required: false
+    description: System-time end of the SCD2 window for this record version. Null indicates the current row.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: is_current_indicator
+    businessName: Is Current Indicator
+    logicalType: boolean
+    required: true
+    description: True for exactly one row per logical key, indicating the current record version.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
 relationships:
-  - name: product_to_line_of_business
-    description: Relates a product to the line of business where it is offered.
-    relationshipType: many-to-one
-    targetContractId: pc.line-of-business
-    sourceFields:
-      - line_of_business_code
-    targetFields:
-      - line_of_business_code
-
+- name: product_to_line_of_business
+  description: Relates a product to the line of business where it is offered.
+  relationshipType: many-to-one
+  targetContractId: pc.line-of-business
+  sourceFields:
+  - line_of_business_code
+  targetFields:
+  - line_of_business_code
 quality:
-  - rule: product_id_required
-    description: Product identifier must be populated.
-    dimension: completeness
-    severity: error
-  - rule: product_code_required
-    description: Product code must be populated.
-    dimension: completeness
-    severity: error
-  - rule: product_name_required
-    description: Product name must be populated.
-    dimension: completeness
-    severity: error
-  - rule: product_line_of_business_code_required
-    description: Line of business code must be populated for every product.
-    dimension: completeness
-    severity: error
-  - rule: product_status_code_required
-    description: Product status code must be populated for every product.
-    dimension: completeness
-    severity: error
-  - rule: product_effective_date_not_after_expiration_date
-    description: Effective date must not be later than expiration date when both dates are populated.
-    dimension: consistency
-    severity: error
-
+- rule: product_uid_required
+  description: product_uid must be populated for every record.
+  dimension: completeness
+  severity: error
+- rule: product_code_required
+  description: Product code must be populated.
+  dimension: completeness
+  severity: error
+- rule: product_name_required
+  description: Product name must be populated.
+  dimension: completeness
+  severity: error
+- rule: product_line_of_business_code_required
+  description: Line of business code must be populated for every product.
+  dimension: completeness
+  severity: error
+- rule: product_status_code_required
+  description: Product status code must be populated for every product.
+  dimension: completeness
+  severity: error
+- rule: product_effective_date_not_after_expiration_date
+  description: Effective date must not be later than expiration date when both dates are populated.
+  dimension: consistency
+  severity: error
+- rule: valid_from_datetime_required
+  description: valid_from_datetime must be populated for every record version.
+  dimension: completeness
+  severity: error
+- rule: valid_window_consistent
+  description: valid_to_datetime must be greater than valid_from_datetime when populated.
+  dimension: consistency
+  severity: error
+- rule: single_current_row_per_key
+  description: Exactly one row per logical key has is_current_indicator equal to true.
+  dimension: uniqueness
+  severity: error
+- rule: record_status_code_required
+  description: record_status_code must be populated for every record.
+  dimension: completeness
+  severity: error
 customProperties:
   canonicalLayer: silver
   contractFamily: property-and-casualty
   domainPackage: pc
   subjectArea: coverage
   supportsPolicyCoveragePattern: true
+  classificationProfile: INTERNAL
+  changelog:
+  - '0.2.0: Apply cross-cutting ADRs (identifier strategy, SCD2 temporal, record state, classifications, codeset references, source attribution).'

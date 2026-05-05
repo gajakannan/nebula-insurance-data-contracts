@@ -6,11 +6,11 @@ A pre-policy insurance request or application that is being evaluated for quote,
 
 ## Submission Identifier
 
-A stable canonical identifier for a submission record.
+The system identity column on a submission record (`submission_uid`). An immutable GUID used as the join key for every reference to the submission.
 
 ## Submission Number
 
-A business-facing number used to identify a submission.
+The business-friendly identifier the business or operations assigns to a submission. Distinct from the submission identifier; not used as the primary key or relationship join key.
 
 ## Submission Status
 

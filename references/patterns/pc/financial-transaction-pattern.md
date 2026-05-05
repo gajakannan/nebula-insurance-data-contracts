@@ -41,4 +41,6 @@ ReinsuranceRecovery
 
 Use a separate top-level contract only when the concept has durable canonical behavior that cannot be represented as a transaction type, amount classification, relationship, or financial dimension.
 
-Preserve context through references to policy, claim, coverage, party, exposure, accounting period, currency, and transaction classification where appropriate.
+Preserve context through references to policy, claim, coverage, party, exposure, accounting period, currency, and transaction classification where appropriate. `ReinsuranceRecovery` is shown above as a likely classification value; the structural reinsurance contract family is deferred per `references/design-decisions/pc/risk-transfer-scope.md`.
+
+Financial transaction contracts are append-only. Corrections are emitted as new immutable rows referencing the corrected row via `corrects_*_uid` per `references/design-decisions/pc/event-and-transaction.md`. Every monetary amount is paired with a sibling `*_currency_code` per `currency-convention.md`.

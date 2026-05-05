@@ -301,22 +301,27 @@ Acceptance criteria:
 
 ## Milestone 6: Claim Contracts
 
-Goal: represent claim intake, lifecycle, coverage association, parties, documents, and claim activity.
+Goal: represent claim intake, lifecycle, coverage association, parties, features, documents, and claim activity. Symmetry with `Policy` and `Submission` is required.
 
 Contracts:
 
 - `Claim`
-- `ClaimEvent`
+- `ClaimFeature`
+- `ClaimLifecycleEvent`
 - `ClaimCoverage`
 - `ClaimPartyRole`
 - `ClaimDocument`
+- `ClaimFinancialTransaction`
 
 Key decisions:
 
 - Claim is tied to loss and policy context where available.
-- Claim lifecycle events preserve operational history.
-- Claim party roles should follow the party-role pattern.
-- Claim coverage should connect claim handling to policy coverage and exposure where known.
+- Claim lifecycle events preserve operational history (per `event-and-transaction.md`).
+- Claim financial movement is modeled via `ClaimFinancialTransaction`, never as a sibling subtype contract per money kind.
+- Claim party roles follow the party-role pattern (per `role-modeling.md`).
+- Claim features partition large claims that handle multiple coverages, perils, or claimants on independent feature streams.
+- Claim coverage connects claim or feature handling to policy coverage and exposure where known.
+- Reinsurance, coinsurance, and recovery activity is deferred to the risk-transfer contract family (per `risk-transfer-scope.md`).
 
 Deliverables:
 
@@ -326,7 +331,7 @@ Deliverables:
 
 Acceptance criteria:
 
-- Loss notice, claim open, assignment, reserve change, payment, recovery, litigation, close, and reopen can be represented.
+- Loss notice, claim open, assignment, reserve change, payment, recovery, litigation, close, and reopen can be represented through events and transactions per `event-and-transaction.md`.
 - Claim parties and coverage relationships are explicit.
 
 ## Milestone 7: Financial Transaction Contracts
@@ -446,6 +451,36 @@ Acceptance criteria:
 8. Complete `FinancialTransaction`.
 9. Fill in dependent contracts around the first milestone spine.
 10. Add target and semantic projections after the canonical spine passes validation.
+
+## Cross-Cutting Conventions (ADR-Backed)
+
+The canonical surface is governed by the cross-cutting design decisions in `references/design-decisions/pc/`. Every contract authored or refactored in this repository must comply with:
+
+- `identifier-strategy.md` — `*_uid` GUID primary keys plus a business-friendly key on every entity contract.
+- `temporal-modeling.md` — SCD2 system-time fields (`valid_from_datetime`, `valid_to_datetime`, `is_current_indicator`) on every entity contract; business-time fields stay where they belong.
+- `record-state.md` — `record_status_code` on every entity contract (default `ACTIVE`); soft delete via state transition, never physical delete.
+- `event-and-transaction.md` — events and transactions are complementary; events for state changes, transactions for processed activity; corrections are immutable new rows.
+- `codeset-strategy.md` — every `*_code` references a governed codeset contract under `references/odcs/pc/reference-data/`.
+- `null-semantics.md` — null is "value not present, reason unspecified"; codeset sentinels are used when "unknown" or "not applicable" must be distinguished.
+- `currency-convention.md` — every monetary field paired with `*_currency_code`; no canonical house currency.
+- `data-classification.md` — `customProperties.classifications` on every property; `classificationProfile` summarized at contract level.
+- `versioning-policy.md` — SemVer with data-contract-specific MAJOR/MINOR/PATCH semantics.
+- `status-promotion.md` — `draft → proposed → approved → deprecated → retired` with documented gates per transition.
+- `separation-and-nesting.md` — five criteria for when a concept becomes its own contract vs nested attributes.
+- `product-coverage-modeling.md` — `Product` ↔ `Coverage` is M:N via `ProductCoverage`.
+- `claims-modeling.md` — claim contract symmetry with policy and submission.
+- `risk-transfer-scope.md` — reinsurance, coinsurance, self-insurance, and fronting are deferred (W021).
+
+## Deferred Scope
+
+The following business areas are recognized but not modeled in the current milestone. Each is tracked so that the deferral is deliberate, not silent.
+
+- Reinsurance — treaties, cessions, recoveries, layers, attachment points (see `risk-transfer-scope.md`, W021).
+- Coinsurance — multi-carrier participation on a single policy (see `risk-transfer-scope.md`, W021).
+- Self-insurance — captives, retentions, deductible buy-down structures where the named insured retains a layer (see `risk-transfer-scope.md`, W021).
+- Fronting — arrangements where one carrier issues paper for another carrier's risk (see `risk-transfer-scope.md`, W021).
+- Semantic projection — RDF/OWL/SKOS/knowledge-graph derivation (W009).
+- Target guidance for Databricks, Snowflake, Kafka, API — not in the first target wave (dbt and Microsoft Fabric come first).
 
 ## Definition Of Done For First Usable Release
 

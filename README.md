@@ -246,16 +246,43 @@ Lifecycle-specific guidance lives in:
 
 ## Modeling References
 
-Use the detailed references instead of expanding the root README:
+Use the detailed references instead of expanding the root README. The full ADR index lives at `references/design-decisions/README.md`; the full pattern index at `references/patterns/README.md`.
+
+Cross-cutting conventions (apply to every contract):
+
+- Identifier strategy (GUID `_uid` + business key): `references/design-decisions/pc/identifier-strategy.md`
+- Bi-temporal modeling (SCD2 system time): `references/design-decisions/pc/temporal-modeling.md`
+- Record state (soft delete, supersession, merge): `references/design-decisions/pc/record-state.md`
+- Event vs transaction (complementary, with linkage): `references/design-decisions/pc/event-and-transaction.md`
+- Codeset strategy (governed `*_code` references): `references/design-decisions/pc/codeset-strategy.md`
+- Null semantics: `references/design-decisions/pc/null-semantics.md`
+- Currency convention: `references/design-decisions/pc/currency-convention.md`
+- Data classification (PII, PHI, sensitivity): `references/design-decisions/pc/data-classification.md`
+- Versioning policy (SemVer for data contracts): `references/design-decisions/pc/versioning-policy.md`
+- Status promotion (gated lifecycle): `references/design-decisions/pc/status-promotion.md`
+- Separation and nesting: `references/design-decisions/pc/separation-and-nesting.md`
+
+Domain-specific decisions:
 
 - Entity boundaries: `references/design-decisions/pc/entity-boundaries.md`
+- Submission modeling: `references/design-decisions/pc/submission-modeling.md`
+- Policy lifecycle modeling: `references/design-decisions/pc/policy-lifecycle-modeling.md`
+- Claims modeling: `references/design-decisions/pc/claims-modeling.md`
+- Product and coverage M:N: `references/design-decisions/pc/product-coverage-modeling.md`
 - Exposure modeling: `references/design-decisions/pc/exposure-modeling.md`
 - Financial modeling: `references/design-decisions/pc/financial-modeling.md`
 - Role modeling: `references/design-decisions/pc/role-modeling.md`
-- Exposure pattern: `references/patterns/pc/exposure-pattern.md`
-- Financial transaction pattern: `references/patterns/pc/financial-transaction-pattern.md`
-- Party role pattern: `references/patterns/pc/party-role-pattern.md`
-- Policy coverage pattern: `references/patterns/pc/policy-coverage-pattern.md`
+- Risk transfer scope (reinsurance, coinsurance, etc. — deferred): `references/design-decisions/pc/risk-transfer-scope.md`
+
+Patterns:
+
+- Submission lifecycle: `references/patterns/pc/submission-lifecycle-pattern.md`
+- Policy lifecycle: `references/patterns/pc/policy-lifecycle-pattern.md`
+- Claim lifecycle: `references/patterns/pc/claim-lifecycle-pattern.md`
+- Policy coverage: `references/patterns/pc/policy-coverage-pattern.md`
+- Exposure: `references/patterns/pc/exposure-pattern.md`
+- Financial transaction: `references/patterns/pc/financial-transaction-pattern.md`
+- Party role: `references/patterns/pc/party-role-pattern.md`
 
 Authoring rules for naming, fields, ODCS expectations, versioning, status lifecycle, and contribution boundaries live in `docs/authoring-guide.md`.
 

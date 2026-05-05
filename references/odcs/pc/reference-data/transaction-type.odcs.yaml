@@ -2,103 +2,198 @@ apiVersion: v3.0.2
 kind: DataContract
 id: pc.transaction-type
 name: TransactionType
-version: 0.1.0
+version: 0.2.0
 status: draft
 description: Canonical contract for transaction type reference data used across Property and Casualty operational and financial activity.
-
 domain: property-and-casualty
-
 schema:
-  - name: transaction_type
-    physicalType: table
-    description: Canonical transaction type reference record used to classify policy, claim, lifecycle, and financial transaction activity.
-    properties:
-      - name: transaction_type_id
-        businessName: Transaction Type Identifier
-        logicalType: string
-        required: true
-        primaryKey: true
-        description: Stable identifier for the canonical transaction type record.
-      - name: transaction_type_code
-        businessName: Transaction Type Code
-        logicalType: string
-        required: true
-        description: Business-facing code for the transaction type.
-      - name: transaction_type_name
-        businessName: Transaction Type Name
-        logicalType: string
-        required: true
-        description: Business-facing name of the transaction type.
-      - name: transaction_category_code
-        businessName: Transaction Category Code
-        logicalType: string
-        required: false
-        description: Higher-level grouping for related transaction types.
-      - name: financial_transaction_indicator
-        businessName: Financial Transaction Indicator
-        logicalType: boolean
-        required: false
-        description: Indicates whether the transaction type is used for monetary activity.
-      - name: lifecycle_event_indicator
-        businessName: Lifecycle Event Indicator
-        logicalType: boolean
-        required: false
-        description: Indicates whether the transaction type is used for lifecycle event activity.
-      - name: transaction_type_description
-        businessName: Transaction Type Description
-        logicalType: string
-        required: false
-        description: Source-neutral business description of the transaction type.
-      - name: status_code
-        businessName: Status Code
-        logicalType: string
-        required: true
-        description: Current lifecycle status of the transaction type reference record.
-      - name: effective_date
-        businessName: Effective Date
-        logicalType: date
-        required: false
-        description: Date when the transaction type reference record becomes effective for canonical use.
-      - name: expiration_date
-        businessName: Expiration Date
-        logicalType: date
-        required: false
-        description: Date when the transaction type reference record stops being effective for canonical use.
-      - name: created_datetime
-        businessName: Created Datetime
-        logicalType: datetime
-        required: false
-        description: Datetime when the canonical transaction type record was created.
-      - name: updated_datetime
-        businessName: Updated Datetime
-        logicalType: datetime
-        required: false
-        description: Datetime when the canonical transaction type record was last updated.
-
+- name: transaction_type
+  physicalType: table
+  description: Canonical transaction type reference record used to classify policy, claim, lifecycle, and financial transaction activity.
+  properties:
+  - name: transaction_type_uid
+    businessName: Transaction Type Identifier
+    logicalType: string
+    required: true
+    primaryKey: true
+    description: Immutable system-generated GUID that uniquely identifies the canonical transaction type record across snapshots and source systems.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: code_value
+    businessName: Code Value
+    logicalType: string
+    required: true
+    description: Business-friendly code value referenced by entity contracts.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: code_label
+    businessName: Code Label
+    logicalType: string
+    required: true
+    description: Human-readable label for the code value.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: code_description
+    businessName: Code Description
+    logicalType: string
+    required: false
+    description: Extended description of the code value.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: external_standard_code
+    businessName: External Standard Code
+    logicalType: string
+    required: false
+    description: Code value as defined by an external standard (ACORD, NAIC, ISO, etc.) when a mapping is recorded.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: external_standard_name
+    businessName: External Standard Name
+    logicalType: string
+    required: false
+    description: Name of the external standard whose code is captured in external_standard_code.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: transaction_category_code
+    businessName: Transaction Category Code
+    logicalType: string
+    required: false
+    description: Higher-level grouping for related transaction types.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: financial_transaction_indicator
+    businessName: Financial Transaction Indicator
+    logicalType: boolean
+    required: false
+    description: Indicates whether the transaction type is used for monetary activity.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: lifecycle_event_indicator
+    businessName: Lifecycle Event Indicator
+    logicalType: boolean
+    required: false
+    description: Indicates whether the transaction type is used for lifecycle event activity.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: status_code
+    businessName: Status Code
+    logicalType: string
+    required: true
+    description: Current lifecycle status of the transaction type reference record.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: effective_date
+    businessName: Effective Date
+    logicalType: date
+    required: false
+    description: Date when the transaction type reference record becomes effective for canonical use.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: expiration_date
+    businessName: Expiration Date
+    logicalType: date
+    required: false
+    description: Date when the transaction type reference record stops being effective for canonical use.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: created_datetime
+    businessName: Created Datetime
+    logicalType: datetime
+    required: false
+    description: Datetime when the canonical transaction type record was created.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: updated_datetime
+    businessName: Updated Datetime
+    logicalType: datetime
+    required: false
+    description: Datetime when the canonical transaction type record was last updated.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: record_status_code
+    businessName: Record Status Code
+    logicalType: string
+    required: true
+    description: Warehouse-level state of the record. References the RecordStatusCode codeset (ACTIVE, SUPERSEDED, SOFT_DELETED, RESTATED, MERGED).
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: valid_from_datetime
+    businessName: Valid From Datetime
+    logicalType: datetime
+    required: true
+    description: System-time start of the SCD2 window for this record version.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: valid_to_datetime
+    businessName: Valid To Datetime
+    logicalType: datetime
+    required: false
+    description: System-time end of the SCD2 window for this record version. Null indicates the current row.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: is_current_indicator
+    businessName: Is Current Indicator
+    logicalType: boolean
+    required: true
+    description: True for exactly one row per logical key, indicating the current record version.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
 quality:
-  - rule: transaction_type_id_required
-    description: Transaction type identifier must be populated.
-    dimension: completeness
-    severity: error
-  - rule: transaction_type_code_required
-    description: Transaction type code must be populated.
-    dimension: completeness
-    severity: error
-  - rule: transaction_type_name_required
-    description: Transaction type name must be populated.
-    dimension: completeness
-    severity: error
-  - rule: transaction_type_status_code_required
-    description: Status code must be populated for every transaction type reference record.
-    dimension: completeness
-    severity: error
-  - rule: transaction_type_effective_date_not_after_expiration_date
-    description: Effective date must not be later than expiration date when both dates are populated.
-    dimension: consistency
-    severity: error
-
+- rule: transaction_type_uid_required
+  description: transaction_type_uid must be populated for every record.
+  dimension: completeness
+  severity: error
+- rule: transaction_type_status_code_required
+  description: Status code must be populated for every transaction type reference record.
+  dimension: completeness
+  severity: error
+- rule: transaction_type_effective_date_not_after_expiration_date
+  description: Effective date must not be later than expiration date when both dates are populated.
+  dimension: consistency
+  severity: error
+- rule: valid_from_datetime_required
+  description: valid_from_datetime must be populated for every record version.
+  dimension: completeness
+  severity: error
+- rule: valid_window_consistent
+  description: valid_to_datetime must be greater than valid_from_datetime when populated.
+  dimension: consistency
+  severity: error
+- rule: single_current_row_per_key
+  description: Exactly one row per logical key has is_current_indicator equal to true.
+  dimension: uniqueness
+  severity: error
+- rule: record_status_code_required
+  description: record_status_code must be populated for every record.
+  dimension: completeness
+  severity: error
+- rule: code_value_required
+  description: code_value must be populated and unique among current rows.
+  dimension: completeness
+  severity: error
 customProperties:
   canonicalLayer: silver
   contractFamily: property-and-casualty
   domainPackage: pc
   subjectArea: reference-data
+  classificationProfile: INTERNAL
+  changelog:
+  - '0.2.0: Apply cross-cutting ADRs (identifier strategy, SCD2 temporal, record state, classifications, codeset references, source attribution).'

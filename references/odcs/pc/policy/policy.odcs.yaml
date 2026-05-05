@@ -2,132 +2,236 @@ apiVersion: v3.0.2
 kind: DataContract
 id: pc.policy
 name: Policy
-version: 0.1.0
+version: 0.2.0
 status: draft
 description: Canonical contract for durable Property and Casualty policy identity and current policy summary.
-
 domain: property-and-casualty
-
 schema:
-  - name: policy
-    physicalType: table
-    description: Canonical policy record that identifies an issued or bound insurance contract without storing term, role, coverage, transaction, or lifecycle event detail.
-    properties:
-      - name: policy_id
-        businessName: Policy Identifier
-        logicalType: string
-        required: true
-        primaryKey: true
-        description: Stable identifier for the canonical policy record.
-      - name: policy_number
-        businessName: Policy Number
-        logicalType: string
-        required: true
-        description: Business-facing number assigned to the policy.
-      - name: policy_status_code
-        businessName: Policy Status Code
-        logicalType: string
-        required: true
-        description: Current lifecycle status of the policy.
-      - name: policy_type_code
-        businessName: Policy Type Code
-        logicalType: string
-        required: false
-        description: Classification of the policy, such as new business, renewal, rewrite, or other recognized policy type.
-      - name: line_of_business_code
-        businessName: Line Of Business Code
-        logicalType: string
-        required: true
-        description: Classification of the insurance line of business for the policy.
-      - name: product_id
-        businessName: Product Identifier
-        logicalType: string
-        required: false
-        description: Identifier for the insurance product associated with the policy when a canonical product is available.
-      - name: issuing_jurisdiction_code
-        businessName: Issuing Jurisdiction Code
-        logicalType: string
-        required: false
-        description: Jurisdiction where the policy is issued or primarily governed.
-      - name: original_effective_date
-        businessName: Original Effective Date
-        logicalType: date
-        required: false
-        description: Date when the policy first became effective across its durable policy history.
-      - name: issue_date
-        businessName: Issue Date
-        logicalType: date
-        required: false
-        description: Date when the policy was issued.
-      - name: current_policy_term_id
-        businessName: Current Policy Term Identifier
-        logicalType: string
-        required: false
-        description: Identifier for the current policy term when term detail is represented in a separate canonical contract.
-      - name: prior_policy_id
-        businessName: Prior Policy Identifier
-        logicalType: string
-        required: false
-        description: Identifier for the prior policy in a renewal, rewrite, or replacement chain when applicable.
-      - name: policy_description
-        businessName: Policy Description
-        logicalType: string
-        required: false
-        description: Source-neutral business description of the policy when additional context is needed.
-      - name: created_datetime
-        businessName: Created Datetime
-        logicalType: datetime
-        required: false
-        description: Datetime when the canonical policy record was created.
-      - name: updated_datetime
-        businessName: Updated Datetime
-        logicalType: datetime
-        required: false
-        description: Datetime when the canonical policy record was last updated.
-
+- name: policy
+  physicalType: table
+  description: Canonical policy record that identifies an issued or bound insurance contract without storing term, role, coverage, transaction, or lifecycle event detail.
+  properties:
+  - name: policy_uid
+    businessName: Policy Identifier
+    logicalType: string
+    required: true
+    primaryKey: true
+    description: Immutable system-generated GUID that uniquely identifies the canonical policy record across snapshots and source systems.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: source_system_code
+    businessName: Source System Code
+    logicalType: string
+    required: false
+    description: Identifier of the upstream system that produced or last asserted this record. Used for multi-source mastering and lineage.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: source_natural_key
+    businessName: Source Natural Key
+    logicalType: string
+    required: false
+    description: Natural key assigned by the source system. Captured for provenance; not used as the canonical primary key.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: policy_number
+    businessName: Policy Number
+    logicalType: string
+    required: true
+    description: Business-facing number assigned to the policy.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: policy_status_code
+    businessName: Policy Status Code
+    logicalType: string
+    required: true
+    description: Current lifecycle status of the policy.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: policy_type_code
+    businessName: Policy Type Code
+    logicalType: string
+    required: false
+    description: Classification of the policy, such as new business, renewal, rewrite, or other recognized policy type.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: line_of_business_code
+    businessName: Line Of Business Code
+    logicalType: string
+    required: true
+    description: Classification of the insurance line of business for the policy.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: product_uid
+    businessName: Product Identifier
+    logicalType: string
+    required: false
+    description: Identifier (GUID reference) for the insurance product associated with the policy when a canonical product is available.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: issuing_jurisdiction_code
+    businessName: Issuing Jurisdiction Code
+    logicalType: string
+    required: false
+    description: Jurisdiction where the policy is issued or primarily governed.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: original_effective_date
+    businessName: Original Effective Date
+    logicalType: date
+    required: false
+    description: Date when the policy first became effective across its durable policy history.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: issue_date
+    businessName: Issue Date
+    logicalType: date
+    required: false
+    description: Date when the policy was issued.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: current_policy_term_uid
+    businessName: Current Policy Term Identifier
+    logicalType: string
+    required: false
+    description: Identifier (GUID reference) for the current policy term when term detail is represented in a separate canonical contract.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: prior_policy_uid
+    businessName: Prior Policy Identifier
+    logicalType: string
+    required: false
+    description: Identifier (GUID reference) for the prior policy in a renewal, rewrite, or replacement chain when applicable.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: policy_description
+    businessName: Policy Description
+    logicalType: string
+    required: false
+    description: Source-neutral business description of the policy when additional context is needed.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: created_datetime
+    businessName: Created Datetime
+    logicalType: datetime
+    required: false
+    description: Datetime when the canonical policy record was created.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: updated_datetime
+    businessName: Updated Datetime
+    logicalType: datetime
+    required: false
+    description: Datetime when the canonical policy record was last updated.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: record_status_code
+    businessName: Record Status Code
+    logicalType: string
+    required: true
+    description: Warehouse-level state of the record. References the RecordStatusCode codeset (ACTIVE, SUPERSEDED, SOFT_DELETED, RESTATED, MERGED).
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: valid_from_datetime
+    businessName: Valid From Datetime
+    logicalType: datetime
+    required: true
+    description: System-time start of the SCD2 window for this record version.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: valid_to_datetime
+    businessName: Valid To Datetime
+    logicalType: datetime
+    required: false
+    description: System-time end of the SCD2 window for this record version. Null indicates the current row.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: is_current_indicator
+    businessName: Is Current Indicator
+    logicalType: boolean
+    required: true
+    description: True for exactly one row per logical key, indicating the current record version.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
 relationships:
-  - name: policy_to_current_policy_term
-    description: Relates a policy to its current policy term when term detail is available.
-    relationshipType: many-to-one
-    targetContractId: pc.policy-term
-    sourceFields:
-      - current_policy_term_id
-    targetFields:
-      - policy_term_id
-  - name: policy_to_prior_policy
-    description: Relates a policy to a prior policy in a renewal, rewrite, or replacement chain when applicable.
-    relationshipType: many-to-one
-    targetContractId: pc.policy
-    sourceFields:
-      - prior_policy_id
-    targetFields:
-      - policy_id
-
+- name: policy_to_current_policy_term
+  description: Relates a policy to its current policy term when term detail is available.
+  relationshipType: many-to-one
+  targetContractId: pc.policy-term
+  sourceFields:
+  - current_policy_term_uid
+  targetFields:
+  - policy_term_uid
+- name: policy_to_prior_policy
+  description: Relates a policy to a prior policy in a renewal, rewrite, or replacement chain when applicable.
+  relationshipType: many-to-one
+  targetContractId: pc.policy
+  sourceFields:
+  - prior_policy_uid
+  targetFields:
+  - policy_uid
 quality:
-  - rule: policy_id_required
-    description: Policy identifier must be populated.
-    dimension: completeness
-    severity: error
-  - rule: policy_number_required
-    description: Policy number must be populated.
-    dimension: completeness
-    severity: error
-  - rule: policy_status_code_required
-    description: Policy status code must be populated.
-    dimension: completeness
-    severity: error
-  - rule: policy_line_of_business_code_required
-    description: Line of business code must be populated.
-    dimension: completeness
-    severity: error
-  - rule: policy_prior_policy_must_differ
-    description: Prior policy identifier should not identify the same policy record.
-    dimension: validity
-    severity: warning
-
+- rule: policy_uid_required
+  description: policy_uid must be populated for every record.
+  dimension: completeness
+  severity: error
+- rule: policy_number_required
+  description: Policy number must be populated.
+  dimension: completeness
+  severity: error
+- rule: policy_status_code_required
+  description: Policy status code must be populated.
+  dimension: completeness
+  severity: error
+- rule: policy_line_of_business_code_required
+  description: Line of business code must be populated.
+  dimension: completeness
+  severity: error
+- rule: policy_prior_policy_must_differ
+  description: Prior policy identifier should not identify the same policy record.
+  dimension: validity
+  severity: warning
+- rule: valid_from_datetime_required
+  description: valid_from_datetime must be populated for every record version.
+  dimension: completeness
+  severity: error
+- rule: valid_window_consistent
+  description: valid_to_datetime must be greater than valid_from_datetime when populated.
+  dimension: consistency
+  severity: error
+- rule: single_current_row_per_key
+  description: Exactly one row per logical key has is_current_indicator equal to true.
+  dimension: uniqueness
+  severity: error
+- rule: record_status_code_required
+  description: record_status_code must be populated for every record.
+  dimension: completeness
+  severity: error
 customProperties:
   canonicalLayer: silver
   contractFamily: property-and-casualty
   domainPackage: pc
   subjectArea: policy
   supportsPolicyLifecyclePattern: true
+  classificationProfile: INTERNAL
+  changelog:
+  - '0.2.0: Apply cross-cutting ADRs (identifier strategy, SCD2 temporal, record state, classifications, codeset references, source attribution).'

@@ -1,0 +1,132 @@
+apiVersion: v3.0.2
+kind: DataContract
+id: pc.jurisdiction-code
+name: JurisdictionCode
+version: 0.1.0
+status: draft
+description: Canonical codeset for jurisdictions in which insurance contracts are issued, governed, or regulated.
+domain: property-and-casualty
+schema:
+- name: jurisdiction_code
+  physicalType: table
+  description: Canonical JurisdictionCode reference record. One row per allowed code value, versioned through SCD2 system time.
+  properties:
+  - name: jurisdiction_code_uid
+    businessName: JurisdictionCode Identifier
+    logicalType: string
+    required: true
+    primaryKey: true
+    description: Immutable system-generated GUID that uniquely identifies the canonical JurisdictionCode record across snapshots.
+    customProperties:
+      classifications:
+        sensitivity: PUBLIC
+  - name: code_value
+    businessName: Code Value
+    logicalType: string
+    required: true
+    description: Business-friendly code value referenced by entity contracts.
+    customProperties:
+      classifications:
+        sensitivity: PUBLIC
+  - name: code_label
+    businessName: Code Label
+    logicalType: string
+    required: true
+    description: Human-readable label for the code value.
+    customProperties:
+      classifications:
+        sensitivity: PUBLIC
+  - name: code_description
+    businessName: Code Description
+    logicalType: string
+    required: false
+    description: Extended description of the code value.
+    customProperties:
+      classifications:
+        sensitivity: PUBLIC
+  - name: external_standard_code
+    businessName: External Standard Code
+    logicalType: string
+    required: false
+    description: Code value as defined by ISO 3166-2 when a mapping is recorded.
+    customProperties:
+      classifications:
+        sensitivity: PUBLIC
+  - name: external_standard_name
+    businessName: External Standard Name
+    logicalType: string
+    required: false
+    description: Name of the external standard whose code is captured in external_standard_code.
+    customProperties:
+      classifications:
+        sensitivity: PUBLIC
+  - name: record_status_code
+    businessName: Record Status Code
+    logicalType: string
+    required: true
+    description: Warehouse-level state of the record. References the RecordStatusCode codeset.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: valid_from_datetime
+    businessName: Valid From Datetime
+    logicalType: datetime
+    required: true
+    description: System-time start of the SCD2 window for this record version.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: valid_to_datetime
+    businessName: Valid To Datetime
+    logicalType: datetime
+    required: false
+    description: System-time end of the SCD2 window for this record version. Null indicates the current row.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: is_current_indicator
+    businessName: Is Current Indicator
+    logicalType: boolean
+    required: true
+    description: True for exactly one row per logical key, indicating the current record version.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+quality:
+- rule: jurisdiction_code_uid_required
+  description: jurisdiction_code_uid must be populated for every record.
+  dimension: completeness
+  severity: error
+- rule: code_value_required
+  description: code_value must be populated and unique among current rows.
+  dimension: completeness
+  severity: error
+- rule: code_label_required
+  description: code_label must be populated for every code value.
+  dimension: completeness
+  severity: error
+- rule: valid_from_datetime_required
+  description: valid_from_datetime must be populated for every record version.
+  dimension: completeness
+  severity: error
+- rule: valid_window_consistent
+  description: valid_to_datetime must be greater than valid_from_datetime when populated.
+  dimension: consistency
+  severity: error
+- rule: single_current_row_per_key
+  description: Exactly one row per logical key has is_current_indicator equal to true.
+  dimension: uniqueness
+  severity: error
+- rule: record_status_code_required
+  description: record_status_code must be populated for every record.
+  dimension: completeness
+  severity: error
+customProperties:
+  canonicalLayer: silver
+  contractFamily: property-and-casualty
+  domainPackage: pc
+  subjectArea: reference-data
+  codesetContract: true
+  classificationProfile: INTERNAL
+  changelog:
+  - '0.1.0: Initial codeset contract generated per codeset-strategy ADR.'

@@ -2,120 +2,221 @@ apiVersion: v3.0.2
 kind: DataContract
 id: pc.property-exposure
 name: PropertyExposure
-version: 0.1.0
+version: 0.2.0
 status: draft
 description: Canonical contract for property-specific exposure attributes in Property and Casualty insurance.
-
 domain: property-and-casualty
-
 schema:
-  - name: property_exposure
-    physicalType: table
-    description: Canonical property exposure detail that extends the shared exposure record for property-based risk.
-    properties:
-      - name: property_exposure_id
-        businessName: Property Exposure Identifier
-        logicalType: string
-        required: true
-        primaryKey: true
-        description: Stable identifier for the canonical property exposure detail record.
-      - name: exposure_id
-        businessName: Exposure Identifier
-        logicalType: string
-        required: true
-        description: Identifier for the shared exposure record that this property detail extends.
-      - name: property_location_id
-        businessName: Property Location Identifier
-        logicalType: string
-        required: false
-        description: Identifier for the geographic location of the property.
-      - name: property_use_code
-        businessName: Property Use Code
-        logicalType: string
-        required: false
-        description: Classification of how the property is used in the insured context.
-      - name: occupancy_type_code
-        businessName: Occupancy Type Code
-        logicalType: string
-        required: false
-        description: Classification of the occupancy associated with the property exposure.
-      - name: construction_type_code
-        businessName: Construction Type Code
-        logicalType: string
-        required: false
-        description: Classification of the construction type associated with the property exposure.
-      - name: protection_class_code
-        businessName: Protection Class Code
-        logicalType: string
-        required: false
-        description: Fire protection or public protection classification associated with the property exposure when applicable.
-      - name: year_built_number
-        businessName: Year Built Number
-        logicalType: integer
-        required: false
-        description: Year the property structure was built.
-      - name: square_footage_count
-        businessName: Square Footage Count
-        logicalType: integer
-        required: false
-        description: Area of the property structure measured in square feet when applicable.
-      - name: building_value_amount
-        businessName: Building Value Amount
-        logicalType: decimal
-        required: false
-        description: Valuation amount for the building or structure when used for underwriting, rating, or analytics.
-      - name: contents_value_amount
-        businessName: Contents Value Amount
-        logicalType: decimal
-        required: false
-        description: Valuation amount for contents associated with the property exposure when applicable.
-      - name: created_datetime
-        businessName: Created Datetime
-        logicalType: datetime
-        required: false
-        description: Datetime when the canonical property exposure detail record was created.
-      - name: updated_datetime
-        businessName: Updated Datetime
-        logicalType: datetime
-        required: false
-        description: Datetime when the canonical property exposure detail record was last updated.
-
+- name: property_exposure
+  physicalType: table
+  description: Canonical property exposure detail that extends the shared exposure record for property-based risk.
+  properties:
+  - name: property_exposure_uid
+    businessName: Property Exposure Identifier
+    logicalType: string
+    required: true
+    primaryKey: true
+    description: Immutable system-generated GUID that uniquely identifies the canonical property exposure record across snapshots and source systems.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: source_system_code
+    businessName: Source System Code
+    logicalType: string
+    required: false
+    description: Identifier of the upstream system that produced or last asserted this record. Used for multi-source mastering and lineage.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: source_natural_key
+    businessName: Source Natural Key
+    logicalType: string
+    required: false
+    description: Natural key assigned by the source system. Captured for provenance; not used as the canonical primary key.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: exposure_uid
+    businessName: Exposure Identifier
+    logicalType: string
+    required: true
+    description: Identifier (GUID reference) for the shared exposure record that this property detail extends.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: property_location_uid
+    businessName: Property Location Identifier
+    logicalType: string
+    required: false
+    description: Identifier (GUID reference) for the geographic location of the property.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: property_use_code
+    businessName: Property Use Code
+    logicalType: string
+    required: false
+    description: Classification of how the property is used in the insured context.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: occupancy_type_code
+    businessName: Occupancy Type Code
+    logicalType: string
+    required: false
+    description: Classification of the occupancy associated with the property exposure.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: construction_type_code
+    businessName: Construction Type Code
+    logicalType: string
+    required: false
+    description: Classification of the construction type associated with the property exposure.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: protection_class_code
+    businessName: Protection Class Code
+    logicalType: string
+    required: false
+    description: Fire protection or public protection classification associated with the property exposure when applicable.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: year_built_number
+    businessName: Year Built Number
+    logicalType: integer
+    required: false
+    description: Year the property structure was built.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: square_footage_count
+    businessName: Square Footage Count
+    logicalType: integer
+    required: false
+    description: Area of the property structure measured in square feet when applicable.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: building_value_amount
+    businessName: Building Value Amount
+    logicalType: decimal
+    required: false
+    description: Valuation amount for the building or structure when used for underwriting, rating, or analytics.
+    customProperties:
+      classifications:
+        sensitivity: CONFIDENTIAL
+        regulatoryTags: &id001
+        - FINANCIAL
+  - name: contents_value_amount
+    businessName: Contents Value Amount
+    logicalType: decimal
+    required: false
+    description: Valuation amount for contents associated with the property exposure when applicable.
+    customProperties:
+      classifications:
+        sensitivity: CONFIDENTIAL
+        regulatoryTags: *id001
+  - name: created_datetime
+    businessName: Created Datetime
+    logicalType: datetime
+    required: false
+    description: Datetime when the canonical property exposure detail record was created.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: updated_datetime
+    businessName: Updated Datetime
+    logicalType: datetime
+    required: false
+    description: Datetime when the canonical property exposure detail record was last updated.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: record_status_code
+    businessName: Record Status Code
+    logicalType: string
+    required: true
+    description: Warehouse-level state of the record. References the RecordStatusCode codeset (ACTIVE, SUPERSEDED, SOFT_DELETED, RESTATED, MERGED).
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: valid_from_datetime
+    businessName: Valid From Datetime
+    logicalType: datetime
+    required: true
+    description: System-time start of the SCD2 window for this record version.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: valid_to_datetime
+    businessName: Valid To Datetime
+    logicalType: datetime
+    required: false
+    description: System-time end of the SCD2 window for this record version. Null indicates the current row.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: is_current_indicator
+    businessName: Is Current Indicator
+    logicalType: boolean
+    required: true
+    description: True for exactly one row per logical key, indicating the current record version.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
 relationships:
-  - name: property_exposure_to_exposure
-    description: Relates property exposure detail to the shared exposure record.
-    relationshipType: many-to-one
-    targetContractId: pc.exposure
-    sourceFields:
-      - exposure_id
-    targetFields:
-      - exposure_id
-  - name: property_exposure_to_property_location
-    description: Relates property exposure detail to the property location when available.
-    relationshipType: many-to-one
-    targetContractId: pc.geographic-location
-    sourceFields:
-      - property_location_id
-    targetFields:
-      - geographic_location_id
-
+- name: property_exposure_to_exposure
+  description: Relates property exposure detail to the shared exposure record.
+  relationshipType: many-to-one
+  targetContractId: pc.exposure
+  sourceFields:
+  - exposure_uid
+  targetFields:
+  - exposure_uid
+- name: property_exposure_to_property_location
+  description: Relates property exposure detail to the property location when available.
+  relationshipType: many-to-one
+  targetContractId: pc.geographic-location
+  sourceFields:
+  - property_location_uid
+  targetFields:
+  - geographic_location_uid
 quality:
-  - rule: property_exposure_id_required
-    description: Property exposure identifier must be populated.
-    dimension: completeness
-    severity: error
-  - rule: property_exposure_exposure_id_required
-    description: Exposure identifier must be populated for every property exposure detail record.
-    dimension: completeness
-    severity: error
-  - rule: property_exposure_square_footage_not_negative
-    description: Square footage count should not be negative when populated.
-    dimension: validity
-    severity: warning
-  - rule: property_exposure_value_amounts_not_negative
-    description: Building value amount and contents value amount should not be negative when populated.
-    dimension: validity
-    severity: warning
-
+- rule: property_exposure_uid_required
+  description: property_exposure_uid must be populated for every record.
+  dimension: completeness
+  severity: error
+- rule: property_exposure_exposure_uid_required
+  description: Exposure identifier must be populated for every property exposure detail record.
+  dimension: completeness
+  severity: error
+- rule: property_exposure_square_footage_not_negative
+  description: Square footage count should not be negative when populated.
+  dimension: validity
+  severity: warning
+- rule: property_exposure_value_amounts_not_negative
+  description: Building value amount and contents value amount should not be negative when populated.
+  dimension: validity
+  severity: warning
+- rule: valid_from_datetime_required
+  description: valid_from_datetime must be populated for every record version.
+  dimension: completeness
+  severity: error
+- rule: valid_window_consistent
+  description: valid_to_datetime must be greater than valid_from_datetime when populated.
+  dimension: consistency
+  severity: error
+- rule: single_current_row_per_key
+  description: Exactly one row per logical key has is_current_indicator equal to true.
+  dimension: uniqueness
+  severity: error
+- rule: record_status_code_required
+  description: record_status_code must be populated for every record.
+  dimension: completeness
+  severity: error
 customProperties:
   canonicalLayer: silver
   contractFamily: property-and-casualty
@@ -123,3 +224,6 @@ customProperties:
   subjectArea: exposure
   exposureSubtype: property
   supportsExposurePattern: true
+  classificationProfile: CONFIDENTIAL
+  changelog:
+  - '0.2.0: Apply cross-cutting ADRs (identifier strategy, SCD2 temporal, record state, classifications, codeset references, source attribution).'

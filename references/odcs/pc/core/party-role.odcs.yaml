@@ -2,109 +2,204 @@ apiVersion: v3.0.2
 kind: DataContract
 id: pc.party-role
 name: PartyRole
-version: 0.1.0
+version: 0.2.0
 status: draft
 description: Canonical contract for a party participating in a business context in Property and Casualty insurance.
-
 domain: property-and-casualty
-
 schema:
-  - name: party_role
-    physicalType: table
-    description: Canonical party role record that separates reusable party identity from contextual participation.
-    properties:
-      - name: party_role_id
-        businessName: Party Role Identifier
-        logicalType: string
-        required: true
-        primaryKey: true
-        description: Stable identifier for the canonical party role record.
-      - name: party_id
-        businessName: Party Identifier
-        logicalType: string
-        required: true
-        description: Identifier for the party participating in the role.
-      - name: role_type_code
-        businessName: Role Type Code
-        logicalType: string
-        required: true
-        description: Classification of the role the party plays in the business context.
-      - name: context_type_code
-        businessName: Context Type Code
-        logicalType: string
-        required: true
-        description: Classification of the business context for the role, such as submission, policy, claim, account, agreement, coverage, or exposure.
-      - name: context_id
-        businessName: Context Identifier
-        logicalType: string
-        required: false
-        description: Identifier of the business context where the party role applies when the context has a canonical identifier.
-      - name: role_status_code
-        businessName: Role Status Code
-        logicalType: string
-        required: true
-        description: Current lifecycle status of the party role within its business context.
-      - name: primary_role_indicator
-        businessName: Primary Role Indicator
-        logicalType: boolean
-        required: false
-        description: Indicates whether this party role is the primary role of its type within the business context.
-      - name: effective_date
-        businessName: Effective Date
-        logicalType: date
-        required: false
-        description: Date when the party role becomes effective in the business context.
-      - name: expiration_date
-        businessName: Expiration Date
-        logicalType: date
-        required: false
-        description: Date when the party role stops being effective in the business context.
-      - name: created_datetime
-        businessName: Created Datetime
-        logicalType: datetime
-        required: false
-        description: Datetime when the canonical party role record was created.
-      - name: updated_datetime
-        businessName: Updated Datetime
-        logicalType: datetime
-        required: false
-        description: Datetime when the canonical party role record was last updated.
-
+- name: party_role
+  physicalType: table
+  description: Canonical party role record that separates reusable party identity from contextual participation.
+  properties:
+  - name: party_role_uid
+    businessName: Party Role Identifier
+    logicalType: string
+    required: true
+    primaryKey: true
+    description: Immutable system-generated GUID that uniquely identifies the canonical party role record across snapshots and source systems.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: source_system_code
+    businessName: Source System Code
+    logicalType: string
+    required: false
+    description: Identifier of the upstream system that produced or last asserted this record. Used for multi-source mastering and lineage.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: source_natural_key
+    businessName: Source Natural Key
+    logicalType: string
+    required: false
+    description: Natural key assigned by the source system. Captured for provenance; not used as the canonical primary key.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: party_uid
+    businessName: Party Identifier
+    logicalType: string
+    required: true
+    description: Identifier (GUID reference) for the party participating in the role.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: role_type_code
+    businessName: Role Type Code
+    logicalType: string
+    required: true
+    description: Classification of the role the party plays in the business context.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: context_type_code
+    businessName: Context Type Code
+    logicalType: string
+    required: true
+    description: Classification of the business context for the role, such as submission, policy, claim, account, agreement, coverage, or exposure.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: context_uid
+    businessName: Context Identifier
+    logicalType: string
+    required: false
+    description: Identifier (GUID reference) of the business context where the party role applies when the context has a canonical identifier.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: role_status_code
+    businessName: Role Status Code
+    logicalType: string
+    required: true
+    description: Current lifecycle status of the party role within its business context.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: primary_role_indicator
+    businessName: Primary Role Indicator
+    logicalType: boolean
+    required: false
+    description: Indicates whether this party role is the primary role of its type within the business context.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: effective_date
+    businessName: Effective Date
+    logicalType: date
+    required: false
+    description: Date when the party role becomes effective in the business context.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: expiration_date
+    businessName: Expiration Date
+    logicalType: date
+    required: false
+    description: Date when the party role stops being effective in the business context.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: created_datetime
+    businessName: Created Datetime
+    logicalType: datetime
+    required: false
+    description: Datetime when the canonical party role record was created.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: updated_datetime
+    businessName: Updated Datetime
+    logicalType: datetime
+    required: false
+    description: Datetime when the canonical party role record was last updated.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: record_status_code
+    businessName: Record Status Code
+    logicalType: string
+    required: true
+    description: Warehouse-level state of the record. References the RecordStatusCode codeset (ACTIVE, SUPERSEDED, SOFT_DELETED, RESTATED, MERGED).
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: valid_from_datetime
+    businessName: Valid From Datetime
+    logicalType: datetime
+    required: true
+    description: System-time start of the SCD2 window for this record version.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: valid_to_datetime
+    businessName: Valid To Datetime
+    logicalType: datetime
+    required: false
+    description: System-time end of the SCD2 window for this record version. Null indicates the current row.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: is_current_indicator
+    businessName: Is Current Indicator
+    logicalType: boolean
+    required: true
+    description: True for exactly one row per logical key, indicating the current record version.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
 relationships:
-  - name: party_role_to_party
-    description: Relates a party role to the reusable party identity that participates in the context.
-    relationshipType: many-to-one
-    targetContractId: pc.party
-    sourceFields:
-      - party_id
-    targetFields:
-      - party_id
-
+- name: party_role_to_party
+  description: Relates a party role to the reusable party identity that participates in the context.
+  relationshipType: many-to-one
+  targetContractId: pc.party
+  sourceFields:
+  - party_uid
+  targetFields:
+  - party_uid
 quality:
-  - rule: party_role_id_required
-    description: Party role identifier must be populated.
-    dimension: completeness
-    severity: error
-  - rule: party_role_party_id_required
-    description: Party identifier must be populated for every party role.
-    dimension: completeness
-    severity: error
-  - rule: party_role_type_code_required
-    description: Role type code must be populated for every party role.
-    dimension: completeness
-    severity: error
-  - rule: party_role_context_type_code_required
-    description: Context type code must be populated for every party role.
-    dimension: completeness
-    severity: error
-  - rule: party_role_effective_date_not_after_expiration_date
-    description: Effective date must not be later than expiration date when both dates are populated.
-    dimension: consistency
-    severity: error
-
+- rule: party_role_uid_required
+  description: party_role_uid must be populated for every record.
+  dimension: completeness
+  severity: error
+- rule: party_role_party_uid_required
+  description: Party identifier must be populated for every party role.
+  dimension: completeness
+  severity: error
+- rule: party_role_type_code_required
+  description: Role type code must be populated for every party role.
+  dimension: completeness
+  severity: error
+- rule: party_role_context_type_code_required
+  description: Context type code must be populated for every party role.
+  dimension: completeness
+  severity: error
+- rule: party_role_effective_date_not_after_expiration_date
+  description: Effective date must not be later than expiration date when both dates are populated.
+  dimension: consistency
+  severity: error
+- rule: valid_from_datetime_required
+  description: valid_from_datetime must be populated for every record version.
+  dimension: completeness
+  severity: error
+- rule: valid_window_consistent
+  description: valid_to_datetime must be greater than valid_from_datetime when populated.
+  dimension: consistency
+  severity: error
+- rule: single_current_row_per_key
+  description: Exactly one row per logical key has is_current_indicator equal to true.
+  dimension: uniqueness
+  severity: error
+- rule: record_status_code_required
+  description: record_status_code must be populated for every record.
+  dimension: completeness
+  severity: error
 customProperties:
   canonicalLayer: silver
   contractFamily: property-and-casualty
   domainPackage: pc
   subjectArea: core
   supportsPartyRolePattern: true
+  classificationProfile: INTERNAL
+  changelog:
+  - '0.2.0: Apply cross-cutting ADRs (identifier strategy, SCD2 temporal, record state, classifications, codeset references, source attribution).'

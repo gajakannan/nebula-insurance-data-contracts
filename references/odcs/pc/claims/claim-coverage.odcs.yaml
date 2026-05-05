@@ -1,0 +1,245 @@
+apiVersion: v3.0.2
+kind: DataContract
+id: pc.claim-coverage
+name: ClaimCoverage
+version: 0.1.0
+status: draft
+description: Canonical contract that connects a claim or claim feature to the policy coverage that responds to it.
+domain: property-and-casualty
+schema:
+- name: claim_coverage
+  physicalType: table
+  description: Canonical claim coverage record that ties claim handling to a specific policy coverage. Many-to-one from claim feature to policy coverage when features are used; many-to-many between claim and policy coverage when no feature partition is in place.
+  properties:
+  - name: claim_coverage_uid
+    businessName: Claim Coverage Identifier
+    logicalType: string
+    required: true
+    primaryKey: true
+    description: Immutable system-generated GUID that uniquely identifies the canonical claim coverage record across snapshots and source systems.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: source_system_code
+    businessName: Source System Code
+    logicalType: string
+    required: false
+    description: Identifier of the upstream system that produced or last asserted this record. Used for multi-source mastering and lineage.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: source_natural_key
+    businessName: Source Natural Key
+    logicalType: string
+    required: false
+    description: Natural key assigned by the source system. Captured for provenance; not used as the canonical primary key.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: claim_uid
+    businessName: Claim Identifier
+    logicalType: string
+    required: true
+    description: Identifier (GUID reference) for the claim associated with the coverage response.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: claim_feature_uid
+    businessName: Claim Feature Identifier
+    logicalType: string
+    required: false
+    description: Identifier (GUID reference) for the claim feature when the response is feature-specific.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: policy_coverage_uid
+    businessName: Policy Coverage Identifier
+    logicalType: string
+    required: true
+    description: Identifier (GUID reference) for the policy coverage that responds to the claim.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: response_status_code
+    businessName: Response Status Code
+    logicalType: string
+    required: true
+    description: Current lifecycle status of the coverage response on the claim.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: applicable_limit_amount
+    businessName: Applicable Limit Amount
+    logicalType: decimal
+    required: false
+    description: Limit amount applied or available under this coverage response when known.
+    customProperties:
+      classifications:
+        sensitivity: CONFIDENTIAL
+        regulatoryTags:
+        - FINANCIAL
+  - name: applicable_limit_currency_code
+    businessName: Applicable Limit Currency Code
+    logicalType: string
+    required: false
+    description: Currency code for the applicable limit amount. References the CurrencyCode codeset.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: applicable_deductible_amount
+    businessName: Applicable Deductible Amount
+    logicalType: decimal
+    required: false
+    description: Deductible amount applied under this coverage response when known.
+    customProperties:
+      classifications:
+        sensitivity: CONFIDENTIAL
+        regulatoryTags:
+        - FINANCIAL
+  - name: applicable_deductible_currency_code
+    businessName: Applicable Deductible Currency Code
+    logicalType: string
+    required: false
+    description: Currency code for the applicable deductible amount. References the CurrencyCode codeset.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: coverage_decision_date
+    businessName: Coverage Decision Date
+    logicalType: date
+    required: false
+    description: Date when the coverage decision (acceptance, partial acceptance, denial) was recorded.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: coverage_decision_code
+    businessName: Coverage Decision Code
+    logicalType: string
+    required: false
+    description: Classification of the coverage decision such as accepted, partially accepted, denied, or pending.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: record_status_code
+    businessName: Record Status Code
+    logicalType: string
+    required: true
+    description: Warehouse-level state of the record. References the RecordStatusCode codeset.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: valid_from_datetime
+    businessName: Valid From Datetime
+    logicalType: datetime
+    required: true
+    description: System-time start of the SCD2 window for this record version.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: valid_to_datetime
+    businessName: Valid To Datetime
+    logicalType: datetime
+    required: false
+    description: System-time end of the SCD2 window for this record version. Null indicates the current row.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: is_current_indicator
+    businessName: Is Current Indicator
+    logicalType: boolean
+    required: true
+    description: True for exactly one row per logical key, indicating the current record version.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+relationships:
+- name: claim_coverage_to_claim
+  description: Relates a claim coverage record to the claim associated with the coverage response.
+  relationshipType: many-to-one
+  targetContractId: pc.claim
+  sourceFields:
+  - claim_uid
+  targetFields:
+  - claim_uid
+- name: claim_coverage_to_claim_feature
+  description: Relates a claim coverage record to the claim feature when the response is feature-specific.
+  relationshipType: many-to-one
+  targetContractId: pc.claim-feature
+  sourceFields:
+  - claim_feature_uid
+  targetFields:
+  - claim_feature_uid
+- name: claim_coverage_to_policy_coverage
+  description: Relates a claim coverage record to the policy coverage that responds to the claim.
+  relationshipType: many-to-one
+  targetContractId: pc.policy-coverage
+  sourceFields:
+  - policy_coverage_uid
+  targetFields:
+  - policy_coverage_uid
+- name: claim_coverage_to_applicable_limit_currency
+  description: Relates the applicable limit amount to its currency code.
+  relationshipType: many-to-one
+  targetContractId: pc.currency-code
+  sourceFields:
+  - applicable_limit_currency_code
+  targetFields:
+  - code_value
+- name: claim_coverage_to_applicable_deductible_currency
+  description: Relates the applicable deductible amount to its currency code.
+  relationshipType: many-to-one
+  targetContractId: pc.currency-code
+  sourceFields:
+  - applicable_deductible_currency_code
+  targetFields:
+  - code_value
+quality:
+- rule: claim_coverage_uid_required
+  description: claim_coverage_uid must be populated for every record.
+  dimension: completeness
+  severity: error
+- rule: claim_coverage_claim_uid_required
+  description: Claim identifier must be populated for every claim coverage record.
+  dimension: completeness
+  severity: error
+- rule: claim_coverage_policy_coverage_uid_required
+  description: Policy coverage identifier must be populated for every claim coverage record.
+  dimension: completeness
+  severity: error
+- rule: claim_coverage_response_status_code_required
+  description: Response status code must be populated for every claim coverage record.
+  dimension: completeness
+  severity: error
+- rule: claim_coverage_limit_has_currency
+  description: Applicable limit currency code should be populated when applicable limit amount is populated.
+  dimension: consistency
+  severity: warning
+- rule: claim_coverage_deductible_has_currency
+  description: Applicable deductible currency code should be populated when applicable deductible amount is populated.
+  dimension: consistency
+  severity: warning
+- rule: valid_from_datetime_required
+  description: valid_from_datetime must be populated for every record version.
+  dimension: completeness
+  severity: error
+- rule: valid_window_consistent
+  description: valid_to_datetime must be greater than valid_from_datetime when populated.
+  dimension: consistency
+  severity: error
+- rule: single_current_row_per_key
+  description: Exactly one row per logical key has is_current_indicator equal to true.
+  dimension: uniqueness
+  severity: error
+- rule: record_status_code_required
+  description: record_status_code must be populated for every record.
+  dimension: completeness
+  severity: error
+customProperties:
+  canonicalLayer: silver
+  contractFamily: property-and-casualty
+  domainPackage: pc
+  subjectArea: claims
+  supportsClaimLifecyclePattern: true
+  classificationProfile: CONFIDENTIAL
+  changelog:
+  - '0.1.0: Initial claim coverage contract per claims-modeling ADR.'

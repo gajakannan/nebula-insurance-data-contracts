@@ -2,123 +2,228 @@ apiVersion: v3.0.2
 kind: DataContract
 id: pc.policy-deductible
 name: PolicyDeductible
-version: 0.1.0
+version: 0.2.0
 status: draft
 description: Canonical contract for structured deductible detail associated with a Property and Casualty policy coverage.
-
 domain: property-and-casualty
-
 schema:
-  - name: policy_deductible
-    physicalType: table
-    description: Canonical policy deductible record that describes deductible terms applied within a policy coverage context.
-    properties:
-      - name: policy_deductible_id
-        businessName: Policy Deductible Identifier
-        logicalType: string
-        required: true
-        primaryKey: true
-        description: Stable identifier for the canonical policy deductible record.
-      - name: policy_coverage_id
-        businessName: Policy Coverage Identifier
-        logicalType: string
-        required: true
-        description: Identifier for the policy coverage associated with the deductible.
-      - name: deductible_type_code
-        businessName: Deductible Type Code
-        logicalType: string
-        required: true
-        description: Classification of the deductible type.
-      - name: deductible_basis_code
-        businessName: Deductible Basis Code
-        logicalType: string
-        required: false
-        description: Classification of the basis to which the deductible applies, such as occurrence, claim, item, location, or policy term.
-      - name: deductible_amount
-        businessName: Deductible Amount
-        logicalType: decimal
-        required: false
-        description: Monetary amount of the deductible when represented as an amount.
-      - name: deductible_currency_code
-        businessName: Deductible Currency Code
-        logicalType: string
-        required: false
-        description: Currency code for the deductible amount.
-      - name: deductible_percent
-        businessName: Deductible Percent
-        logicalType: decimal
-        required: false
-        description: Percentage value of the deductible when represented as a percentage.
-      - name: minimum_deductible_amount
-        businessName: Minimum Deductible Amount
-        logicalType: decimal
-        required: false
-        description: Minimum monetary deductible amount when the deductible uses a threshold.
-      - name: maximum_deductible_amount
-        businessName: Maximum Deductible Amount
-        logicalType: decimal
-        required: false
-        description: Maximum monetary deductible amount when the deductible uses a cap.
-      - name: effective_date
-        businessName: Effective Date
-        logicalType: date
-        required: false
-        description: Date when the policy deductible becomes effective within the policy coverage context.
-      - name: expiration_date
-        businessName: Expiration Date
-        logicalType: date
-        required: false
-        description: Date when the policy deductible stops being effective within the policy coverage context.
-      - name: created_datetime
-        businessName: Created Datetime
-        logicalType: datetime
-        required: false
-        description: Datetime when the canonical policy deductible record was created.
-      - name: updated_datetime
-        businessName: Updated Datetime
-        logicalType: datetime
-        required: false
-        description: Datetime when the canonical policy deductible record was last updated.
-
+- name: policy_deductible
+  physicalType: table
+  description: Canonical policy deductible record that describes deductible terms applied within a policy coverage context.
+  properties:
+  - name: policy_deductible_uid
+    businessName: Policy Deductible Identifier
+    logicalType: string
+    required: true
+    primaryKey: true
+    description: Immutable system-generated GUID that uniquely identifies the canonical policy deductible record across snapshots and source systems.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: source_system_code
+    businessName: Source System Code
+    logicalType: string
+    required: false
+    description: Identifier of the upstream system that produced or last asserted this record. Used for multi-source mastering and lineage.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: source_natural_key
+    businessName: Source Natural Key
+    logicalType: string
+    required: false
+    description: Natural key assigned by the source system. Captured for provenance; not used as the canonical primary key.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: policy_coverage_uid
+    businessName: Policy Coverage Identifier
+    logicalType: string
+    required: true
+    description: Identifier (GUID reference) for the policy coverage associated with the deductible.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: deductible_type_code
+    businessName: Deductible Type Code
+    logicalType: string
+    required: true
+    description: Classification of the deductible type.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: deductible_basis_code
+    businessName: Deductible Basis Code
+    logicalType: string
+    required: false
+    description: Classification of the basis to which the deductible applies, such as occurrence, claim, item, location, or policy term.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: deductible_amount
+    businessName: Deductible Amount
+    logicalType: decimal
+    required: false
+    description: Monetary amount of the deductible when represented as an amount.
+    customProperties:
+      classifications:
+        sensitivity: CONFIDENTIAL
+        regulatoryTags: &id001
+        - FINANCIAL
+  - name: deductible_currency_code
+    businessName: Deductible Currency Code
+    logicalType: string
+    required: false
+    description: Currency code for the deductible amount.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: deductible_percent
+    businessName: Deductible Percent
+    logicalType: decimal
+    required: false
+    description: Percentage value of the deductible when represented as a percentage.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: minimum_deductible_amount
+    businessName: Minimum Deductible Amount
+    logicalType: decimal
+    required: false
+    description: Minimum monetary deductible amount when the deductible uses a threshold.
+    customProperties:
+      classifications:
+        sensitivity: CONFIDENTIAL
+        regulatoryTags: *id001
+  - name: maximum_deductible_amount
+    businessName: Maximum Deductible Amount
+    logicalType: decimal
+    required: false
+    description: Maximum monetary deductible amount when the deductible uses a cap.
+    customProperties:
+      classifications:
+        sensitivity: CONFIDENTIAL
+        regulatoryTags: *id001
+  - name: effective_date
+    businessName: Effective Date
+    logicalType: date
+    required: false
+    description: Date when the policy deductible becomes effective within the policy coverage context.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: expiration_date
+    businessName: Expiration Date
+    logicalType: date
+    required: false
+    description: Date when the policy deductible stops being effective within the policy coverage context.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: created_datetime
+    businessName: Created Datetime
+    logicalType: datetime
+    required: false
+    description: Datetime when the canonical policy deductible record was created.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: updated_datetime
+    businessName: Updated Datetime
+    logicalType: datetime
+    required: false
+    description: Datetime when the canonical policy deductible record was last updated.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: record_status_code
+    businessName: Record Status Code
+    logicalType: string
+    required: true
+    description: Warehouse-level state of the record. References the RecordStatusCode codeset (ACTIVE, SUPERSEDED, SOFT_DELETED, RESTATED, MERGED).
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: valid_from_datetime
+    businessName: Valid From Datetime
+    logicalType: datetime
+    required: true
+    description: System-time start of the SCD2 window for this record version.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: valid_to_datetime
+    businessName: Valid To Datetime
+    logicalType: datetime
+    required: false
+    description: System-time end of the SCD2 window for this record version. Null indicates the current row.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: is_current_indicator
+    businessName: Is Current Indicator
+    logicalType: boolean
+    required: true
+    description: True for exactly one row per logical key, indicating the current record version.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
 relationships:
-  - name: policy_deductible_to_policy_coverage
-    description: Relates a policy deductible to the policy coverage where the deductible applies.
-    relationshipType: many-to-one
-    targetContractId: pc.policy-coverage
-    sourceFields:
-      - policy_coverage_id
-    targetFields:
-      - policy_coverage_id
-
+- name: policy_deductible_to_policy_coverage
+  description: Relates a policy deductible to the policy coverage where the deductible applies.
+  relationshipType: many-to-one
+  targetContractId: pc.policy-coverage
+  sourceFields:
+  - policy_coverage_uid
+  targetFields:
+  - policy_coverage_uid
 quality:
-  - rule: policy_deductible_id_required
-    description: Policy deductible identifier must be populated.
-    dimension: completeness
-    severity: error
-  - rule: policy_deductible_policy_coverage_id_required
-    description: Policy coverage identifier must be populated for every policy deductible.
-    dimension: completeness
-    severity: error
-  - rule: policy_deductible_type_code_required
-    description: Deductible type code must be populated for every policy deductible.
-    dimension: completeness
-    severity: error
-  - rule: policy_deductible_amounts_not_negative
-    description: Deductible amounts should not be negative when populated.
-    dimension: validity
-    severity: warning
-  - rule: policy_deductible_percent_not_negative
-    description: Deductible percent should not be negative when populated.
-    dimension: validity
-    severity: warning
-  - rule: policy_deductible_effective_date_not_after_expiration_date
-    description: Effective date must not be later than expiration date when both dates are populated.
-    dimension: consistency
-    severity: error
-
+- rule: policy_deductible_uid_required
+  description: policy_deductible_uid must be populated for every record.
+  dimension: completeness
+  severity: error
+- rule: policy_deductible_policy_coverage_uid_required
+  description: Policy coverage identifier must be populated for every policy deductible.
+  dimension: completeness
+  severity: error
+- rule: policy_deductible_type_code_required
+  description: Deductible type code must be populated for every policy deductible.
+  dimension: completeness
+  severity: error
+- rule: policy_deductible_amounts_not_negative
+  description: Deductible amounts should not be negative when populated.
+  dimension: validity
+  severity: warning
+- rule: policy_deductible_percent_not_negative
+  description: Deductible percent should not be negative when populated.
+  dimension: validity
+  severity: warning
+- rule: policy_deductible_effective_date_not_after_expiration_date
+  description: Effective date must not be later than expiration date when both dates are populated.
+  dimension: consistency
+  severity: error
+- rule: valid_from_datetime_required
+  description: valid_from_datetime must be populated for every record version.
+  dimension: completeness
+  severity: error
+- rule: valid_window_consistent
+  description: valid_to_datetime must be greater than valid_from_datetime when populated.
+  dimension: consistency
+  severity: error
+- rule: single_current_row_per_key
+  description: Exactly one row per logical key has is_current_indicator equal to true.
+  dimension: uniqueness
+  severity: error
+- rule: record_status_code_required
+  description: record_status_code must be populated for every record.
+  dimension: completeness
+  severity: error
 customProperties:
   canonicalLayer: silver
   contractFamily: property-and-casualty
   domainPackage: pc
   subjectArea: coverage
   supportsPolicyCoveragePattern: true
+  classificationProfile: CONFIDENTIAL
+  changelog:
+  - '0.2.0: Apply cross-cutting ADRs (identifier strategy, SCD2 temporal, record state, classifications, codeset references, source attribution).'

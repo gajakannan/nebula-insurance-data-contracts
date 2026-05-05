@@ -1,0 +1,217 @@
+apiVersion: v3.0.2
+kind: DataContract
+id: pc.claim-party-role
+name: ClaimPartyRole
+version: 0.1.0
+status: draft
+description: Canonical contract for a party participating in a Property and Casualty claim context.
+domain: property-and-casualty
+schema:
+- name: claim_party_role
+  physicalType: table
+  description: Canonical claim party role record that separates reusable party identity from claim-specific participation such as claimant, insured contact, adjuster, supervisor, attorney, expert, witness, service provider, or recovery party.
+  properties:
+  - name: claim_party_role_uid
+    businessName: Claim Party Role Identifier
+    logicalType: string
+    required: true
+    primaryKey: true
+    description: Immutable system-generated GUID that uniquely identifies the canonical claim party role record across snapshots and source systems.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: source_system_code
+    businessName: Source System Code
+    logicalType: string
+    required: false
+    description: Identifier of the upstream system that produced or last asserted this record. Used for multi-source mastering and lineage.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: source_natural_key
+    businessName: Source Natural Key
+    logicalType: string
+    required: false
+    description: Natural key assigned by the source system. Captured for provenance; not used as the canonical primary key.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: claim_uid
+    businessName: Claim Identifier
+    logicalType: string
+    required: true
+    description: Identifier (GUID reference) for the claim where the party participates.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: claim_feature_uid
+    businessName: Claim Feature Identifier
+    logicalType: string
+    required: false
+    description: Identifier (GUID reference) for the claim feature when the role applies to a specific feature rather than the whole claim.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: party_uid
+    businessName: Party Identifier
+    logicalType: string
+    required: true
+    description: Identifier (GUID reference) for the party participating in the claim.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: party_role_type_code
+    businessName: Party Role Type Code
+    logicalType: string
+    required: true
+    description: Classification of the role the party plays in the claim. References the PartyRoleTypeCode codeset.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: role_status_code
+    businessName: Role Status Code
+    logicalType: string
+    required: true
+    description: Current lifecycle status of the party role within the claim context.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: effective_date
+    businessName: Effective Date
+    logicalType: date
+    required: false
+    description: Date when the party role becomes effective within the claim context.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: expiration_date
+    businessName: Expiration Date
+    logicalType: date
+    required: false
+    description: Date when the party role stops being effective within the claim context.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: primary_indicator
+    businessName: Primary Indicator
+    logicalType: boolean
+    required: false
+    description: Indicates whether this is the primary party for the role type within the claim context.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: record_status_code
+    businessName: Record Status Code
+    logicalType: string
+    required: true
+    description: Warehouse-level state of the record. References the RecordStatusCode codeset.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: valid_from_datetime
+    businessName: Valid From Datetime
+    logicalType: datetime
+    required: true
+    description: System-time start of the SCD2 window for this record version.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: valid_to_datetime
+    businessName: Valid To Datetime
+    logicalType: datetime
+    required: false
+    description: System-time end of the SCD2 window for this record version. Null indicates the current row.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: is_current_indicator
+    businessName: Is Current Indicator
+    logicalType: boolean
+    required: true
+    description: True for exactly one row per logical key, indicating the current record version.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+relationships:
+- name: claim_party_role_to_claim
+  description: Relates a claim party role to the claim where the party participates.
+  relationshipType: many-to-one
+  targetContractId: pc.claim
+  sourceFields:
+  - claim_uid
+  targetFields:
+  - claim_uid
+- name: claim_party_role_to_claim_feature
+  description: Relates a claim party role to the claim feature when the role applies to a specific feature.
+  relationshipType: many-to-one
+  targetContractId: pc.claim-feature
+  sourceFields:
+  - claim_feature_uid
+  targetFields:
+  - claim_feature_uid
+- name: claim_party_role_to_party
+  description: Relates a claim party role to the party participating in the claim.
+  relationshipType: many-to-one
+  targetContractId: pc.party
+  sourceFields:
+  - party_uid
+  targetFields:
+  - party_uid
+- name: claim_party_role_to_party_role_type
+  description: Relates a claim party role to the party-role-type codeset.
+  relationshipType: many-to-one
+  targetContractId: pc.party-role-type-code
+  sourceFields:
+  - party_role_type_code
+  targetFields:
+  - code_value
+quality:
+- rule: claim_party_role_uid_required
+  description: claim_party_role_uid must be populated for every record.
+  dimension: completeness
+  severity: error
+- rule: claim_party_role_claim_uid_required
+  description: Claim identifier must be populated for every claim party role record.
+  dimension: completeness
+  severity: error
+- rule: claim_party_role_party_uid_required
+  description: Party identifier must be populated for every claim party role record.
+  dimension: completeness
+  severity: error
+- rule: claim_party_role_type_code_required
+  description: Party role type code must be populated for every claim party role record.
+  dimension: completeness
+  severity: error
+- rule: claim_party_role_status_code_required
+  description: Role status code must be populated for every claim party role record.
+  dimension: completeness
+  severity: error
+- rule: claim_party_role_effective_not_after_expiration
+  description: Effective date must not be later than expiration date when both dates are populated.
+  dimension: consistency
+  severity: error
+- rule: valid_from_datetime_required
+  description: valid_from_datetime must be populated for every record version.
+  dimension: completeness
+  severity: error
+- rule: valid_window_consistent
+  description: valid_to_datetime must be greater than valid_from_datetime when populated.
+  dimension: consistency
+  severity: error
+- rule: single_current_row_per_key
+  description: Exactly one row per logical key has is_current_indicator equal to true.
+  dimension: uniqueness
+  severity: error
+- rule: record_status_code_required
+  description: record_status_code must be populated for every record.
+  dimension: completeness
+  severity: error
+customProperties:
+  canonicalLayer: silver
+  contractFamily: property-and-casualty
+  domainPackage: pc
+  subjectArea: claims
+  supportsPartyRolePattern: true
+  classificationProfile: INTERNAL
+  changelog:
+  - '0.1.0: Initial claim party role contract per claims-modeling ADR.'

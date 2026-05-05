@@ -1,0 +1,209 @@
+apiVersion: v3.0.2
+kind: DataContract
+id: pc.claim-document
+name: ClaimDocument
+version: 0.1.0
+status: draft
+description: Canonical contract for documents associated with a Property and Casualty claim. Stores document metadata only; document content is held in an external store.
+domain: property-and-casualty
+schema:
+- name: claim_document
+  physicalType: table
+  description: Canonical claim document record that captures metadata about a document associated with a claim or claim feature, including type, source, capture context, and an external storage reference.
+  properties:
+  - name: claim_document_uid
+    businessName: Claim Document Identifier
+    logicalType: string
+    required: true
+    primaryKey: true
+    description: Immutable system-generated GUID that uniquely identifies the canonical claim document record across snapshots and source systems.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: source_system_code
+    businessName: Source System Code
+    logicalType: string
+    required: false
+    description: Identifier of the upstream system that produced or last asserted this record. Used for multi-source mastering and lineage.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: source_natural_key
+    businessName: Source Natural Key
+    logicalType: string
+    required: false
+    description: Natural key assigned by the source system. Captured for provenance; not used as the canonical primary key.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: claim_uid
+    businessName: Claim Identifier
+    logicalType: string
+    required: true
+    description: Identifier (GUID reference) for the claim associated with the document.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: claim_feature_uid
+    businessName: Claim Feature Identifier
+    logicalType: string
+    required: false
+    description: Identifier (GUID reference) for the claim feature associated with the document when feature context is known.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: document_type_code
+    businessName: Document Type Code
+    logicalType: string
+    required: true
+    description: Classification of the document such as FNOL form, police report, medical record, photograph, repair estimate, demand letter, settlement agreement, or correspondence.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: document_status_code
+    businessName: Document Status Code
+    logicalType: string
+    required: true
+    description: Current lifecycle status of the document such as received, indexed, reviewed, redacted, or archived.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: document_title
+    businessName: Document Title
+    logicalType: string
+    required: false
+    description: Title or short label assigned to the document when known.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: external_storage_reference
+    businessName: External Storage Reference
+    logicalType: string
+    required: false
+    description: Opaque reference to the document content held in an external storage system. Treated as a pointer; the document body is not stored in this contract.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: capture_datetime
+    businessName: Capture Datetime
+    logicalType: datetime
+    required: false
+    description: Datetime when the document was captured, received, or registered.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: capture_party_uid
+    businessName: Capture Party Identifier
+    logicalType: string
+    required: false
+    description: Identifier (GUID reference) for the party that captured or registered the document when known.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: contains_phi_indicator
+    businessName: Contains PHI Indicator
+    logicalType: boolean
+    required: false
+    description: Indicates whether the document is known to contain Protected Health Information. Used by downstream targets to apply HIPAA-compliant handling.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: record_status_code
+    businessName: Record Status Code
+    logicalType: string
+    required: true
+    description: Warehouse-level state of the record. References the RecordStatusCode codeset.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: valid_from_datetime
+    businessName: Valid From Datetime
+    logicalType: datetime
+    required: true
+    description: System-time start of the SCD2 window for this record version.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: valid_to_datetime
+    businessName: Valid To Datetime
+    logicalType: datetime
+    required: false
+    description: System-time end of the SCD2 window for this record version. Null indicates the current row.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: is_current_indicator
+    businessName: Is Current Indicator
+    logicalType: boolean
+    required: true
+    description: True for exactly one row per logical key, indicating the current record version.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+relationships:
+- name: claim_document_to_claim
+  description: Relates a claim document to the claim associated with the document.
+  relationshipType: many-to-one
+  targetContractId: pc.claim
+  sourceFields:
+  - claim_uid
+  targetFields:
+  - claim_uid
+- name: claim_document_to_claim_feature
+  description: Relates a claim document to the claim feature when feature context is known.
+  relationshipType: many-to-one
+  targetContractId: pc.claim-feature
+  sourceFields:
+  - claim_feature_uid
+  targetFields:
+  - claim_feature_uid
+- name: claim_document_to_capture_party
+  description: Relates a claim document to the party that captured or registered it when known.
+  relationshipType: many-to-one
+  targetContractId: pc.party
+  sourceFields:
+  - capture_party_uid
+  targetFields:
+  - party_uid
+quality:
+- rule: claim_document_uid_required
+  description: claim_document_uid must be populated for every record.
+  dimension: completeness
+  severity: error
+- rule: claim_document_claim_uid_required
+  description: Claim identifier must be populated for every claim document record.
+  dimension: completeness
+  severity: error
+- rule: claim_document_type_code_required
+  description: Document type code must be populated for every claim document record.
+  dimension: completeness
+  severity: error
+- rule: claim_document_status_code_required
+  description: Document status code must be populated for every claim document record.
+  dimension: completeness
+  severity: error
+- rule: valid_from_datetime_required
+  description: valid_from_datetime must be populated for every record version.
+  dimension: completeness
+  severity: error
+- rule: valid_window_consistent
+  description: valid_to_datetime must be greater than valid_from_datetime when populated.
+  dimension: consistency
+  severity: error
+- rule: single_current_row_per_key
+  description: Exactly one row per logical key has is_current_indicator equal to true.
+  dimension: uniqueness
+  severity: error
+- rule: record_status_code_required
+  description: record_status_code must be populated for every record.
+  dimension: completeness
+  severity: error
+customProperties:
+  canonicalLayer: silver
+  contractFamily: property-and-casualty
+  domainPackage: pc
+  subjectArea: claims
+  supportsClaimLifecyclePattern: true
+  classificationProfile: INTERNAL
+  changelog:
+  - '0.1.0: Initial claim document contract per claims-modeling ADR.'

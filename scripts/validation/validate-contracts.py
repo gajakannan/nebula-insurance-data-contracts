@@ -28,11 +28,32 @@ REQUIRED_TOP_LEVEL = [
     "description",
     "domain",
 ]
-ALLOWED_STATUSES = {"draft", "review", "approved", "deprecated", "retired"}
+ALLOWED_STATUSES = {"draft", "proposed", "review", "approved", "deprecated", "retired"}
 ALLOWED_SEVERITIES = {"info", "warning", "error"}
+ALLOWED_SENSITIVITIES = {"PUBLIC", "INTERNAL", "CONFIDENTIAL", "RESTRICTED"}
+ALLOWED_REGULATORY_TAGS = {
+    "PII",
+    "PHI",
+    "PCI",
+    "SPI",
+    "FINANCIAL",
+    "JURISDICTION_RESTRICTED",
+}
 FIELD_NAME_RE = re.compile(r"^[a-z][a-z0-9]*(?:_[a-z0-9]+)*$")
 CONTRACT_ID_RE = re.compile(r"^[a-z][a-z0-9]*(?:\.[a-z0-9][a-z0-9-]*)+$")
 VERSION_RE = re.compile(r"^\d+\.\d+\.\d+$")
+
+# Append-only event/transaction contracts skip SCD2 and record_status_code per
+# the temporal-modeling and event-and-transaction ADRs. They get correction
+# fields instead.
+EVENT_OR_TRANSACTION_SLUGS = {
+    "policy-lifecycle-event",
+    "policy-transaction",
+    "submission-lifecycle-event",
+    "claim-lifecycle-event",
+    "financial-transaction",
+    "claim-financial-transaction",
+}
 BANNED_CONTENT_PATTERNS = [
     (re.compile(r"https?://", re.IGNORECASE), "URLs must not appear in tracked contract files"),
     (re.compile(r"\bwww\.", re.IGNORECASE), "URLs must not appear in tracked contract files"),
@@ -138,11 +159,38 @@ def validate_top_level(path: Path, data: Any) -> list[Finding]:
     return findings
 
 
+def validate_classifications(prop_location: str, prop: dict[str, Any]) -> list[Finding]:
+    findings: list[Finding] = []
+    custom = prop.get("customProperties")
+    if not isinstance(custom, dict):
+        findings.append(Finding(Path(prop_location), f"{prop_location} missing `customProperties.classifications`"))
+        return findings
+    classifications = custom.get("classifications")
+    if not isinstance(classifications, dict):
+        findings.append(Finding(Path(prop_location), f"{prop_location}.customProperties.classifications must be a mapping (data-classification ADR)"))
+        return findings
+    sensitivity = classifications.get("sensitivity")
+    if sensitivity not in ALLOWED_SENSITIVITIES:
+        findings.append(Finding(Path(prop_location), f"{prop_location}.customProperties.classifications.sensitivity must be one of {sorted(ALLOWED_SENSITIVITIES)}"))
+    tags = classifications.get("regulatoryTags")
+    if tags is not None:
+        if not isinstance(tags, list):
+            findings.append(Finding(Path(prop_location), f"{prop_location}.customProperties.classifications.regulatoryTags must be a list when present"))
+        else:
+            for tag in tags:
+                if tag not in ALLOWED_REGULATORY_TAGS:
+                    findings.append(Finding(Path(prop_location), f"{prop_location}.customProperties.classifications.regulatoryTags contains unknown tag `{tag}`"))
+    return findings
+
+
 def validate_schema(path: Path, data: dict[str, Any]) -> list[Finding]:
     findings: list[Finding] = []
     schema = data.get("schema")
     if not isinstance(schema, list) or not schema:
         return [Finding(path, "`schema` must be a non-empty list")]
+
+    slug = path.name.removesuffix(".odcs.yaml")
+    is_event_or_txn = slug in EVENT_OR_TRANSACTION_SLUGS
 
     for index, entry in enumerate(schema):
         location = f"`schema[{index}]`"
@@ -168,6 +216,7 @@ def validate_schema(path: Path, data: dict[str, Any]) -> list[Finding]:
             continue
 
         primary_keys = []
+        property_names: set[str] = set()
         for prop_index, prop in enumerate(properties):
             prop_location = f"{location}.properties[{prop_index}]"
             if not isinstance(prop, dict):
@@ -183,6 +232,10 @@ def validate_schema(path: Path, data: dict[str, Any]) -> list[Finding]:
                 findings.append(Finding(path, f"{prop_location}.name must be a non-empty string"))
             elif not FIELD_NAME_RE.match(name):
                 findings.append(Finding(path, f"{prop_location}.name `{name}` must be lowercase snake_case"))
+            else:
+                property_names.add(name)
+                if name.endswith("_id") and prop.get("primaryKey") is not True:
+                    findings.append(Finding(path, f"{prop_location}.name `{name}` must use `_uid` suffix per identifier-strategy ADR"))
 
             for key in ("businessName", "logicalType", "description"):
                 if not is_non_empty_string(prop.get(key)):
@@ -195,9 +248,27 @@ def validate_schema(path: Path, data: dict[str, Any]) -> list[Finding]:
                 primary_keys.append(prop)
                 if prop.get("required") is not True:
                     findings.append(Finding(path, f"{prop_location} primary key fields must be required"))
+                if isinstance(name, str) and not name.endswith("_uid"):
+                    findings.append(Finding(path, f"{prop_location} primary key `{name}` must use `_uid` suffix per identifier-strategy ADR"))
+
+            for f in validate_classifications(prop_location, prop):
+                findings.append(Finding(path, f.message))
 
         if not primary_keys:
             findings.append(Finding(path, f"{location} must define at least one primary key property"))
+
+        # ADR enforcement: SCD2 + record_status on entity contracts;
+        # correction fields on event/transaction contracts.
+        if is_event_or_txn:
+            if "correction_indicator" not in property_names:
+                findings.append(Finding(path, f"{location} event/transaction contract must include `correction_indicator` per event-and-transaction ADR"))
+            for forbidden in ("valid_from_datetime", "valid_to_datetime", "is_current_indicator", "record_status_code"):
+                if forbidden in property_names:
+                    findings.append(Finding(path, f"{location} event/transaction contract must not include `{forbidden}` (append-only per temporal-modeling ADR)"))
+        else:
+            for required_field in ("valid_from_datetime", "valid_to_datetime", "is_current_indicator", "record_status_code"):
+                if required_field not in property_names:
+                    findings.append(Finding(path, f"{location} entity contract must include `{required_field}` per temporal-modeling/record-state ADR"))
 
     return findings
 
@@ -270,6 +341,15 @@ def validate_custom_properties(path: Path, data: dict[str, Any]) -> list[Finding
             findings.append(Finding(path, f"`customProperties.{key}` must be `{expected_value}`"))
     if not is_non_empty_string(custom.get("domainPackage")):
         findings.append(Finding(path, "`customProperties.domainPackage` must be populated"))
+
+    profile = custom.get("classificationProfile")
+    if profile is not None and profile not in ALLOWED_SENSITIVITIES:
+        findings.append(Finding(path, f"`customProperties.classificationProfile` must be one of {sorted(ALLOWED_SENSITIVITIES)} when present"))
+
+    changelog = custom.get("changelog")
+    if changelog is not None and not isinstance(changelog, list):
+        findings.append(Finding(path, "`customProperties.changelog` must be a list when present"))
+
     return findings
 
 

@@ -2,20 +2,36 @@
 
 This guide contains the reusable authoring rules for Nebula Insurance Data Contracts. The root README explains what the repository is; this file explains how to add or change contracts.
 
+## Cross-Cutting Conventions
+
+Every contract authored or changed in this repository must comply with the cross-cutting design decisions in `references/design-decisions/pc/`. Read the index at `references/design-decisions/README.md` first; the conventions below summarize what the validator enforces.
+
+- **Identifiers** — every entity contract has a `*_uid` GUID primary key plus a business-friendly key where the business assigns one. See `identifier-strategy.md`.
+- **Bi-temporal modeling** — every entity contract carries `valid_from_datetime`, `valid_to_datetime`, and `is_current_indicator` for SCD2 system time. Business-effective dates stay where they belong. See `temporal-modeling.md`.
+- **Record state** — every entity contract carries `record_status_code` (`ACTIVE` / `SUPERSEDED` / `SOFT_DELETED` / `RESTATED` / `MERGED`). Soft delete is the only delete. See `record-state.md`.
+- **Event vs transaction** — append-only `*LifecycleEvent` and `*Transaction` contracts skip SCD2; corrections are new immutable rows linked via `corrects_*_uid`. See `event-and-transaction.md`.
+- **Codesets** — every `*_code` field references a governed codeset contract under `references/odcs/pc/reference-data/`. See `codeset-strategy.md`.
+- **Null semantics** — null means "value not present, reason unspecified." Distinguish "unknown" vs "not applicable" via codeset sentinels, never via overloading null. See `null-semantics.md`.
+- **Currency** — every monetary field is paired with a sibling `*_currency_code` referencing the `CurrencyCode` codeset. No house currency at the canonical layer. See `currency-convention.md`.
+- **Data classification** — every property declares `customProperties.classifications` with a `sensitivity` tier and any applicable regulatory tags (PII, PHI, PCI, SPI, FINANCIAL). Contract-level `classificationProfile` summarizes the most-sensitive class present. See `data-classification.md`.
+- **Versioning** — SemVer with data-contract semantics; the validator checks well-formedness. See `versioning-policy.md`.
+- **Status promotion** — gated transitions `draft → proposed → approved → deprecated → retired`. See `status-promotion.md`.
+
 ## Contract Workflow
 
 When adding or changing a contract:
 
 1. Start with the business concept.
-2. Decide whether it belongs to an existing contract, a role contract, a classification, reference data, a lifecycle event, or a new contract.
+2. Decide whether it belongs to an existing contract, a role contract, a classification, reference data, a lifecycle event, or a new contract — see `separation-and-nesting.md`.
 3. Check existing patterns under `references/patterns/`.
 4. Check design rationale under `references/design-decisions/`.
-5. Add or update the ODCS YAML.
+5. Add or update the ODCS YAML using the cross-cutting conventions above.
 6. Add meaningful data quality rules.
 7. Add design rationale if the modeling choice is significant.
 8. Keep platform-specific guidance out of canonical contracts.
-9. Validate the contract when validation tooling exists.
+9. Run the validator (`python3 scripts/validation/validate-contracts.py`).
 10. Update examples, glossary terms, or documentation when needed.
+11. Bump version per `versioning-policy.md` and append a changelog entry under `customProperties.changelog`.
 
 Use `references/odcs/templates/pc-contract-template.odcs.yaml` as the starting point for new P&C contracts.
 
@@ -70,13 +86,13 @@ Use lowercase snake_case for physical field names.
 Preferred examples:
 
 ```text
-policy_id
+policy_uid
 policy_number
 effective_date
 expiration_date
-status_code
-coverage_id
-claim_id
+policy_status_code
+coverage_uid
+claim_uid
 transaction_amount
 transaction_currency_code
 ```
@@ -84,14 +100,17 @@ transaction_currency_code
 General rules:
 
 - Use singular names.
-- Use `_id` for identifiers.
-- Use `_code` for coded values.
+- Use `_uid` for system-generated GUID identity columns. The `*_uid` is the primary key and the join key for every relationship (per `identifier-strategy.md`).
+- Use `_number` for business-friendly identifiers that the business or operations assigns (e.g. `policy_number`, `claim_number`).
+- Use `_code` for coded values that reference a codeset contract (per `codeset-strategy.md`).
 - Use `_date` for dates.
 - Use `_datetime` or `_timestamp` only when time precision is required.
-- Use `_amount` for monetary amounts.
+- Use `_amount` for monetary amounts; pair every monetary field with a sibling `_currency_code` (per `currency-convention.md`).
 - Use `_count` for counts.
 - Use `_indicator` for yes/no or true/false business indicators.
 - Avoid abbreviations unless they are widely understood in insurance or finance.
+
+Do not use plain `_id` for new fields. Existing legacy `_id` names have been migrated to `_uid` per `identifier-strategy.md`; the validator rejects new non-PK `_id` fields.
 
 ## ODCS Expectations
 
@@ -112,7 +131,7 @@ Each ODCS contract should include:
 - Ownership or support metadata where appropriate
 - Custom properties for domain and target hints
 
-Suggested starting skeleton:
+Suggested starting skeleton (entity contract):
 
 ```yaml
 apiVersion: v3.0.2
@@ -122,73 +141,100 @@ name: Policy
 version: 0.1.0
 status: draft
 description: Canonical contract for a Property and Casualty insurance policy.
-
 domain: property-and-casualty
-
 schema:
   - name: policy
     physicalType: table
     description: Canonical policy record.
     properties:
-      - name: policy_id
+      - name: policy_uid
         businessName: Policy Identifier
         logicalType: string
         required: true
         primaryKey: true
-
+        description: Immutable system-generated GUID that uniquely identifies the canonical policy record.
+        customProperties:
+          classifications:
+            sensitivity: INTERNAL
+      - name: policy_number
+        businessName: Policy Number
+        logicalType: string
+        required: true
+        description: Business-facing number assigned to the policy.
+        customProperties:
+          classifications:
+            sensitivity: INTERNAL
+      - name: record_status_code
+        businessName: Record Status Code
+        logicalType: string
+        required: true
+        description: Warehouse-level state of the record.
+        customProperties:
+          classifications:
+            sensitivity: INTERNAL
+      - name: valid_from_datetime
+        businessName: Valid From Datetime
+        logicalType: datetime
+        required: true
+        description: System-time start of the SCD2 window for this record version.
+        customProperties:
+          classifications:
+            sensitivity: INTERNAL
+      - name: valid_to_datetime
+        businessName: Valid To Datetime
+        logicalType: datetime
+        required: false
+        description: System-time end of the SCD2 window. Null indicates the current row.
+        customProperties:
+          classifications:
+            sensitivity: INTERNAL
+      - name: is_current_indicator
+        businessName: Is Current Indicator
+        logicalType: boolean
+        required: true
+        description: True for exactly one row per logical key.
+        customProperties:
+          classifications:
+            sensitivity: INTERNAL
 quality:
-  - rule: policy_effective_date_required
-    description: Policy effective date must be populated.
+  - rule: policy_uid_required
+    description: policy_uid must be populated.
     dimension: completeness
     severity: error
-
+  - rule: valid_from_datetime_required
+    description: valid_from_datetime must be populated for every record version.
+    dimension: completeness
+    severity: error
 customProperties:
   canonicalLayer: silver
   contractFamily: property-and-casualty
+  domainPackage: pc
+  classificationProfile: INTERNAL
 ```
+
+Append-only event/transaction contracts use a different shape: they skip SCD2 and `record_status_code` and instead carry `correction_indicator` plus `corrects_*_uid` per `event-and-transaction.md`.
 
 ## Versioning
 
-Contracts should follow semantic versioning where practical:
+Contracts use SemVer with data-contract semantics defined in `references/design-decisions/pc/versioning-policy.md`. Summary:
 
-```text
-MAJOR.MINOR.PATCH
-```
+- **MAJOR** — breaking: drop/rename field, tighten type, optional → required, narrow allowed code values, drop relationship.
+- **MINOR** — additive: add optional field, add quality rule, widen allowed code values, add relationship.
+- **PATCH** — no schema impact: description/businessName/comment fixes.
 
-Suggested interpretation:
+Below `1.0.0`, the contract is pre-stable. Breaking changes are permitted between `0.x` minor versions but must be recorded in the contract's changelog.
 
-- `PATCH`: documentation, metadata, or non-breaking clarification.
-- `MINOR`: additive, backward-compatible field or rule.
-- `MAJOR`: breaking schema, meaning, or compatibility change.
-
-Examples:
-
-```text
-0.1.0 = initial draft
-0.2.0 = adds optional fields
-1.0.0 = stable first release
-2.0.0 = breaking redesign
-```
+Each version bump should add an entry to `customProperties.changelog`.
 
 ## Status Lifecycle
 
-Recommended statuses:
+Statuses and gates are defined in `references/design-decisions/pc/status-promotion.md`:
 
 ```text
-draft
-review
-approved
-deprecated
-retired
+draft → proposed → approved → deprecated → retired
 ```
 
-Suggested meaning:
-
-- `draft`: actively being shaped.
-- `review`: ready for domain and data review.
-- `approved`: stable enough for implementation.
-- `deprecated`: still available but should not be used for new work.
-- `retired`: no longer active.
+Promotion is gated; the status field is not advanced ad hoc. See the ADR for the gates that apply at each transition.
 
 ## What Not To Commit
 

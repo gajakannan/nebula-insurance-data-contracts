@@ -1,0 +1,301 @@
+apiVersion: v3.0.2
+kind: DataContract
+id: pc.product-coverage
+name: ProductCoverage
+version: 0.1.0
+status: draft
+description: Canonical many-to-many junction contract relating a Product to a Coverage with product-coverage-specific defaults, constraints, and filing context.
+domain: property-and-casualty
+schema:
+- name: product_coverage
+  physicalType: table
+  description: Canonical product-coverage record that captures the relationship between a marketed product and a reusable coverage definition, including default selections, constraints, and filing references that vary by product context.
+  properties:
+  - name: product_coverage_uid
+    businessName: Product Coverage Identifier
+    logicalType: string
+    required: true
+    primaryKey: true
+    description: Immutable system-generated GUID that uniquely identifies the canonical product-coverage record across snapshots and source systems.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: source_system_code
+    businessName: Source System Code
+    logicalType: string
+    required: false
+    description: Identifier of the upstream system that produced or last asserted this record. Used for multi-source mastering and lineage.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: source_natural_key
+    businessName: Source Natural Key
+    logicalType: string
+    required: false
+    description: Natural key assigned by the source system. Captured for provenance; not used as the canonical primary key.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: product_uid
+    businessName: Product Identifier
+    logicalType: string
+    required: true
+    description: Identifier (GUID reference) for the product offering this coverage.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: coverage_uid
+    businessName: Coverage Identifier
+    logicalType: string
+    required: true
+    description: Identifier (GUID reference) for the reusable coverage definition offered by this product.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: jurisdiction_code
+    businessName: Jurisdiction Code
+    logicalType: string
+    required: false
+    description: Jurisdiction in which this product-coverage filing applies. References the JurisdictionCode codeset.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: form_code
+    businessName: Form Code
+    logicalType: string
+    required: false
+    description: Filed form code associated with the product-coverage offering when applicable.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: form_edition_code
+    businessName: Form Edition Code
+    logicalType: string
+    required: false
+    description: Form edition or revision code associated with the filed form when applicable.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: mandatory_indicator
+    businessName: Mandatory Indicator
+    logicalType: boolean
+    required: false
+    description: Indicates whether the coverage is mandatory when the product is sold within the applicable scope.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: default_selected_indicator
+    businessName: Default Selected Indicator
+    logicalType: boolean
+    required: false
+    description: Indicates whether the coverage is selected by default when the product is offered.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: default_limit_amount
+    businessName: Default Limit Amount
+    logicalType: decimal
+    required: false
+    description: Default limit amount associated with the coverage in this product context when one is filed.
+    customProperties:
+      classifications:
+        sensitivity: CONFIDENTIAL
+        regulatoryTags:
+        - FINANCIAL
+  - name: default_limit_currency_code
+    businessName: Default Limit Currency Code
+    logicalType: string
+    required: false
+    description: Currency code for the default limit amount. References the CurrencyCode codeset.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: default_deductible_amount
+    businessName: Default Deductible Amount
+    logicalType: decimal
+    required: false
+    description: Default deductible amount associated with the coverage in this product context when one is filed.
+    customProperties:
+      classifications:
+        sensitivity: CONFIDENTIAL
+        regulatoryTags:
+        - FINANCIAL
+  - name: default_deductible_currency_code
+    businessName: Default Deductible Currency Code
+    logicalType: string
+    required: false
+    description: Currency code for the default deductible amount. References the CurrencyCode codeset.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: minimum_limit_amount
+    businessName: Minimum Limit Amount
+    logicalType: decimal
+    required: false
+    description: Minimum allowable limit amount for the coverage when offered under this product.
+    customProperties:
+      classifications:
+        sensitivity: CONFIDENTIAL
+        regulatoryTags:
+        - FINANCIAL
+  - name: maximum_limit_amount
+    businessName: Maximum Limit Amount
+    logicalType: decimal
+    required: false
+    description: Maximum allowable limit amount for the coverage when offered under this product.
+    customProperties:
+      classifications:
+        sensitivity: CONFIDENTIAL
+        regulatoryTags:
+        - FINANCIAL
+  - name: limit_constraint_currency_code
+    businessName: Limit Constraint Currency Code
+    logicalType: string
+    required: false
+    description: Currency code for the minimum and maximum limit constraint amounts. References the CurrencyCode codeset.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: effective_date
+    businessName: Effective Date
+    logicalType: date
+    required: false
+    description: Date when the product-coverage offering becomes effective for new business.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: expiration_date
+    businessName: Expiration Date
+    logicalType: date
+    required: false
+    description: Date when the product-coverage offering stops being effective for new business.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: record_status_code
+    businessName: Record Status Code
+    logicalType: string
+    required: true
+    description: Warehouse-level state of the record. References the RecordStatusCode codeset.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: valid_from_datetime
+    businessName: Valid From Datetime
+    logicalType: datetime
+    required: true
+    description: System-time start of the SCD2 window for this record version.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: valid_to_datetime
+    businessName: Valid To Datetime
+    logicalType: datetime
+    required: false
+    description: System-time end of the SCD2 window for this record version. Null indicates the current row.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: is_current_indicator
+    businessName: Is Current Indicator
+    logicalType: boolean
+    required: true
+    description: True for exactly one row per logical key, indicating the current record version.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+relationships:
+- name: product_coverage_to_product
+  description: Relates a product-coverage record to the product offering the coverage.
+  relationshipType: many-to-one
+  targetContractId: pc.product
+  sourceFields:
+  - product_uid
+  targetFields:
+  - product_uid
+- name: product_coverage_to_coverage
+  description: Relates a product-coverage record to the reusable coverage definition.
+  relationshipType: many-to-one
+  targetContractId: pc.coverage
+  sourceFields:
+  - coverage_uid
+  targetFields:
+  - coverage_uid
+- name: product_coverage_to_jurisdiction
+  description: Relates a product-coverage record to the jurisdiction in which it is filed when applicable.
+  relationshipType: many-to-one
+  targetContractId: pc.jurisdiction-code
+  sourceFields:
+  - jurisdiction_code
+  targetFields:
+  - code_value
+- name: product_coverage_to_default_limit_currency
+  description: Relates the default limit amount to its currency code.
+  relationshipType: many-to-one
+  targetContractId: pc.currency-code
+  sourceFields:
+  - default_limit_currency_code
+  targetFields:
+  - code_value
+- name: product_coverage_to_default_deductible_currency
+  description: Relates the default deductible amount to its currency code.
+  relationshipType: many-to-one
+  targetContractId: pc.currency-code
+  sourceFields:
+  - default_deductible_currency_code
+  targetFields:
+  - code_value
+quality:
+- rule: product_coverage_uid_required
+  description: product_coverage_uid must be populated for every record.
+  dimension: completeness
+  severity: error
+- rule: product_coverage_product_uid_required
+  description: Product identifier must be populated for every product-coverage record.
+  dimension: completeness
+  severity: error
+- rule: product_coverage_coverage_uid_required
+  description: Coverage identifier must be populated for every product-coverage record.
+  dimension: completeness
+  severity: error
+- rule: product_coverage_default_limit_has_currency
+  description: Default limit currency code must be populated when default limit amount is populated.
+  dimension: consistency
+  severity: warning
+- rule: product_coverage_default_deductible_has_currency
+  description: Default deductible currency code must be populated when default deductible amount is populated.
+  dimension: consistency
+  severity: warning
+- rule: product_coverage_min_max_consistency
+  description: Minimum limit amount must not exceed maximum limit amount when both are populated.
+  dimension: consistency
+  severity: error
+- rule: product_coverage_effective_not_after_expiration
+  description: Effective date must not be later than expiration date when both dates are populated.
+  dimension: consistency
+  severity: error
+- rule: valid_from_datetime_required
+  description: valid_from_datetime must be populated for every record version.
+  dimension: completeness
+  severity: error
+- rule: valid_window_consistent
+  description: valid_to_datetime must be greater than valid_from_datetime when populated.
+  dimension: consistency
+  severity: error
+- rule: single_current_row_per_key
+  description: Exactly one row per logical key has is_current_indicator equal to true.
+  dimension: uniqueness
+  severity: error
+- rule: record_status_code_required
+  description: record_status_code must be populated for every record.
+  dimension: completeness
+  severity: error
+customProperties:
+  canonicalLayer: silver
+  contractFamily: property-and-casualty
+  domainPackage: pc
+  subjectArea: coverage
+  supportsPolicyCoveragePattern: true
+  classificationProfile: CONFIDENTIAL
+  changelog:
+  - '0.1.0: Initial junction contract per product-coverage-modeling ADR.'

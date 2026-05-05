@@ -6,7 +6,7 @@ A reusable identity for a person, organization, household, trust, public entity,
 
 ## Party Identifier
 
-A stable canonical identifier for a party record.
+The system identity column on a party record (`party_uid`). An immutable GUID generated upstream and used as the join key for every reference to the party. Distinct from any business-friendly identifier the source systems may assign.
 
 ## Party Type
 
@@ -70,4 +70,12 @@ The date when a record, role, relationship, value, or classification stops being
 
 ## Canonical Identifier
 
-A stable identifier used by the canonical contract layer to connect records without depending on any one source system.
+A stable identifier used by the canonical contract layer to connect records without depending on any one source system. See `cross-cutting.md` for the full identifier strategy.
+
+## Party Role Type
+
+The classification of a role a party plays in a business context, such as insured, claimant, producer, broker, agent, adjuster, loss payee, service provider, or underwriter. Captured through the `PartyRoleTypeCode` codeset.
+
+## Effective Window
+
+The pair of effective and expiration dates that bounds when a party identity, party role, or party relationship is valid for canonical business use. Distinct from the SCD2 system-time window.
