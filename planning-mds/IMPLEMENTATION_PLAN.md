@@ -23,17 +23,22 @@ The repository should end with:
 
 ## Current Baseline
 
-The repo already has the right shape:
+The canonical surface is at version 0.2.0 and has known hardening work pending before it can be considered locked:
 
-- `references/odcs/` for canonical contracts.
-- `references/patterns/` for reusable modeling patterns.
-- `references/design-decisions/` for rationale.
-- `references/glossary/` for canonical terms.
-- `targets/` for target-specific implementation guidance.
-- `scripts/` for validation, generation, linting, and inspection.
-- `docs/` for authoring guidance, roadmap, examples, and usage docs.
+- `references/odcs/` — 54 contracts pass the current validator (entity, codeset, event, transaction). Cross-cutting conventions (identifier strategy, SCD2, record state, classifications, codesets, currency pairing) are partially enforced; the strengthened rule set lands during canonical hardening.
+- `references/design-decisions/` — 14 ADRs plus the original six modeling decisions, indexed in the design-decisions README. Additional ADRs (`canonical-alignment.md`, `authoring-source-primacy.md`, `scd2-primary-key.md`) and ADR amendments land during canonical hardening.
+- `references/patterns/` — seven patterns covering party-role, submission-lifecycle, policy-lifecycle, claim-lifecycle, policy-coverage, exposure, and financial-transaction. Cross-linked to ADRs.
+- `references/glossary/` — cross-cutting terms file plus area-specific files; refreshed for the post-ADR contract shape.
+- `scripts/validation/` — `validate-contracts.py` enforces the current canonical conventions; canonical hardening adds 12 new rules.
+- `scripts/refactor/` — one-time migration scripts (`apply-adrs.py`, `generate-codesets.py`) that produced the 0.2.0 surface.
+- `docs/` — authoring guide and architecture notes cross-link the ADRs.
+- `targets/` — Fabric is the active target; dbt and other platforms are deferred or dropped. Fabric work is gated on canonical hardening completion.
+- `planning-mds/CANONICAL_HARDENING_PLAN.md` — detailed plan for Milestone 8.5, sequenced C1 → C7.
+- `planning-mds/FABRIC_IMPLEMENTATION_PLAN.md` — detailed plan for the Fabric Lakehouse projection, sequenced F1 → F8.
 
-The main gap is implementation depth. Most contract files are placeholders, scripts are empty, target folders are empty, and glossary content has not started.
+Pending work before Fabric generation can begin: canonical hardening (Milestone 8.5, C1–C7) covering validator strengthening, ADR/validator/glossary reconciliation, bulk 0.3.0 refactor, missing canonical entities (Occurrence, Catastrophe, InsurableObjectPartyRole), codeset taxonomy completion, ADR back-linking, and single-contract cleanup. Surface lands at 0.4.x.
+
+Remaining gaps after hardening: target generation (Fabric, plan in place per F1–F8), semantic projection (deferred), risk-transfer contract family (deferred), additional targets beyond Fabric (out of scope).
 
 ## Source Review Posture
 
@@ -391,34 +396,66 @@ Acceptance criteria:
 - Glossary definitions are original, concise, and aligned with contracts.
 - Contract field descriptions use glossary terms consistently.
 
+## Milestone 8.5: Canonical Hardening
+
+Goal: bring the 0.2.0 canonical surface to a clean 0.4.x state before any target projection consumes it.
+
+Detailed plan: `planning-mds/CANONICAL_HARDENING_PLAN.md`. The plan is authoritative for canonical hardening; this milestone summary mirrors it.
+
+This milestone is inserted between the original Milestone 8 (Reference Data and Glossary, complete) and Milestone 9 (Target Implementation Guidance, in progress) because internal validation surfaced a canonical-layer backlog that must be resolved before Fabric generation can begin. The metadata-driven Fabric posture treats canonical contracts as the source of truth; if canonical hygiene is not complete, generated manifests, DDL, notebooks, and Purview labels inherit every issue.
+
+Phasing (per `CANONICAL_HARDENING_PLAN.md`):
+
+- **C1** — Validator-first enforcement. Add 12 new rules covering currency pairing, codeset relationship resolution, target-contract-id resolution, append-only field bans, classification heuristics, status-promotion gates, changelog-on-version-bump, and ADR-id resolution. Pause for review.
+- **C2** — Reconcile ADR / validator / glossary contradictions. Rewrite `identifier-strategy.md` to match shipped naming, drop `review` from validator allowlist (or codify in ADR), rephrase `status-promotion.md` enforcement claims, clarify `null-semantics.md` and `data-classification.md` defaults. Pause for review.
+- **C3** — Bulk 0.3.0 refactor. Apply the C1 validator's findings as one cross-cutting commit (SCD2 PK resolution, append-only datetime cleanup, currency pairing, classification fixes, redundant `_uid` + `_code` removal, YAML anchor expansion). Bump every touched contract to 0.3.0.
+- **C4** — Canonical entity gaps. Land `Occurrence`, `Catastrophe`, `InsurableObjectPartyRole`, direct `insurable_object_uid` FK on `Claim`, decisions on `Account` / `Agreement` and `PolicyFinancialTransaction`, drop generic `pc.party-role`, align role-type and document-contract field naming. Bump to 0.4.0. Pause for review.
+- **C5** — Codeset and reference-data hygiene. Land top 10–15 missing codesets, add codeset relationships to all `*_code` fields where the codeset exists, add codeset-strategy ADR addendum on pure-codeset vs reference-data-entity distinction, fix pure-codeset `classificationProfile`.
+- **C6** — Cross-source coherence and authoring discipline. Land `canonical-alignment.md` and `authoring-source-primacy.md` ADRs, add `customProperties.adrs: [...]` on every contract, update authoring guide and architecture doc, resolve pattern-vs-contract gaps.
+- **C7** — Single-contract cleanups. Rename `vehicle-exposure.vehicle_identifier`, resolve dead references, add mutually-exclusive-outcome quality rule on `submission`, resolve `created_datetime` / `updated_datetime` semantic ambiguity, address `source_natural_key` single-slot question.
+
+Acceptance criteria for the milestone:
+
+- All 12 C1 validator rules are live and pass on the full contract set.
+- All cross-source contradictions (identifier strategy, `review` status, status-promotion gates, narrative-classification defaults) are reconciled.
+- Six canonical entity gaps are closed (or the deferral is documented in `canonical-alignment.md`).
+- Codeset coverage extends to the highest-frequency status / type / classification families.
+- `customProperties.adrs: [...]` appears on every contract; validator confirms each id resolves.
+- The canonical-alignment ADR documents every deliberate departure from the recommended modeling defaults.
+- Final canonical surface is at 0.4.x with zero validator findings.
+
 ## Milestone 9: Target Implementation Guidance
 
-Goal: make contracts usable across platforms without changing canonical meaning.
+Goal: project canonical contracts onto a target platform without changing canonical meaning.
 
-Target areas:
+The first and only target in this milestone is **Microsoft Fabric Lakehouse**. The dbt path was retired (W022) once it became clear the consumer is Fabric-native. Databricks, Snowflake, Kafka, API, and semantic projections are out of scope for this milestone and tracked under deferred scope.
 
-- Fabric
-- Databricks
-- Snowflake
-- dbt
-- Kafka
-- API
-- Semantic
+The Fabric projection follows a **metadata-driven** posture: the canonical ODCS contract is the only insurance-aware artifact, a generated Fabric manifest is the only platform-aware artifact, and every downstream artifact (Delta DDL, SCD2 / append / codeset notebook templates, Purview sensitivity manifest, business glossary manifest) is derived from the manifest. No bespoke per-contract code; no hand-authored manifests.
 
-Tasks:
+Detailed plan: `planning-mds/FABRIC_IMPLEMENTATION_PLAN.md`. The plan is authoritative for the Fabric target; this milestone summary mirrors it.
 
-- Define logical-to-target type mappings.
-- Define naming conventions.
-- Define table/view generation rules.
-- Define dbt model conventions.
-- Define Kafka and API schema projection rules.
-- Define semantic projection rules.
+Phasing (per `FABRIC_IMPLEMENTATION_PLAN.md`):
 
-Acceptance criteria:
+- **F1** — Conventions and type mapping documentation under `targets/fabric/`.
+- **F2** — Manifest generator + manifest validator + one golden manifest example (Policy). Pause for review.
+- **F3** — Generate manifests for all 54 contracts.
+- **F4** — Generate Purview sensitivity-labels and business-glossary JSON manifests. (Pulled ahead of DDL/notebooks because the data-classification ADR's payoff materializes only when sensitivity labels reach materialized columns.)
+- **F5** — Generate Spark SQL `CREATE TABLE IF NOT EXISTS` Delta DDL.
+- **F6** — Generate three parameterized Fabric `.ipynb` notebook templates (SCD2 merge, append-only event/transaction, codeset load) plus a lakehouse-binding template.
+- **F7** — Worked end-to-end example walkthrough (Policy + PolicyTerm + PolicyCoverage + PolicyStatusCode).
+- **F8** — Status, planning, and validator closeout; cross-link from root README.
 
-- Target guidance adapts mechanics only.
-- Canonical field meaning, relationships, lifecycle semantics, and quality rules stay unchanged.
-- At least one target has a worked example generated from a completed contract.
+Acceptance criteria for the milestone:
+
+- Every canonical entity contract has a Spark SQL DDL file and an SCD2-capable manifest.
+- Every event/transaction contract has an append-only manifest with correction handling.
+- Every codeset has a SCD2 codeset manifest.
+- Field-level sensitivity classifications produce a Purview sensitivity manifest covering every Delta column.
+- HIPAA-tagged contracts produce PHI-aware Purview entries and notebook annotations.
+- Three notebook templates (SCD2, append, codeset) read any conformant manifest at runtime.
+- Manifests cannot drift from source ODCS contracts: `validate-fabric-manifests.py` enforces SHA-256 digest pinning and structural alignment.
+- The worked example (`targets/fabric/examples/end-to-end-policy.md`) walks the full pipeline end to end.
+- Canonical field meaning, relationships, lifecycle semantics, and quality rules are unchanged by Fabric projection.
 
 ## Milestone 10: Examples, Docs, And Release Governance
 
@@ -441,16 +478,11 @@ Acceptance criteria:
 
 ## First Execution Order
 
-1. Add ODCS template and validation script.
-2. Complete `Party`.
-3. Complete `PartyRole` and `PartyRelationship`.
-4. Complete `Policy`.
-5. Complete `Coverage` and `PolicyCoverage`.
-6. Complete `Exposure`.
-7. Complete `Claim`.
-8. Complete `FinancialTransaction`.
-9. Fill in dependent contracts around the first milestone spine.
-10. Add target and semantic projections after the canonical spine passes validation.
+The original execution order (Milestones 0–8) is complete: ODCS template, validator, party / policy / coverage / exposure / claim / financial / submission / reference-data contracts, glossary, patterns, and design decisions are all in place. The 54 contracts are at version 0.2.0.
+
+Current execution focus is **Milestone 8.5 — Canonical Hardening** per `planning-mds/CANONICAL_HARDENING_PLAN.md`, sequenced C1 → C7. Internal validation surfaced a canonical-layer backlog (cross-cutting bugs, ADR/validator contradictions, missing first-wave entities, codeset taxonomy gaps, ADR back-linking) that must close before any target projection consumes the canonical surface. Fabric work is gated on hardening completion.
+
+After hardening, execution moves to the Fabric target (Milestone 9) per `planning-mds/FABRIC_IMPLEMENTATION_PLAN.md`, sequenced F1 → F8 against the 0.4.x canonical surface. After Fabric, the remaining work is Milestone 10 (examples, docs, release governance) and the deferred scope (risk-transfer family, litigation/arbitration as first-class entities, full assessment-subtype hierarchy, semantic projection, additional targets).
 
 ## Cross-Cutting Conventions (ADR-Backed)
 
@@ -480,7 +512,12 @@ The following business areas are recognized but not modeled in the current miles
 - Self-insurance — captives, retentions, deductible buy-down structures where the named insured retains a layer (see `risk-transfer-scope.md`, W021).
 - Fronting — arrangements where one carrier issues paper for another carrier's risk (see `risk-transfer-scope.md`, W021).
 - Semantic projection — RDF/OWL/SKOS/knowledge-graph derivation (W009).
-- Target guidance for Databricks, Snowflake, Kafka, API — not in the first target wave (dbt and Microsoft Fabric come first).
+- Target guidance for Databricks, Snowflake, Kafka, API — out of scope for this target milestone. Fabric is the only first-wave target.
+- dbt projection — retired (W022). The consumer is Fabric-native; the metadata-driven Fabric projection covers the same ground without an intermediate transformation framework.
+- Gold layer marts, semantic models, and Power BI artifacts — downstream of Silver and not generated by this repository.
+- Bronze ingestion (connectors, Copy activities, scheduling) — upstream of the canonical layer and not modeled here.
+- Streaming ingestion into Silver — out of scope for this target milestone; batch only.
+- Real Fabric workspace deployment automation — this repository ships artifacts; deployment is a consumer responsibility.
 
 ## Definition Of Done For First Usable Release
 
