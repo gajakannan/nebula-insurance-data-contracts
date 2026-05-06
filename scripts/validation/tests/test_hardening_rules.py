@@ -341,6 +341,26 @@ class TestC1_8OverClassificationHeuristic(unittest.TestCase):
         findings = validator.validate_over_classification_heuristic(PATH, data)
         self.assertEqual(len(findings), 1)
 
+    def test_fail_uid_at_restricted_pii(self):
+        """`_uid` fields are opaque GUIDs per identifier-strategy ADR; RESTRICTED+PII is almost certainly a mis-tag."""
+        data = _contract([
+            _prop(
+                "claim_uid",
+                primaryKey=True,
+                required=True,
+                classifications=_classifications(sensitivity="RESTRICTED", regulatory_tags=["PII"]),
+            )
+        ])
+        findings = validator.validate_over_classification_heuristic(PATH, data)
+        self.assertEqual(len(findings), 1)
+        self.assertEqual(findings[0].severity, "warning")
+
+    def test_pass_uid_at_internal(self):
+        data = _contract([
+            _prop("claim_uid", primaryKey=True, required=True),  # default INTERNAL
+        ])
+        self.assertEqual(validator.validate_over_classification_heuristic(PATH, data), [])
+
 
 class TestC1_9ClassificationProfile(unittest.TestCase):
     def test_pass_profile_at_max(self):
@@ -445,6 +465,21 @@ class TestC1_12AdrIdResolution(unittest.TestCase):
         )
         findings = validator.validate_adr_id_resolution(PATH, data, self.index)
         self.assertEqual(len(findings), 1)
+
+
+class TestAllowedStatusesAlignsWithAdr(unittest.TestCase):
+    """C2.2 — validator allowed-status set must match `status-promotion.md`."""
+
+    def test_allowed_statuses_set(self):
+        self.assertEqual(
+            validator.ALLOWED_STATUSES,
+            {"draft", "proposed", "approved", "deprecated", "retired"},
+        )
+
+    def test_review_rejected_by_top_level(self):
+        data = _contract([_prop("test_uid", primaryKey=True, required=True)], status="review")
+        findings = validator.validate_top_level(PATH, data)
+        self.assertTrue(any("must be one of" in f.message for f in findings))
 
 
 if __name__ == "__main__":

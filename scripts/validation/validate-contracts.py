@@ -29,7 +29,7 @@ REQUIRED_TOP_LEVEL = [
     "description",
     "domain",
 ]
-ALLOWED_STATUSES = {"draft", "proposed", "review", "approved", "deprecated", "retired"}
+ALLOWED_STATUSES = {"draft", "proposed", "approved", "deprecated", "retired"}
 PROMOTED_STATUSES = {"approved", "deprecated", "retired"}
 ALLOWED_SEVERITIES = {"info", "warning", "error"}
 ALLOWED_SENSITIVITIES = {"PUBLIC", "INTERNAL", "CONFIDENTIAL", "RESTRICTED"}
@@ -64,6 +64,7 @@ OVER_CLASSIFICATION_SUFFIXES = (
     "_period_code",
     "_territory_code",
     "_region_code",
+    "_uid",  # opaque GUIDs per identifier-strategy ADR; never PII.
 )
 OVER_CLASSIFICATION_PREFIXES = ("accounting_",)
 ADR_DIR = ROOT / "references" / "design-decisions" / "pc"
@@ -684,8 +685,8 @@ def validate_over_classification_heuristic(path: Path, data: dict[str, Any]) -> 
             findings.append(
                 Finding(
                     path,
-                    f"`schema[{entry_index}].properties[{prop_index}]` `{name}` is tagged `RESTRICTED + PII` but matches a status/period/territory/accounting pattern; "
-                    f"verify against data-classification ADR (C1.8).",
+                    f"`schema[{entry_index}].properties[{prop_index}]` `{name}` is tagged `RESTRICTED + PII` but the field name pattern (status/result/period/territory/region/accounting/identifier) "
+                    f"suggests it is unlikely to be personal data; verify against data-classification ADR (C1.8).",
                     severity="warning",
                 )
             )

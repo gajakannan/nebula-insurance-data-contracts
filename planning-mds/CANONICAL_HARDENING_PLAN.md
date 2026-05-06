@@ -4,7 +4,7 @@ This plan defines how the locked-but-imperfect 0.2.0 P&C canonical surface is br
 
 This document is authoritative for canonical hardening. ADRs, validator code, contract YAML, and pattern documents follow what this plan specifies; if they diverge, this plan is the source of truth and the artifacts must be re-aligned.
 
-Last updated: 2026-05-05.
+Last updated: 2026-05-06.
 
 ## 1. Intent
 
@@ -209,7 +209,7 @@ Estimated scope: 1–2 weeks.
 
 Deliverables:
 
-- **C5.1** **Land top 10–15 missing codesets.** Prioritized by frequency of use across the contract set. Initial slate: `feature-status-code`, `document-type-code`, `document-status-code`, `coverage-decision-code`, `relationship-type-code`, `relationship-status-code`, `role-status-code`, `assessment-type-code`, `assessment-status-code`, `assessment-result-code`, `submission-status-code`, `submission-type-code`, `transaction-classification-code`, `expense-classification-code` (ALAE/ULAE per glossary), `claim-type-code`. Generate via `scripts/refactor/generate-codesets.py` extended with the new slate.
+- **C5.1** **Land top 10–15 missing codesets.** Prioritized by frequency of use across the contract set. Initial slate: `feature-status-code`, `document-type-code`, `document-status-code`, `coverage-decision-code`, `relationship-type-code`, `relationship-status-code`, `role-status-code`, `assessment-type-code`, `assessment-status-code`, `assessment-result-code`, `submission-status-code`, `submission-type-code`, `transaction-classification-code`, `expense-classification-code` (ALAE/ULAE per glossary), `claim-type-code`, `source-system-code`. Generate via `scripts/refactor/generate-codesets.py` extended with the new slate. The `source-system-code` codeset captures upstream system identifiers (its rows are populated per deployment); every contract's `source_system_code` field binds to it via a relationship rather than carrying a per-contract codeset exemption — see the C2 amendment to `identifier-strategy.md`.
 - **C5.2** **Add codeset relationships to all `*_code` fields where the codeset exists.** Run scripted across the contract set: for every `*_code` field, if a matching codeset contract exists under `references/odcs/pc/reference-data/`, add a `relationships:` entry pointing to it. C1.2 enforces presence after this phase.
 - **C5.3** **Codeset-strategy ADR addendum.** Document the pure-codeset vs reference-data-entity distinction in `references/design-decisions/pc/codeset-strategy.md`:
   - **Pure codeset**: filename ends `-code`, single `code_value` field, `classificationProfile: PUBLIC`, `customProperties.codesetContract: true`. Used for status / type / classification enumerations.

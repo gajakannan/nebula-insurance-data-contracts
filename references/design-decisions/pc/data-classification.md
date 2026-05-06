@@ -24,10 +24,19 @@ Classifying at the canonical layer makes the contract the single source of truth
 - Contract-level `classificationProfile` is the maximum sensitivity tier present, used by target generators to set the default sensitivity label on the materialized table.
 - HIPAA-relevant contracts (anything carrying `PHI`) declare `customProperties.subjectToHipaa: true` at the contract level so downstream targets can branch their generation logic.
 
+## Narrative free-text default
+
+Narrative free-text fields — properties whose name ends in `_description`, `_notes`, `_narrative`, `_text`, or `_summary` — default to **`CONFIDENTIAL` plus at least one regulatory tag** (`PII` is the typical default; `PHI` for medical narrative; `FINANCIAL` for financial narrative). Free-text routinely contains identifiers, regulated content, or commercially sensitive information that the schema does not enforce, so the default leans conservative.
+
+Authors who need to opt out of this default classify the field with `customProperties.classifications.narrativeException: true` plus a `narrativeExceptionReason` string explaining why the classification is lower than the default. The validator enforces the default and accepts the exception form.
+
+The default does **not** apply to codeset `code_value`, `code_label`, and `code_description` fields on contracts under `references/odcs/pc/reference-data/`. Codeset reference data is `PUBLIC` by design — the values are the same enumerations every consumer sees and they carry no PII / PHI / financial content. The validator carves codeset and reference-data contracts out of the narrative heuristic by path.
+
 ## Guidance
 
 - Use `RESTRICTED` for any field that, if disclosed, would create regulatory or legal exposure. Use `CONFIDENTIAL` for commercial sensitivity (rates, reserves, underwriting comments).
-- Free-text narrative fields default to `CONFIDENTIAL` and `PII` because they routinely contain identifiers that the schema does not enforce.
+- Apply the narrative default above to every new free-text field; document the exception only when there is a real, written reason.
+- Status / period / territory / accounting fields (`_status_code`, `_result_code`, `_period_code`, `_territory_code`, `_region_code`, `accounting_*`) are typically `INTERNAL` with no PII tag — they describe lifecycle / classification metadata, not personal information. The validator emits a warning when these patterns appear at `RESTRICTED + PII` so reviewers can confirm the tagging is intentional.
 - Classifications evolve. Tightening a classification (e.g. INTERNAL → CONFIDENTIAL) is a non-breaking metadata change. Loosening one (e.g. RESTRICTED → CONFIDENTIAL) is a governance decision and must be reviewed by the data steward, even though it does not break a schema consumer.
 
 ## Related
