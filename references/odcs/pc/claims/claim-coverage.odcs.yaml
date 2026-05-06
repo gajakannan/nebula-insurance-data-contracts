@@ -2,14 +2,15 @@ apiVersion: v3.0.2
 kind: DataContract
 id: pc.claim-coverage
 name: ClaimCoverage
-version: 0.1.0
+version: 0.3.0
 status: draft
 description: Canonical contract that connects a claim or claim feature to the policy coverage that responds to it.
 domain: property-and-casualty
 schema:
 - name: claim_coverage
   physicalType: table
-  description: Canonical claim coverage record that ties claim handling to a specific policy coverage. Many-to-one from claim feature to policy coverage when features are used; many-to-many between claim and policy coverage when no feature partition is in place.
+  description: Canonical claim coverage record that ties claim handling to a specific policy coverage. Many-to-one from claim feature to policy coverage when features are used; many-to-many between claim
+    and policy coverage when no feature partition is in place.
   properties:
   - name: claim_coverage_uid
     businessName: Claim Coverage Identifier
@@ -136,6 +137,7 @@ schema:
     customProperties:
       classifications:
         sensitivity: INTERNAL
+    primaryKey: true
   - name: valid_to_datetime
     businessName: Valid To Datetime
     logicalType: datetime
@@ -243,3 +245,4 @@ customProperties:
   classificationProfile: CONFIDENTIAL
   changelog:
   - '0.1.0: Initial claim coverage contract per claims-modeling ADR.'
+  - '0.3.0: Canonical hardening C3 — composite SCD2 PK on (uid, valid_from_datetime) per scd2-primary-key ADR.'

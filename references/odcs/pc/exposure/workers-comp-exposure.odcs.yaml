@@ -2,7 +2,7 @@ apiVersion: v3.0.2
 kind: DataContract
 id: pc.workers-comp-exposure
 name: WorkersCompExposure
-version: 0.2.0
+version: 0.3.0
 status: draft
 description: Canonical contract for workers compensation exposure attributes in Property and Casualty insurance.
 domain: property-and-casualty
@@ -75,7 +75,9 @@ schema:
     description: Source-neutral description of the job duties or work activities represented by the exposure.
     customProperties:
       classifications:
-        sensitivity: INTERNAL
+        sensitivity: CONFIDENTIAL
+        regulatoryTags:
+        - PII
   - name: payroll_amount
     businessName: Payroll Amount
     logicalType: decimal
@@ -86,6 +88,14 @@ schema:
         sensitivity: CONFIDENTIAL
         regulatoryTags:
         - FINANCIAL
+  - name: payroll_currency_code
+    businessName: Payroll Currency Code
+    logicalType: string
+    required: false
+    description: Currency code for the payroll amount. References the CurrencyCode codeset.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
   - name: employee_count
     businessName: Employee Count
     logicalType: integer
@@ -150,6 +160,7 @@ schema:
     customProperties:
       classifications:
         sensitivity: INTERNAL
+    primaryKey: true
   - name: valid_to_datetime
     businessName: Valid To Datetime
     logicalType: datetime
@@ -175,6 +186,14 @@ relationships:
   - exposure_uid
   targetFields:
   - exposure_uid
+- name: workers_comp_exposure_to_currency_for_payroll_amount
+  description: Relates payroll_amount to its currency code.
+  relationshipType: many-to-one
+  targetContractId: pc.currency-code
+  sourceFields:
+  - payroll_currency_code
+  targetFields:
+  - code_value
 quality:
 - rule: workers_comp_exposure_uid_required
   description: workers_comp_exposure_uid must be populated for every record.
@@ -226,3 +245,5 @@ customProperties:
   classificationProfile: CONFIDENTIAL
   changelog:
   - '0.2.0: Apply cross-cutting ADRs (identifier strategy, SCD2 temporal, record state, classifications, codeset references, source attribution).'
+  - '0.3.0: Canonical hardening C3 — composite SCD2 PK on (uid, valid_from_datetime) per scd2-primary-key ADR; add payroll_currency_code sibling for payroll_amount; re-tag narrative free-text field(s) to
+    CONFIDENTIAL + PII: job_duty_description.'

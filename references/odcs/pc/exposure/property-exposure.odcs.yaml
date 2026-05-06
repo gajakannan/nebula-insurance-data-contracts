@@ -2,7 +2,7 @@ apiVersion: v3.0.2
 kind: DataContract
 id: pc.property-exposure
 name: PropertyExposure
-version: 0.2.0
+version: 0.3.0
 status: draft
 description: Canonical contract for property-specific exposure attributes in Property and Casualty insurance.
 domain: property-and-casualty
@@ -108,8 +108,16 @@ schema:
     customProperties:
       classifications:
         sensitivity: CONFIDENTIAL
-        regulatoryTags: &id001
+        regulatoryTags:
         - FINANCIAL
+  - name: building_value_currency_code
+    businessName: Building Value Currency Code
+    logicalType: string
+    required: false
+    description: Currency code for the building value amount. References the CurrencyCode codeset.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
   - name: contents_value_amount
     businessName: Contents Value Amount
     logicalType: decimal
@@ -118,7 +126,16 @@ schema:
     customProperties:
       classifications:
         sensitivity: CONFIDENTIAL
-        regulatoryTags: *id001
+        regulatoryTags:
+        - FINANCIAL
+  - name: contents_value_currency_code
+    businessName: Contents Value Currency Code
+    logicalType: string
+    required: false
+    description: Currency code for the contents value amount. References the CurrencyCode codeset.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
   - name: created_datetime
     businessName: Created Datetime
     logicalType: datetime
@@ -151,6 +168,7 @@ schema:
     customProperties:
       classifications:
         sensitivity: INTERNAL
+    primaryKey: true
   - name: valid_to_datetime
     businessName: Valid To Datetime
     logicalType: datetime
@@ -184,6 +202,22 @@ relationships:
   - property_location_uid
   targetFields:
   - geographic_location_uid
+- name: property_exposure_to_currency_for_building_value_amount
+  description: Relates building_value_amount to its currency code.
+  relationshipType: many-to-one
+  targetContractId: pc.currency-code
+  sourceFields:
+  - building_value_currency_code
+  targetFields:
+  - code_value
+- name: property_exposure_to_currency_for_contents_value_amount
+  description: Relates contents_value_amount to its currency code.
+  relationshipType: many-to-one
+  targetContractId: pc.currency-code
+  sourceFields:
+  - contents_value_currency_code
+  targetFields:
+  - code_value
 quality:
 - rule: property_exposure_uid_required
   description: property_exposure_uid must be populated for every record.
@@ -227,3 +261,5 @@ customProperties:
   classificationProfile: CONFIDENTIAL
   changelog:
   - '0.2.0: Apply cross-cutting ADRs (identifier strategy, SCD2 temporal, record state, classifications, codeset references, source attribution).'
+  - '0.3.0: Canonical hardening C3 — composite SCD2 PK on (uid, valid_from_datetime) per scd2-primary-key ADR; add building_value_currency_code sibling for building_value_amount; add contents_value_currency_code
+    sibling for contents_value_amount.'

@@ -2,7 +2,7 @@ apiVersion: v3.0.2
 kind: DataContract
 id: pc.exposure
 name: Exposure
-version: 0.2.0
+version: 0.3.0
 status: draft
 description: Canonical contract for the measurable risk basis associated with Property and Casualty policy, coverage, claim, underwriting, or analytics context.
 domain: property-and-casualty
@@ -123,9 +123,7 @@ schema:
     description: Territory classification used for rating or risk analysis when applicable.
     customProperties:
       classifications:
-        sensitivity: RESTRICTED
-        regulatoryTags:
-        - PII
+        sensitivity: INTERNAL
   - name: exposure_description
     businessName: Exposure Description
     logicalType: string
@@ -133,7 +131,9 @@ schema:
     description: Source-neutral business description of the exposure when additional context is needed.
     customProperties:
       classifications:
-        sensitivity: INTERNAL
+        sensitivity: CONFIDENTIAL
+        regulatoryTags:
+        - PII
   - name: effective_date
     businessName: Effective Date
     logicalType: date
@@ -182,6 +182,7 @@ schema:
     customProperties:
       classifications:
         sensitivity: INTERNAL
+    primaryKey: true
   - name: valid_to_datetime
     businessName: Valid To Datetime
     logicalType: datetime
@@ -285,3 +286,5 @@ customProperties:
   classificationProfile: RESTRICTED
   changelog:
   - '0.2.0: Apply cross-cutting ADRs (identifier strategy, SCD2 temporal, record state, classifications, codeset references, source attribution).'
+  - '0.3.0: Canonical hardening C3 — composite SCD2 PK on (uid, valid_from_datetime) per scd2-primary-key ADR; re-tag over-classified field(s) to INTERNAL: rating_territory_code; re-tag narrative free-text
+    field(s) to CONFIDENTIAL + PII: exposure_description.'

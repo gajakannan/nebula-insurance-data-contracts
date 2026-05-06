@@ -2,14 +2,15 @@ apiVersion: v3.0.2
 kind: DataContract
 id: pc.product-coverage
 name: ProductCoverage
-version: 0.1.0
+version: 0.3.0
 status: draft
 description: Canonical many-to-many junction contract relating a Product to a Coverage with product-coverage-specific defaults, constraints, and filing context.
 domain: property-and-casualty
 schema:
 - name: product_coverage
   physicalType: table
-  description: Canonical product-coverage record that captures the relationship between a marketed product and a reusable coverage definition, including default selections, constraints, and filing references that vary by product context.
+  description: Canonical product-coverage record that captures the relationship between a marketed product and a reusable coverage definition, including default selections, constraints, and filing references
+    that vary by product context.
   properties:
   - name: product_coverage_uid
     businessName: Product Coverage Identifier
@@ -138,6 +139,8 @@ schema:
         sensitivity: CONFIDENTIAL
         regulatoryTags:
         - FINANCIAL
+      amountCurrencyExempt: true
+      amountCurrencyExemptReason: Bound shares the contract's primary `limit_constraint_currency_code` field; min/max amounts and the primary amount are denominated in the same currency by definition.
   - name: maximum_limit_amount
     businessName: Maximum Limit Amount
     logicalType: decimal
@@ -148,6 +151,8 @@ schema:
         sensitivity: CONFIDENTIAL
         regulatoryTags:
         - FINANCIAL
+      amountCurrencyExempt: true
+      amountCurrencyExemptReason: Bound shares the contract's primary `limit_constraint_currency_code` field; min/max amounts and the primary amount are denominated in the same currency by definition.
   - name: limit_constraint_currency_code
     businessName: Limit Constraint Currency Code
     logicalType: string
@@ -188,6 +193,7 @@ schema:
     customProperties:
       classifications:
         sensitivity: INTERNAL
+    primaryKey: true
   - name: valid_to_datetime
     businessName: Valid To Datetime
     logicalType: datetime
@@ -299,3 +305,5 @@ customProperties:
   classificationProfile: CONFIDENTIAL
   changelog:
   - '0.1.0: Initial junction contract per product-coverage-modeling ADR.'
+  - '0.3.0: Canonical hardening C3 — composite SCD2 PK on (uid, valid_from_datetime) per scd2-primary-key ADR; exempt minimum_limit_amount (shares limit_constraint_currency_code); exempt maximum_limit_amount
+    (shares limit_constraint_currency_code).'

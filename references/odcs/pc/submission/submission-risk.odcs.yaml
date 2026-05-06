@@ -2,7 +2,7 @@ apiVersion: v3.0.2
 kind: DataContract
 id: pc.submission-risk
 name: SubmissionRisk
-version: 0.2.0
+version: 0.3.0
 status: draft
 description: Canonical contract for risk information presented within a Property and Casualty submission.
 domain: property-and-casualty
@@ -99,7 +99,9 @@ schema:
     description: Source-neutral business description of the submitted risk when additional context is needed.
     customProperties:
       classifications:
-        sensitivity: INTERNAL
+        sensitivity: CONFIDENTIAL
+        regulatoryTags:
+        - PII
   - name: effective_date
     businessName: Effective Date
     logicalType: date
@@ -148,6 +150,7 @@ schema:
     customProperties:
       classifications:
         sensitivity: INTERNAL
+    primaryKey: true
   - name: valid_to_datetime
     businessName: Valid To Datetime
     logicalType: datetime
@@ -240,6 +243,8 @@ customProperties:
   domainPackage: pc
   subjectArea: submission
   supportsSubmissionLifecyclePattern: true
-  classificationProfile: INTERNAL
+  classificationProfile: CONFIDENTIAL
   changelog:
   - '0.2.0: Apply cross-cutting ADRs (identifier strategy, SCD2 temporal, record state, classifications, codeset references, source attribution).'
+  - '0.3.0: Canonical hardening C3 — composite SCD2 PK on (uid, valid_from_datetime) per scd2-primary-key ADR; re-tag narrative free-text field(s) to CONFIDENTIAL + PII: risk_description; raise classificationProfile
+    INTERNAL → CONFIDENTIAL (matches max field sensitivity).'

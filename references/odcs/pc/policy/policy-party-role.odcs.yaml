@@ -2,7 +2,7 @@ apiVersion: v3.0.2
 kind: DataContract
 id: pc.policy-party-role
 name: PolicyPartyRole
-version: 0.2.0
+version: 0.3.0
 status: draft
 description: Canonical contract for a party participating in a Property and Casualty policy context.
 domain: property-and-casualty
@@ -132,6 +132,7 @@ schema:
     customProperties:
       classifications:
         sensitivity: INTERNAL
+    primaryKey: true
   - name: valid_to_datetime
     businessName: Valid To Datetime
     logicalType: datetime
@@ -224,3 +225,4 @@ customProperties:
   classificationProfile: INTERNAL
   changelog:
   - '0.2.0: Apply cross-cutting ADRs (identifier strategy, SCD2 temporal, record state, classifications, codeset references, source attribution).'
+  - '0.3.0: Canonical hardening C3 — composite SCD2 PK on (uid, valid_from_datetime) per scd2-primary-key ADR.'

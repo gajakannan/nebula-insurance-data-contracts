@@ -2,7 +2,7 @@ apiVersion: v3.0.2
 kind: DataContract
 id: pc.policy-lifecycle-event
 name: PolicyLifecycleEvent
-version: 0.2.0
+version: 0.3.0
 status: draft
 description: Canonical contract for meaningful lifecycle events in a Property and Casualty policy.
 domain: property-and-casualty
@@ -33,14 +33,6 @@ schema:
     logicalType: string
     required: false
     description: Identifier (GUID reference) for the policy term associated with the lifecycle event when term context is known.
-    customProperties:
-      classifications:
-        sensitivity: INTERNAL
-  - name: lifecycle_event_type_uid
-    businessName: Lifecycle Event Type Identifier
-    logicalType: string
-    required: false
-    description: Identifier (GUID reference) for the lifecycle event type when reference data is available.
     customProperties:
       classifications:
         sensitivity: INTERNAL
@@ -75,9 +67,7 @@ schema:
     description: Policy or term status after the lifecycle event when known.
     customProperties:
       classifications:
-        sensitivity: RESTRICTED
-        regulatoryTags:
-        - PII
+        sensitivity: INTERNAL
   - name: event_datetime
     businessName: Event Datetime
     logicalType: datetime
@@ -101,23 +91,9 @@ schema:
     description: Source-neutral business description of the policy lifecycle event when additional context is needed.
     customProperties:
       classifications:
-        sensitivity: INTERNAL
-  - name: created_datetime
-    businessName: Created Datetime
-    logicalType: datetime
-    required: false
-    description: Datetime when the canonical policy lifecycle event record was created.
-    customProperties:
-      classifications:
-        sensitivity: INTERNAL
-  - name: updated_datetime
-    businessName: Updated Datetime
-    logicalType: datetime
-    required: false
-    description: Datetime when the canonical policy lifecycle event record was last updated.
-    customProperties:
-      classifications:
-        sensitivity: INTERNAL
+        sensitivity: CONFIDENTIAL
+        regulatoryTags:
+        - PII
   - name: triggering_transaction_uid
     businessName: Triggering Transaction Identifier
     logicalType: string
@@ -164,9 +140,9 @@ relationships:
   relationshipType: many-to-one
   targetContractId: pc.lifecycle-event-type
   sourceFields:
-  - lifecycle_event_type_uid
+  - lifecycle_event_type_code
   targetFields:
-  - lifecycle_event_type_uid
+  - code_value
 - name: policy_lifecycle_event_to_initiating_party
   description: Relates a policy lifecycle event to the party that initiated it when known.
   relationshipType: many-to-one
@@ -205,3 +181,5 @@ customProperties:
   classificationProfile: RESTRICTED
   changelog:
   - '0.2.0: Apply cross-cutting ADRs (identifier strategy, SCD2 temporal, record state, classifications, codeset references, source attribution).'
+  - '0.3.0: Canonical hardening C3 — drop created_datetime, updated_datetime (append-only per temporal-modeling ADR); re-tag over-classified field(s) to INTERNAL: resulting_status_code; re-tag narrative
+    free-text field(s) to CONFIDENTIAL + PII: event_description; drop redundant lifecycle_event_type_uid (keep lifecycle_event_type_code).'

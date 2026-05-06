@@ -2,7 +2,7 @@ apiVersion: v3.0.2
 kind: DataContract
 id: pc.policy-transaction
 name: PolicyTransaction
-version: 0.2.0
+version: 0.3.0
 status: draft
 description: Canonical contract for transaction-level policy activity in Property and Casualty insurance.
 domain: property-and-casualty
@@ -44,27 +44,11 @@ schema:
     customProperties:
       classifications:
         sensitivity: INTERNAL
-  - name: transaction_type_uid
-    businessName: Transaction Type Identifier
-    logicalType: string
-    required: false
-    description: Identifier (GUID reference) for the transaction type when reference data is available.
-    customProperties:
-      classifications:
-        sensitivity: INTERNAL
   - name: transaction_type_code
     businessName: Transaction Type Code
     logicalType: string
     required: true
     description: Business-facing code for the policy transaction type.
-    customProperties:
-      classifications:
-        sensitivity: INTERNAL
-  - name: transaction_status_code
-    businessName: Transaction Status Code
-    logicalType: string
-    required: true
-    description: Current lifecycle status of the policy transaction.
     customProperties:
       classifications:
         sensitivity: INTERNAL
@@ -118,8 +102,8 @@ schema:
         sensitivity: CONFIDENTIAL
         regulatoryTags:
         - FINANCIAL
-  - name: premium_currency_code
-    businessName: Premium Currency Code
+  - name: premium_change_currency_code
+    businessName: Premium Change Currency Code
     logicalType: string
     required: false
     description: Currency code for the premium change amount.
@@ -133,23 +117,9 @@ schema:
     description: Source-neutral business description of the policy transaction when additional context is needed.
     customProperties:
       classifications:
-        sensitivity: INTERNAL
-  - name: created_datetime
-    businessName: Created Datetime
-    logicalType: datetime
-    required: false
-    description: Datetime when the canonical policy transaction record was created.
-    customProperties:
-      classifications:
-        sensitivity: INTERNAL
-  - name: updated_datetime
-    businessName: Updated Datetime
-    logicalType: datetime
-    required: false
-    description: Datetime when the canonical policy transaction record was last updated.
-    customProperties:
-      classifications:
-        sensitivity: INTERNAL
+        sensitivity: CONFIDENTIAL
+        regulatoryTags:
+        - PII
   - name: correction_indicator
     businessName: Correction Indicator
     logicalType: boolean
@@ -196,9 +166,9 @@ relationships:
   relationshipType: many-to-one
   targetContractId: pc.transaction-type
   sourceFields:
-  - transaction_type_uid
+  - transaction_type_code
   targetFields:
-  - transaction_type_uid
+  - code_value
 - name: policy_transaction_to_requested_by_party
   description: Relates a policy transaction to the party that requested it when known.
   relationshipType: many-to-one
@@ -228,10 +198,6 @@ quality:
   description: Transaction type code must be populated for every policy transaction.
   dimension: completeness
   severity: error
-- rule: policy_transaction_status_code_required
-  description: Transaction status code must be populated for every policy transaction.
-  dimension: completeness
-  severity: error
 - rule: policy_transaction_effective_date_required
   description: Transaction effective date must be populated for every policy transaction.
   dimension: completeness
@@ -253,3 +219,6 @@ customProperties:
   classificationProfile: CONFIDENTIAL
   changelog:
   - '0.2.0: Apply cross-cutting ADRs (identifier strategy, SCD2 temporal, record state, classifications, codeset references, source attribution).'
+  - '0.3.0: Canonical hardening C3 — drop created_datetime, updated_datetime (append-only per temporal-modeling ADR); drop mutable transaction_status_code (status belongs on lifecycle events); rename premium_currency_code
+    → premium_change_currency_code for currency pairing on premium_change_amount; re-tag narrative free-text field(s) to CONFIDENTIAL + PII: transaction_description; drop redundant transaction_type_uid
+    (keep transaction_type_code).'

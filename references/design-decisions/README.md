@@ -21,6 +21,7 @@ Records of canonical modeling choices. Each decision states the position, the ra
 
 - `pc/identifier-strategy.md` — `*_uid` GUID identity column plus a business-friendly key.
 - `pc/temporal-modeling.md` — bi-temporal model with SCD2 system-time fields.
+- `pc/scd2-primary-key.md` — composite logical PK `(*_uid, valid_from_datetime)` for SCD2 contracts.
 - `pc/record-state.md` — record-level status (soft delete, supersession, merge).
 - `pc/event-and-transaction.md` — lifecycle events and transactions are complementary, with linkage rules.
 

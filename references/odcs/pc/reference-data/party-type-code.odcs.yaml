@@ -2,7 +2,7 @@ apiVersion: v3.0.2
 kind: DataContract
 id: pc.party-type-code
 name: PartyTypeCode
-version: 0.1.0
+version: 0.3.0
 status: draft
 description: Canonical codeset for party classification values such as person, organization, household, and trust.
 domain: property-and-casualty
@@ -76,6 +76,7 @@ schema:
     customProperties:
       classifications:
         sensitivity: INTERNAL
+    primaryKey: true
   - name: valid_to_datetime
     businessName: Valid To Datetime
     logicalType: datetime
@@ -130,3 +131,5 @@ customProperties:
   classificationProfile: INTERNAL
   changelog:
   - '0.1.0: Initial codeset contract generated per codeset-strategy ADR.'
+  - '0.3.0: Canonical hardening C3 — composite SCD2 PK on (uid, valid_from_datetime) per scd2-primary-key ADR.'
+relationships: []

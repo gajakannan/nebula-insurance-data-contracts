@@ -29,7 +29,7 @@ Single-timeline approximations (Type 1 current-state, append-only events without
 
 ## Guidance
 
-- Append-only event contracts (`*LifecycleEvent`, `*Transaction`) do not need SCD2 fields. Each event row is immutable; corrections are modeled as new events. They still get `valid_from_datetime` (the system-time the record landed) for lineage but no `valid_to_datetime`.
+- Append-only event contracts (`*LifecycleEvent`, `*Transaction`) do not carry SCD2 fields at all. Each event row is immutable; corrections are emitted as new rows referencing the corrected row via `correction_indicator` + `corrects_*_uid` (per the event-and-transaction ADR). The system-time the record landed is captured upstream by ingestion metadata and is not modeled as a canonical column on these contracts.
 - Junction contracts (e.g. `ProductCoverage`) follow SCD2 because the relationship itself can change over time.
 - Downstream targets (dbt snapshots, Fabric Lakehouse Delta tables) materialize SCD2 directly. The contract carries the seam; the target chooses the storage strategy.
 

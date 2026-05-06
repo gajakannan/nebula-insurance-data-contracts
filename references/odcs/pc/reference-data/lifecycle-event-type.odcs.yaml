@@ -2,7 +2,7 @@ apiVersion: v3.0.2
 kind: DataContract
 id: pc.lifecycle-event-type
 name: LifecycleEventType
-version: 0.2.0
+version: 0.3.0
 status: draft
 description: Canonical contract for lifecycle event type reference data used across Property and Casualty business lifecycles.
 domain: property-and-casualty
@@ -75,9 +75,7 @@ schema:
     description: Identifier (GUID reference) for the lifecycle status that commonly results from this event type when applicable.
     customProperties:
       classifications:
-        sensitivity: RESTRICTED
-        regulatoryTags:
-        - PII
+        sensitivity: INTERNAL
   - name: transaction_type_uid
     businessName: Transaction Type Identifier
     logicalType: string
@@ -142,6 +140,7 @@ schema:
     customProperties:
       classifications:
         sensitivity: INTERNAL
+    primaryKey: true
   - name: valid_to_datetime
     businessName: Valid To Datetime
     logicalType: datetime
@@ -216,3 +215,4 @@ customProperties:
   classificationProfile: RESTRICTED
   changelog:
   - '0.2.0: Apply cross-cutting ADRs (identifier strategy, SCD2 temporal, record state, classifications, codeset references, source attribution).'
+  - '0.3.0: Canonical hardening C3 — composite SCD2 PK on (uid, valid_from_datetime) per scd2-primary-key ADR; re-tag over-classified field(s) to INTERNAL: resulting_lifecycle_status_uid.'

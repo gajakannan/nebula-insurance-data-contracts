@@ -2,7 +2,7 @@ apiVersion: v3.0.2
 kind: DataContract
 id: pc.claim-feature
 name: ClaimFeature
-version: 0.1.0
+version: 0.3.0
 status: draft
 description: Canonical contract for a claim feature, partitioning a claim into independent handling streams by coverage, peril, claimant, or other business dimension.
 domain: property-and-casualty
@@ -107,7 +107,9 @@ schema:
     description: Source-neutral business description of the claim feature when additional context is needed.
     customProperties:
       classifications:
-        sensitivity: INTERNAL
+        sensitivity: CONFIDENTIAL
+        regulatoryTags:
+        - PII
   - name: record_status_code
     businessName: Record Status Code
     logicalType: string
@@ -124,6 +126,7 @@ schema:
     customProperties:
       classifications:
         sensitivity: INTERNAL
+    primaryKey: true
   - name: valid_to_datetime
     businessName: Valid To Datetime
     logicalType: datetime
@@ -212,6 +215,8 @@ customProperties:
   domainPackage: pc
   subjectArea: claims
   supportsClaimLifecyclePattern: true
-  classificationProfile: INTERNAL
+  classificationProfile: CONFIDENTIAL
   changelog:
   - '0.1.0: Initial claim feature contract per claims-modeling ADR.'
+  - '0.3.0: Canonical hardening C3 — composite SCD2 PK on (uid, valid_from_datetime) per scd2-primary-key ADR; re-tag narrative free-text field(s) to CONFIDENTIAL + PII: feature_description; raise classificationProfile
+    INTERNAL → CONFIDENTIAL (matches max field sensitivity).'

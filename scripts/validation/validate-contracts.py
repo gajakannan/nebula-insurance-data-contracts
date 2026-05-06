@@ -298,8 +298,10 @@ def validate_schema(path: Path, data: dict[str, Any]) -> list[Finding]:
                 primary_keys.append(prop)
                 if prop.get("required") is not True:
                     findings.append(Finding(path, f"{prop_location} primary key fields must be required"))
-                if isinstance(name, str) and not name.endswith("_uid"):
-                    findings.append(Finding(path, f"{prop_location} primary key `{name}` must use `_uid` suffix per identifier-strategy ADR"))
+                # `valid_from_datetime` is the permitted second PK component for the
+                # composite SCD2 primary key per scd2-primary-key.md ADR.
+                if isinstance(name, str) and not name.endswith("_uid") and name != "valid_from_datetime":
+                    findings.append(Finding(path, f"{prop_location} primary key `{name}` must use `_uid` suffix per identifier-strategy ADR (or be `valid_from_datetime` per scd2-primary-key ADR)"))
 
             for f in validate_classifications(prop_location, prop):
                 findings.append(Finding(path, f.message))

@@ -2,7 +2,7 @@ apiVersion: v3.0.2
 kind: DataContract
 id: pc.financial-transaction
 name: FinancialTransaction
-version: 0.2.0
+version: 0.3.0
 status: draft
 description: Canonical contract for monetary activity associated with Property and Casualty policy, claim, coverage, party, and exposure context.
 domain: property-and-casualty
@@ -44,14 +44,6 @@ schema:
     customProperties:
       classifications:
         sensitivity: INTERNAL
-  - name: transaction_status_code
-    businessName: Transaction Status Code
-    logicalType: string
-    required: true
-    description: Current lifecycle status of the financial transaction.
-    customProperties:
-      classifications:
-        sensitivity: INTERNAL
   - name: transaction_effective_date
     businessName: Transaction Effective Date
     logicalType: date
@@ -75,9 +67,7 @@ schema:
     description: Accounting period associated with the financial transaction.
     customProperties:
       classifications:
-        sensitivity: RESTRICTED
-        regulatoryTags:
-        - PII
+        sensitivity: INTERNAL
   - name: transaction_amount
     businessName: Transaction Amount
     logicalType: decimal
@@ -159,23 +149,9 @@ schema:
     description: Source-neutral business description of the financial transaction when additional context is needed.
     customProperties:
       classifications:
-        sensitivity: INTERNAL
-  - name: created_datetime
-    businessName: Created Datetime
-    logicalType: datetime
-    required: false
-    description: Datetime when the canonical financial transaction record was created.
-    customProperties:
-      classifications:
-        sensitivity: INTERNAL
-  - name: updated_datetime
-    businessName: Updated Datetime
-    logicalType: datetime
-    required: false
-    description: Datetime when the canonical financial transaction record was last updated.
-    customProperties:
-      classifications:
-        sensitivity: INTERNAL
+        sensitivity: CONFIDENTIAL
+        regulatoryTags:
+        - PII
   - name: lifecycle_event_uid
     businessName: Lifecycle Event Identifier
     logicalType: string
@@ -250,10 +226,6 @@ quality:
   description: Transaction type code must be populated.
   dimension: completeness
   severity: error
-- rule: financial_transaction_status_code_required
-  description: Transaction status code must be populated.
-  dimension: completeness
-  severity: error
 - rule: financial_transaction_amount_required
   description: Transaction amount must be populated.
   dimension: completeness
@@ -279,3 +251,5 @@ customProperties:
   classificationProfile: RESTRICTED
   changelog:
   - '0.2.0: Apply cross-cutting ADRs (identifier strategy, SCD2 temporal, record state, classifications, codeset references, source attribution).'
+  - '0.3.0: Canonical hardening C3 — drop created_datetime, updated_datetime (append-only per temporal-modeling ADR); drop mutable transaction_status_code (status belongs on lifecycle events); re-tag over-classified
+    field(s) to INTERNAL: accounting_period_code; re-tag narrative free-text field(s) to CONFIDENTIAL + PII: transaction_description.'

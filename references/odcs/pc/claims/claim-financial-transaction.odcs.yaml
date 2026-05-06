@@ -9,7 +9,8 @@ domain: property-and-casualty
 schema:
 - name: claim_financial_transaction
   physicalType: table
-  description: Append-only canonical record of a financial movement attached to a claim. Specializes the FinancialTransaction pattern with claim, feature, coverage, party-role, and reserve-category context. Original rows are immutable; corrections are emitted as new rows referencing the corrected row.
+  description: Append-only canonical record of a financial movement attached to a claim. Specializes the FinancialTransaction pattern with claim, feature, coverage, party-role, and reserve-category context.
+    Original rows are immutable; corrections are emitted as new rows referencing the corrected row.
   properties:
   - name: claim_financial_transaction_uid
     businessName: Claim Financial Transaction Identifier
