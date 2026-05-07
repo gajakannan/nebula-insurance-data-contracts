@@ -213,6 +213,19 @@ customProperties:
   domainPackage: pc
   subjectArea: claims
   classificationProfile: CONFIDENTIAL
+  adrs:
+  - authoring-source-primacy
+  - canonical-alignment
+  - claims-modeling
+  - codeset-strategy
+  - data-classification
+  - identifier-strategy
+  - null-semantics
+  - record-state
+  - scd2-primary-key
+  - status-promotion
+  - temporal-modeling
+  - versioning-policy
   changelog:
   - '0.1.0: Initial catastrophe contract per claims-modeling ADR; canonical hardening C4.2.'
   - '0.1.1: Canonical hardening C5 — bind 1 *_code field(s) to codeset(s) (C5.2); add codesetExempt to 2 field(s) (C5.2).'

@@ -14,9 +14,10 @@ nebula-insurance-data-contracts/
 │   │   ├── pc/
 │   │   │   ├── core/
 │   │   │   │   ├── party.odcs.yaml
-│   │   │   │   ├── party-role.odcs.yaml
 │   │   │   │   ├── party-relationship.odcs.yaml
 │   │   │   │   ├── account.odcs.yaml
+│   │   │   │   ├── account-relationship.odcs.yaml
+│   │   │   │   ├── account-party-role.odcs.yaml
 │   │   │   │   └── agreement.odcs.yaml
 │   │   │   │
 │   │   │   ├── submission/
@@ -38,6 +39,7 @@ nebula-insurance-data-contracts/
 │   │   │   ├── coverage/
 │   │   │   │   ├── product.odcs.yaml
 │   │   │   │   ├── coverage.odcs.yaml
+│   │   │   │   ├── product-coverage.odcs.yaml
 │   │   │   │   ├── policy-coverage.odcs.yaml
 │   │   │   │   ├── policy-limit.odcs.yaml
 │   │   │   │   └── policy-deductible.odcs.yaml
@@ -45,6 +47,7 @@ nebula-insurance-data-contracts/
 │   │   │   ├── exposure/
 │   │   │   │   ├── insurable-object.odcs.yaml
 │   │   │   │   ├── insurable-object-classification.odcs.yaml
+│   │   │   │   ├── insurable-object-party-role.odcs.yaml
 │   │   │   │   ├── exposure.odcs.yaml
 │   │   │   │   ├── vehicle-exposure.odcs.yaml
 │   │   │   │   ├── property-exposure.odcs.yaml
@@ -52,16 +55,18 @@ nebula-insurance-data-contracts/
 │   │   │   │
 │   │   │   ├── claims/
 │   │   │   │   ├── claim.odcs.yaml
-│   │   │   │   ├── claim-event.odcs.yaml
 │   │   │   │   ├── claim-coverage.odcs.yaml
+│   │   │   │   ├── claim-feature.odcs.yaml
 │   │   │   │   ├── claim-party-role.odcs.yaml
-│   │   │   │   └── claim-document.odcs.yaml
+│   │   │   │   ├── claim-document.odcs.yaml
+│   │   │   │   ├── claim-lifecycle-event.odcs.yaml
+│   │   │   │   ├── claim-financial-transaction.odcs.yaml
+│   │   │   │   ├── occurrence.odcs.yaml
+│   │   │   │   └── catastrophe.odcs.yaml
 │   │   │   │
 │   │   │   ├── financial/
 │   │   │   │   ├── financial-transaction.odcs.yaml
-│   │   │   │   ├── policy-financial-transaction.odcs.yaml
-│   │   │   │   ├── claim-financial-transaction.odcs.yaml
-│   │   │   │   └── financial-transaction-classification.odcs.yaml
+│   │   │   │   └── policy-financial-transaction.odcs.yaml
 │   │   │   │
 │   │   │   └── reference-data/
 │   │   │       ├── geographic-location.odcs.yaml
@@ -69,7 +74,9 @@ nebula-insurance-data-contracts/
 │   │   │       ├── line-of-business.odcs.yaml
 │   │   │       ├── transaction-type.odcs.yaml
 │   │   │       ├── lifecycle-status.odcs.yaml
-│   │   │       └── lifecycle-event-type.odcs.yaml
+│   │   │       ├── lifecycle-event-type.odcs.yaml
+│   │   │       ├── financial-transaction-classification.odcs.yaml
+│   │   │       └── ... (pure codesets: *-status-code, *-type-code, etc.)
 │   │   │
 │   │   ├── life/
 │   │   ├── health/
@@ -84,20 +91,30 @@ nebula-insurance-data-contracts/
 │   ├── design-decisions/
 │   │   ├── README.md
 │   │   └── pc/
+│   │       ├── canonical-alignment.md
+│   │       ├── authoring-source-primacy.md
 │   │       ├── entity-boundaries.md
 │   │       ├── submission-modeling.md
 │   │       ├── policy-lifecycle-modeling.md
 │   │       ├── exposure-modeling.md
 │   │       ├── financial-modeling.md
-│   │       └── role-modeling.md
+│   │       ├── role-modeling.md
+│   │       ├── identifier-strategy.md
+│   │       ├── temporal-modeling.md
+│   │       ├── scd2-primary-key.md
+│   │       ├── record-state.md
+│   │       ├── codeset-strategy.md
+│   │       └── ... (full ADR index in references/design-decisions/README.md)
 │   │
 │   └── patterns/
 │       ├── README.md
 │       └── pc/
+│           ├── account-pattern.md
 │           ├── party-role-pattern.md
 │           ├── submission-lifecycle-pattern.md
 │           ├── policy-lifecycle-pattern.md
 │           ├── policy-coverage-pattern.md
+│           ├── claim-lifecycle-pattern.md
 │           ├── exposure-pattern.md
 │           └── financial-transaction-pattern.md
 │
@@ -291,3 +308,21 @@ Medallion view        = how data moves through the platform
 Operating lifecycle   = how insurance work moves through the business
 Canonical contracts   = the stable agreement between both
 ```
+
+## Commercial Lines Boundary
+
+The `core/` subject area carries `Account`, `AccountRelationship`, `AccountPartyRole`, and `Agreement` contracts that support commercial-lines business where one customer holds multiple policies under a master agreement.
+
+```text
+Account
+    │
+    ├── AccountRelationship   (parent / subsidiary / aggregation)
+    ├── AccountPartyRole      (named insured, billing contact, broker of record, ...)
+    └── Agreement             (master policy, blanket coverage, schedule, program)
+            │
+            └── Policy        (account_uid + agreement_uid as optional FKs)
+```
+
+This shape was added during canonical hardening C4.5 as a deliberate scope expansion. The original C4.5 default was to amend — defer the account / agreement layer until commercial-line scope expanded. The reversal landed because the user-driven scope expansion brought commercial-lines into the first wave. `Policy`, `Submission`, and `PolicyFinancialTransaction` carry optional `account_uid` and `agreement_uid` FKs that are populated for commercial-lines records and left null for personal-lines records.
+
+The deliberate-departure rationale and the cross-references to `entity-boundaries.md` and `account-pattern.md` are recorded in `references/design-decisions/pc/canonical-alignment.md`.

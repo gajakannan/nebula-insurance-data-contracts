@@ -36,3 +36,5 @@ Records of canonical modeling choices. Each decision states the position, the ra
 
 - `pc/versioning-policy.md` — SemVer with data-contract-specific semantics for MAJOR/MINOR/PATCH.
 - `pc/status-promotion.md` — `draft → proposed → approved → deprecated → retired` with explicit gates.
+- `pc/canonical-alignment.md` — register of deliberate departures from recommended modeling defaults, plus the list of concepts deliberately deferred from the current canonical surface.
+- `pc/authoring-source-primacy.md` — primacy order ADR > pattern > glossary > contract > validator; documents which artifact to update first when something changes.

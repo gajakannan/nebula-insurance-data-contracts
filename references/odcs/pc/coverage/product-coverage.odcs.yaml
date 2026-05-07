@@ -331,6 +331,20 @@ customProperties:
   subjectArea: coverage
   supportsPolicyCoveragePattern: true
   classificationProfile: CONFIDENTIAL
+  adrs:
+  - authoring-source-primacy
+  - canonical-alignment
+  - codeset-strategy
+  - currency-convention
+  - data-classification
+  - identifier-strategy
+  - null-semantics
+  - product-coverage-modeling
+  - record-state
+  - scd2-primary-key
+  - status-promotion
+  - temporal-modeling
+  - versioning-policy
   changelog:
   - '0.1.0: Initial junction contract per product-coverage-modeling ADR.'
   - '0.3.0: Canonical hardening C3 — composite SCD2 PK on (uid, valid_from_datetime) per scd2-primary-key ADR; exempt minimum_limit_amount (shares limit_constraint_currency_code); exempt maximum_limit_amount

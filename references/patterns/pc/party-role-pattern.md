@@ -18,7 +18,7 @@ InsurableObjectPartyRole
 AccountPartyRole
 ```
 
-A generic `PartyRole` contract is **not** part of the canonical surface. The polymorphic `context_type_code + context_uid` shape it would require cannot be validated by ODCS, and every shipped use case maps to one of the five context-specific role contracts. Authors needing a new role context add a new context-specific contract following the same shape.
+A generic `PartyRole` contract is **not** part of the canonical surface. The polymorphic `context_type_code + context_uid` shape it would require cannot be validated by ODCS, and every shipped use case maps to one of the five context-specific role contracts. Authors needing a new role context add a new context-specific contract following the same shape. The deliberate-departure rationale is recorded in `references/design-decisions/pc/canonical-alignment.md` and `references/design-decisions/pc/role-modeling.md`.
 
 ## Common Role Examples
 

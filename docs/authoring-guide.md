@@ -2,6 +2,26 @@
 
 This guide contains the reusable authoring rules for Nebula Insurance Data Contracts. The root README explains what the repository is; this file explains how to add or change contracts.
 
+## Authoring Source Primacy
+
+When the canonical layer changes, contributors update artifacts in a fixed primacy order:
+
+```text
+ADR  >  pattern  >  glossary  >  contract  >  validator
+```
+
+The leftmost artifact is authoritative. When two artifacts disagree, the leftmost wins, and the rightmost is the one that must catch up. Update the ADR first; then patterns, glossary, and contracts; the validator is updated last because it codifies what the ADR has already decided. See `references/design-decisions/pc/authoring-source-primacy.md` for the full rationale and resolution procedure.
+
+A practical workflow when a rule changes:
+
+1. Update the relevant ADR — edit the rule statement, note the change in the ADR's "Consequences" or "Related" section, and (if the change reverses a prior decision) move the prior decision to a "Superseded" or "History" subsection rather than deleting it.
+2. Update patterns under `references/patterns/pc/` if the change affects how the ADR is applied across a contract family.
+3. Update the glossary if the change renames or re-scopes a canonical term.
+4. Apply the change to contracts. For changes touching more than three contracts, write an idempotent refactor script under `scripts/refactor/` (modeled on `apply-hardening-c5.py` or `apply-hardening-c6.py`). Bump the version per `versioning-policy.md` and append a changelog entry that names the specific ADR (or ADR section) driving the change.
+5. Update the validator last. Add the rule to `scripts/validation/validate-contracts.py` and a unit test under `scripts/validation/tests/`.
+
+The deliberate departures and deferrals that shape the current canonical surface are documented in `references/design-decisions/pc/canonical-alignment.md`. Read that ADR before introducing new contracts, reversing a deferral, or proposing a new departure.
+
 ## Cross-Cutting Conventions
 
 Every contract authored or changed in this repository must comply with the cross-cutting design decisions in `references/design-decisions/pc/`. Read the index at `references/design-decisions/README.md` first; the conventions below summarize what the validator enforces.
@@ -16,6 +36,7 @@ Every contract authored or changed in this repository must comply with the cross
 - **Data classification** — every property declares `customProperties.classifications` with a `sensitivity` tier and any applicable regulatory tags (PII, PHI, PCI, SPI, FINANCIAL). Contract-level `classificationProfile` summarizes the most-sensitive class present. See `data-classification.md`.
 - **Versioning** — SemVer with data-contract semantics; the validator checks well-formedness. See `versioning-policy.md`.
 - **Status promotion** — gated transitions `draft → proposed → approved → deprecated → retired`. See `status-promotion.md`.
+- **ADR back-links** — every contract carries `customProperties.adrs: [...]` naming the ADRs that govern its shape. The validator's C1.12 rule confirms each id resolves to a file under `references/design-decisions/pc/`. When an ADR change drives a contract change, update the contract's `adrs` list to match.
 
 ## Contract Workflow
 
@@ -24,14 +45,15 @@ When adding or changing a contract:
 1. Start with the business concept.
 2. Decide whether it belongs to an existing contract, a role contract, a classification, reference data, a lifecycle event, or a new contract — see `separation-and-nesting.md`.
 3. Check existing patterns under `references/patterns/`.
-4. Check design rationale under `references/design-decisions/`.
+4. Check design rationale under `references/design-decisions/`. If a deliberate departure or deferral might apply, check `canonical-alignment.md`.
 5. Add or update the ODCS YAML using the cross-cutting conventions above.
 6. Add meaningful data quality rules.
-7. Add design rationale if the modeling choice is significant.
+7. Add design rationale if the modeling choice is significant. When a new ADR is introduced, follow the primacy order: ADR first, then pattern/glossary, then contracts, then validator.
 8. Keep platform-specific guidance out of canonical contracts.
-9. Run the validator (`python3 scripts/validation/validate-contracts.py`).
-10. Update examples, glossary terms, or documentation when needed.
-11. Bump version per `versioning-policy.md` and append a changelog entry under `customProperties.changelog`.
+9. Update `customProperties.adrs: [...]` to name the ADRs that govern the contract's shape. The validator's C1.12 rule confirms each id resolves.
+10. Run the validator (`python3 scripts/validation/validate-contracts.py`).
+11. Update examples, glossary terms, or documentation when needed.
+12. Bump version per `versioning-policy.md` and append a changelog entry under `customProperties.changelog` that names the specific ADR (or ADR section) driving the change. Generic "apply cross-cutting ADRs" entries are no longer acceptable; entries should name which ADR drove which field addition. Existing pre-0.3.0 entries are not retroactively rewritten — those are git history.
 
 Use `references/odcs/templates/pc-contract-template.odcs.yaml` as the starting point for new P&C contracts.
 
@@ -210,6 +232,17 @@ customProperties:
   contractFamily: property-and-casualty
   domainPackage: pc
   classificationProfile: INTERNAL
+  adrs:
+    - authoring-source-primacy
+    - canonical-alignment
+    - codeset-strategy
+    - data-classification
+    - identifier-strategy
+    - record-state
+    - scd2-primary-key
+    - status-promotion
+    - temporal-modeling
+    - versioning-policy
 ```
 
 Append-only event/transaction contracts use a different shape: they skip SCD2 and `record_status_code` and instead carry `correction_indicator` plus `corrects_*_uid` per `event-and-transaction.md`.

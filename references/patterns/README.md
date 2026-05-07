@@ -4,6 +4,7 @@ Reusable modeling patterns for canonical insurance data contracts.
 
 ## Property and Casualty
 
+- `pc/account-pattern.md`
 - `pc/party-role-pattern.md`
 - `pc/submission-lifecycle-pattern.md`
 - `pc/policy-lifecycle-pattern.md`

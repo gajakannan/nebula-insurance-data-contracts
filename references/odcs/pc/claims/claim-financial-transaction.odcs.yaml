@@ -259,6 +259,19 @@ customProperties:
   subjectArea: claims
   supportsFinancialTransactionPattern: true
   classificationProfile: CONFIDENTIAL
+  adrs:
+  - authoring-source-primacy
+  - canonical-alignment
+  - claims-modeling
+  - codeset-strategy
+  - currency-convention
+  - data-classification
+  - event-and-transaction
+  - financial-modeling
+  - identifier-strategy
+  - status-promotion
+  - temporal-modeling
+  - versioning-policy
   changelog:
   - '0.1.0: Initial claim financial transaction contract per claims-modeling and event-and-transaction ADRs.'
   - '0.1.1: Canonical hardening C5 — bind 1 *_code field(s) to codeset(s) (C5.2); add codesetExempt to 2 field(s) (C5.2).'

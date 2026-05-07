@@ -306,6 +306,19 @@ customProperties:
   subjectArea: financial
   supportsFinancialTransactionPattern: true
   classificationProfile: CONFIDENTIAL
+  adrs:
+  - authoring-source-primacy
+  - canonical-alignment
+  - codeset-strategy
+  - currency-convention
+  - data-classification
+  - event-and-transaction
+  - financial-modeling
+  - identifier-strategy
+  - policy-lifecycle-modeling
+  - status-promotion
+  - temporal-modeling
+  - versioning-policy
   changelog:
   - '0.1.0: Initial policy financial transaction contract per financial-modeling and event-and-transaction ADRs; canonical hardening C4.6.'
   - '0.2.0: Canonical hardening C4.5 — add account_uid FK to new pc.account contract and agreement_uid FK to new pc.agreement contract for commercial-lines financial rollups.'

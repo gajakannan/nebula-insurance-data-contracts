@@ -130,6 +130,18 @@ customProperties:
   subjectArea: financial
   codesetContract: true
   classificationProfile: PUBLIC
+  adrs:
+  - authoring-source-primacy
+  - canonical-alignment
+  - codeset-strategy
+  - data-classification
+  - financial-modeling
+  - identifier-strategy
+  - record-state
+  - scd2-primary-key
+  - status-promotion
+  - temporal-modeling
+  - versioning-policy
   changelog:
   - '0.1.0: Initial codeset contract per codeset-strategy ADR; canonical hardening C4.6.'
   - '0.1.1: Canonical hardening C5 — lift classificationProfile to PUBLIC (C5.4 pure codeset); flip 4 field sensitivities to PUBLIC (C5.4 pure codeset).'

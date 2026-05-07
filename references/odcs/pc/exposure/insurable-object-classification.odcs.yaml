@@ -232,6 +232,20 @@ customProperties:
   subjectArea: exposure
   supportsExposurePattern: true
   classificationProfile: CONFIDENTIAL
+  adrs:
+  - authoring-source-primacy
+  - canonical-alignment
+  - codeset-strategy
+  - data-classification
+  - exposure-modeling
+  - identifier-strategy
+  - null-semantics
+  - record-state
+  - scd2-primary-key
+  - separation-and-nesting
+  - status-promotion
+  - temporal-modeling
+  - versioning-policy
   changelog:
   - '0.2.0: Apply cross-cutting ADRs (identifier strategy, SCD2 temporal, record state, classifications, codeset references, source attribution).'
   - '0.3.0: Canonical hardening C3 — composite SCD2 PK on (uid, valid_from_datetime) per scd2-primary-key ADR; re-tag narrative free-text field(s) to CONFIDENTIAL + PII: classification_description; raise

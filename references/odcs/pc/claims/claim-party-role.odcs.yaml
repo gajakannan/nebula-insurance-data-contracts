@@ -239,6 +239,20 @@ customProperties:
   subjectArea: claims
   supportsPartyRolePattern: true
   classificationProfile: INTERNAL
+  adrs:
+  - authoring-source-primacy
+  - canonical-alignment
+  - claims-modeling
+  - codeset-strategy
+  - data-classification
+  - identifier-strategy
+  - null-semantics
+  - record-state
+  - role-modeling
+  - scd2-primary-key
+  - status-promotion
+  - temporal-modeling
+  - versioning-policy
   changelog:
   - '0.1.0: Initial claim party role contract per claims-modeling ADR.'
   - '0.3.0: Canonical hardening C3 — composite SCD2 PK on (uid, valid_from_datetime) per scd2-primary-key ADR.'

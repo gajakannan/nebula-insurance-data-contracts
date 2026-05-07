@@ -129,6 +129,17 @@ customProperties:
   subjectArea: core
   codesetContract: true
   classificationProfile: PUBLIC
+  adrs:
+  - authoring-source-primacy
+  - canonical-alignment
+  - codeset-strategy
+  - data-classification
+  - identifier-strategy
+  - record-state
+  - scd2-primary-key
+  - status-promotion
+  - temporal-modeling
+  - versioning-policy
   changelog:
   - '0.1.0: Initial codeset contract generated per codeset-strategy ADR.'
   - '0.3.0: Canonical hardening C3 — composite SCD2 PK on (uid, valid_from_datetime) per scd2-primary-key ADR.'

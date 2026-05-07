@@ -260,6 +260,21 @@ customProperties:
   subjectArea: coverage
   supportsPolicyCoveragePattern: true
   classificationProfile: CONFIDENTIAL
+  adrs:
+  - authoring-source-primacy
+  - canonical-alignment
+  - codeset-strategy
+  - currency-convention
+  - data-classification
+  - identifier-strategy
+  - null-semantics
+  - product-coverage-modeling
+  - record-state
+  - scd2-primary-key
+  - separation-and-nesting
+  - status-promotion
+  - temporal-modeling
+  - versioning-policy
   changelog:
   - '0.2.0: Apply cross-cutting ADRs (identifier strategy, SCD2 temporal, record state, classifications, codeset references, source attribution).'
   - '0.3.0: Canonical hardening C3 — composite SCD2 PK on (uid, valid_from_datetime) per scd2-primary-key ADR; exempt minimum_deductible_amount (shares deductible_currency_code); exempt maximum_deductible_amount

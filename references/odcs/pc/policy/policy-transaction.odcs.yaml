@@ -225,6 +225,19 @@ customProperties:
   subjectArea: policy
   supportsPolicyLifecyclePattern: true
   classificationProfile: CONFIDENTIAL
+  adrs:
+  - authoring-source-primacy
+  - canonical-alignment
+  - codeset-strategy
+  - currency-convention
+  - data-classification
+  - event-and-transaction
+  - financial-modeling
+  - identifier-strategy
+  - policy-lifecycle-modeling
+  - status-promotion
+  - temporal-modeling
+  - versioning-policy
   changelog:
   - '0.2.0: Apply cross-cutting ADRs (identifier strategy, SCD2 temporal, record state, classifications, codeset references, source attribution).'
   - '0.3.0: Canonical hardening C3 — drop created_datetime, updated_datetime (append-only per temporal-modeling ADR); drop mutable transaction_status_code (status belongs on lifecycle events); rename premium_currency_code
