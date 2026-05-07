@@ -1,0 +1,483 @@
+manifestVersion: 1.0.0
+contract:
+  id: pc.property-exposure
+  name: PropertyExposure
+  version: 0.4.1
+  domain: property-and-casualty
+  description: Canonical contract for property-specific exposure attributes in Property and Casualty insurance.
+  classificationProfile: CONFIDENTIAL
+  subjectToHipaa: false
+  contractKind: entity
+  subjectArea: exposure
+  adrs:
+  - authoring-source-primacy
+  - canonical-alignment
+  - codeset-strategy
+  - currency-convention
+  - data-classification
+  - exposure-modeling
+  - identifier-strategy
+  - null-semantics
+  - record-state
+  - scd2-primary-key
+  - status-promotion
+  - temporal-modeling
+  - versioning-policy
+fabric:
+  lakehouse: nebula_pc_silver
+  schema: silver_exposure
+  table:
+    name: property_exposure
+    delta:
+      tableProperties:
+        delta.appendOnly: false
+        delta.autoOptimize.optimizeWrite: true
+        delta.autoOptimize.autoCompact: true
+        delta.enableChangeDataFeed: true
+      partitionedBy:
+      - is_current_indicator
+      zorderBy:
+      - property_exposure_uid
+      vorder: true
+  columns:
+  - name: property_exposure_uid
+    sparkType: STRING
+    nullable: false
+    primaryKey: true
+    role: identity
+    description: Immutable system-generated GUID that uniquely identifies the canonical property exposure
+      record across snapshots and source systems.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: source_system_code
+    sparkType: STRING
+    nullable: true
+    role: source-attribution
+    description: Identifier of the upstream system that produced or last asserted this record. Used for
+      multi-source mastering and lineage.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    codeReference:
+      codeset: pc.source-system-code
+      codesetTable: silver_reference_data.source_system_code
+      codesetField: code_value
+  - name: source_natural_key
+    sparkType: STRING
+    nullable: true
+    role: source-attribution
+    description: Natural key assigned by the source system. Captured for provenance; not used as the canonical
+      primary key.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: exposure_uid
+    sparkType: STRING
+    nullable: false
+    role: foreign-key
+    description: Identifier (GUID reference) for the shared exposure record that this property detail
+      extends.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    foreignKey:
+      targetContract: pc.exposure
+      targetTable: silver_exposure.exposure
+      targetField: exposure_uid
+  - name: property_location_uid
+    sparkType: STRING
+    nullable: true
+    role: data
+    description: Identifier (GUID reference) for the geographic location of the property.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    codeReference:
+      codeset: pc.geographic-location
+      codesetTable: silver_reference_data.geographic_location
+      codesetField: geographic_location_uid
+  - name: property_use_code
+    sparkType: STRING
+    nullable: true
+    role: data
+    description: Classification of how the property is used in the insured context.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: occupancy_type_code
+    sparkType: STRING
+    nullable: true
+    role: data
+    description: Classification of the occupancy associated with the property exposure.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: construction_type_code
+    sparkType: STRING
+    nullable: true
+    role: data
+    description: Classification of the construction type associated with the property exposure.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: protection_class_code
+    sparkType: STRING
+    nullable: true
+    role: data
+    description: Fire protection or public protection classification associated with the property exposure
+      when applicable.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: year_built_number
+    sparkType: INT
+    nullable: true
+    role: business-key
+    description: Year the property structure was built.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: square_footage_count
+    sparkType: INT
+    nullable: true
+    role: data
+    description: Area of the property structure measured in square feet when applicable.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: building_value_amount
+    sparkType: DECIMAL(18, 2)
+    nullable: true
+    role: monetary-amount
+    description: Valuation amount for the building or structure when used for underwriting, rating, or
+      analytics.
+    classifications:
+      sensitivity: CONFIDENTIAL
+      regulatoryTags:
+      - FINANCIAL
+    purview:
+      sensitivityLabel: Confidential
+    currencyPair:
+      pairedColumn: building_value_currency_code
+  - name: building_value_currency_code
+    sparkType: STRING
+    nullable: true
+    role: monetary-currency
+    description: Currency code for the building value amount. References the CurrencyCode codeset.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    codeReference:
+      codeset: pc.currency-code
+      codesetTable: silver_reference_data.currency_code
+      codesetField: code_value
+  - name: contents_value_amount
+    sparkType: DECIMAL(18, 2)
+    nullable: true
+    role: monetary-amount
+    description: Valuation amount for contents associated with the property exposure when applicable.
+    classifications:
+      sensitivity: CONFIDENTIAL
+      regulatoryTags:
+      - FINANCIAL
+    purview:
+      sensitivityLabel: Confidential
+    currencyPair:
+      pairedColumn: contents_value_currency_code
+  - name: contents_value_currency_code
+    sparkType: STRING
+    nullable: true
+    role: monetary-currency
+    description: Currency code for the contents value amount. References the CurrencyCode codeset.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    codeReference:
+      codeset: pc.currency-code
+      codesetTable: silver_reference_data.currency_code
+      codesetField: code_value
+  - name: source_created_datetime
+    sparkType: TIMESTAMP
+    nullable: true
+    role: source-time
+    description: Source-system timestamp asserting when this record was created. Captured for late-arriving-data
+      analysis; distinct from the SCD2 system-time start in valid_from_datetime.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: source_updated_datetime
+    sparkType: TIMESTAMP
+    nullable: true
+    role: source-time
+    description: Source-system timestamp asserting when this record was last updated. Captured for late-arriving-data
+      analysis; distinct from the SCD2 system-time markers valid_from_datetime / valid_to_datetime.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: record_status_code
+    sparkType: STRING
+    nullable: false
+    role: record-state
+    description: Warehouse-level state of the record. References the RecordStatusCode codeset (ACTIVE,
+      SUPERSEDED, SOFT_DELETED, RESTATED, MERGED).
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    codeReference:
+      codeset: pc.record-status-code
+      codesetTable: silver_reference_data.record_status_code
+      codesetField: code_value
+  - name: valid_from_datetime
+    sparkType: TIMESTAMP
+    nullable: false
+    primaryKey: true
+    role: scd2-valid-from
+    description: System-time start of the SCD2 window for this record version.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: valid_to_datetime
+    sparkType: TIMESTAMP
+    nullable: true
+    role: scd2-valid-to
+    description: System-time end of the SCD2 window for this record version. Null indicates the current
+      row.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: is_current_indicator
+    sparkType: BOOLEAN
+    nullable: false
+    role: scd2-is-current
+    description: True for exactly one row per logical key, indicating the current record version.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  scd2:
+    enabled: true
+    validFrom: valid_from_datetime
+    validTo: valid_to_datetime
+    isCurrent: is_current_indicator
+    naturalKey:
+    - property_exposure_uid
+    deletionAware: false
+    changeDetection:
+      excludeFromHashing:
+      - valid_from_datetime
+      - valid_to_datetime
+      - is_current_indicator
+      - record_status_code
+  recordState:
+    enabled: true
+    field: record_status_code
+    activeValue: ACTIVE
+    supersededValue: SUPERSEDED
+    softDeletedValue: SOFT_DELETED
+  appendOnly:
+    enabled: false
+    correctionIndicator: null
+    correctsRefField: null
+    businessTimeField: null
+    partitionExpression: null
+  qualityRules:
+  - id: property_exposure_uid_required
+    type: not_null
+    column: property_exposure_uid
+    severity: error
+    sourceRule: property_exposure_uid_required
+  - id: property_exposure_exposure_uid_required
+    type: not_null
+    column: exposure_uid
+    severity: error
+    sourceRule: property_exposure_exposure_uid_required
+  - id: property_exposure_square_footage_not_negative
+    type: expression
+    expression: 'TRUE  -- TODO: derive from contract description: Square footage count should not be negative
+      when populated.'
+    severity: warning
+    sourceRule: property_exposure_square_footage_not_negative
+  - id: property_exposure_value_amounts_not_negative
+    type: expression
+    expression: 'TRUE  -- TODO: derive from contract description: Building value amount and contents value
+      amount should not be negative when populated.'
+    severity: warning
+    sourceRule: property_exposure_value_amounts_not_negative
+  - id: valid_from_datetime_required
+    type: not_null
+    column: valid_from_datetime
+    severity: error
+    sourceRule: valid_from_datetime_required
+  - id: valid_window_consistent
+    type: expression
+    expression: valid_to_datetime IS NULL OR valid_to_datetime > valid_from_datetime
+    severity: error
+    sourceRule: valid_window_consistent
+  - id: single_current_row_per_key
+    type: unique
+    keyColumns:
+    - property_exposure_uid
+    filter: is_current_indicator = true
+    severity: error
+    sourceRule: single_current_row_per_key
+  - id: record_status_code_required
+    type: not_null
+    column: record_status_code
+    severity: error
+    sourceRule: record_status_code_required
+  - id: building_value_amount_currency_pair
+    type: currency_pair
+    amountColumn: building_value_amount
+    currencyColumn: building_value_currency_code
+    severity: error
+    sourceRule: derived
+  - id: contents_value_amount_currency_pair
+    type: currency_pair
+    amountColumn: contents_value_amount
+    currencyColumn: contents_value_currency_code
+    severity: error
+    sourceRule: derived
+  - id: source_system_code_in_codeset
+    type: accepted_values
+    column: source_system_code
+    codeset: pc.source-system-code
+    codesetTable: silver_reference_data.source_system_code
+    codesetField: code_value
+    severity: error
+    sourceRule: derived
+  - id: property_location_uid_in_codeset
+    type: accepted_values
+    column: property_location_uid
+    codeset: pc.geographic-location
+    codesetTable: silver_reference_data.geographic_location
+    codesetField: geographic_location_uid
+    severity: error
+    sourceRule: derived
+  - id: building_value_currency_code_in_codeset
+    type: accepted_values
+    column: building_value_currency_code
+    codeset: pc.currency-code
+    codesetTable: silver_reference_data.currency_code
+    codesetField: code_value
+    severity: error
+    sourceRule: derived
+  - id: contents_value_currency_code_in_codeset
+    type: accepted_values
+    column: contents_value_currency_code
+    codeset: pc.currency-code
+    codesetTable: silver_reference_data.currency_code
+    codesetField: code_value
+    severity: error
+    sourceRule: derived
+  - id: record_status_code_in_codeset
+    type: accepted_values
+    column: record_status_code
+    codeset: pc.record-status-code
+    codesetTable: silver_reference_data.record_status_code
+    codesetField: code_value
+    severity: error
+    sourceRule: derived
+  bronze:
+    table: bronze.property_exposure_raw
+    incrementalColumn: _ingested_at
+    expectedColumns:
+    - property_exposure_uid
+    - source_system_code
+    - source_natural_key
+    - exposure_uid
+    - property_location_uid
+    - property_use_code
+    - occupancy_type_code
+    - construction_type_code
+    - protection_class_code
+    - year_built_number
+    - square_footage_count
+    - building_value_amount
+    - building_value_currency_code
+    - contents_value_amount
+    - contents_value_currency_code
+    - source_created_datetime
+    - source_updated_datetime
+    - record_status_code
+    - valid_from_datetime
+    - valid_to_datetime
+    - is_current_indicator
+relationships:
+- name: property_exposure_to_exposure
+  description: Relates property exposure detail to the shared exposure record.
+  cardinality: many-to-one
+  targetContract: pc.exposure
+  targetTable: silver_exposure.exposure
+  sourceFields:
+  - exposure_uid
+  targetFields:
+  - exposure_uid
+- name: property_exposure_to_property_location
+  description: Relates property exposure detail to the property location when available.
+  cardinality: many-to-one
+  targetContract: pc.geographic-location
+  targetTable: silver_reference_data.geographic_location
+  sourceFields:
+  - property_location_uid
+  targetFields:
+  - geographic_location_uid
+- name: property_exposure_to_currency_for_building_value_amount
+  description: Relates building_value_amount to its currency code.
+  cardinality: many-to-one
+  targetContract: pc.currency-code
+  targetTable: silver_reference_data.currency_code
+  sourceFields:
+  - building_value_currency_code
+  targetFields:
+  - code_value
+- name: property_exposure_to_currency_for_contents_value_amount
+  description: Relates contents_value_amount to its currency code.
+  cardinality: many-to-one
+  targetContract: pc.currency-code
+  targetTable: silver_reference_data.currency_code
+  sourceFields:
+  - contents_value_currency_code
+  targetFields:
+  - code_value
+- name: property_exposure_source_system_code_to_source_system_code
+  description: Binds source_system_code to the canonical source-system-code codeset.
+  cardinality: many-to-one
+  targetContract: pc.source-system-code
+  targetTable: silver_reference_data.source_system_code
+  sourceFields:
+  - source_system_code
+  targetFields:
+  - code_value
+- name: property_exposure_record_status_code_to_record_status_code
+  description: Binds record_status_code to the canonical record-status-code codeset.
+  cardinality: many-to-one
+  targetContract: pc.record-status-code
+  targetTable: silver_reference_data.record_status_code
+  sourceFields:
+  - record_status_code
+  targetFields:
+  - code_value
+generation:
+  generatorVersion: 1.0.0
+  generatedAt: '2026-05-07T00:00:00Z'
+  sourceContractPath: references/odcs/pc/exposure/property-exposure.odcs.yaml
+  sourceContractDigest: sha256:ebadac34153658da884c0285e1298925f3af573d28b86145676cf7de3e91d11b

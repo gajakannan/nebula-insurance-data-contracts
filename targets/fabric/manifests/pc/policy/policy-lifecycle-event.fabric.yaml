@@ -1,0 +1,359 @@
+manifestVersion: 1.0.0
+contract:
+  id: pc.policy-lifecycle-event
+  name: PolicyLifecycleEvent
+  version: 0.4.0
+  domain: property-and-casualty
+  description: Canonical contract for meaningful lifecycle events in a Property and Casualty policy.
+  classificationProfile: RESTRICTED
+  subjectToHipaa: false
+  contractKind: event
+  subjectArea: policy
+  adrs:
+  - authoring-source-primacy
+  - canonical-alignment
+  - codeset-strategy
+  - data-classification
+  - event-and-transaction
+  - identifier-strategy
+  - policy-lifecycle-modeling
+  - status-promotion
+  - temporal-modeling
+  - versioning-policy
+fabric:
+  lakehouse: nebula_pc_silver
+  schema: silver_policy
+  table:
+    name: policy_lifecycle_event
+    delta:
+      tableProperties:
+        delta.appendOnly: true
+        delta.autoOptimize.optimizeWrite: true
+        delta.autoOptimize.autoCompact: true
+        delta.enableChangeDataFeed: true
+      partitionedBy:
+      - event_datetime
+      zorderBy: []
+      vorder: true
+  columns:
+  - name: policy_lifecycle_event_uid
+    sparkType: STRING
+    nullable: false
+    primaryKey: true
+    role: identity
+    description: Immutable system-generated GUID that uniquely identifies the canonical policy lifecycle
+      event record across snapshots and source systems.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: policy_uid
+    sparkType: STRING
+    nullable: false
+    role: foreign-key
+    description: Identifier (GUID reference) for the policy associated with the lifecycle event.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    foreignKey:
+      targetContract: pc.policy
+      targetTable: silver_policy.policy
+      targetField: policy_uid
+  - name: policy_term_uid
+    sparkType: STRING
+    nullable: true
+    role: foreign-key
+    description: Identifier (GUID reference) for the policy term associated with the lifecycle event when
+      term context is known.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    foreignKey:
+      targetContract: pc.policy-term
+      targetTable: silver_policy.policy_term
+      targetField: policy_term_uid
+  - name: lifecycle_event_type_code
+    sparkType: STRING
+    nullable: false
+    role: code-reference
+    description: Business-facing code for the lifecycle event type.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    codeReference:
+      codeset: pc.lifecycle-event-type
+      codesetTable: silver_reference_data.lifecycle_event_type
+      codesetField: code_value
+  - name: lifecycle_event_status_code
+    sparkType: STRING
+    nullable: true
+    role: code-reference
+    description: Current lifecycle status of the lifecycle event record.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    codeReference:
+      codeset: pc.lifecycle-status
+      codesetTable: silver_reference_data.lifecycle_status
+      codesetField: code_value
+  - name: prior_status_code
+    sparkType: STRING
+    nullable: true
+    role: code-reference
+    description: Policy or term status before the lifecycle event when known.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    codeReference:
+      codeset: pc.lifecycle-status
+      codesetTable: silver_reference_data.lifecycle_status
+      codesetField: code_value
+  - name: resulting_status_code
+    sparkType: STRING
+    nullable: true
+    role: code-reference
+    description: Policy or term status after the lifecycle event when known.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    codeReference:
+      codeset: pc.lifecycle-status
+      codesetTable: silver_reference_data.lifecycle_status
+      codesetField: code_value
+  - name: event_datetime
+    sparkType: TIMESTAMP
+    nullable: false
+    role: data
+    description: Datetime when the policy lifecycle event occurred.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: initiated_by_party_uid
+    sparkType: STRING
+    nullable: true
+    role: foreign-key
+    description: Identifier (GUID reference) for the party that initiated the policy lifecycle event when
+      known.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    foreignKey:
+      targetContract: pc.party
+      targetTable: silver_core.party
+      targetField: party_uid
+  - name: event_description
+    sparkType: STRING
+    nullable: true
+    role: data
+    description: Source-neutral business description of the policy lifecycle event when additional context
+      is needed.
+    classifications:
+      sensitivity: CONFIDENTIAL
+      regulatoryTags:
+      - PII
+    purview:
+      sensitivityLabel: Confidential
+  - name: triggering_transaction_uid
+    sparkType: STRING
+    nullable: true
+    role: data
+    description: Optional reference to the transaction that produced this lifecycle event, when the event
+      is the consequence of a processed transaction.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: correction_indicator
+    sparkType: BOOLEAN
+    nullable: false
+    role: event-correction-flag
+    description: True when this row corrects a previously emitted row. False for original (uncorrected)
+      rows.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: corrects_policy_lifecycle_event_uid
+    sparkType: STRING
+    nullable: true
+    role: event-corrects-ref
+    description: Reference to the prior row that this row corrects. Populated only when correction_indicator
+      is true.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  scd2:
+    enabled: false
+    validFrom: null
+    validTo: null
+    isCurrent: null
+    naturalKey: []
+    deletionAware: false
+    changeDetection:
+      excludeFromHashing: []
+  recordState:
+    enabled: false
+    field: null
+    activeValue: null
+    supersededValue: null
+    softDeletedValue: null
+  appendOnly:
+    enabled: true
+    correctionIndicator: correction_indicator
+    correctsRefField: corrects_policy_lifecycle_event_uid
+    businessTimeField: event_datetime
+    partitionExpression: MONTH(event_datetime)
+  qualityRules:
+  - id: policy_lifecycle_event_uid_required
+    type: not_null
+    column: policy_lifecycle_event_uid
+    severity: error
+    sourceRule: policy_lifecycle_event_uid_required
+  - id: policy_lifecycle_event_policy_uid_required
+    type: not_null
+    column: policy_uid
+    severity: error
+    sourceRule: policy_lifecycle_event_policy_uid_required
+  - id: policy_lifecycle_event_type_code_required
+    type: not_null
+    column: lifecycle_event_type_code
+    severity: error
+    sourceRule: policy_lifecycle_event_type_code_required
+  - id: policy_lifecycle_event_datetime_required
+    type: not_null
+    column: event_datetime
+    severity: error
+    sourceRule: policy_lifecycle_event_datetime_required
+  - id: correction_indicator_required
+    type: not_null
+    column: correction_indicator
+    severity: error
+    sourceRule: correction_indicator_required
+  - id: lifecycle_event_type_code_in_codeset
+    type: accepted_values
+    column: lifecycle_event_type_code
+    codeset: pc.lifecycle-event-type
+    codesetTable: silver_reference_data.lifecycle_event_type
+    codesetField: code_value
+    severity: error
+    sourceRule: derived
+  - id: lifecycle_event_status_code_in_codeset
+    type: accepted_values
+    column: lifecycle_event_status_code
+    codeset: pc.lifecycle-status
+    codesetTable: silver_reference_data.lifecycle_status
+    codesetField: code_value
+    severity: error
+    sourceRule: derived
+  - id: prior_status_code_in_codeset
+    type: accepted_values
+    column: prior_status_code
+    codeset: pc.lifecycle-status
+    codesetTable: silver_reference_data.lifecycle_status
+    codesetField: code_value
+    severity: error
+    sourceRule: derived
+  - id: resulting_status_code_in_codeset
+    type: accepted_values
+    column: resulting_status_code
+    codeset: pc.lifecycle-status
+    codesetTable: silver_reference_data.lifecycle_status
+    codesetField: code_value
+    severity: error
+    sourceRule: derived
+  bronze:
+    table: bronze.policy_lifecycle_event_raw
+    incrementalColumn: _ingested_at
+    expectedColumns:
+    - policy_lifecycle_event_uid
+    - policy_uid
+    - policy_term_uid
+    - lifecycle_event_type_code
+    - lifecycle_event_status_code
+    - prior_status_code
+    - resulting_status_code
+    - event_datetime
+    - initiated_by_party_uid
+    - event_description
+    - triggering_transaction_uid
+    - correction_indicator
+    - corrects_policy_lifecycle_event_uid
+relationships:
+- name: policy_lifecycle_event_to_policy
+  description: Relates a policy lifecycle event to the policy whose lifecycle changed.
+  cardinality: many-to-one
+  targetContract: pc.policy
+  targetTable: silver_policy.policy
+  sourceFields:
+  - policy_uid
+  targetFields:
+  - policy_uid
+- name: policy_lifecycle_event_to_policy_term
+  description: Relates a policy lifecycle event to the policy term associated with the event when term
+    context is known.
+  cardinality: many-to-one
+  targetContract: pc.policy-term
+  targetTable: silver_policy.policy_term
+  sourceFields:
+  - policy_term_uid
+  targetFields:
+  - policy_term_uid
+- name: policy_lifecycle_event_to_lifecycle_event_type
+  description: Relates a policy lifecycle event to lifecycle event type reference data when available.
+  cardinality: many-to-one
+  targetContract: pc.lifecycle-event-type
+  targetTable: silver_reference_data.lifecycle_event_type
+  sourceFields:
+  - lifecycle_event_type_code
+  targetFields:
+  - code_value
+- name: policy_lifecycle_event_to_initiating_party
+  description: Relates a policy lifecycle event to the party that initiated it when known.
+  cardinality: many-to-one
+  targetContract: pc.party
+  targetTable: silver_core.party
+  sourceFields:
+  - initiated_by_party_uid
+  targetFields:
+  - party_uid
+- name: policy_lifecycle_event_lifecycle_event_status_code_to_lifecycle_status
+  description: Binds lifecycle_event_status_code to the canonical lifecycle-status codeset.
+  cardinality: many-to-one
+  targetContract: pc.lifecycle-status
+  targetTable: silver_reference_data.lifecycle_status
+  sourceFields:
+  - lifecycle_event_status_code
+  targetFields:
+  - code_value
+- name: policy_lifecycle_event_prior_status_code_to_lifecycle_status
+  description: Binds prior_status_code to the canonical lifecycle-status codeset.
+  cardinality: many-to-one
+  targetContract: pc.lifecycle-status
+  targetTable: silver_reference_data.lifecycle_status
+  sourceFields:
+  - prior_status_code
+  targetFields:
+  - code_value
+- name: policy_lifecycle_event_resulting_status_code_to_lifecycle_status
+  description: Binds resulting_status_code to the canonical lifecycle-status codeset.
+  cardinality: many-to-one
+  targetContract: pc.lifecycle-status
+  targetTable: silver_reference_data.lifecycle_status
+  sourceFields:
+  - resulting_status_code
+  targetFields:
+  - code_value
+generation:
+  generatorVersion: 1.0.0
+  generatedAt: '2026-05-07T00:00:00Z'
+  sourceContractPath: references/odcs/pc/policy/policy-lifecycle-event.odcs.yaml
+  sourceContractDigest: sha256:64d97597edcd4d65bafd8d59af6ab4aa8583e407538be8f8729e887843eb9ad4

@@ -1,0 +1,550 @@
+manifestVersion: 1.0.0
+contract:
+  id: pc.submission
+  name: Submission
+  version: 0.4.2
+  domain: property-and-casualty
+  description: Canonical contract for Property and Casualty submission intake and current submission summary.
+  classificationProfile: CONFIDENTIAL
+  subjectToHipaa: false
+  contractKind: entity
+  subjectArea: submission
+  adrs:
+  - authoring-source-primacy
+  - canonical-alignment
+  - codeset-strategy
+  - data-classification
+  - entity-boundaries
+  - identifier-strategy
+  - null-semantics
+  - record-state
+  - scd2-primary-key
+  - status-promotion
+  - submission-modeling
+  - temporal-modeling
+  - versioning-policy
+fabric:
+  lakehouse: nebula_pc_silver
+  schema: silver_submission
+  table:
+    name: submission
+    delta:
+      tableProperties:
+        delta.appendOnly: false
+        delta.autoOptimize.optimizeWrite: true
+        delta.autoOptimize.autoCompact: true
+        delta.enableChangeDataFeed: true
+      partitionedBy:
+      - is_current_indicator
+      zorderBy:
+      - submission_uid
+      vorder: true
+  columns:
+  - name: submission_uid
+    sparkType: STRING
+    nullable: false
+    primaryKey: true
+    role: identity
+    description: Immutable system-generated GUID that uniquely identifies the canonical submission record
+      across snapshots and source systems.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: source_system_code
+    sparkType: STRING
+    nullable: true
+    role: source-attribution
+    description: Identifier of the upstream system that produced or last asserted this record. Used for
+      multi-source mastering and lineage.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    codeReference:
+      codeset: pc.source-system-code
+      codesetTable: silver_reference_data.source_system_code
+      codesetField: code_value
+  - name: source_natural_key
+    sparkType: STRING
+    nullable: true
+    role: source-attribution
+    description: Natural key assigned by the source system. Captured for provenance; not used as the canonical
+      primary key.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: submission_number
+    sparkType: STRING
+    nullable: false
+    role: business-key
+    description: Business-facing number assigned to the submission.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: submission_status_code
+    sparkType: STRING
+    nullable: false
+    role: code-reference
+    description: Current lifecycle status of the submission.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    codeReference:
+      codeset: pc.submission-status-code
+      codesetTable: silver_reference_data.submission_status_code
+      codesetField: code_value
+  - name: submission_type_code
+    sparkType: STRING
+    nullable: true
+    role: code-reference
+    description: Classification of the submission type, such as new business, renewal, rewrite, or other
+      recognized intake type.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    codeReference:
+      codeset: pc.submission-type-code
+      codesetTable: silver_reference_data.submission_type_code
+      codesetField: code_value
+  - name: line_of_business_code
+    sparkType: STRING
+    nullable: false
+    role: code-reference
+    description: Line of business associated with the submission.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    codeReference:
+      codeset: pc.line-of-business
+      codesetTable: silver_reference_data.line_of_business
+      codesetField: code_value
+  - name: account_uid
+    sparkType: STRING
+    nullable: true
+    role: foreign-key
+    description: Identifier (GUID reference) for the commercial account the submission belongs to. Required
+      for commercial-lines submissions; null for personal-lines submissions that do not live under an
+      account.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    foreignKey:
+      targetContract: pc.account
+      targetTable: silver_core.account
+      targetField: account_uid
+  - name: agreement_uid
+    sparkType: STRING
+    nullable: true
+    role: foreign-key
+    description: Identifier (GUID reference) for the master legal or program agreement the submission
+      is being placed under, when applicable (typically renewals or extensions under an existing master
+      program).
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    foreignKey:
+      targetContract: pc.agreement
+      targetTable: silver_core.agreement
+      targetField: agreement_uid
+  - name: product_uid
+    sparkType: STRING
+    nullable: true
+    role: foreign-key
+    description: Identifier (GUID reference) for the product associated with the submission when a product
+      is known.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    foreignKey:
+      targetContract: pc.product
+      targetTable: silver_product.product
+      targetField: product_uid
+  - name: related_policy_uid
+    sparkType: STRING
+    nullable: true
+    role: foreign-key
+    description: Identifier (GUID reference) for a policy associated with the submission when the submission
+      binds, issues, renews, or rewrites policy context.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    foreignKey:
+      targetContract: pc.policy
+      targetTable: silver_policy.policy
+      targetField: policy_uid
+  - name: received_date
+    sparkType: DATE
+    nullable: false
+    role: data
+    description: Date when the submission was received for consideration.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: requested_effective_date
+    sparkType: DATE
+    nullable: true
+    role: data
+    description: Requested effective date for the insurance being submitted.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: quote_date
+    sparkType: DATE
+    nullable: true
+    role: data
+    description: Date when a quote was provided for the submission.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: bind_date
+    sparkType: DATE
+    nullable: true
+    role: data
+    description: Date when the submission was bound when applicable.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: decline_date
+    sparkType: DATE
+    nullable: true
+    role: data
+    description: Date when the submission was declined when applicable.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: withdrawn_date
+    sparkType: DATE
+    nullable: true
+    role: data
+    description: Date when the submission was withdrawn when applicable.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: submission_description
+    sparkType: STRING
+    nullable: true
+    role: data
+    description: Source-neutral business description of the submission when additional context is needed.
+    classifications:
+      sensitivity: CONFIDENTIAL
+      regulatoryTags:
+      - PII
+    purview:
+      sensitivityLabel: Confidential
+  - name: source_created_datetime
+    sparkType: TIMESTAMP
+    nullable: true
+    role: source-time
+    description: Source-system timestamp asserting when this record was created. Captured for late-arriving-data
+      analysis; distinct from the SCD2 system-time start in valid_from_datetime.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: source_updated_datetime
+    sparkType: TIMESTAMP
+    nullable: true
+    role: source-time
+    description: Source-system timestamp asserting when this record was last updated. Captured for late-arriving-data
+      analysis; distinct from the SCD2 system-time markers valid_from_datetime / valid_to_datetime.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: record_status_code
+    sparkType: STRING
+    nullable: false
+    role: record-state
+    description: Warehouse-level state of the record. References the RecordStatusCode codeset (ACTIVE,
+      SUPERSEDED, SOFT_DELETED, RESTATED, MERGED).
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    codeReference:
+      codeset: pc.record-status-code
+      codesetTable: silver_reference_data.record_status_code
+      codesetField: code_value
+  - name: valid_from_datetime
+    sparkType: TIMESTAMP
+    nullable: false
+    primaryKey: true
+    role: scd2-valid-from
+    description: System-time start of the SCD2 window for this record version.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: valid_to_datetime
+    sparkType: TIMESTAMP
+    nullable: true
+    role: scd2-valid-to
+    description: System-time end of the SCD2 window for this record version. Null indicates the current
+      row.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: is_current_indicator
+    sparkType: BOOLEAN
+    nullable: false
+    role: scd2-is-current
+    description: True for exactly one row per logical key, indicating the current record version.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  scd2:
+    enabled: true
+    validFrom: valid_from_datetime
+    validTo: valid_to_datetime
+    isCurrent: is_current_indicator
+    naturalKey:
+    - submission_uid
+    deletionAware: false
+    changeDetection:
+      excludeFromHashing:
+      - valid_from_datetime
+      - valid_to_datetime
+      - is_current_indicator
+      - record_status_code
+  recordState:
+    enabled: true
+    field: record_status_code
+    activeValue: ACTIVE
+    supersededValue: SUPERSEDED
+    softDeletedValue: SOFT_DELETED
+  appendOnly:
+    enabled: false
+    correctionIndicator: null
+    correctsRefField: null
+    businessTimeField: null
+    partitionExpression: null
+  qualityRules:
+  - id: submission_uid_required
+    type: not_null
+    column: submission_uid
+    severity: error
+    sourceRule: submission_uid_required
+  - id: submission_number_required
+    type: not_null
+    column: submission_number
+    severity: error
+    sourceRule: submission_number_required
+  - id: submission_status_code_required
+    type: not_null
+    column: submission_status_code
+    severity: error
+    sourceRule: submission_status_code_required
+  - id: submission_line_of_business_code_required
+    type: not_null
+    column: line_of_business_code
+    severity: error
+    sourceRule: submission_line_of_business_code_required
+  - id: submission_received_date_required
+    type: not_null
+    column: received_date
+    severity: error
+    sourceRule: submission_received_date_required
+  - id: valid_from_datetime_required
+    type: not_null
+    column: valid_from_datetime
+    severity: error
+    sourceRule: valid_from_datetime_required
+  - id: valid_window_consistent
+    type: expression
+    expression: valid_to_datetime IS NULL OR valid_to_datetime > valid_from_datetime
+    severity: error
+    sourceRule: valid_window_consistent
+  - id: single_current_row_per_key
+    type: unique
+    keyColumns:
+    - submission_uid
+    filter: is_current_indicator = true
+    severity: error
+    sourceRule: single_current_row_per_key
+  - id: record_status_code_required
+    type: not_null
+    column: record_status_code
+    severity: error
+    sourceRule: record_status_code_required
+  - id: submission_outcome_dates_mutually_exclusive
+    type: expression
+    expression: 'TRUE  -- TODO: derive from contract description: At most one of bind_date, decline_date,
+      or withdrawn_date is populated per snapshot. Submission outcomes are mutually exclusive — a submission
+      cannot be both bound and declined, both bound and withdrawn, or both declined and withdrawn.'
+    severity: error
+    sourceRule: submission_outcome_dates_mutually_exclusive
+  - id: source_system_code_in_codeset
+    type: accepted_values
+    column: source_system_code
+    codeset: pc.source-system-code
+    codesetTable: silver_reference_data.source_system_code
+    codesetField: code_value
+    severity: error
+    sourceRule: derived
+  - id: submission_status_code_in_codeset
+    type: accepted_values
+    column: submission_status_code
+    codeset: pc.submission-status-code
+    codesetTable: silver_reference_data.submission_status_code
+    codesetField: code_value
+    severity: error
+    sourceRule: derived
+  - id: submission_type_code_in_codeset
+    type: accepted_values
+    column: submission_type_code
+    codeset: pc.submission-type-code
+    codesetTable: silver_reference_data.submission_type_code
+    codesetField: code_value
+    severity: error
+    sourceRule: derived
+  - id: line_of_business_code_in_codeset
+    type: accepted_values
+    column: line_of_business_code
+    codeset: pc.line-of-business
+    codesetTable: silver_reference_data.line_of_business
+    codesetField: code_value
+    severity: error
+    sourceRule: derived
+  - id: record_status_code_in_codeset
+    type: accepted_values
+    column: record_status_code
+    codeset: pc.record-status-code
+    codesetTable: silver_reference_data.record_status_code
+    codesetField: code_value
+    severity: error
+    sourceRule: derived
+  bronze:
+    table: bronze.submission_raw
+    incrementalColumn: _ingested_at
+    expectedColumns:
+    - submission_uid
+    - source_system_code
+    - source_natural_key
+    - submission_number
+    - submission_status_code
+    - submission_type_code
+    - line_of_business_code
+    - account_uid
+    - agreement_uid
+    - product_uid
+    - related_policy_uid
+    - received_date
+    - requested_effective_date
+    - quote_date
+    - bind_date
+    - decline_date
+    - withdrawn_date
+    - submission_description
+    - source_created_datetime
+    - source_updated_datetime
+    - record_status_code
+    - valid_from_datetime
+    - valid_to_datetime
+    - is_current_indicator
+relationships:
+- name: submission_to_product
+  description: Relates a submission to the product being considered when product context is available.
+  cardinality: many-to-one
+  targetContract: pc.product
+  targetTable: silver_product.product
+  sourceFields:
+  - product_uid
+  targetFields:
+  - product_uid
+- name: submission_to_related_policy
+  description: Relates a submission to policy context when the submission binds, issues, renews, or rewrites
+    a policy.
+  cardinality: many-to-one
+  targetContract: pc.policy
+  targetTable: silver_policy.policy
+  sourceFields:
+  - related_policy_uid
+  targetFields:
+  - policy_uid
+- name: submission_to_account
+  description: Relates a submission to the commercial account it belongs to when account context is available.
+  cardinality: many-to-one
+  targetContract: pc.account
+  targetTable: silver_core.account
+  sourceFields:
+  - account_uid
+  targetFields:
+  - account_uid
+- name: submission_to_agreement
+  description: Relates a submission to the master legal or program agreement it is being placed under
+    when applicable.
+  cardinality: many-to-one
+  targetContract: pc.agreement
+  targetTable: silver_core.agreement
+  sourceFields:
+  - agreement_uid
+  targetFields:
+  - agreement_uid
+- name: submission_source_system_code_to_source_system_code
+  description: Binds source_system_code to the canonical source-system-code codeset.
+  cardinality: many-to-one
+  targetContract: pc.source-system-code
+  targetTable: silver_reference_data.source_system_code
+  sourceFields:
+  - source_system_code
+  targetFields:
+  - code_value
+- name: submission_submission_status_code_to_submission_status_code
+  description: Binds submission_status_code to the canonical submission-status-code codeset.
+  cardinality: many-to-one
+  targetContract: pc.submission-status-code
+  targetTable: silver_reference_data.submission_status_code
+  sourceFields:
+  - submission_status_code
+  targetFields:
+  - code_value
+- name: submission_submission_type_code_to_submission_type_code
+  description: Binds submission_type_code to the canonical submission-type-code codeset.
+  cardinality: many-to-one
+  targetContract: pc.submission-type-code
+  targetTable: silver_reference_data.submission_type_code
+  sourceFields:
+  - submission_type_code
+  targetFields:
+  - code_value
+- name: submission_line_of_business_code_to_line_of_business
+  description: Binds line_of_business_code to the canonical line-of-business codeset.
+  cardinality: many-to-one
+  targetContract: pc.line-of-business
+  targetTable: silver_reference_data.line_of_business
+  sourceFields:
+  - line_of_business_code
+  targetFields:
+  - code_value
+- name: submission_record_status_code_to_record_status_code
+  description: Binds record_status_code to the canonical record-status-code codeset.
+  cardinality: many-to-one
+  targetContract: pc.record-status-code
+  targetTable: silver_reference_data.record_status_code
+  sourceFields:
+  - record_status_code
+  targetFields:
+  - code_value
+generation:
+  generatorVersion: 1.0.0
+  generatedAt: '2026-05-07T00:00:00Z'
+  sourceContractPath: references/odcs/pc/submission/submission.odcs.yaml
+  sourceContractDigest: sha256:2933011249688c521648f85c5232779ff7b95bb21bfdc3e64e44813b07fa6a8e

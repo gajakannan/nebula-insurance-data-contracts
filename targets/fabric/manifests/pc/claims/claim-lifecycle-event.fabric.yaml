@@ -1,0 +1,283 @@
+manifestVersion: 1.0.0
+contract:
+  id: pc.claim-lifecycle-event
+  name: ClaimLifecycleEvent
+  version: 0.1.1
+  domain: property-and-casualty
+  description: Canonical contract for lifecycle events in the Property and Casualty claim history.
+  classificationProfile: CONFIDENTIAL
+  subjectToHipaa: false
+  contractKind: event
+  subjectArea: claims
+  adrs:
+  - authoring-source-primacy
+  - canonical-alignment
+  - claims-modeling
+  - codeset-strategy
+  - data-classification
+  - event-and-transaction
+  - identifier-strategy
+  - status-promotion
+  - temporal-modeling
+  - versioning-policy
+fabric:
+  lakehouse: nebula_pc_silver
+  schema: silver_claims
+  table:
+    name: claim_lifecycle_event
+    delta:
+      tableProperties:
+        delta.appendOnly: true
+        delta.autoOptimize.optimizeWrite: true
+        delta.autoOptimize.autoCompact: true
+        delta.enableChangeDataFeed: true
+      partitionedBy:
+      - event_datetime
+      zorderBy: []
+      vorder: true
+  columns:
+  - name: claim_lifecycle_event_uid
+    sparkType: STRING
+    nullable: false
+    primaryKey: true
+    role: identity
+    description: Immutable system-generated GUID that uniquely identifies the canonical claim lifecycle
+      event record across snapshots and source systems.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: claim_uid
+    sparkType: STRING
+    nullable: false
+    role: foreign-key
+    description: Identifier (GUID reference) for the claim associated with the event.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    foreignKey:
+      targetContract: pc.claim
+      targetTable: silver_claims.claim
+      targetField: claim_uid
+  - name: claim_feature_uid
+    sparkType: STRING
+    nullable: true
+    role: foreign-key
+    description: Identifier (GUID reference) for the claim feature associated with the event when feature
+      context is known.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    foreignKey:
+      targetContract: pc.claim-feature
+      targetTable: silver_claims.claim_feature
+      targetField: claim_feature_uid
+  - name: lifecycle_event_type_code
+    sparkType: STRING
+    nullable: false
+    role: code-reference
+    description: Classification of the lifecycle event. References the LifecycleEventType codeset.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    codeReference:
+      codeset: pc.lifecycle-event-type
+      codesetTable: silver_reference_data.lifecycle_event_type
+      codesetField: code_value
+  - name: event_datetime
+    sparkType: TIMESTAMP
+    nullable: false
+    role: data
+    description: Datetime when the event occurred or was recognized.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: effective_date
+    sparkType: DATE
+    nullable: true
+    role: data
+    description: Business-effective date for the event when it differs from the event datetime.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: actor_party_uid
+    sparkType: STRING
+    nullable: true
+    role: foreign-key
+    description: Identifier (GUID reference) for the party that performed or owned the event when known.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    foreignKey:
+      targetContract: pc.party
+      targetTable: silver_core.party
+      targetField: party_uid
+  - name: reason_code
+    sparkType: STRING
+    nullable: true
+    role: data
+    description: Classification of the reason for the event when applicable.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: event_narrative
+    sparkType: STRING
+    nullable: true
+    role: data
+    description: Source-neutral narrative describing the event when additional context is needed.
+    classifications:
+      sensitivity: CONFIDENTIAL
+      regulatoryTags:
+      - PII
+    purview:
+      sensitivityLabel: Confidential
+  - name: triggering_transaction_uid
+    sparkType: STRING
+    nullable: true
+    role: data
+    description: Optional reference to the transaction that produced this lifecycle event, when the event
+      is the consequence of a processed transaction.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: correction_indicator
+    sparkType: BOOLEAN
+    nullable: false
+    role: event-correction-flag
+    description: True when this row corrects a previously emitted row. False for original (uncorrected)
+      rows.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: corrects_claim_lifecycle_event_uid
+    sparkType: STRING
+    nullable: true
+    role: event-corrects-ref
+    description: Reference to the prior row that this row corrects. Populated only when correction_indicator
+      is true.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  scd2:
+    enabled: false
+    validFrom: null
+    validTo: null
+    isCurrent: null
+    naturalKey: []
+    deletionAware: false
+    changeDetection:
+      excludeFromHashing: []
+  recordState:
+    enabled: false
+    field: null
+    activeValue: null
+    supersededValue: null
+    softDeletedValue: null
+  appendOnly:
+    enabled: true
+    correctionIndicator: correction_indicator
+    correctsRefField: corrects_claim_lifecycle_event_uid
+    businessTimeField: event_datetime
+    partitionExpression: MONTH(event_datetime)
+  qualityRules:
+  - id: claim_lifecycle_event_uid_required
+    type: not_null
+    column: claim_lifecycle_event_uid
+    severity: error
+    sourceRule: claim_lifecycle_event_uid_required
+  - id: claim_lifecycle_event_claim_uid_required
+    type: not_null
+    column: claim_uid
+    severity: error
+    sourceRule: claim_lifecycle_event_claim_uid_required
+  - id: claim_lifecycle_event_type_code_required
+    type: not_null
+    column: lifecycle_event_type_code
+    severity: error
+    sourceRule: claim_lifecycle_event_type_code_required
+  - id: claim_lifecycle_event_datetime_required
+    type: not_null
+    column: event_datetime
+    severity: error
+    sourceRule: claim_lifecycle_event_datetime_required
+  - id: correction_indicator_required
+    type: not_null
+    column: correction_indicator
+    severity: error
+    sourceRule: correction_indicator_required
+  - id: lifecycle_event_type_code_in_codeset
+    type: accepted_values
+    column: lifecycle_event_type_code
+    codeset: pc.lifecycle-event-type
+    codesetTable: silver_reference_data.lifecycle_event_type
+    codesetField: code_value
+    severity: error
+    sourceRule: derived
+  bronze:
+    table: bronze.claim_lifecycle_event_raw
+    incrementalColumn: _ingested_at
+    expectedColumns:
+    - claim_lifecycle_event_uid
+    - claim_uid
+    - claim_feature_uid
+    - lifecycle_event_type_code
+    - event_datetime
+    - effective_date
+    - actor_party_uid
+    - reason_code
+    - event_narrative
+    - triggering_transaction_uid
+    - correction_indicator
+    - corrects_claim_lifecycle_event_uid
+relationships:
+- name: claim_lifecycle_event_to_claim
+  description: Relates a claim lifecycle event to the claim associated with the event.
+  cardinality: many-to-one
+  targetContract: pc.claim
+  targetTable: silver_claims.claim
+  sourceFields:
+  - claim_uid
+  targetFields:
+  - claim_uid
+- name: claim_lifecycle_event_to_claim_feature
+  description: Relates a claim lifecycle event to the claim feature when feature context is known.
+  cardinality: many-to-one
+  targetContract: pc.claim-feature
+  targetTable: silver_claims.claim_feature
+  sourceFields:
+  - claim_feature_uid
+  targetFields:
+  - claim_feature_uid
+- name: claim_lifecycle_event_to_event_type
+  description: Relates a claim lifecycle event to the LifecycleEventType codeset.
+  cardinality: many-to-one
+  targetContract: pc.lifecycle-event-type
+  targetTable: silver_reference_data.lifecycle_event_type
+  sourceFields:
+  - lifecycle_event_type_code
+  targetFields:
+  - code_value
+- name: claim_lifecycle_event_to_actor_party
+  description: Relates a claim lifecycle event to the party that performed or owned it when known.
+  cardinality: many-to-one
+  targetContract: pc.party
+  targetTable: silver_core.party
+  sourceFields:
+  - actor_party_uid
+  targetFields:
+  - party_uid
+generation:
+  generatorVersion: 1.0.0
+  generatedAt: '2026-05-07T00:00:00Z'
+  sourceContractPath: references/odcs/pc/claims/claim-lifecycle-event.odcs.yaml
+  sourceContractDigest: sha256:6112eb049b9137bb1dbbbf5fb3d155c48d755fe3128cde33af0834695424ce04

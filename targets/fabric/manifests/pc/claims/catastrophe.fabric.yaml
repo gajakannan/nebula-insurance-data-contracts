@@ -1,0 +1,371 @@
+manifestVersion: 1.0.0
+contract:
+  id: pc.catastrophe
+  name: Catastrophe
+  version: 0.1.1
+  domain: property-and-casualty
+  description: Canonical contract for a catastrophe — a named industry or company event (named storm,
+    wildfire, earthquake, civil event) used to aggregate exposures, occurrences, and claims for reinsurance
+    recovery, regulatory reporting, and industry benchmarking.
+  classificationProfile: CONFIDENTIAL
+  subjectToHipaa: false
+  contractKind: entity
+  subjectArea: claims
+  adrs:
+  - authoring-source-primacy
+  - canonical-alignment
+  - claims-modeling
+  - codeset-strategy
+  - data-classification
+  - identifier-strategy
+  - null-semantics
+  - record-state
+  - scd2-primary-key
+  - status-promotion
+  - temporal-modeling
+  - versioning-policy
+fabric:
+  lakehouse: nebula_pc_silver
+  schema: silver_claims
+  table:
+    name: catastrophe
+    delta:
+      tableProperties:
+        delta.appendOnly: false
+        delta.autoOptimize.optimizeWrite: true
+        delta.autoOptimize.autoCompact: true
+        delta.enableChangeDataFeed: true
+      partitionedBy:
+      - is_current_indicator
+      zorderBy:
+      - catastrophe_uid
+      vorder: true
+  columns:
+  - name: catastrophe_uid
+    sparkType: STRING
+    nullable: false
+    primaryKey: true
+    role: identity
+    description: Immutable system-generated GUID that uniquely identifies the canonical catastrophe record
+      across snapshots and source systems.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: source_system_code
+    sparkType: STRING
+    nullable: true
+    role: source-attribution
+    description: Identifier of the upstream system that produced or last asserted this record. Used for
+      multi-source mastering and lineage.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    codeReference:
+      codeset: pc.source-system-code
+      codesetTable: silver_reference_data.source_system_code
+      codesetField: code_value
+  - name: source_natural_key
+    sparkType: STRING
+    nullable: true
+    role: source-attribution
+    description: Natural key assigned by the source system. Captured for provenance; not used as the canonical
+      primary key.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: industry_catastrophe_code
+    sparkType: STRING
+    nullable: true
+    role: data
+    description: Industry-standard catastrophe identifier (e.g. PCS catastrophe number) used for cross-carrier
+      and reinsurance aggregation when one is assigned.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: company_catastrophe_code
+    sparkType: STRING
+    nullable: true
+    role: data
+    description: Company-internal catastrophe identifier used for accumulation and reporting when distinct
+      from the industry code.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: catastrophe_name
+    sparkType: STRING
+    nullable: false
+    role: data
+    description: Human-readable name of the catastrophe (e.g. named storm, fire complex name, civil event
+      designation).
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: catastrophe_type_code
+    sparkType: STRING
+    nullable: false
+    role: code-reference
+    description: Classification of the catastrophe (HURRICANE, WILDFIRE, EARTHQUAKE, FLOOD, CIVIL_EVENT,
+      etc.). References the CatastropheTypeCode codeset.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    codeReference:
+      codeset: pc.catastrophe-type-code
+      codesetTable: silver_reference_data.catastrophe_type_code
+      codesetField: code_value
+  - name: catastrophe_status_code
+    sparkType: STRING
+    nullable: false
+    role: code-reference
+    description: Current lifecycle status of the catastrophe record (e.g. OPEN, CLOSED, REOPENED).
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    codeReference:
+      codeset: pc.catastrophe-status-code
+      codesetTable: silver_reference_data.catastrophe_status_code
+      codesetField: code_value
+  - name: effective_datetime
+    sparkType: TIMESTAMP
+    nullable: false
+    role: data
+    description: Datetime when the catastrophe is deemed to begin for accumulation purposes.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: expiration_datetime
+    sparkType: TIMESTAMP
+    nullable: true
+    role: data
+    description: Datetime when the catastrophe is deemed to end for accumulation purposes. Null while
+      the event is ongoing.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: catastrophe_description
+    sparkType: STRING
+    nullable: true
+    role: data
+    description: Source-neutral business description of the catastrophe when additional context is needed.
+    classifications:
+      sensitivity: CONFIDENTIAL
+      regulatoryTags:
+      - PII
+    purview:
+      sensitivityLabel: Confidential
+  - name: record_status_code
+    sparkType: STRING
+    nullable: false
+    role: record-state
+    description: Warehouse-level state of the record. References the RecordStatusCode codeset (ACTIVE,
+      SUPERSEDED, SOFT_DELETED, RESTATED, MERGED).
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    codeReference:
+      codeset: pc.record-status-code
+      codesetTable: silver_reference_data.record_status_code
+      codesetField: code_value
+  - name: valid_from_datetime
+    sparkType: TIMESTAMP
+    nullable: false
+    primaryKey: true
+    role: scd2-valid-from
+    description: System-time start of the SCD2 window for this record version.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: valid_to_datetime
+    sparkType: TIMESTAMP
+    nullable: true
+    role: scd2-valid-to
+    description: System-time end of the SCD2 window for this record version. Null indicates the current
+      row.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: is_current_indicator
+    sparkType: BOOLEAN
+    nullable: false
+    role: scd2-is-current
+    description: True for exactly one row per logical key, indicating the current record version.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  scd2:
+    enabled: true
+    validFrom: valid_from_datetime
+    validTo: valid_to_datetime
+    isCurrent: is_current_indicator
+    naturalKey:
+    - catastrophe_uid
+    deletionAware: false
+    changeDetection:
+      excludeFromHashing:
+      - valid_from_datetime
+      - valid_to_datetime
+      - is_current_indicator
+      - record_status_code
+  recordState:
+    enabled: true
+    field: record_status_code
+    activeValue: ACTIVE
+    supersededValue: SUPERSEDED
+    softDeletedValue: SOFT_DELETED
+  appendOnly:
+    enabled: false
+    correctionIndicator: null
+    correctsRefField: null
+    businessTimeField: null
+    partitionExpression: null
+  qualityRules:
+  - id: catastrophe_uid_required
+    type: not_null
+    column: catastrophe_uid
+    severity: error
+    sourceRule: catastrophe_uid_required
+  - id: catastrophe_name_required
+    type: not_null
+    column: catastrophe_name
+    severity: error
+    sourceRule: catastrophe_name_required
+  - id: catastrophe_type_code_required
+    type: not_null
+    column: catastrophe_type_code
+    severity: error
+    sourceRule: catastrophe_type_code_required
+  - id: catastrophe_window_consistent
+    type: expression
+    expression: 'TRUE  -- TODO: derive from contract description: expiration_datetime must not be earlier
+      than effective_datetime when both are populated.'
+    severity: error
+    sourceRule: catastrophe_window_consistent
+  - id: valid_from_datetime_required
+    type: not_null
+    column: valid_from_datetime
+    severity: error
+    sourceRule: valid_from_datetime_required
+  - id: valid_window_consistent
+    type: expression
+    expression: valid_to_datetime IS NULL OR valid_to_datetime > valid_from_datetime
+    severity: error
+    sourceRule: valid_window_consistent
+  - id: single_current_row_per_key
+    type: unique
+    keyColumns:
+    - catastrophe_uid
+    filter: is_current_indicator = true
+    severity: error
+    sourceRule: single_current_row_per_key
+  - id: record_status_code_required
+    type: not_null
+    column: record_status_code
+    severity: error
+    sourceRule: record_status_code_required
+  - id: source_system_code_in_codeset
+    type: accepted_values
+    column: source_system_code
+    codeset: pc.source-system-code
+    codesetTable: silver_reference_data.source_system_code
+    codesetField: code_value
+    severity: error
+    sourceRule: derived
+  - id: catastrophe_type_code_in_codeset
+    type: accepted_values
+    column: catastrophe_type_code
+    codeset: pc.catastrophe-type-code
+    codesetTable: silver_reference_data.catastrophe_type_code
+    codesetField: code_value
+    severity: error
+    sourceRule: derived
+  - id: catastrophe_status_code_in_codeset
+    type: accepted_values
+    column: catastrophe_status_code
+    codeset: pc.catastrophe-status-code
+    codesetTable: silver_reference_data.catastrophe_status_code
+    codesetField: code_value
+    severity: error
+    sourceRule: derived
+  - id: record_status_code_in_codeset
+    type: accepted_values
+    column: record_status_code
+    codeset: pc.record-status-code
+    codesetTable: silver_reference_data.record_status_code
+    codesetField: code_value
+    severity: error
+    sourceRule: derived
+  bronze:
+    table: bronze.catastrophe_raw
+    incrementalColumn: _ingested_at
+    expectedColumns:
+    - catastrophe_uid
+    - source_system_code
+    - source_natural_key
+    - industry_catastrophe_code
+    - company_catastrophe_code
+    - catastrophe_name
+    - catastrophe_type_code
+    - catastrophe_status_code
+    - effective_datetime
+    - expiration_datetime
+    - catastrophe_description
+    - record_status_code
+    - valid_from_datetime
+    - valid_to_datetime
+    - is_current_indicator
+relationships:
+- name: catastrophe_to_catastrophe_type
+  description: Relates a catastrophe to the CatastropheTypeCode codeset.
+  cardinality: many-to-one
+  targetContract: pc.catastrophe-type-code
+  targetTable: silver_reference_data.catastrophe_type_code
+  sourceFields:
+  - catastrophe_type_code
+  targetFields:
+  - code_value
+- name: catastrophe_to_catastrophe_status
+  description: Relates a catastrophe to the CatastropheStatusCode codeset.
+  cardinality: many-to-one
+  targetContract: pc.catastrophe-status-code
+  targetTable: silver_reference_data.catastrophe_status_code
+  sourceFields:
+  - catastrophe_status_code
+  targetFields:
+  - code_value
+- name: catastrophe_to_record_status
+  description: Relates a catastrophe to the RecordStatusCode codeset.
+  cardinality: many-to-one
+  targetContract: pc.record-status-code
+  targetTable: silver_reference_data.record_status_code
+  sourceFields:
+  - record_status_code
+  targetFields:
+  - code_value
+- name: catastrophe_source_system_code_to_source_system_code
+  description: Binds source_system_code to the canonical source-system-code codeset.
+  cardinality: many-to-one
+  targetContract: pc.source-system-code
+  targetTable: silver_reference_data.source_system_code
+  sourceFields:
+  - source_system_code
+  targetFields:
+  - code_value
+generation:
+  generatorVersion: 1.0.0
+  generatedAt: '2026-05-07T00:00:00Z'
+  sourceContractPath: references/odcs/pc/claims/catastrophe.odcs.yaml
+  sourceContractDigest: sha256:48f49f657ae7a3e576c2c2cb07958b2b8d6ae8e7d618216ef92b8e8f8ae107e5

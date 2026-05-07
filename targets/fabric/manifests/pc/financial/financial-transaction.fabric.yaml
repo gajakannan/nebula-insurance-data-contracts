@@ -1,0 +1,462 @@
+manifestVersion: 1.0.0
+contract:
+  id: pc.financial-transaction
+  name: FinancialTransaction
+  version: 0.4.0
+  domain: property-and-casualty
+  description: Canonical contract for monetary activity associated with Property and Casualty policy,
+    claim, coverage, party, and exposure context.
+  classificationProfile: RESTRICTED
+  subjectToHipaa: false
+  contractKind: transaction
+  subjectArea: financial
+  adrs:
+  - authoring-source-primacy
+  - canonical-alignment
+  - codeset-strategy
+  - currency-convention
+  - data-classification
+  - event-and-transaction
+  - financial-modeling
+  - identifier-strategy
+  - status-promotion
+  - temporal-modeling
+  - versioning-policy
+fabric:
+  lakehouse: nebula_pc_silver
+  schema: silver_financial
+  table:
+    name: financial_transaction
+    delta:
+      tableProperties:
+        delta.appendOnly: true
+        delta.autoOptimize.optimizeWrite: true
+        delta.autoOptimize.autoCompact: true
+        delta.enableChangeDataFeed: true
+      partitionedBy:
+      - transaction_effective_date
+      zorderBy: []
+      vorder: true
+  columns:
+  - name: financial_transaction_uid
+    sparkType: STRING
+    nullable: false
+    primaryKey: true
+    role: identity
+    description: Immutable system-generated GUID that uniquely identifies the canonical financial transaction
+      record across snapshots and source systems.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: transaction_number
+    sparkType: STRING
+    nullable: true
+    role: business-key
+    description: Business-facing number or reference assigned to the financial transaction when available.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: transaction_type_code
+    sparkType: STRING
+    nullable: false
+    role: code-reference
+    description: Classification of the financial transaction type.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    codeReference:
+      codeset: pc.transaction-type
+      codesetTable: silver_reference_data.transaction_type
+      codesetField: code_value
+  - name: transaction_classification_code
+    sparkType: STRING
+    nullable: true
+    role: code-reference
+    description: Classification of the monetary movement, such as premium, fee, tax, commission, payment,
+      reserve, recovery, salvage, or subrogation.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    codeReference:
+      codeset: pc.financial-transaction-classification
+      codesetTable: silver_reference_data.financial_transaction_classification
+      codesetField: code_value
+  - name: transaction_effective_date
+    sparkType: DATE
+    nullable: true
+    role: data
+    description: Date when the financial transaction becomes effective for business purposes.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: transaction_posted_date
+    sparkType: DATE
+    nullable: true
+    role: data
+    description: Date when the financial transaction was posted or recorded.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: accounting_period_code
+    sparkType: STRING
+    nullable: true
+    role: data
+    description: Accounting period associated with the financial transaction.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: transaction_amount
+    sparkType: DECIMAL(18, 2)
+    nullable: false
+    role: monetary-amount
+    description: Monetary amount of the financial transaction.
+    classifications:
+      sensitivity: CONFIDENTIAL
+      regulatoryTags:
+      - FINANCIAL
+    purview:
+      sensitivityLabel: Confidential
+    currencyPair:
+      pairedColumn: transaction_currency_code
+  - name: transaction_currency_code
+    sparkType: STRING
+    nullable: false
+    role: monetary-currency
+    description: Currency code for the transaction amount.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    codeReference:
+      codeset: pc.currency-code
+      codesetTable: silver_reference_data.currency_code
+      codesetField: code_value
+  - name: debit_credit_code
+    sparkType: STRING
+    nullable: true
+    role: data
+    description: Classification indicating whether the transaction is a debit, credit, or other recognized
+      accounting direction.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: policy_uid
+    sparkType: STRING
+    nullable: true
+    role: foreign-key
+    description: Identifier (GUID reference) for the policy associated with the financial transaction
+      when policy context is available.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    foreignKey:
+      targetContract: pc.policy
+      targetTable: silver_policy.policy
+      targetField: policy_uid
+  - name: claim_uid
+    sparkType: STRING
+    nullable: true
+    role: foreign-key
+    description: Identifier (GUID reference) for the claim associated with the financial transaction when
+      claim context is available.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    foreignKey:
+      targetContract: pc.claim
+      targetTable: silver_claims.claim
+      targetField: claim_uid
+  - name: policy_coverage_uid
+    sparkType: STRING
+    nullable: true
+    role: foreign-key
+    description: Identifier (GUID reference) for the policy coverage associated with the financial transaction
+      when coverage context is known.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    foreignKey:
+      targetContract: pc.policy-coverage
+      targetTable: silver_coverage.policy_coverage
+      targetField: policy_coverage_uid
+  - name: party_uid
+    sparkType: STRING
+    nullable: true
+    role: foreign-key
+    description: Identifier (GUID reference) for the party associated with the financial transaction when
+      party context is known.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    foreignKey:
+      targetContract: pc.party
+      targetTable: silver_core.party
+      targetField: party_uid
+  - name: exposure_uid
+    sparkType: STRING
+    nullable: true
+    role: foreign-key
+    description: Identifier (GUID reference) for the exposure associated with the financial transaction
+      when exposure context is known.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    foreignKey:
+      targetContract: pc.exposure
+      targetTable: silver_exposure.exposure
+      targetField: exposure_uid
+  - name: source_transaction_reference
+    sparkType: STRING
+    nullable: true
+    role: data
+    description: Source-neutral business reference that helps reconcile the financial transaction across
+      processing contexts.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: transaction_description
+    sparkType: STRING
+    nullable: true
+    role: data
+    description: Source-neutral business description of the financial transaction when additional context
+      is needed.
+    classifications:
+      sensitivity: CONFIDENTIAL
+      regulatoryTags:
+      - PII
+    purview:
+      sensitivityLabel: Confidential
+  - name: lifecycle_event_uid
+    sparkType: STRING
+    nullable: true
+    role: lifecycle-event-link
+    description: Optional reference to the lifecycle event that this transaction realizes (per the event-and-transaction
+      ADR).
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: correction_indicator
+    sparkType: BOOLEAN
+    nullable: false
+    role: event-correction-flag
+    description: True when this row corrects a previously emitted row. False for original (uncorrected)
+      rows.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: corrects_financial_transaction_uid
+    sparkType: STRING
+    nullable: true
+    role: event-corrects-ref
+    description: Reference to the prior row that this row corrects. Populated only when correction_indicator
+      is true.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  scd2:
+    enabled: false
+    validFrom: null
+    validTo: null
+    isCurrent: null
+    naturalKey: []
+    deletionAware: false
+    changeDetection:
+      excludeFromHashing: []
+  recordState:
+    enabled: false
+    field: null
+    activeValue: null
+    supersededValue: null
+    softDeletedValue: null
+  appendOnly:
+    enabled: true
+    correctionIndicator: correction_indicator
+    correctsRefField: corrects_financial_transaction_uid
+    businessTimeField: transaction_effective_date
+    partitionExpression: MONTH(transaction_effective_date)
+  qualityRules:
+  - id: financial_transaction_uid_required
+    type: not_null
+    column: financial_transaction_uid
+    severity: error
+    sourceRule: financial_transaction_uid_required
+  - id: financial_transaction_type_code_required
+    type: not_null
+    column: transaction_type_code
+    severity: error
+    sourceRule: financial_transaction_type_code_required
+  - id: financial_transaction_amount_required
+    type: not_null
+    column: transaction_amount
+    severity: error
+    sourceRule: financial_transaction_amount_required
+  - id: financial_transaction_currency_code_required
+    type: not_null
+    column: transaction_currency_code
+    severity: error
+    sourceRule: financial_transaction_currency_code_required
+  - id: financial_transaction_has_business_context
+    type: expression
+    expression: 'TRUE  -- TODO: derive from contract description: At least one policy, claim, coverage,
+      party, or exposure context should be populated for the financial transaction.'
+    severity: warning
+    sourceRule: financial_transaction_has_business_context
+  - id: correction_indicator_required
+    type: not_null
+    column: correction_indicator
+    severity: error
+    sourceRule: correction_indicator_required
+  - id: transaction_amount_currency_pair
+    type: currency_pair
+    amountColumn: transaction_amount
+    currencyColumn: transaction_currency_code
+    severity: error
+    sourceRule: derived
+  - id: transaction_type_code_in_codeset
+    type: accepted_values
+    column: transaction_type_code
+    codeset: pc.transaction-type
+    codesetTable: silver_reference_data.transaction_type
+    codesetField: code_value
+    severity: error
+    sourceRule: derived
+  - id: transaction_classification_code_in_codeset
+    type: accepted_values
+    column: transaction_classification_code
+    codeset: pc.financial-transaction-classification
+    codesetTable: silver_reference_data.financial_transaction_classification
+    codesetField: code_value
+    severity: error
+    sourceRule: derived
+  - id: transaction_currency_code_in_codeset
+    type: accepted_values
+    column: transaction_currency_code
+    codeset: pc.currency-code
+    codesetTable: silver_reference_data.currency_code
+    codesetField: code_value
+    severity: error
+    sourceRule: derived
+  bronze:
+    table: bronze.financial_transaction_raw
+    incrementalColumn: _ingested_at
+    expectedColumns:
+    - financial_transaction_uid
+    - transaction_number
+    - transaction_type_code
+    - transaction_classification_code
+    - transaction_effective_date
+    - transaction_posted_date
+    - accounting_period_code
+    - transaction_amount
+    - transaction_currency_code
+    - debit_credit_code
+    - policy_uid
+    - claim_uid
+    - policy_coverage_uid
+    - party_uid
+    - exposure_uid
+    - source_transaction_reference
+    - transaction_description
+    - lifecycle_event_uid
+    - correction_indicator
+    - corrects_financial_transaction_uid
+relationships:
+- name: financial_transaction_to_policy
+  description: Relates a financial transaction to the policy associated with the monetary movement when
+    policy context is available.
+  cardinality: many-to-one
+  targetContract: pc.policy
+  targetTable: silver_policy.policy
+  sourceFields:
+  - policy_uid
+  targetFields:
+  - policy_uid
+- name: financial_transaction_to_claim
+  description: Relates a financial transaction to the claim associated with the monetary movement when
+    claim context is available.
+  cardinality: many-to-one
+  targetContract: pc.claim
+  targetTable: silver_claims.claim
+  sourceFields:
+  - claim_uid
+  targetFields:
+  - claim_uid
+- name: financial_transaction_to_policy_coverage
+  description: Relates a financial transaction to policy coverage when coverage context is known.
+  cardinality: many-to-one
+  targetContract: pc.policy-coverage
+  targetTable: silver_coverage.policy_coverage
+  sourceFields:
+  - policy_coverage_uid
+  targetFields:
+  - policy_coverage_uid
+- name: financial_transaction_to_party
+  description: Relates a financial transaction to a party associated with the monetary movement when party
+    context is known.
+  cardinality: many-to-one
+  targetContract: pc.party
+  targetTable: silver_core.party
+  sourceFields:
+  - party_uid
+  targetFields:
+  - party_uid
+- name: financial_transaction_to_exposure
+  description: Relates a financial transaction to an exposure associated with the monetary movement when
+    exposure context is known.
+  cardinality: many-to-one
+  targetContract: pc.exposure
+  targetTable: silver_exposure.exposure
+  sourceFields:
+  - exposure_uid
+  targetFields:
+  - exposure_uid
+- name: financial_transaction_transaction_type_code_to_transaction_type
+  description: Binds transaction_type_code to the canonical transaction-type codeset.
+  cardinality: many-to-one
+  targetContract: pc.transaction-type
+  targetTable: silver_reference_data.transaction_type
+  sourceFields:
+  - transaction_type_code
+  targetFields:
+  - code_value
+- name: financial_transaction_transaction_classification_code_to_financial_transaction_classification
+  description: Binds transaction_classification_code to the canonical financial-transaction-classification
+    codeset.
+  cardinality: many-to-one
+  targetContract: pc.financial-transaction-classification
+  targetTable: silver_reference_data.financial_transaction_classification
+  sourceFields:
+  - transaction_classification_code
+  targetFields:
+  - code_value
+- name: financial_transaction_transaction_currency_code_to_currency_code
+  description: Binds transaction_currency_code to the canonical currency-code codeset.
+  cardinality: many-to-one
+  targetContract: pc.currency-code
+  targetTable: silver_reference_data.currency_code
+  sourceFields:
+  - transaction_currency_code
+  targetFields:
+  - code_value
+generation:
+  generatorVersion: 1.0.0
+  generatedAt: '2026-05-07T00:00:00Z'
+  sourceContractPath: references/odcs/pc/financial/financial-transaction.odcs.yaml
+  sourceContractDigest: sha256:5d42af8550bf8fd2d15d9de516519ecf0558d8a8c1813af1cac83e1135c96dc5

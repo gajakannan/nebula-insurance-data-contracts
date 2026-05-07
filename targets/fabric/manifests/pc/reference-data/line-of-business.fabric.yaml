@@ -1,0 +1,318 @@
+manifestVersion: 1.0.0
+contract:
+  id: pc.line-of-business
+  name: LineOfBusiness
+  version: 0.4.1
+  domain: property-and-casualty
+  description: Canonical contract for Property and Casualty line of business reference data.
+  classificationProfile: INTERNAL
+  subjectToHipaa: false
+  contractKind: codeset
+  subjectArea: reference-data
+  adrs:
+  - authoring-source-primacy
+  - canonical-alignment
+  - codeset-strategy
+  - data-classification
+  - entity-boundaries
+  - identifier-strategy
+  - record-state
+  - scd2-primary-key
+  - status-promotion
+  - temporal-modeling
+  - versioning-policy
+fabric:
+  lakehouse: nebula_pc_silver
+  schema: silver_reference_data
+  table:
+    name: line_of_business
+    delta:
+      tableProperties:
+        delta.appendOnly: false
+        delta.autoOptimize.optimizeWrite: true
+        delta.autoOptimize.autoCompact: true
+        delta.enableChangeDataFeed: true
+      partitionedBy:
+      - is_current_indicator
+      zorderBy:
+      - line_of_business_uid
+      vorder: true
+  columns:
+  - name: line_of_business_uid
+    sparkType: STRING
+    nullable: false
+    primaryKey: true
+    role: identity
+    description: Immutable system-generated GUID that uniquely identifies the canonical line of business
+      record across snapshots and source systems.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: code_value
+    sparkType: STRING
+    nullable: false
+    role: data
+    description: Business-friendly code value referenced by entity contracts.
+    classifications:
+      sensitivity: PUBLIC
+    purview:
+      sensitivityLabel: Public
+  - name: code_label
+    sparkType: STRING
+    nullable: false
+    role: data
+    description: Human-readable label for the code value.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: code_description
+    sparkType: STRING
+    nullable: true
+    role: data
+    description: Extended description of the code value.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: external_standard_code
+    sparkType: STRING
+    nullable: true
+    role: data
+    description: Code value as defined by an external standard (ACORD, NAIC, ISO, etc.) when a mapping
+      is recorded.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: external_standard_name
+    sparkType: STRING
+    nullable: true
+    role: data
+    description: Name of the external standard whose code is captured in external_standard_code.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: business_segment_code
+    sparkType: STRING
+    nullable: true
+    role: data
+    description: Higher-level business segment classification for the line of business.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: parent_line_of_business_uid
+    sparkType: STRING
+    nullable: true
+    role: data
+    description: Identifier (GUID reference) for a parent line of business when a hierarchy is used.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    codeReference:
+      codeset: pc.line-of-business
+      codesetTable: silver_reference_data.line_of_business
+      codesetField: line_of_business_uid
+  - name: line_of_business_status_code
+    sparkType: STRING
+    nullable: false
+    role: data
+    description: Current lifecycle status of the line of business reference record.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: effective_date
+    sparkType: DATE
+    nullable: true
+    role: data
+    description: Date when the line of business reference record becomes effective for canonical use.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: expiration_date
+    sparkType: DATE
+    nullable: true
+    role: data
+    description: Date when the line of business reference record stops being effective for canonical use.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: source_created_datetime
+    sparkType: TIMESTAMP
+    nullable: true
+    role: source-time
+    description: Source-system timestamp asserting when this record was created. Captured for late-arriving-data
+      analysis; distinct from the SCD2 system-time start in valid_from_datetime.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: source_updated_datetime
+    sparkType: TIMESTAMP
+    nullable: true
+    role: source-time
+    description: Source-system timestamp asserting when this record was last updated. Captured for late-arriving-data
+      analysis; distinct from the SCD2 system-time markers valid_from_datetime / valid_to_datetime.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: record_status_code
+    sparkType: STRING
+    nullable: false
+    role: record-state
+    description: Warehouse-level state of the record. References the RecordStatusCode codeset (ACTIVE,
+      SUPERSEDED, SOFT_DELETED, RESTATED, MERGED).
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: valid_from_datetime
+    sparkType: TIMESTAMP
+    nullable: false
+    primaryKey: true
+    role: scd2-valid-from
+    description: System-time start of the SCD2 window for this record version.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: valid_to_datetime
+    sparkType: TIMESTAMP
+    nullable: true
+    role: scd2-valid-to
+    description: System-time end of the SCD2 window for this record version. Null indicates the current
+      row.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: is_current_indicator
+    sparkType: BOOLEAN
+    nullable: false
+    role: scd2-is-current
+    description: True for exactly one row per logical key, indicating the current record version.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  scd2:
+    enabled: true
+    validFrom: valid_from_datetime
+    validTo: valid_to_datetime
+    isCurrent: is_current_indicator
+    naturalKey:
+    - line_of_business_uid
+    deletionAware: true
+    changeDetection:
+      excludeFromHashing:
+      - valid_from_datetime
+      - valid_to_datetime
+      - is_current_indicator
+      - record_status_code
+  recordState:
+    enabled: true
+    field: record_status_code
+    activeValue: ACTIVE
+    supersededValue: SUPERSEDED
+    softDeletedValue: SOFT_DELETED
+  appendOnly:
+    enabled: false
+    correctionIndicator: null
+    correctsRefField: null
+    businessTimeField: null
+    partitionExpression: null
+  qualityRules:
+  - id: line_of_business_uid_required
+    type: not_null
+    column: line_of_business_uid
+    severity: error
+    sourceRule: line_of_business_uid_required
+  - id: line_of_business_status_code_required
+    type: not_null
+    column: line_of_business_status_code
+    severity: error
+    sourceRule: line_of_business_status_code_required
+  - id: line_of_business_effective_date_not_after_expiration_date
+    type: expression
+    expression: effective_date IS NULL OR expiration_date IS NULL OR effective_date <= expiration_date
+    severity: error
+    sourceRule: line_of_business_effective_date_not_after_expiration_date
+  - id: valid_from_datetime_required
+    type: not_null
+    column: valid_from_datetime
+    severity: error
+    sourceRule: valid_from_datetime_required
+  - id: valid_window_consistent
+    type: expression
+    expression: valid_to_datetime IS NULL OR valid_to_datetime > valid_from_datetime
+    severity: error
+    sourceRule: valid_window_consistent
+  - id: single_current_row_per_key
+    type: unique
+    keyColumns:
+    - line_of_business_uid
+    filter: is_current_indicator = true
+    severity: error
+    sourceRule: single_current_row_per_key
+  - id: record_status_code_required
+    type: not_null
+    column: record_status_code
+    severity: error
+    sourceRule: record_status_code_required
+  - id: code_value_required
+    type: not_null
+    column: code_value
+    severity: error
+    sourceRule: code_value_required
+  - id: parent_line_of_business_uid_in_codeset
+    type: accepted_values
+    column: parent_line_of_business_uid
+    codeset: pc.line-of-business
+    codesetTable: silver_reference_data.line_of_business
+    codesetField: line_of_business_uid
+    severity: error
+    sourceRule: derived
+  bronze:
+    table: bronze.line_of_business_raw
+    incrementalColumn: _ingested_at
+    expectedColumns:
+    - line_of_business_uid
+    - code_value
+    - code_label
+    - code_description
+    - external_standard_code
+    - external_standard_name
+    - business_segment_code
+    - parent_line_of_business_uid
+    - line_of_business_status_code
+    - effective_date
+    - expiration_date
+    - source_created_datetime
+    - source_updated_datetime
+    - record_status_code
+    - valid_from_datetime
+    - valid_to_datetime
+    - is_current_indicator
+relationships:
+- name: line_of_business_to_parent_line_of_business
+  description: Relates a line of business to a parent line of business when a hierarchy is used.
+  cardinality: many-to-one
+  targetContract: pc.line-of-business
+  targetTable: silver_reference_data.line_of_business
+  sourceFields:
+  - parent_line_of_business_uid
+  targetFields:
+  - line_of_business_uid
+generation:
+  generatorVersion: 1.0.0
+  generatedAt: '2026-05-07T00:00:00Z'
+  sourceContractPath: references/odcs/pc/reference-data/line-of-business.odcs.yaml
+  sourceContractDigest: sha256:6ab00e6fd0b36b2616e2226cad500bc0513467199ae4ee454156e689ec3322d0

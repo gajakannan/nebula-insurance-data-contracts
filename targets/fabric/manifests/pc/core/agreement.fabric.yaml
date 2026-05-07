@@ -1,0 +1,428 @@
+manifestVersion: 1.0.0
+contract:
+  id: pc.agreement
+  name: Agreement
+  version: 0.1.1
+  domain: property-and-casualty
+  description: Canonical contract for a master legal or program agreement between the insurer and an account,
+    broker, MGA, or program administrator. Spawns one or more policies under shared terms.
+  classificationProfile: CONFIDENTIAL
+  subjectToHipaa: false
+  contractKind: entity
+  subjectArea: core
+  adrs:
+  - authoring-source-primacy
+  - canonical-alignment
+  - codeset-strategy
+  - data-classification
+  - entity-boundaries
+  - identifier-strategy
+  - null-semantics
+  - record-state
+  - scd2-primary-key
+  - status-promotion
+  - temporal-modeling
+  - versioning-policy
+fabric:
+  lakehouse: nebula_pc_silver
+  schema: silver_core
+  table:
+    name: agreement
+    delta:
+      tableProperties:
+        delta.appendOnly: false
+        delta.autoOptimize.optimizeWrite: true
+        delta.autoOptimize.autoCompact: true
+        delta.enableChangeDataFeed: true
+      partitionedBy:
+      - is_current_indicator
+      zorderBy:
+      - agreement_uid
+      vorder: true
+  columns:
+  - name: agreement_uid
+    sparkType: STRING
+    nullable: false
+    primaryKey: true
+    role: identity
+    description: Immutable system-generated GUID that uniquely identifies the canonical agreement record
+      across snapshots and source systems.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: source_system_code
+    sparkType: STRING
+    nullable: true
+    role: source-attribution
+    description: Identifier of the upstream system that produced or last asserted this record. Used for
+      multi-source mastering and lineage.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    codeReference:
+      codeset: pc.source-system-code
+      codesetTable: silver_reference_data.source_system_code
+      codesetField: code_value
+  - name: source_natural_key
+    sparkType: STRING
+    nullable: true
+    role: source-attribution
+    description: Natural key assigned by the source system. Captured for provenance; not used as the canonical
+      primary key.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: agreement_number
+    sparkType: STRING
+    nullable: false
+    role: business-key
+    description: Business-facing number assigned to the agreement.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: agreement_name
+    sparkType: STRING
+    nullable: false
+    role: data
+    description: Business-facing name of the agreement (typically the program name or master-program designation).
+    classifications:
+      sensitivity: CONFIDENTIAL
+      regulatoryTags:
+      - PII
+    purview:
+      sensitivityLabel: Confidential
+  - name: agreement_type_code
+    sparkType: STRING
+    nullable: false
+    role: code-reference
+    description: Classification of the agreement (MASTER_PROGRAM, BROKER_AUTHORITY, MGA_AUTHORITY, SERVICE_AGREEMENT,
+      BINDER_AGREEMENT, etc.). References the AgreementTypeCode codeset.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    codeReference:
+      codeset: pc.agreement-type-code
+      codesetTable: silver_reference_data.agreement_type_code
+      codesetField: code_value
+  - name: agreement_status_code
+    sparkType: STRING
+    nullable: false
+    role: code-reference
+    description: Current lifecycle status of the agreement (DRAFT, ACTIVE, EXPIRED, TERMINATED, RENEWED,
+      etc.). References the AgreementStatusCode codeset.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    codeReference:
+      codeset: pc.agreement-status-code
+      codesetTable: silver_reference_data.agreement_status_code
+      codesetField: code_value
+  - name: account_uid
+    sparkType: STRING
+    nullable: false
+    role: foreign-key
+    description: Identifier (GUID reference) for the account the agreement belongs to.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    foreignKey:
+      targetContract: pc.account
+      targetTable: silver_core.account
+      targetField: account_uid
+  - name: counterparty_party_uid
+    sparkType: STRING
+    nullable: true
+    role: foreign-key
+    description: Identifier (GUID reference) for the counterparty Party (broker, MGA, program administrator,
+      or master insured) when distinct from the account's primary party.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    foreignKey:
+      targetContract: pc.party
+      targetTable: silver_core.party
+      targetField: party_uid
+  - name: effective_date
+    sparkType: DATE
+    nullable: false
+    role: data
+    description: Date when the agreement becomes legally effective.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: expiration_date
+    sparkType: DATE
+    nullable: true
+    role: data
+    description: Date when the agreement expires. Null indicates an open-ended agreement (e.g. an evergreen
+      broker authority).
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: agreement_description
+    sparkType: STRING
+    nullable: true
+    role: data
+    description: Source-neutral business description of the agreement when additional context is needed.
+    classifications:
+      sensitivity: CONFIDENTIAL
+      regulatoryTags:
+      - PII
+    purview:
+      sensitivityLabel: Confidential
+  - name: record_status_code
+    sparkType: STRING
+    nullable: false
+    role: record-state
+    description: Warehouse-level state of the record. References the RecordStatusCode codeset (ACTIVE,
+      SUPERSEDED, SOFT_DELETED, RESTATED, MERGED).
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    codeReference:
+      codeset: pc.record-status-code
+      codesetTable: silver_reference_data.record_status_code
+      codesetField: code_value
+  - name: valid_from_datetime
+    sparkType: TIMESTAMP
+    nullable: false
+    primaryKey: true
+    role: scd2-valid-from
+    description: System-time start of the SCD2 window for this record version.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: valid_to_datetime
+    sparkType: TIMESTAMP
+    nullable: true
+    role: scd2-valid-to
+    description: System-time end of the SCD2 window for this record version. Null indicates the current
+      row.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: is_current_indicator
+    sparkType: BOOLEAN
+    nullable: false
+    role: scd2-is-current
+    description: True for exactly one row per logical key, indicating the current record version.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  scd2:
+    enabled: true
+    validFrom: valid_from_datetime
+    validTo: valid_to_datetime
+    isCurrent: is_current_indicator
+    naturalKey:
+    - agreement_uid
+    deletionAware: false
+    changeDetection:
+      excludeFromHashing:
+      - valid_from_datetime
+      - valid_to_datetime
+      - is_current_indicator
+      - record_status_code
+  recordState:
+    enabled: true
+    field: record_status_code
+    activeValue: ACTIVE
+    supersededValue: SUPERSEDED
+    softDeletedValue: SOFT_DELETED
+  appendOnly:
+    enabled: false
+    correctionIndicator: null
+    correctsRefField: null
+    businessTimeField: null
+    partitionExpression: null
+  qualityRules:
+  - id: agreement_uid_required
+    type: not_null
+    column: agreement_uid
+    severity: error
+    sourceRule: agreement_uid_required
+  - id: agreement_number_required
+    type: not_null
+    column: agreement_number
+    severity: error
+    sourceRule: agreement_number_required
+  - id: agreement_name_required
+    type: not_null
+    column: agreement_name
+    severity: error
+    sourceRule: agreement_name_required
+  - id: agreement_type_code_required
+    type: not_null
+    column: agreement_type_code
+    severity: error
+    sourceRule: agreement_type_code_required
+  - id: agreement_status_code_required
+    type: not_null
+    column: agreement_status_code
+    severity: error
+    sourceRule: agreement_status_code_required
+  - id: agreement_account_uid_required
+    type: not_null
+    column: account_uid
+    severity: error
+    sourceRule: agreement_account_uid_required
+  - id: agreement_effective_date_required
+    type: not_null
+    column: effective_date
+    severity: error
+    sourceRule: agreement_effective_date_required
+  - id: agreement_effective_not_after_expiration
+    type: expression
+    expression: 'TRUE  -- TODO: derive from contract description: Effective date must not be later than
+      expiration date when both dates are populated.'
+    severity: error
+    sourceRule: agreement_effective_not_after_expiration
+  - id: valid_from_datetime_required
+    type: not_null
+    column: valid_from_datetime
+    severity: error
+    sourceRule: valid_from_datetime_required
+  - id: valid_window_consistent
+    type: expression
+    expression: valid_to_datetime IS NULL OR valid_to_datetime > valid_from_datetime
+    severity: error
+    sourceRule: valid_window_consistent
+  - id: single_current_row_per_key
+    type: unique
+    keyColumns:
+    - agreement_uid
+    filter: is_current_indicator = true
+    severity: error
+    sourceRule: single_current_row_per_key
+  - id: record_status_code_required
+    type: not_null
+    column: record_status_code
+    severity: error
+    sourceRule: record_status_code_required
+  - id: source_system_code_in_codeset
+    type: accepted_values
+    column: source_system_code
+    codeset: pc.source-system-code
+    codesetTable: silver_reference_data.source_system_code
+    codesetField: code_value
+    severity: error
+    sourceRule: derived
+  - id: agreement_type_code_in_codeset
+    type: accepted_values
+    column: agreement_type_code
+    codeset: pc.agreement-type-code
+    codesetTable: silver_reference_data.agreement_type_code
+    codesetField: code_value
+    severity: error
+    sourceRule: derived
+  - id: agreement_status_code_in_codeset
+    type: accepted_values
+    column: agreement_status_code
+    codeset: pc.agreement-status-code
+    codesetTable: silver_reference_data.agreement_status_code
+    codesetField: code_value
+    severity: error
+    sourceRule: derived
+  - id: record_status_code_in_codeset
+    type: accepted_values
+    column: record_status_code
+    codeset: pc.record-status-code
+    codesetTable: silver_reference_data.record_status_code
+    codesetField: code_value
+    severity: error
+    sourceRule: derived
+  bronze:
+    table: bronze.agreement_raw
+    incrementalColumn: _ingested_at
+    expectedColumns:
+    - agreement_uid
+    - source_system_code
+    - source_natural_key
+    - agreement_number
+    - agreement_name
+    - agreement_type_code
+    - agreement_status_code
+    - account_uid
+    - counterparty_party_uid
+    - effective_date
+    - expiration_date
+    - agreement_description
+    - record_status_code
+    - valid_from_datetime
+    - valid_to_datetime
+    - is_current_indicator
+relationships:
+- name: agreement_to_agreement_type
+  description: Relates an agreement to the AgreementTypeCode codeset.
+  cardinality: many-to-one
+  targetContract: pc.agreement-type-code
+  targetTable: silver_reference_data.agreement_type_code
+  sourceFields:
+  - agreement_type_code
+  targetFields:
+  - code_value
+- name: agreement_to_agreement_status
+  description: Relates an agreement to the AgreementStatusCode codeset.
+  cardinality: many-to-one
+  targetContract: pc.agreement-status-code
+  targetTable: silver_reference_data.agreement_status_code
+  sourceFields:
+  - agreement_status_code
+  targetFields:
+  - code_value
+- name: agreement_to_account
+  description: Relates an agreement to the account it belongs to.
+  cardinality: many-to-one
+  targetContract: pc.account
+  targetTable: silver_core.account
+  sourceFields:
+  - account_uid
+  targetFields:
+  - account_uid
+- name: agreement_to_counterparty_party
+  description: Relates an agreement to its counterparty Party (broker, MGA, program administrator, or
+    master insured) when applicable.
+  cardinality: many-to-one
+  targetContract: pc.party
+  targetTable: silver_core.party
+  sourceFields:
+  - counterparty_party_uid
+  targetFields:
+  - party_uid
+- name: agreement_to_record_status
+  description: Relates an agreement to the RecordStatusCode codeset.
+  cardinality: many-to-one
+  targetContract: pc.record-status-code
+  targetTable: silver_reference_data.record_status_code
+  sourceFields:
+  - record_status_code
+  targetFields:
+  - code_value
+- name: agreement_source_system_code_to_source_system_code
+  description: Binds source_system_code to the canonical source-system-code codeset.
+  cardinality: many-to-one
+  targetContract: pc.source-system-code
+  targetTable: silver_reference_data.source_system_code
+  sourceFields:
+  - source_system_code
+  targetFields:
+  - code_value
+generation:
+  generatorVersion: 1.0.0
+  generatedAt: '2026-05-07T00:00:00Z'
+  sourceContractPath: references/odcs/pc/core/agreement.odcs.yaml
+  sourceContractDigest: sha256:c09d6875afa4b486924b80468f0123881d60d6055840f4d73ceb4d46312d1687

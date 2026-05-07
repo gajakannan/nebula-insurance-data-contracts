@@ -1,0 +1,425 @@
+manifestVersion: 1.0.0
+contract:
+  id: pc.party
+  name: Party
+  version: 0.4.1
+  domain: property-and-casualty
+  description: Canonical contract for a reusable person, organization, or group identity in Property and
+    Casualty insurance.
+  classificationProfile: RESTRICTED
+  subjectToHipaa: false
+  contractKind: entity
+  subjectArea: core
+  adrs:
+  - authoring-source-primacy
+  - canonical-alignment
+  - codeset-strategy
+  - data-classification
+  - identifier-strategy
+  - null-semantics
+  - record-state
+  - role-modeling
+  - scd2-primary-key
+  - separation-and-nesting
+  - status-promotion
+  - temporal-modeling
+  - versioning-policy
+fabric:
+  lakehouse: nebula_pc_silver
+  schema: silver_core
+  table:
+    name: party
+    delta:
+      tableProperties:
+        delta.appendOnly: false
+        delta.autoOptimize.optimizeWrite: true
+        delta.autoOptimize.autoCompact: true
+        delta.enableChangeDataFeed: true
+      partitionedBy:
+      - is_current_indicator
+      zorderBy:
+      - party_uid
+      vorder: true
+  columns:
+  - name: party_uid
+    sparkType: STRING
+    nullable: false
+    primaryKey: true
+    role: identity
+    description: Immutable system-generated GUID that uniquely identifies the canonical party record across
+      snapshots and source systems.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: source_system_code
+    sparkType: STRING
+    nullable: true
+    role: source-attribution
+    description: Identifier of the upstream system that produced or last asserted this record. Used for
+      multi-source mastering and lineage.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    codeReference:
+      codeset: pc.source-system-code
+      codesetTable: silver_reference_data.source_system_code
+      codesetField: code_value
+  - name: source_natural_key
+    sparkType: STRING
+    nullable: true
+    role: source-attribution
+    description: Natural key assigned by the source system. Captured for provenance; not used as the canonical
+      primary key.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: party_type_code
+    sparkType: STRING
+    nullable: false
+    role: code-reference
+    description: Classification of the party as a person, organization, household, trust, or other recognized
+      party type.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    codeReference:
+      codeset: pc.party-type-code
+      codesetTable: silver_reference_data.party_type_code
+      codesetField: code_value
+  - name: party_display_name
+    sparkType: STRING
+    nullable: false
+    role: data
+    description: Name used to identify the party in business-facing contexts.
+    classifications:
+      sensitivity: CONFIDENTIAL
+      regulatoryTags:
+      - PII
+    purview:
+      sensitivityLabel: Confidential
+  - name: legal_name
+    sparkType: STRING
+    nullable: true
+    role: data
+    description: Legal name for the party when it differs from the display name or is required for contractual
+      context.
+    classifications:
+      sensitivity: CONFIDENTIAL
+      regulatoryTags:
+      - PII
+    purview:
+      sensitivityLabel: Confidential
+  - name: given_name
+    sparkType: STRING
+    nullable: true
+    role: data
+    description: Given or first name for a party that represents an individual person.
+    classifications:
+      sensitivity: CONFIDENTIAL
+      regulatoryTags:
+      - PII
+    purview:
+      sensitivityLabel: Confidential
+  - name: middle_name
+    sparkType: STRING
+    nullable: true
+    role: data
+    description: Middle name or initial for a party that represents an individual person.
+    classifications:
+      sensitivity: CONFIDENTIAL
+      regulatoryTags:
+      - PII
+    purview:
+      sensitivityLabel: Confidential
+  - name: family_name
+    sparkType: STRING
+    nullable: true
+    role: data
+    description: Family or last name for a party that represents an individual person.
+    classifications:
+      sensitivity: CONFIDENTIAL
+      regulatoryTags:
+      - PII
+    purview:
+      sensitivityLabel: Confidential
+  - name: birth_date
+    sparkType: DATE
+    nullable: true
+    role: data
+    description: Date of birth for a party that represents an individual person.
+    classifications:
+      sensitivity: RESTRICTED
+      regulatoryTags:
+      - PII
+    purview:
+      sensitivityLabel: Restricted
+  - name: organization_name
+    sparkType: STRING
+    nullable: true
+    role: data
+    description: Registered or commonly used organization name for a party that represents an organization.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: organization_type_code
+    sparkType: STRING
+    nullable: true
+    role: data
+    description: Classification of an organization party, such as carrier, agency, employer, vendor, or
+      public entity.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: party_status_code
+    sparkType: STRING
+    nullable: false
+    role: data
+    description: Current lifecycle status of the party identity record.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: effective_date
+    sparkType: DATE
+    nullable: true
+    role: data
+    description: Date when the party identity record becomes effective for canonical use.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: expiration_date
+    sparkType: DATE
+    nullable: true
+    role: data
+    description: Date when the party identity record stops being effective for canonical use.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: source_created_datetime
+    sparkType: TIMESTAMP
+    nullable: true
+    role: source-time
+    description: Source-system timestamp asserting when this record was created. Captured for late-arriving-data
+      analysis; distinct from the SCD2 system-time start in valid_from_datetime.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: source_updated_datetime
+    sparkType: TIMESTAMP
+    nullable: true
+    role: source-time
+    description: Source-system timestamp asserting when this record was last updated. Captured for late-arriving-data
+      analysis; distinct from the SCD2 system-time markers valid_from_datetime / valid_to_datetime.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: record_status_code
+    sparkType: STRING
+    nullable: false
+    role: record-state
+    description: Warehouse-level state of the record. References the RecordStatusCode codeset (ACTIVE,
+      SUPERSEDED, SOFT_DELETED, RESTATED, MERGED).
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    codeReference:
+      codeset: pc.record-status-code
+      codesetTable: silver_reference_data.record_status_code
+      codesetField: code_value
+  - name: valid_from_datetime
+    sparkType: TIMESTAMP
+    nullable: false
+    primaryKey: true
+    role: scd2-valid-from
+    description: System-time start of the SCD2 window for this record version.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: valid_to_datetime
+    sparkType: TIMESTAMP
+    nullable: true
+    role: scd2-valid-to
+    description: System-time end of the SCD2 window for this record version. Null indicates the current
+      row.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: is_current_indicator
+    sparkType: BOOLEAN
+    nullable: false
+    role: scd2-is-current
+    description: True for exactly one row per logical key, indicating the current record version.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  scd2:
+    enabled: true
+    validFrom: valid_from_datetime
+    validTo: valid_to_datetime
+    isCurrent: is_current_indicator
+    naturalKey:
+    - party_uid
+    deletionAware: false
+    changeDetection:
+      excludeFromHashing:
+      - valid_from_datetime
+      - valid_to_datetime
+      - is_current_indicator
+      - record_status_code
+  recordState:
+    enabled: true
+    field: record_status_code
+    activeValue: ACTIVE
+    supersededValue: SUPERSEDED
+    softDeletedValue: SOFT_DELETED
+  appendOnly:
+    enabled: false
+    correctionIndicator: null
+    correctsRefField: null
+    businessTimeField: null
+    partitionExpression: null
+  qualityRules:
+  - id: party_uid_required
+    type: not_null
+    column: party_uid
+    severity: error
+    sourceRule: party_uid_required
+  - id: party_type_code_required
+    type: not_null
+    column: party_type_code
+    severity: error
+    sourceRule: party_type_code_required
+  - id: party_display_name_required
+    type: not_null
+    column: party_display_name
+    severity: error
+    sourceRule: party_display_name_required
+  - id: party_effective_date_not_after_expiration_date
+    type: expression
+    expression: effective_date IS NULL OR expiration_date IS NULL OR effective_date <= expiration_date
+    severity: error
+    sourceRule: party_effective_date_not_after_expiration_date
+  - id: party_person_name_or_organization_name_present
+    type: expression
+    expression: 'TRUE  -- TODO: derive from contract description: A person party should include person
+      name fields and an organization party should include organization name.'
+    severity: warning
+    sourceRule: party_person_name_or_organization_name_present
+  - id: valid_from_datetime_required
+    type: not_null
+    column: valid_from_datetime
+    severity: error
+    sourceRule: valid_from_datetime_required
+  - id: valid_window_consistent
+    type: expression
+    expression: valid_to_datetime IS NULL OR valid_to_datetime > valid_from_datetime
+    severity: error
+    sourceRule: valid_window_consistent
+  - id: single_current_row_per_key
+    type: unique
+    keyColumns:
+    - party_uid
+    filter: is_current_indicator = true
+    severity: error
+    sourceRule: single_current_row_per_key
+  - id: record_status_code_required
+    type: not_null
+    column: record_status_code
+    severity: error
+    sourceRule: record_status_code_required
+  - id: source_system_code_in_codeset
+    type: accepted_values
+    column: source_system_code
+    codeset: pc.source-system-code
+    codesetTable: silver_reference_data.source_system_code
+    codesetField: code_value
+    severity: error
+    sourceRule: derived
+  - id: party_type_code_in_codeset
+    type: accepted_values
+    column: party_type_code
+    codeset: pc.party-type-code
+    codesetTable: silver_reference_data.party_type_code
+    codesetField: code_value
+    severity: error
+    sourceRule: derived
+  - id: record_status_code_in_codeset
+    type: accepted_values
+    column: record_status_code
+    codeset: pc.record-status-code
+    codesetTable: silver_reference_data.record_status_code
+    codesetField: code_value
+    severity: error
+    sourceRule: derived
+  bronze:
+    table: bronze.party_raw
+    incrementalColumn: _ingested_at
+    expectedColumns:
+    - party_uid
+    - source_system_code
+    - source_natural_key
+    - party_type_code
+    - party_display_name
+    - legal_name
+    - given_name
+    - middle_name
+    - family_name
+    - birth_date
+    - organization_name
+    - organization_type_code
+    - party_status_code
+    - effective_date
+    - expiration_date
+    - source_created_datetime
+    - source_updated_datetime
+    - record_status_code
+    - valid_from_datetime
+    - valid_to_datetime
+    - is_current_indicator
+relationships:
+- name: party_source_system_code_to_source_system_code
+  description: Binds source_system_code to the canonical source-system-code codeset.
+  cardinality: many-to-one
+  targetContract: pc.source-system-code
+  targetTable: silver_reference_data.source_system_code
+  sourceFields:
+  - source_system_code
+  targetFields:
+  - code_value
+- name: party_party_type_code_to_party_type_code
+  description: Binds party_type_code to the canonical party-type-code codeset.
+  cardinality: many-to-one
+  targetContract: pc.party-type-code
+  targetTable: silver_reference_data.party_type_code
+  sourceFields:
+  - party_type_code
+  targetFields:
+  - code_value
+- name: party_record_status_code_to_record_status_code
+  description: Binds record_status_code to the canonical record-status-code codeset.
+  cardinality: many-to-one
+  targetContract: pc.record-status-code
+  targetTable: silver_reference_data.record_status_code
+  sourceFields:
+  - record_status_code
+  targetFields:
+  - code_value
+generation:
+  generatorVersion: 1.0.0
+  generatedAt: '2026-05-07T00:00:00Z'
+  sourceContractPath: references/odcs/pc/core/party.odcs.yaml
+  sourceContractDigest: sha256:9ef76b13294b51decd0bdf042461370d2c7361d3e8253554e617e290b2d456c5

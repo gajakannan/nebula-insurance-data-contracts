@@ -20,7 +20,7 @@ The skills-for-fabric default is one workspace and one lakehouse per medallion l
 |---|---|
 | Workspace | One workspace; name parameterized at deployment time (e.g. `nebula-pc-silver-{env}` for dev / test / prod). |
 | Lakehouse | One Silver Lakehouse named `nebula_pc_silver`. |
-| Schema (folder) | One schema per ODCS subject area: `silver_core`, `silver_policy`, `silver_coverage`, `silver_exposure`, `silver_submission`, `silver_claims`, `silver_financial`, `silver_reference_data`. |
+| Schema (folder) | One schema per ODCS subject area: `silver_core`, `silver_policy`, `silver_coverage`, `silver_product`, `silver_exposure`, `silver_submission`, `silver_claims`, `silver_financial`, `silver_reference_data`. |
 | Delta table | snake_case slug of the contract id, with the `pc.` prefix dropped (e.g. `pc.policy` → `policy`, `pc.policy-term` → `policy_term`, `pc.claim-lifecycle-event` → `claim_lifecycle_event`). |
 | Bronze | Assumed to exist outside this repository. Manifests reference Bronze tables by qualified name with a configurable prefix (e.g. `bronze.policy_raw`); the deployer overrides the prefix per environment via notebook parameters. |
 | Gold | Out of scope for this milestone. Power BI / Direct Lake consumption is downstream of Silver and not generated here. |

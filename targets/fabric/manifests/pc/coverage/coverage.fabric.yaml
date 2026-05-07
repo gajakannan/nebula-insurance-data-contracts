@@ -1,0 +1,429 @@
+manifestVersion: 1.0.0
+contract:
+  id: pc.coverage
+  name: Coverage
+  version: 0.4.1
+  domain: property-and-casualty
+  description: Canonical contract for a reusable Property and Casualty coverage concept.
+  classificationProfile: CONFIDENTIAL
+  subjectToHipaa: false
+  contractKind: entity
+  subjectArea: coverage
+  adrs:
+  - authoring-source-primacy
+  - canonical-alignment
+  - codeset-strategy
+  - data-classification
+  - identifier-strategy
+  - null-semantics
+  - product-coverage-modeling
+  - record-state
+  - scd2-primary-key
+  - status-promotion
+  - temporal-modeling
+  - versioning-policy
+fabric:
+  lakehouse: nebula_pc_silver
+  schema: silver_coverage
+  table:
+    name: coverage
+    delta:
+      tableProperties:
+        delta.appendOnly: false
+        delta.autoOptimize.optimizeWrite: true
+        delta.autoOptimize.autoCompact: true
+        delta.enableChangeDataFeed: true
+      partitionedBy:
+      - is_current_indicator
+      zorderBy:
+      - coverage_uid
+      vorder: true
+  columns:
+  - name: coverage_uid
+    sparkType: STRING
+    nullable: false
+    primaryKey: true
+    role: identity
+    description: Immutable system-generated GUID that uniquely identifies the canonical coverage record
+      across snapshots and source systems.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: source_system_code
+    sparkType: STRING
+    nullable: true
+    role: source-attribution
+    description: Identifier of the upstream system that produced or last asserted this record. Used for
+      multi-source mastering and lineage.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    codeReference:
+      codeset: pc.source-system-code
+      codesetTable: silver_reference_data.source_system_code
+      codesetField: code_value
+  - name: source_natural_key
+    sparkType: STRING
+    nullable: true
+    role: source-attribution
+    description: Natural key assigned by the source system. Captured for provenance; not used as the canonical
+      primary key.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: coverage_code
+    sparkType: STRING
+    nullable: false
+    role: data
+    description: Business-facing code that classifies the coverage definition.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: coverage_name
+    sparkType: STRING
+    nullable: false
+    role: data
+    description: Business-facing name of the coverage definition.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: coverage_description
+    sparkType: STRING
+    nullable: true
+    role: data
+    description: Source-neutral business description of the protection provided by the coverage.
+    classifications:
+      sensitivity: CONFIDENTIAL
+      regulatoryTags:
+      - PII
+    purview:
+      sensitivityLabel: Confidential
+  - name: coverage_type_code
+    sparkType: STRING
+    nullable: true
+    role: data
+    description: Classification of the coverage by protection type or coverage family.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: coverage_category_code
+    sparkType: STRING
+    nullable: true
+    role: data
+    description: Higher-level grouping used to organize related coverage definitions.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: line_of_business_code
+    sparkType: STRING
+    nullable: false
+    role: code-reference
+    description: Classification of the insurance line of business where the coverage is generally offered.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    codeReference:
+      codeset: pc.line-of-business
+      codesetTable: silver_reference_data.line_of_business
+      codesetField: code_value
+  - name: product_uid
+    sparkType: STRING
+    nullable: true
+    role: foreign-key
+    description: Identifier (GUID reference) for the product that offers the coverage when the coverage
+      is product-specific.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    foreignKey:
+      targetContract: pc.product
+      targetTable: silver_product.product
+      targetField: product_uid
+  - name: coverage_status_code
+    sparkType: STRING
+    nullable: false
+    role: code-reference
+    description: Current lifecycle status of the coverage definition.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    codeReference:
+      codeset: pc.coverage-status-code
+      codesetTable: silver_reference_data.coverage_status_code
+      codesetField: code_value
+  - name: effective_date
+    sparkType: DATE
+    nullable: true
+    role: data
+    description: Date when the coverage definition becomes effective for canonical use.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: expiration_date
+    sparkType: DATE
+    nullable: true
+    role: data
+    description: Date when the coverage definition stops being effective for canonical use.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: source_created_datetime
+    sparkType: TIMESTAMP
+    nullable: true
+    role: source-time
+    description: Source-system timestamp asserting when this record was created. Captured for late-arriving-data
+      analysis; distinct from the SCD2 system-time start in valid_from_datetime.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: source_updated_datetime
+    sparkType: TIMESTAMP
+    nullable: true
+    role: source-time
+    description: Source-system timestamp asserting when this record was last updated. Captured for late-arriving-data
+      analysis; distinct from the SCD2 system-time markers valid_from_datetime / valid_to_datetime.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: record_status_code
+    sparkType: STRING
+    nullable: false
+    role: record-state
+    description: Warehouse-level state of the record. References the RecordStatusCode codeset (ACTIVE,
+      SUPERSEDED, SOFT_DELETED, RESTATED, MERGED).
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    codeReference:
+      codeset: pc.record-status-code
+      codesetTable: silver_reference_data.record_status_code
+      codesetField: code_value
+  - name: valid_from_datetime
+    sparkType: TIMESTAMP
+    nullable: false
+    primaryKey: true
+    role: scd2-valid-from
+    description: System-time start of the SCD2 window for this record version.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: valid_to_datetime
+    sparkType: TIMESTAMP
+    nullable: true
+    role: scd2-valid-to
+    description: System-time end of the SCD2 window for this record version. Null indicates the current
+      row.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: is_current_indicator
+    sparkType: BOOLEAN
+    nullable: false
+    role: scd2-is-current
+    description: True for exactly one row per logical key, indicating the current record version.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  scd2:
+    enabled: true
+    validFrom: valid_from_datetime
+    validTo: valid_to_datetime
+    isCurrent: is_current_indicator
+    naturalKey:
+    - coverage_uid
+    deletionAware: false
+    changeDetection:
+      excludeFromHashing:
+      - valid_from_datetime
+      - valid_to_datetime
+      - is_current_indicator
+      - record_status_code
+  recordState:
+    enabled: true
+    field: record_status_code
+    activeValue: ACTIVE
+    supersededValue: SUPERSEDED
+    softDeletedValue: SOFT_DELETED
+  appendOnly:
+    enabled: false
+    correctionIndicator: null
+    correctsRefField: null
+    businessTimeField: null
+    partitionExpression: null
+  qualityRules:
+  - id: coverage_uid_required
+    type: not_null
+    column: coverage_uid
+    severity: error
+    sourceRule: coverage_uid_required
+  - id: coverage_code_required
+    type: not_null
+    column: coverage_code
+    severity: error
+    sourceRule: coverage_code_required
+  - id: coverage_name_required
+    type: not_null
+    column: coverage_name
+    severity: error
+    sourceRule: coverage_name_required
+  - id: coverage_line_of_business_code_required
+    type: not_null
+    column: line_of_business_code
+    severity: error
+    sourceRule: coverage_line_of_business_code_required
+  - id: coverage_status_code_required
+    type: not_null
+    column: coverage_status_code
+    severity: error
+    sourceRule: coverage_status_code_required
+  - id: coverage_effective_date_not_after_expiration_date
+    type: expression
+    expression: effective_date IS NULL OR expiration_date IS NULL OR effective_date <= expiration_date
+    severity: error
+    sourceRule: coverage_effective_date_not_after_expiration_date
+  - id: valid_from_datetime_required
+    type: not_null
+    column: valid_from_datetime
+    severity: error
+    sourceRule: valid_from_datetime_required
+  - id: valid_window_consistent
+    type: expression
+    expression: valid_to_datetime IS NULL OR valid_to_datetime > valid_from_datetime
+    severity: error
+    sourceRule: valid_window_consistent
+  - id: single_current_row_per_key
+    type: unique
+    keyColumns:
+    - coverage_uid
+    filter: is_current_indicator = true
+    severity: error
+    sourceRule: single_current_row_per_key
+  - id: record_status_code_required
+    type: not_null
+    column: record_status_code
+    severity: error
+    sourceRule: record_status_code_required
+  - id: source_system_code_in_codeset
+    type: accepted_values
+    column: source_system_code
+    codeset: pc.source-system-code
+    codesetTable: silver_reference_data.source_system_code
+    codesetField: code_value
+    severity: error
+    sourceRule: derived
+  - id: line_of_business_code_in_codeset
+    type: accepted_values
+    column: line_of_business_code
+    codeset: pc.line-of-business
+    codesetTable: silver_reference_data.line_of_business
+    codesetField: code_value
+    severity: error
+    sourceRule: derived
+  - id: coverage_status_code_in_codeset
+    type: accepted_values
+    column: coverage_status_code
+    codeset: pc.coverage-status-code
+    codesetTable: silver_reference_data.coverage_status_code
+    codesetField: code_value
+    severity: error
+    sourceRule: derived
+  - id: record_status_code_in_codeset
+    type: accepted_values
+    column: record_status_code
+    codeset: pc.record-status-code
+    codesetTable: silver_reference_data.record_status_code
+    codesetField: code_value
+    severity: error
+    sourceRule: derived
+  bronze:
+    table: bronze.coverage_raw
+    incrementalColumn: _ingested_at
+    expectedColumns:
+    - coverage_uid
+    - source_system_code
+    - source_natural_key
+    - coverage_code
+    - coverage_name
+    - coverage_description
+    - coverage_type_code
+    - coverage_category_code
+    - line_of_business_code
+    - product_uid
+    - coverage_status_code
+    - effective_date
+    - expiration_date
+    - source_created_datetime
+    - source_updated_datetime
+    - record_status_code
+    - valid_from_datetime
+    - valid_to_datetime
+    - is_current_indicator
+relationships:
+- name: coverage_to_product
+  description: Relates a coverage definition to the product that offers it when the coverage is product-specific.
+  cardinality: many-to-one
+  targetContract: pc.product
+  targetTable: silver_product.product
+  sourceFields:
+  - product_uid
+  targetFields:
+  - product_uid
+- name: coverage_source_system_code_to_source_system_code
+  description: Binds source_system_code to the canonical source-system-code codeset.
+  cardinality: many-to-one
+  targetContract: pc.source-system-code
+  targetTable: silver_reference_data.source_system_code
+  sourceFields:
+  - source_system_code
+  targetFields:
+  - code_value
+- name: coverage_line_of_business_code_to_line_of_business
+  description: Binds line_of_business_code to the canonical line-of-business codeset.
+  cardinality: many-to-one
+  targetContract: pc.line-of-business
+  targetTable: silver_reference_data.line_of_business
+  sourceFields:
+  - line_of_business_code
+  targetFields:
+  - code_value
+- name: coverage_coverage_status_code_to_coverage_status_code
+  description: Binds coverage_status_code to the canonical coverage-status-code codeset.
+  cardinality: many-to-one
+  targetContract: pc.coverage-status-code
+  targetTable: silver_reference_data.coverage_status_code
+  sourceFields:
+  - coverage_status_code
+  targetFields:
+  - code_value
+- name: coverage_record_status_code_to_record_status_code
+  description: Binds record_status_code to the canonical record-status-code codeset.
+  cardinality: many-to-one
+  targetContract: pc.record-status-code
+  targetTable: silver_reference_data.record_status_code
+  sourceFields:
+  - record_status_code
+  targetFields:
+  - code_value
+generation:
+  generatorVersion: 1.0.0
+  generatedAt: '2026-05-07T00:00:00Z'
+  sourceContractPath: references/odcs/pc/coverage/coverage.odcs.yaml
+  sourceContractDigest: sha256:d8e6bb886900345bc5d05933017eeb39249205e101a985650c85063505918f81

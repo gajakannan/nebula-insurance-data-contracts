@@ -1,0 +1,426 @@
+manifestVersion: 1.0.0
+contract:
+  id: pc.account
+  name: Account
+  version: 0.1.1
+  domain: property-and-casualty
+  description: Canonical contract for a commercial-lines account — the master customer record that owns
+    one or more policies, agreements, and submissions.
+  classificationProfile: CONFIDENTIAL
+  subjectToHipaa: false
+  contractKind: entity
+  subjectArea: core
+  adrs:
+  - authoring-source-primacy
+  - canonical-alignment
+  - codeset-strategy
+  - data-classification
+  - entity-boundaries
+  - identifier-strategy
+  - null-semantics
+  - record-state
+  - scd2-primary-key
+  - status-promotion
+  - temporal-modeling
+  - versioning-policy
+fabric:
+  lakehouse: nebula_pc_silver
+  schema: silver_core
+  table:
+    name: account
+    delta:
+      tableProperties:
+        delta.appendOnly: false
+        delta.autoOptimize.optimizeWrite: true
+        delta.autoOptimize.autoCompact: true
+        delta.enableChangeDataFeed: true
+      partitionedBy:
+      - is_current_indicator
+      zorderBy:
+      - account_uid
+      vorder: true
+  columns:
+  - name: account_uid
+    sparkType: STRING
+    nullable: false
+    primaryKey: true
+    role: identity
+    description: Immutable system-generated GUID that uniquely identifies the canonical account record
+      across snapshots and source systems.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: source_system_code
+    sparkType: STRING
+    nullable: true
+    role: source-attribution
+    description: Identifier of the upstream system that produced or last asserted this record. Used for
+      multi-source mastering and lineage.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    codeReference:
+      codeset: pc.source-system-code
+      codesetTable: silver_reference_data.source_system_code
+      codesetField: code_value
+  - name: source_natural_key
+    sparkType: STRING
+    nullable: true
+    role: source-attribution
+    description: Natural key assigned by the source system. Captured for provenance; not used as the canonical
+      primary key.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: account_number
+    sparkType: STRING
+    nullable: false
+    role: business-key
+    description: Business-facing number assigned to the account.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: account_name
+    sparkType: STRING
+    nullable: false
+    role: data
+    description: Business-facing name of the account (typically the legal name of the master customer
+      organization).
+    classifications:
+      sensitivity: CONFIDENTIAL
+      regulatoryTags:
+      - PII
+    purview:
+      sensitivityLabel: Confidential
+  - name: account_type_code
+    sparkType: STRING
+    nullable: false
+    role: code-reference
+    description: Classification of the account organization (CORPORATE, PARTNERSHIP, LLC, ASSOCIATION,
+      CAPTIVE, MASTER_PROGRAM, INDIVIDUAL_LARGE, etc.). References the AccountTypeCode codeset.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    codeReference:
+      codeset: pc.account-type-code
+      codesetTable: silver_reference_data.account_type_code
+      codesetField: code_value
+  - name: account_status_code
+    sparkType: STRING
+    nullable: false
+    role: code-reference
+    description: Current lifecycle status of the account (ACTIVE, PROSPECT, INACTIVE, CLOSED, MERGED).
+      References the AccountStatusCode codeset.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    codeReference:
+      codeset: pc.account-status-code
+      codesetTable: silver_reference_data.account_status_code
+      codesetField: code_value
+  - name: parent_account_uid
+    sparkType: STRING
+    nullable: true
+    role: foreign-key
+    description: Identifier (GUID reference) for the primary parent account when the account belongs to
+      a corporate hierarchy. Self-references the canonical account contract. Multi-parent or non-primary
+      parent relationships live on AccountRelationship.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    foreignKey:
+      targetContract: pc.account
+      targetTable: silver_core.account
+      targetField: account_uid
+  - name: primary_party_uid
+    sparkType: STRING
+    nullable: false
+    role: foreign-key
+    description: Identifier (GUID reference) for the legal-entity Party that the account represents. Connects
+      the operational account record to canonical party identity.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    foreignKey:
+      targetContract: pc.party
+      targetTable: silver_core.party
+      targetField: party_uid
+  - name: effective_date
+    sparkType: DATE
+    nullable: true
+    role: data
+    description: Date when the account becomes effective for business use.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: expiration_date
+    sparkType: DATE
+    nullable: true
+    role: data
+    description: Date when the account stops being effective for business use. Null indicates an open-ended
+      account.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: account_description
+    sparkType: STRING
+    nullable: true
+    role: data
+    description: Source-neutral business description of the account when additional context is needed.
+    classifications:
+      sensitivity: CONFIDENTIAL
+      regulatoryTags:
+      - PII
+    purview:
+      sensitivityLabel: Confidential
+  - name: record_status_code
+    sparkType: STRING
+    nullable: false
+    role: record-state
+    description: Warehouse-level state of the record. References the RecordStatusCode codeset (ACTIVE,
+      SUPERSEDED, SOFT_DELETED, RESTATED, MERGED).
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    codeReference:
+      codeset: pc.record-status-code
+      codesetTable: silver_reference_data.record_status_code
+      codesetField: code_value
+  - name: valid_from_datetime
+    sparkType: TIMESTAMP
+    nullable: false
+    primaryKey: true
+    role: scd2-valid-from
+    description: System-time start of the SCD2 window for this record version.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: valid_to_datetime
+    sparkType: TIMESTAMP
+    nullable: true
+    role: scd2-valid-to
+    description: System-time end of the SCD2 window for this record version. Null indicates the current
+      row.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: is_current_indicator
+    sparkType: BOOLEAN
+    nullable: false
+    role: scd2-is-current
+    description: True for exactly one row per logical key, indicating the current record version.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  scd2:
+    enabled: true
+    validFrom: valid_from_datetime
+    validTo: valid_to_datetime
+    isCurrent: is_current_indicator
+    naturalKey:
+    - account_uid
+    deletionAware: false
+    changeDetection:
+      excludeFromHashing:
+      - valid_from_datetime
+      - valid_to_datetime
+      - is_current_indicator
+      - record_status_code
+  recordState:
+    enabled: true
+    field: record_status_code
+    activeValue: ACTIVE
+    supersededValue: SUPERSEDED
+    softDeletedValue: SOFT_DELETED
+  appendOnly:
+    enabled: false
+    correctionIndicator: null
+    correctsRefField: null
+    businessTimeField: null
+    partitionExpression: null
+  qualityRules:
+  - id: account_uid_required
+    type: not_null
+    column: account_uid
+    severity: error
+    sourceRule: account_uid_required
+  - id: account_number_required
+    type: not_null
+    column: account_number
+    severity: error
+    sourceRule: account_number_required
+  - id: account_name_required
+    type: not_null
+    column: account_name
+    severity: error
+    sourceRule: account_name_required
+  - id: account_status_code_required
+    type: not_null
+    column: account_status_code
+    severity: error
+    sourceRule: account_status_code_required
+  - id: account_primary_party_uid_required
+    type: not_null
+    column: primary_party_uid
+    severity: error
+    sourceRule: account_primary_party_uid_required
+  - id: account_parent_not_self_reference
+    type: expression
+    expression: 'TRUE  -- TODO: derive from contract description: parent_account_uid must not equal account_uid
+      when populated.'
+    severity: error
+    sourceRule: account_parent_not_self_reference
+  - id: account_effective_not_after_expiration
+    type: expression
+    expression: 'TRUE  -- TODO: derive from contract description: Effective date must not be later than
+      expiration date when both dates are populated.'
+    severity: error
+    sourceRule: account_effective_not_after_expiration
+  - id: valid_from_datetime_required
+    type: not_null
+    column: valid_from_datetime
+    severity: error
+    sourceRule: valid_from_datetime_required
+  - id: valid_window_consistent
+    type: expression
+    expression: valid_to_datetime IS NULL OR valid_to_datetime > valid_from_datetime
+    severity: error
+    sourceRule: valid_window_consistent
+  - id: single_current_row_per_key
+    type: unique
+    keyColumns:
+    - account_uid
+    filter: is_current_indicator = true
+    severity: error
+    sourceRule: single_current_row_per_key
+  - id: record_status_code_required
+    type: not_null
+    column: record_status_code
+    severity: error
+    sourceRule: record_status_code_required
+  - id: source_system_code_in_codeset
+    type: accepted_values
+    column: source_system_code
+    codeset: pc.source-system-code
+    codesetTable: silver_reference_data.source_system_code
+    codesetField: code_value
+    severity: error
+    sourceRule: derived
+  - id: account_type_code_in_codeset
+    type: accepted_values
+    column: account_type_code
+    codeset: pc.account-type-code
+    codesetTable: silver_reference_data.account_type_code
+    codesetField: code_value
+    severity: error
+    sourceRule: derived
+  - id: account_status_code_in_codeset
+    type: accepted_values
+    column: account_status_code
+    codeset: pc.account-status-code
+    codesetTable: silver_reference_data.account_status_code
+    codesetField: code_value
+    severity: error
+    sourceRule: derived
+  - id: record_status_code_in_codeset
+    type: accepted_values
+    column: record_status_code
+    codeset: pc.record-status-code
+    codesetTable: silver_reference_data.record_status_code
+    codesetField: code_value
+    severity: error
+    sourceRule: derived
+  bronze:
+    table: bronze.account_raw
+    incrementalColumn: _ingested_at
+    expectedColumns:
+    - account_uid
+    - source_system_code
+    - source_natural_key
+    - account_number
+    - account_name
+    - account_type_code
+    - account_status_code
+    - parent_account_uid
+    - primary_party_uid
+    - effective_date
+    - expiration_date
+    - account_description
+    - record_status_code
+    - valid_from_datetime
+    - valid_to_datetime
+    - is_current_indicator
+relationships:
+- name: account_to_account_type
+  description: Relates an account to the AccountTypeCode codeset.
+  cardinality: many-to-one
+  targetContract: pc.account-type-code
+  targetTable: silver_reference_data.account_type_code
+  sourceFields:
+  - account_type_code
+  targetFields:
+  - code_value
+- name: account_to_account_status
+  description: Relates an account to the AccountStatusCode codeset.
+  cardinality: many-to-one
+  targetContract: pc.account-status-code
+  targetTable: silver_reference_data.account_status_code
+  sourceFields:
+  - account_status_code
+  targetFields:
+  - code_value
+- name: account_to_parent_account
+  description: Relates an account to its primary parent account in the corporate hierarchy.
+  cardinality: many-to-one
+  targetContract: pc.account
+  targetTable: silver_core.account
+  sourceFields:
+  - parent_account_uid
+  targetFields:
+  - account_uid
+- name: account_to_primary_party
+  description: Relates an account to the legal-entity Party that the account represents.
+  cardinality: many-to-one
+  targetContract: pc.party
+  targetTable: silver_core.party
+  sourceFields:
+  - primary_party_uid
+  targetFields:
+  - party_uid
+- name: account_to_record_status
+  description: Relates an account to the RecordStatusCode codeset.
+  cardinality: many-to-one
+  targetContract: pc.record-status-code
+  targetTable: silver_reference_data.record_status_code
+  sourceFields:
+  - record_status_code
+  targetFields:
+  - code_value
+- name: account_source_system_code_to_source_system_code
+  description: Binds source_system_code to the canonical source-system-code codeset.
+  cardinality: many-to-one
+  targetContract: pc.source-system-code
+  targetTable: silver_reference_data.source_system_code
+  sourceFields:
+  - source_system_code
+  targetFields:
+  - code_value
+generation:
+  generatorVersion: 1.0.0
+  generatedAt: '2026-05-07T00:00:00Z'
+  sourceContractPath: references/odcs/pc/core/account.odcs.yaml
+  sourceContractDigest: sha256:e4779598fba9598e385e36929d8bd1a8ff431b9ffea1c13cebea2b9b9d40ac09

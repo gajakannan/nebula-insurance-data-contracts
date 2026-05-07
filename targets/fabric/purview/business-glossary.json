@@ -1,0 +1,3270 @@
+{
+  "schemaVersion": "1.0",
+  "lakehouse": "nebula_pc_silver",
+  "terms": [
+    {
+      "name": "Canonical Identifier",
+      "definition": "A stable identifier owned by the canonical contract layer. Independent of any one source system; not changed when source systems re-key, merge, or migrate.",
+      "category": "cross-cutting",
+      "sourcePath": "references/glossary/pc/cross-cutting.md#canonical-identifier",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "System Identity Column",
+      "definition": "The immutable, system-generated GUID that is the primary key on every entity and codeset contract. Field name follows the pattern `*_uid`. Used as the join key for every relationship.",
+      "category": "cross-cutting",
+      "sourcePath": "references/glossary/pc/cross-cutting.md#system-identity-column",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Business Key",
+      "definition": "A human-readable identifier the business or operations assigns to an entity, such as a policy number, claim number, or submission number. Required where the business assigns one. Stored alongside the system identity column but not used as the canonical primary key.",
+      "category": "cross-cutting",
+      "sourcePath": "references/glossary/pc/cross-cutting.md#business-key",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Source System Code",
+      "definition": "A code identifying the upstream system that produced or last asserted a canonical record. Captured for multi-source mastering and lineage; does not replace the system identity column.",
+      "category": "cross-cutting",
+      "sourcePath": "references/glossary/pc/cross-cutting.md#source-system-code",
+      "columnFQNs": [
+        "Lakehouse://nebula_pc_silver/Tables/silver_claims/catastrophe/source_system_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim/source_system_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim_coverage/source_system_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim_document/source_system_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim_feature/source_system_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim_party_role/source_system_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_claims/occurrence/source_system_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_core/account/source_system_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_core/account_party_role/source_system_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_core/account_relationship/source_system_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_core/agreement/source_system_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_core/party/source_system_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_core/party_relationship/source_system_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_coverage/coverage/source_system_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_coverage/policy_coverage/source_system_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_coverage/policy_deductible/source_system_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_coverage/policy_limit/source_system_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_coverage/product_coverage/source_system_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_exposure/exposure/source_system_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_exposure/insurable_object/source_system_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_exposure/insurable_object_classification/source_system_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_exposure/insurable_object_party_role/source_system_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_exposure/property_exposure/source_system_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_exposure/vehicle_exposure/source_system_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_exposure/workers_comp_exposure/source_system_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_financial/policy_financial_transaction/source_system_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_policy/policy/source_system_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_policy/policy_document/source_system_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_policy/policy_party_role/source_system_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_policy/policy_term/source_system_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_product/product/source_system_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/geographic_location/source_system_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/location_address/source_system_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_submission/submission/source_system_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_submission/submission_assessment/source_system_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_submission/submission_document/source_system_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_submission/submission_party_role/source_system_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_submission/submission_risk/source_system_code"
+      ],
+      "tableFQNs": []
+    },
+    {
+      "name": "Source Natural Key",
+      "definition": "The natural key assigned by the source system. Captured for provenance and reconciliation; not used as the canonical primary key.",
+      "category": "cross-cutting",
+      "sourcePath": "references/glossary/pc/cross-cutting.md#source-natural-key",
+      "columnFQNs": [
+        "Lakehouse://nebula_pc_silver/Tables/silver_claims/catastrophe/source_natural_key",
+        "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim/source_natural_key",
+        "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim_coverage/source_natural_key",
+        "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim_document/source_natural_key",
+        "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim_feature/source_natural_key",
+        "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim_party_role/source_natural_key",
+        "Lakehouse://nebula_pc_silver/Tables/silver_claims/occurrence/source_natural_key",
+        "Lakehouse://nebula_pc_silver/Tables/silver_core/account/source_natural_key",
+        "Lakehouse://nebula_pc_silver/Tables/silver_core/account_party_role/source_natural_key",
+        "Lakehouse://nebula_pc_silver/Tables/silver_core/account_relationship/source_natural_key",
+        "Lakehouse://nebula_pc_silver/Tables/silver_core/agreement/source_natural_key",
+        "Lakehouse://nebula_pc_silver/Tables/silver_core/party/source_natural_key",
+        "Lakehouse://nebula_pc_silver/Tables/silver_core/party_relationship/source_natural_key",
+        "Lakehouse://nebula_pc_silver/Tables/silver_coverage/coverage/source_natural_key",
+        "Lakehouse://nebula_pc_silver/Tables/silver_coverage/policy_coverage/source_natural_key",
+        "Lakehouse://nebula_pc_silver/Tables/silver_coverage/policy_deductible/source_natural_key",
+        "Lakehouse://nebula_pc_silver/Tables/silver_coverage/policy_limit/source_natural_key",
+        "Lakehouse://nebula_pc_silver/Tables/silver_coverage/product_coverage/source_natural_key",
+        "Lakehouse://nebula_pc_silver/Tables/silver_exposure/exposure/source_natural_key",
+        "Lakehouse://nebula_pc_silver/Tables/silver_exposure/insurable_object/source_natural_key",
+        "Lakehouse://nebula_pc_silver/Tables/silver_exposure/insurable_object_classification/source_natural_key",
+        "Lakehouse://nebula_pc_silver/Tables/silver_exposure/insurable_object_party_role/source_natural_key",
+        "Lakehouse://nebula_pc_silver/Tables/silver_exposure/property_exposure/source_natural_key",
+        "Lakehouse://nebula_pc_silver/Tables/silver_exposure/vehicle_exposure/source_natural_key",
+        "Lakehouse://nebula_pc_silver/Tables/silver_exposure/workers_comp_exposure/source_natural_key",
+        "Lakehouse://nebula_pc_silver/Tables/silver_financial/policy_financial_transaction/source_natural_key",
+        "Lakehouse://nebula_pc_silver/Tables/silver_policy/policy/source_natural_key",
+        "Lakehouse://nebula_pc_silver/Tables/silver_policy/policy_document/source_natural_key",
+        "Lakehouse://nebula_pc_silver/Tables/silver_policy/policy_party_role/source_natural_key",
+        "Lakehouse://nebula_pc_silver/Tables/silver_policy/policy_term/source_natural_key",
+        "Lakehouse://nebula_pc_silver/Tables/silver_product/product/source_natural_key",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/geographic_location/source_natural_key",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/location_address/source_natural_key",
+        "Lakehouse://nebula_pc_silver/Tables/silver_submission/submission/source_natural_key",
+        "Lakehouse://nebula_pc_silver/Tables/silver_submission/submission_assessment/source_natural_key",
+        "Lakehouse://nebula_pc_silver/Tables/silver_submission/submission_document/source_natural_key",
+        "Lakehouse://nebula_pc_silver/Tables/silver_submission/submission_party_role/source_natural_key",
+        "Lakehouse://nebula_pc_silver/Tables/silver_submission/submission_risk/source_natural_key"
+      ],
+      "tableFQNs": []
+    },
+    {
+      "name": "Business Time",
+      "definition": "The time dimension that describes when a business concept is or was effective in the real world. Examples: a policy term's `term_effective_date` and `term_expiration_date`, a coverage's `effective_date`.",
+      "category": "cross-cutting",
+      "sourcePath": "references/glossary/pc/cross-cutting.md#business-time",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "System Time",
+      "definition": "The time dimension that describes when the canonical record was valid in the warehouse. Captured through SCD2 fields independent of business-time fields.",
+      "category": "cross-cutting",
+      "sourcePath": "references/glossary/pc/cross-cutting.md#system-time",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Valid From Datetime",
+      "definition": "The system-time start of an SCD2 record version. Populated for every record version on every entity and codeset contract.",
+      "category": "cross-cutting",
+      "sourcePath": "references/glossary/pc/cross-cutting.md#valid-from-datetime",
+      "columnFQNs": [
+        "Lakehouse://nebula_pc_silver/Tables/silver_claims/catastrophe/valid_from_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim/valid_from_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim_coverage/valid_from_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim_document/valid_from_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim_feature/valid_from_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim_party_role/valid_from_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_claims/occurrence/valid_from_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_core/account/valid_from_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_core/account_party_role/valid_from_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_core/account_relationship/valid_from_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_core/agreement/valid_from_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_core/party/valid_from_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_core/party_relationship/valid_from_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_coverage/coverage/valid_from_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_coverage/policy_coverage/valid_from_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_coverage/policy_deductible/valid_from_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_coverage/policy_limit/valid_from_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_coverage/product_coverage/valid_from_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_exposure/exposure/valid_from_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_exposure/insurable_object/valid_from_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_exposure/insurable_object_classification/valid_from_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_exposure/insurable_object_party_role/valid_from_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_exposure/property_exposure/valid_from_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_exposure/vehicle_exposure/valid_from_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_exposure/workers_comp_exposure/valid_from_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_policy/policy/valid_from_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_policy/policy_document/valid_from_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_policy/policy_party_role/valid_from_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_policy/policy_term/valid_from_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_product/product/valid_from_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/account_relationship_type_code/valid_from_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/account_status_code/valid_from_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/account_type_code/valid_from_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/agreement_status_code/valid_from_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/agreement_type_code/valid_from_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/assessment_result_code/valid_from_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/assessment_status_code/valid_from_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/assessment_type_code/valid_from_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/catastrophe_status_code/valid_from_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/catastrophe_type_code/valid_from_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/cause_of_loss_code/valid_from_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/claim_status_code/valid_from_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/claim_type_code/valid_from_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/coverage_basis_code/valid_from_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/coverage_decision_code/valid_from_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/coverage_level_code/valid_from_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/coverage_status_code/valid_from_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/currency_code/valid_from_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/document_status_code/valid_from_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/document_type_code/valid_from_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/feature_status_code/valid_from_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/financial_transaction_classification/valid_from_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/geographic_location/valid_from_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/jurisdiction_code/valid_from_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/lifecycle_event_type/valid_from_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/lifecycle_status/valid_from_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/line_of_business/valid_from_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/location_address/valid_from_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/occurrence_status_code/valid_from_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/occurrence_type_code/valid_from_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/party_role_type_code/valid_from_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/party_type_code/valid_from_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/policy_status_code/valid_from_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/policy_type_code/valid_from_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/record_status_code/valid_from_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/relationship_status_code/valid_from_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/relationship_type_code/valid_from_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/role_status_code/valid_from_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/source_system_code/valid_from_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/submission_status_code/valid_from_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/submission_type_code/valid_from_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/term_status_code/valid_from_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/transaction_type/valid_from_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_submission/submission/valid_from_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_submission/submission_assessment/valid_from_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_submission/submission_document/valid_from_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_submission/submission_party_role/valid_from_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_submission/submission_risk/valid_from_datetime"
+      ],
+      "tableFQNs": []
+    },
+    {
+      "name": "Valid To Datetime",
+      "definition": "The system-time end of an SCD2 record version. Null indicates the current row.",
+      "category": "cross-cutting",
+      "sourcePath": "references/glossary/pc/cross-cutting.md#valid-to-datetime",
+      "columnFQNs": [
+        "Lakehouse://nebula_pc_silver/Tables/silver_claims/catastrophe/valid_to_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim/valid_to_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim_coverage/valid_to_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim_document/valid_to_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim_feature/valid_to_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim_party_role/valid_to_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_claims/occurrence/valid_to_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_core/account/valid_to_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_core/account_party_role/valid_to_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_core/account_relationship/valid_to_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_core/agreement/valid_to_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_core/party/valid_to_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_core/party_relationship/valid_to_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_coverage/coverage/valid_to_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_coverage/policy_coverage/valid_to_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_coverage/policy_deductible/valid_to_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_coverage/policy_limit/valid_to_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_coverage/product_coverage/valid_to_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_exposure/exposure/valid_to_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_exposure/insurable_object/valid_to_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_exposure/insurable_object_classification/valid_to_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_exposure/insurable_object_party_role/valid_to_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_exposure/property_exposure/valid_to_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_exposure/vehicle_exposure/valid_to_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_exposure/workers_comp_exposure/valid_to_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_policy/policy/valid_to_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_policy/policy_document/valid_to_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_policy/policy_party_role/valid_to_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_policy/policy_term/valid_to_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_product/product/valid_to_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/account_relationship_type_code/valid_to_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/account_status_code/valid_to_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/account_type_code/valid_to_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/agreement_status_code/valid_to_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/agreement_type_code/valid_to_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/assessment_result_code/valid_to_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/assessment_status_code/valid_to_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/assessment_type_code/valid_to_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/catastrophe_status_code/valid_to_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/catastrophe_type_code/valid_to_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/cause_of_loss_code/valid_to_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/claim_status_code/valid_to_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/claim_type_code/valid_to_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/coverage_basis_code/valid_to_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/coverage_decision_code/valid_to_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/coverage_level_code/valid_to_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/coverage_status_code/valid_to_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/currency_code/valid_to_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/document_status_code/valid_to_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/document_type_code/valid_to_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/feature_status_code/valid_to_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/financial_transaction_classification/valid_to_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/geographic_location/valid_to_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/jurisdiction_code/valid_to_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/lifecycle_event_type/valid_to_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/lifecycle_status/valid_to_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/line_of_business/valid_to_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/location_address/valid_to_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/occurrence_status_code/valid_to_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/occurrence_type_code/valid_to_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/party_role_type_code/valid_to_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/party_type_code/valid_to_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/policy_status_code/valid_to_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/policy_type_code/valid_to_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/record_status_code/valid_to_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/relationship_status_code/valid_to_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/relationship_type_code/valid_to_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/role_status_code/valid_to_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/source_system_code/valid_to_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/submission_status_code/valid_to_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/submission_type_code/valid_to_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/term_status_code/valid_to_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/transaction_type/valid_to_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_submission/submission/valid_to_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_submission/submission_assessment/valid_to_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_submission/submission_document/valid_to_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_submission/submission_party_role/valid_to_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_submission/submission_risk/valid_to_datetime"
+      ],
+      "tableFQNs": []
+    },
+    {
+      "name": "Is Current Indicator",
+      "definition": "A boolean that is true for exactly one row per logical key, indicating the current canonical record version.",
+      "category": "cross-cutting",
+      "sourcePath": "references/glossary/pc/cross-cutting.md#is-current-indicator",
+      "columnFQNs": [
+        "Lakehouse://nebula_pc_silver/Tables/silver_claims/catastrophe/is_current_indicator",
+        "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim/is_current_indicator",
+        "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim_coverage/is_current_indicator",
+        "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim_document/is_current_indicator",
+        "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim_feature/is_current_indicator",
+        "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim_party_role/is_current_indicator",
+        "Lakehouse://nebula_pc_silver/Tables/silver_claims/occurrence/is_current_indicator",
+        "Lakehouse://nebula_pc_silver/Tables/silver_core/account/is_current_indicator",
+        "Lakehouse://nebula_pc_silver/Tables/silver_core/account_party_role/is_current_indicator",
+        "Lakehouse://nebula_pc_silver/Tables/silver_core/account_relationship/is_current_indicator",
+        "Lakehouse://nebula_pc_silver/Tables/silver_core/agreement/is_current_indicator",
+        "Lakehouse://nebula_pc_silver/Tables/silver_core/party/is_current_indicator",
+        "Lakehouse://nebula_pc_silver/Tables/silver_core/party_relationship/is_current_indicator",
+        "Lakehouse://nebula_pc_silver/Tables/silver_coverage/coverage/is_current_indicator",
+        "Lakehouse://nebula_pc_silver/Tables/silver_coverage/policy_coverage/is_current_indicator",
+        "Lakehouse://nebula_pc_silver/Tables/silver_coverage/policy_deductible/is_current_indicator",
+        "Lakehouse://nebula_pc_silver/Tables/silver_coverage/policy_limit/is_current_indicator",
+        "Lakehouse://nebula_pc_silver/Tables/silver_coverage/product_coverage/is_current_indicator",
+        "Lakehouse://nebula_pc_silver/Tables/silver_exposure/exposure/is_current_indicator",
+        "Lakehouse://nebula_pc_silver/Tables/silver_exposure/insurable_object/is_current_indicator",
+        "Lakehouse://nebula_pc_silver/Tables/silver_exposure/insurable_object_classification/is_current_indicator",
+        "Lakehouse://nebula_pc_silver/Tables/silver_exposure/insurable_object_party_role/is_current_indicator",
+        "Lakehouse://nebula_pc_silver/Tables/silver_exposure/property_exposure/is_current_indicator",
+        "Lakehouse://nebula_pc_silver/Tables/silver_exposure/vehicle_exposure/is_current_indicator",
+        "Lakehouse://nebula_pc_silver/Tables/silver_exposure/workers_comp_exposure/is_current_indicator",
+        "Lakehouse://nebula_pc_silver/Tables/silver_policy/policy/is_current_indicator",
+        "Lakehouse://nebula_pc_silver/Tables/silver_policy/policy_document/is_current_indicator",
+        "Lakehouse://nebula_pc_silver/Tables/silver_policy/policy_party_role/is_current_indicator",
+        "Lakehouse://nebula_pc_silver/Tables/silver_policy/policy_term/is_current_indicator",
+        "Lakehouse://nebula_pc_silver/Tables/silver_product/product/is_current_indicator",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/account_relationship_type_code/is_current_indicator",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/account_status_code/is_current_indicator",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/account_type_code/is_current_indicator",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/agreement_status_code/is_current_indicator",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/agreement_type_code/is_current_indicator",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/assessment_result_code/is_current_indicator",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/assessment_status_code/is_current_indicator",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/assessment_type_code/is_current_indicator",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/catastrophe_status_code/is_current_indicator",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/catastrophe_type_code/is_current_indicator",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/cause_of_loss_code/is_current_indicator",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/claim_status_code/is_current_indicator",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/claim_type_code/is_current_indicator",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/coverage_basis_code/is_current_indicator",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/coverage_decision_code/is_current_indicator",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/coverage_level_code/is_current_indicator",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/coverage_status_code/is_current_indicator",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/currency_code/is_current_indicator",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/document_status_code/is_current_indicator",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/document_type_code/is_current_indicator",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/feature_status_code/is_current_indicator",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/financial_transaction_classification/is_current_indicator",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/geographic_location/is_current_indicator",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/jurisdiction_code/is_current_indicator",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/lifecycle_event_type/is_current_indicator",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/lifecycle_status/is_current_indicator",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/line_of_business/is_current_indicator",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/location_address/is_current_indicator",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/occurrence_status_code/is_current_indicator",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/occurrence_type_code/is_current_indicator",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/party_role_type_code/is_current_indicator",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/party_type_code/is_current_indicator",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/policy_status_code/is_current_indicator",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/policy_type_code/is_current_indicator",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/record_status_code/is_current_indicator",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/relationship_status_code/is_current_indicator",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/relationship_type_code/is_current_indicator",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/role_status_code/is_current_indicator",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/source_system_code/is_current_indicator",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/submission_status_code/is_current_indicator",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/submission_type_code/is_current_indicator",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/term_status_code/is_current_indicator",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/transaction_type/is_current_indicator",
+        "Lakehouse://nebula_pc_silver/Tables/silver_submission/submission/is_current_indicator",
+        "Lakehouse://nebula_pc_silver/Tables/silver_submission/submission_assessment/is_current_indicator",
+        "Lakehouse://nebula_pc_silver/Tables/silver_submission/submission_document/is_current_indicator",
+        "Lakehouse://nebula_pc_silver/Tables/silver_submission/submission_party_role/is_current_indicator",
+        "Lakehouse://nebula_pc_silver/Tables/silver_submission/submission_risk/is_current_indicator"
+      ],
+      "tableFQNs": []
+    },
+    {
+      "name": "SCD2 Window",
+      "definition": "The pair of `valid_from_datetime` and `valid_to_datetime` that defines the time interval during which a record version was current in the warehouse.",
+      "category": "cross-cutting",
+      "sourcePath": "references/glossary/pc/cross-cutting.md#scd2-window",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Bi-Temporal Model",
+      "definition": "A model that preserves both business time and system time. Required because insurance routinely backdates and corrects records, so the answers to \"what was effective\" and \"what we knew, when\" are different and both must be answerable.",
+      "category": "cross-cutting",
+      "sourcePath": "references/glossary/pc/cross-cutting.md#bi-temporal-model",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Record Status",
+      "definition": "The warehouse-level state of a canonical record, distinct from any business lifecycle status the entity may also carry. Captured in `record_status_code` on every entity contract.",
+      "category": "cross-cutting",
+      "sourcePath": "references/glossary/pc/cross-cutting.md#record-status",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Active Record",
+      "definition": "A record whose `record_status_code` is `ACTIVE`. The default state for every newly written record.",
+      "category": "cross-cutting",
+      "sourcePath": "references/glossary/pc/cross-cutting.md#active-record",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Superseded Record",
+      "definition": "A record version whose `record_status_code` is `SUPERSEDED` because a later version of the same logical key has taken its place.",
+      "category": "cross-cutting",
+      "sourcePath": "references/glossary/pc/cross-cutting.md#superseded-record",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Soft-Deleted Record",
+      "definition": "A record whose `record_status_code` is `SOFT_DELETED` because the upstream truth is that the record should not have existed (data-entry error, duplicate, or system-of-record retraction). Soft delete is the only delete; rows are not physically removed from canonical contracts.",
+      "category": "cross-cutting",
+      "sourcePath": "references/glossary/pc/cross-cutting.md#soft-deleted-record",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Restated Record",
+      "definition": "A record whose `record_status_code` is `RESTATED` because the canonical interpretation has been revised even though the record itself is still considered to have existed.",
+      "category": "cross-cutting",
+      "sourcePath": "references/glossary/pc/cross-cutting.md#restated-record",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Merged Record",
+      "definition": "A record whose `record_status_code` is `MERGED` because the entity it represented has been consolidated into another canonical record. Carries `merged_into_uid` to point at the surviving record.",
+      "category": "cross-cutting",
+      "sourcePath": "references/glossary/pc/cross-cutting.md#merged-record",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Lifecycle Event",
+      "definition": "An append-only canonical record of a business-meaningful state change in an entity's history. Captures *what happened*. Does not by itself imply financial impact or processing.",
+      "category": "cross-cutting",
+      "sourcePath": "references/glossary/pc/cross-cutting.md#lifecycle-event",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Transaction",
+      "definition": "An append-only canonical record of a unit of business activity that has financial impact, document generation, or independent processing identity. Captures *what was processed*.",
+      "category": "cross-cutting",
+      "sourcePath": "references/glossary/pc/cross-cutting.md#transaction",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Correction Indicator",
+      "definition": "A boolean on every event and transaction record. True when the row corrects a previously emitted row, false otherwise. Original rows are immutable; corrections are emitted as new rows.",
+      "category": "cross-cutting",
+      "sourcePath": "references/glossary/pc/cross-cutting.md#correction-indicator",
+      "columnFQNs": [
+        "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim_financial_transaction/correction_indicator",
+        "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim_lifecycle_event/correction_indicator",
+        "Lakehouse://nebula_pc_silver/Tables/silver_financial/financial_transaction/correction_indicator",
+        "Lakehouse://nebula_pc_silver/Tables/silver_financial/policy_financial_transaction/correction_indicator",
+        "Lakehouse://nebula_pc_silver/Tables/silver_policy/policy_lifecycle_event/correction_indicator",
+        "Lakehouse://nebula_pc_silver/Tables/silver_policy/policy_transaction/correction_indicator",
+        "Lakehouse://nebula_pc_silver/Tables/silver_submission/submission_lifecycle_event/correction_indicator"
+      ],
+      "tableFQNs": []
+    },
+    {
+      "name": "Corrects Reference",
+      "definition": "The reference field (named `corrects_*_uid`) that points from a correcting event or transaction to the prior row it corrects. Populated only when the correction indicator is true.",
+      "category": "cross-cutting",
+      "sourcePath": "references/glossary/pc/cross-cutting.md#corrects-reference",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Triggering Transaction Reference",
+      "definition": "The optional reference on a lifecycle event that points to the transaction that produced the event, when the event is the consequence of a processed transaction rather than its cause.",
+      "category": "cross-cutting",
+      "sourcePath": "references/glossary/pc/cross-cutting.md#triggering-transaction-reference",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Codeset",
+      "definition": "A small, governed reference-data contract that enumerates the allowed values for a coded field, their human-readable labels, optional external-standard mappings, and their effective windows.",
+      "category": "cross-cutting",
+      "sourcePath": "references/glossary/pc/cross-cutting.md#codeset",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Code Value",
+      "definition": "The business-friendly code value that an entity contract's `*_code` field references. Treated as the canonical foreign key into a codeset.",
+      "category": "cross-cutting",
+      "sourcePath": "references/glossary/pc/cross-cutting.md#code-value",
+      "columnFQNs": [
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/account_relationship_type_code/code_value",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/account_status_code/code_value",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/account_type_code/code_value",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/agreement_status_code/code_value",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/agreement_type_code/code_value",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/assessment_result_code/code_value",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/assessment_status_code/code_value",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/assessment_type_code/code_value",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/catastrophe_status_code/code_value",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/catastrophe_type_code/code_value",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/cause_of_loss_code/code_value",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/claim_status_code/code_value",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/claim_type_code/code_value",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/coverage_basis_code/code_value",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/coverage_decision_code/code_value",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/coverage_level_code/code_value",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/coverage_status_code/code_value",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/currency_code/code_value",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/document_status_code/code_value",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/document_type_code/code_value",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/feature_status_code/code_value",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/financial_transaction_classification/code_value",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/jurisdiction_code/code_value",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/lifecycle_event_type/code_value",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/lifecycle_status/code_value",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/line_of_business/code_value",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/occurrence_status_code/code_value",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/occurrence_type_code/code_value",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/party_role_type_code/code_value",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/party_type_code/code_value",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/policy_status_code/code_value",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/policy_type_code/code_value",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/record_status_code/code_value",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/relationship_status_code/code_value",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/relationship_type_code/code_value",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/role_status_code/code_value",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/source_system_code/code_value",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/submission_status_code/code_value",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/submission_type_code/code_value",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/term_status_code/code_value",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/transaction_type/code_value"
+      ],
+      "tableFQNs": []
+    },
+    {
+      "name": "Code Label",
+      "definition": "The human-readable name of a code value, used for presentation and reporting.",
+      "category": "cross-cutting",
+      "sourcePath": "references/glossary/pc/cross-cutting.md#code-label",
+      "columnFQNs": [
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/account_relationship_type_code/code_label",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/account_status_code/code_label",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/account_type_code/code_label",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/agreement_status_code/code_label",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/agreement_type_code/code_label",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/assessment_result_code/code_label",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/assessment_status_code/code_label",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/assessment_type_code/code_label",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/catastrophe_status_code/code_label",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/catastrophe_type_code/code_label",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/cause_of_loss_code/code_label",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/claim_status_code/code_label",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/claim_type_code/code_label",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/coverage_basis_code/code_label",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/coverage_decision_code/code_label",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/coverage_level_code/code_label",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/coverage_status_code/code_label",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/currency_code/code_label",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/document_status_code/code_label",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/document_type_code/code_label",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/feature_status_code/code_label",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/financial_transaction_classification/code_label",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/jurisdiction_code/code_label",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/lifecycle_event_type/code_label",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/lifecycle_status/code_label",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/line_of_business/code_label",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/occurrence_status_code/code_label",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/occurrence_type_code/code_label",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/party_role_type_code/code_label",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/party_type_code/code_label",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/policy_status_code/code_label",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/policy_type_code/code_label",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/record_status_code/code_label",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/relationship_status_code/code_label",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/relationship_type_code/code_label",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/role_status_code/code_label",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/source_system_code/code_label",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/submission_status_code/code_label",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/submission_type_code/code_label",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/term_status_code/code_label",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/transaction_type/code_label"
+      ],
+      "tableFQNs": []
+    },
+    {
+      "name": "External Standard Code",
+      "definition": "The code value as defined by an external standard (such as ACORD, NAIC, ISO 4217, or ISO 3166-2) when the canonical codeset records a mapping to that standard.",
+      "category": "cross-cutting",
+      "sourcePath": "references/glossary/pc/cross-cutting.md#external-standard-code",
+      "columnFQNs": [
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/account_relationship_type_code/external_standard_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/account_status_code/external_standard_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/account_type_code/external_standard_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/agreement_status_code/external_standard_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/agreement_type_code/external_standard_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/assessment_result_code/external_standard_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/assessment_status_code/external_standard_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/assessment_type_code/external_standard_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/catastrophe_status_code/external_standard_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/catastrophe_type_code/external_standard_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/cause_of_loss_code/external_standard_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/claim_status_code/external_standard_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/claim_type_code/external_standard_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/coverage_basis_code/external_standard_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/coverage_decision_code/external_standard_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/coverage_level_code/external_standard_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/coverage_status_code/external_standard_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/currency_code/external_standard_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/document_status_code/external_standard_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/document_type_code/external_standard_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/feature_status_code/external_standard_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/financial_transaction_classification/external_standard_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/jurisdiction_code/external_standard_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/lifecycle_event_type/external_standard_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/lifecycle_status/external_standard_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/line_of_business/external_standard_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/occurrence_status_code/external_standard_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/occurrence_type_code/external_standard_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/party_role_type_code/external_standard_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/party_type_code/external_standard_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/policy_status_code/external_standard_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/policy_type_code/external_standard_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/record_status_code/external_standard_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/relationship_status_code/external_standard_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/relationship_type_code/external_standard_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/role_status_code/external_standard_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/source_system_code/external_standard_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/submission_status_code/external_standard_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/submission_type_code/external_standard_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/term_status_code/external_standard_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/transaction_type/external_standard_code"
+      ],
+      "tableFQNs": []
+    },
+    {
+      "name": "Allowed Value",
+      "definition": "A code value that currently exists in the codeset and is valid for use. Adding an allowed value is a non-breaking change; removing or renaming one is breaking.",
+      "category": "cross-cutting",
+      "sourcePath": "references/glossary/pc/cross-cutting.md#allowed-value",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Sentinel Code",
+      "definition": "An explicit codeset value used to distinguish \"unknown\" or \"not applicable\" from missing data. Used in place of overloading null when the business needs the distinction.",
+      "category": "cross-cutting",
+      "sourcePath": "references/glossary/pc/cross-cutting.md#sentinel-code",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Data Classification",
+      "definition": "Field-level metadata that captures the sensitivity tier and any applicable regulatory tags for a property. Used by downstream targets to enforce masking, row-level security, retention, and lineage tagging.",
+      "category": "cross-cutting",
+      "sourcePath": "references/glossary/pc/cross-cutting.md#data-classification",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Sensitivity Tier",
+      "definition": "The classification of how sensitive a field is. One of `PUBLIC`, `INTERNAL`, `CONFIDENTIAL`, or `RESTRICTED`. Every property declares one explicitly.",
+      "category": "cross-cutting",
+      "sourcePath": "references/glossary/pc/cross-cutting.md#sensitivity-tier",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Regulatory Tag",
+      "definition": "A tag indicating regulatory category. Includes `PII`, `PHI`, `PCI`, `SPI`, `FINANCIAL`, and `JURISDICTION_RESTRICTED`. Applied additively where multiple categories apply.",
+      "category": "cross-cutting",
+      "sourcePath": "references/glossary/pc/cross-cutting.md#regulatory-tag",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Classification Profile",
+      "definition": "A contract-level summary of the most-sensitive class present on any property in the contract. Used by target generators to set the default sensitivity label on the materialized table.",
+      "category": "cross-cutting",
+      "sourcePath": "references/glossary/pc/cross-cutting.md#classification-profile",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Subject To HIPAA",
+      "definition": "A contract-level flag that is true when any property is tagged with `PHI`. Used by downstream targets to branch into HIPAA-aware generation logic.",
+      "category": "cross-cutting",
+      "sourcePath": "references/glossary/pc/cross-cutting.md#subject-to-hipaa",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Transactional Currency",
+      "definition": "The currency in which a monetary amount was originally booked. Stored on every monetary field through a sibling `*_currency_code` reference to the `CurrencyCode` codeset.",
+      "category": "cross-cutting",
+      "sourcePath": "references/glossary/pc/cross-cutting.md#transactional-currency",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "House Currency",
+      "definition": "A reporting or presentation currency selected by a consumer for aggregation. Not represented in canonical contracts; computed downstream.",
+      "category": "cross-cutting",
+      "sourcePath": "references/glossary/pc/cross-cutting.md#house-currency",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Currency Pairing",
+      "definition": "The convention that every monetary field is paired with a `*_currency_code` field naming the currency of that amount. Required by the canonical layer; enforced by quality rules.",
+      "category": "cross-cutting",
+      "sourcePath": "references/glossary/pc/cross-cutting.md#currency-pairing",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Contract Version",
+      "definition": "The SemVer identifier on every contract: `MAJOR.MINOR.PATCH`. Major bumps signal breaking changes for consumers, minor bumps signal additive changes, patch bumps signal documentation-only changes.",
+      "category": "cross-cutting",
+      "sourcePath": "references/glossary/pc/cross-cutting.md#contract-version",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Pre-Stable Version",
+      "definition": "A contract whose version is below `1.0.0`. Breaking changes are permitted between `0.x` minor versions but must still be recorded in the contract changelog.",
+      "category": "cross-cutting",
+      "sourcePath": "references/glossary/pc/cross-cutting.md#pre-stable-version",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Changelog",
+      "definition": "The list of version entries on every contract, captured under `customProperties.changelog`. Each entry records date, change type, and brief description.",
+      "category": "cross-cutting",
+      "sourcePath": "references/glossary/pc/cross-cutting.md#changelog",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Contract Status",
+      "definition": "The lifecycle position of a contract: `draft`, `proposed`, `approved`, `deprecated`, or `retired`. Promotion is gated by criteria documented in `status-promotion.md`.",
+      "category": "cross-cutting",
+      "sourcePath": "references/glossary/pc/cross-cutting.md#contract-status",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Deprecated Contract",
+      "definition": "A contract that is still emitted but discouraged because a successor exists. Carries deprecation metadata pointing at the replacement.",
+      "category": "cross-cutting",
+      "sourcePath": "references/glossary/pc/cross-cutting.md#deprecated-contract",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Retired Contract",
+      "definition": "A contract that is no longer emitted. The contract file remains in the repository for historical reference but produces no target artifacts.",
+      "category": "cross-cutting",
+      "sourcePath": "references/glossary/pc/cross-cutting.md#retired-contract",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Domain Steward",
+      "definition": "The named owner of a contract who signs off on promotion to `approved` and on subsequent changes that affect consumers.",
+      "category": "cross-cutting",
+      "sourcePath": "references/glossary/pc/cross-cutting.md#domain-steward",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Canonical Layer",
+      "definition": "The Silver-layer position in the medallion architecture. The contracts in this repository define the canonical layer; Bronze landing and Gold mart shapes are downstream concerns.",
+      "category": "cross-cutting",
+      "sourcePath": "references/glossary/pc/cross-cutting.md#canonical-layer",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Source-Neutral",
+      "definition": "The property of a canonical contract that it does not embed source-system structure, vendor schema, raw DDL, ontology export, or copied definition. Source signal is allowed as design input only.",
+      "category": "cross-cutting",
+      "sourcePath": "references/glossary/pc/cross-cutting.md#source-neutral",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Platform-Neutral",
+      "definition": "The property of a canonical contract that it does not embed target-platform mechanics. Target-specific projection (dbt, Microsoft Fabric, Databricks, Snowflake) lives under `targets/`.",
+      "category": "cross-cutting",
+      "sourcePath": "references/glossary/pc/cross-cutting.md#platform-neutral",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Claim",
+      "definition": "A record of loss, damage, injury, liability, or other covered or potentially covered event being handled under a Property and Casualty insurance context.",
+      "category": "claims",
+      "sourcePath": "references/glossary/pc/claims.md#claim",
+      "columnFQNs": [],
+      "tableFQNs": [
+        "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim"
+      ]
+    },
+    {
+      "name": "Claim Identifier",
+      "definition": "The system identity column on a claim record (`claim_uid`). An immutable GUID used as the join key for every reference to the claim.",
+      "category": "claims",
+      "sourcePath": "references/glossary/pc/claims.md#claim-identifier",
+      "columnFQNs": [
+        "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim/claim_uid",
+        "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim_coverage/claim_uid",
+        "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim_document/claim_uid",
+        "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim_feature/claim_uid",
+        "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim_financial_transaction/claim_uid",
+        "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim_lifecycle_event/claim_uid",
+        "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim_party_role/claim_uid",
+        "Lakehouse://nebula_pc_silver/Tables/silver_financial/financial_transaction/claim_uid"
+      ],
+      "tableFQNs": []
+    },
+    {
+      "name": "Claim Number",
+      "definition": "The business-friendly identifier the business or operations assigns to a claim. Distinct from the claim identifier; not used as the primary key or relationship join key.",
+      "category": "claims",
+      "sourcePath": "references/glossary/pc/claims.md#claim-number",
+      "columnFQNs": [
+        "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim/claim_number"
+      ],
+      "tableFQNs": []
+    },
+    {
+      "name": "Claim Status",
+      "definition": "The current lifecycle state of a claim.",
+      "category": "claims",
+      "sourcePath": "references/glossary/pc/claims.md#claim-status",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Claim Type",
+      "definition": "A classification of the kind of claim being handled.",
+      "category": "claims",
+      "sourcePath": "references/glossary/pc/claims.md#claim-type",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Loss Type",
+      "definition": "A classification of the kind of loss associated with a claim.",
+      "category": "claims",
+      "sourcePath": "references/glossary/pc/claims.md#loss-type",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Policy Context",
+      "definition": "The policy connected to a claim when the claim can be tied to policy coverage.",
+      "category": "claims",
+      "sourcePath": "references/glossary/pc/claims.md#policy-context",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Claim Coverage Context",
+      "definition": "The policy coverage connected to claim handling when coverage association is known.",
+      "category": "claims",
+      "sourcePath": "references/glossary/pc/claims.md#claim-coverage-context",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Claim Exposure Context",
+      "definition": "The exposure connected to claim handling when the risk basis is known.",
+      "category": "claims",
+      "sourcePath": "references/glossary/pc/claims.md#claim-exposure-context",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Loss Location",
+      "definition": "The location associated with the loss or event giving rise to the claim.",
+      "category": "claims",
+      "sourcePath": "references/glossary/pc/claims.md#loss-location",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Loss Date",
+      "definition": "The date when the loss occurred or is treated as having occurred.",
+      "category": "claims",
+      "sourcePath": "references/glossary/pc/claims.md#loss-date",
+      "columnFQNs": [
+        "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim/loss_date"
+      ],
+      "tableFQNs": []
+    },
+    {
+      "name": "Reported Datetime",
+      "definition": "The date and time when the claim or loss was reported.",
+      "category": "claims",
+      "sourcePath": "references/glossary/pc/claims.md#reported-datetime",
+      "columnFQNs": [
+        "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim/reported_datetime"
+      ],
+      "tableFQNs": []
+    },
+    {
+      "name": "Opened Date",
+      "definition": "The date when claim handling was opened.",
+      "category": "claims",
+      "sourcePath": "references/glossary/pc/claims.md#opened-date",
+      "columnFQNs": [
+        "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim/opened_date",
+        "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim_feature/opened_date"
+      ],
+      "tableFQNs": []
+    },
+    {
+      "name": "Closed Date",
+      "definition": "The date when claim handling was closed.",
+      "category": "claims",
+      "sourcePath": "references/glossary/pc/claims.md#closed-date",
+      "columnFQNs": [
+        "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim/closed_date",
+        "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim_feature/closed_date"
+      ],
+      "tableFQNs": []
+    },
+    {
+      "name": "Catastrophe Code",
+      "definition": "A code used to associate a claim with a catastrophe or large event grouping.",
+      "category": "claims",
+      "sourcePath": "references/glossary/pc/claims.md#catastrophe-code",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Catastrophe Indicator",
+      "definition": "An indicator that the claim is associated with a catastrophe or large event grouping.",
+      "category": "claims",
+      "sourcePath": "references/glossary/pc/claims.md#catastrophe-indicator",
+      "columnFQNs": [
+        "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim/catastrophe_indicator"
+      ],
+      "tableFQNs": []
+    },
+    {
+      "name": "Litigation Indicator",
+      "definition": "An indicator that the claim involves litigation or litigation handling.",
+      "category": "claims",
+      "sourcePath": "references/glossary/pc/claims.md#litigation-indicator",
+      "columnFQNs": [
+        "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim/litigation_indicator"
+      ],
+      "tableFQNs": []
+    },
+    {
+      "name": "Claim Description",
+      "definition": "A source-neutral business description of the claim or loss context.",
+      "category": "claims",
+      "sourcePath": "references/glossary/pc/claims.md#claim-description",
+      "columnFQNs": [
+        "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim/claim_description"
+      ],
+      "tableFQNs": []
+    },
+    {
+      "name": "Loss Notice",
+      "definition": "The initial notification that a loss or potential claim has occurred.",
+      "category": "claims",
+      "sourcePath": "references/glossary/pc/claims.md#loss-notice",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Reserve Change",
+      "definition": "A change in expected claim financial responsibility or reserve amount.",
+      "category": "claims",
+      "sourcePath": "references/glossary/pc/claims.md#reserve-change",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Recovery",
+      "definition": "Money or value recovered in connection with a claim.",
+      "category": "claims",
+      "sourcePath": "references/glossary/pc/claims.md#recovery",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Salvage",
+      "definition": "Value recovered from damaged property associated with a claim.",
+      "category": "claims",
+      "sourcePath": "references/glossary/pc/claims.md#salvage",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Subrogation",
+      "definition": "Recovery activity against another party that may be responsible for a loss.",
+      "category": "claims",
+      "sourcePath": "references/glossary/pc/claims.md#subrogation",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Reopen",
+      "definition": "An event or state where a previously closed claim becomes active again.",
+      "category": "claims",
+      "sourcePath": "references/glossary/pc/claims.md#reopen",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Claim Feature",
+      "definition": "A partition of a claim into independent handling streams when distinct coverages, perils, or claimants are handled separately on a single claim. Optional; used by carriers that model feature-level handling.",
+      "category": "claims",
+      "sourcePath": "references/glossary/pc/claims.md#claim-feature",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Feature Number",
+      "definition": "A business-friendly identifier for a feature within a claim. Distinct from the system identity column on the feature record.",
+      "category": "claims",
+      "sourcePath": "references/glossary/pc/claims.md#feature-number",
+      "columnFQNs": [
+        "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim_feature/feature_number"
+      ],
+      "tableFQNs": []
+    },
+    {
+      "name": "Feature Status",
+      "definition": "The current lifecycle state of a claim feature.",
+      "category": "claims",
+      "sourcePath": "references/glossary/pc/claims.md#feature-status",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Cause Of Loss",
+      "definition": "The classification of what caused the loss associated with a claim or claim feature. Captured through the `CauseOfLossCode` codeset.",
+      "category": "claims",
+      "sourcePath": "references/glossary/pc/claims.md#cause-of-loss",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Claim Coverage",
+      "definition": "The connection between claim handling and the policy coverage that responds to the claim. Many-to-one from claim feature to policy coverage when features are used; many-to-many between claim and policy coverage when no feature partition is in place.",
+      "category": "claims",
+      "sourcePath": "references/glossary/pc/claims.md#claim-coverage",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Coverage Decision",
+      "definition": "The disposition recorded for the policy coverage's response to the claim, such as accepted, partially accepted, denied, or pending.",
+      "category": "claims",
+      "sourcePath": "references/glossary/pc/claims.md#coverage-decision",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Applicable Limit",
+      "definition": "The limit amount applied or available under a particular coverage response on a claim. Paired with a currency code.",
+      "category": "claims",
+      "sourcePath": "references/glossary/pc/claims.md#applicable-limit",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Applicable Deductible",
+      "definition": "The deductible amount applied under a particular coverage response on a claim. Paired with a currency code.",
+      "category": "claims",
+      "sourcePath": "references/glossary/pc/claims.md#applicable-deductible",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Claim Lifecycle Event",
+      "definition": "A meaningful state change in the claim history. Examples include FNOL received, acknowledged, assigned, reserved, partial payment, full payment, closed, reopened, subrogation initiated, salvage initiated, denied, and withdrawn. Append-only; corrections are emitted as new immutable rows.",
+      "category": "claims",
+      "sourcePath": "references/glossary/pc/claims.md#claim-lifecycle-event",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "FNOL",
+      "definition": "First Notice of Loss. The lifecycle event that records the initial notification of a loss or potential claim.",
+      "category": "claims",
+      "sourcePath": "references/glossary/pc/claims.md#fnol",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Claim Party Role",
+      "definition": "The participation of a party in a claim context, such as claimant, insured contact, adjuster, supervisor, attorney, expert, witness, service provider, or recovery party.",
+      "category": "claims",
+      "sourcePath": "references/glossary/pc/claims.md#claim-party-role",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Adjuster",
+      "definition": "A party role on a claim that handles investigation, evaluation, and resolution.",
+      "category": "claims",
+      "sourcePath": "references/glossary/pc/claims.md#adjuster",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Claimant",
+      "definition": "A party role on a claim that asserts a claim against an insured or insurer.",
+      "category": "claims",
+      "sourcePath": "references/glossary/pc/claims.md#claimant",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Service Provider",
+      "definition": "A party role on a claim that performs repair, medical, legal, or other services in connection with the claim.",
+      "category": "claims",
+      "sourcePath": "references/glossary/pc/claims.md#service-provider",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Recovery Party",
+      "definition": "A party role on a claim that is the source or target of a recovery, such as a subrogated party or a salvage purchaser.",
+      "category": "claims",
+      "sourcePath": "references/glossary/pc/claims.md#recovery-party",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Claim Document",
+      "definition": "A document associated with a claim or claim feature. Stores metadata only; document content is held in an external store referenced through an opaque storage reference.",
+      "category": "claims",
+      "sourcePath": "references/glossary/pc/claims.md#claim-document",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "External Storage Reference",
+      "definition": "An opaque pointer to document content held outside the canonical contract layer. The document body is never stored in the canonical contract.",
+      "category": "claims",
+      "sourcePath": "references/glossary/pc/claims.md#external-storage-reference",
+      "columnFQNs": [
+        "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim_document/external_storage_reference",
+        "Lakehouse://nebula_pc_silver/Tables/silver_policy/policy_document/external_storage_reference",
+        "Lakehouse://nebula_pc_silver/Tables/silver_submission/submission_document/external_storage_reference"
+      ],
+      "tableFQNs": []
+    },
+    {
+      "name": "Contains PHI Indicator",
+      "definition": "An indicator that a claim document is known to contain Protected Health Information. Used by downstream targets to apply HIPAA-compliant handling.",
+      "category": "claims",
+      "sourcePath": "references/glossary/pc/claims.md#contains-phi-indicator",
+      "columnFQNs": [
+        "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim_document/contains_phi_indicator",
+        "Lakehouse://nebula_pc_silver/Tables/silver_policy/policy_document/contains_phi_indicator",
+        "Lakehouse://nebula_pc_silver/Tables/silver_submission/submission_document/contains_phi_indicator"
+      ],
+      "tableFQNs": []
+    },
+    {
+      "name": "Claim Financial Transaction",
+      "definition": "Append-only canonical record of a financial movement attached to a claim, such as reserves, payments, recoveries, salvage, subrogation, deductible recovery, or expense activity. Specializes the financial-transaction pattern with claim, feature, coverage, payee party role, and reserve-category context.",
+      "category": "claims",
+      "sourcePath": "references/glossary/pc/claims.md#claim-financial-transaction",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Reserve Category",
+      "definition": "The classification of a reserve a financial transaction affects, such as indemnity reserve or expense reserve.",
+      "category": "claims",
+      "sourcePath": "references/glossary/pc/claims.md#reserve-category",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Payee Party Role",
+      "definition": "The claim party role that is the payee of a financial transaction when the transaction transfers value to a party.",
+      "category": "claims",
+      "sourcePath": "references/glossary/pc/claims.md#payee-party-role",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Indemnity",
+      "definition": "The portion of claim cost that compensates for the loss itself, distinct from expense costs incurred to handle the claim.",
+      "category": "claims",
+      "sourcePath": "references/glossary/pc/claims.md#indemnity",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "ALAE",
+      "definition": "Allocated Loss Adjustment Expense. Expense activity directly attributable to a specific claim, distinct from indemnity.",
+      "category": "claims",
+      "sourcePath": "references/glossary/pc/claims.md#alae",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "ULAE",
+      "definition": "Unallocated Loss Adjustment Expense. Expense activity associated with claim handling that cannot be allocated to a specific claim.",
+      "category": "claims",
+      "sourcePath": "references/glossary/pc/claims.md#ulae",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Catastrophe",
+      "definition": "A large event grouping that aggregates many claims arising from a single occurrence such as a hurricane, wildfire, or flood. Captured through the catastrophe code on a claim and reinforced by the catastrophe indicator.",
+      "category": "claims",
+      "sourcePath": "references/glossary/pc/claims.md#catastrophe",
+      "columnFQNs": [],
+      "tableFQNs": [
+        "Lakehouse://nebula_pc_silver/Tables/silver_claims/catastrophe"
+      ]
+    },
+    {
+      "name": "Party",
+      "definition": "A reusable identity for a person, organization, household, trust, public entity, or other recognized participant in Property and Casualty insurance activity.",
+      "category": "core",
+      "sourcePath": "references/glossary/pc/core.md#party",
+      "columnFQNs": [],
+      "tableFQNs": [
+        "Lakehouse://nebula_pc_silver/Tables/silver_core/party"
+      ]
+    },
+    {
+      "name": "Party Identifier",
+      "definition": "The system identity column on a party record (`party_uid`). An immutable GUID generated upstream and used as the join key for every reference to the party. Distinct from any business-friendly identifier the source systems may assign.",
+      "category": "core",
+      "sourcePath": "references/glossary/pc/core.md#party-identifier",
+      "columnFQNs": [
+        "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim_party_role/party_uid",
+        "Lakehouse://nebula_pc_silver/Tables/silver_core/account_party_role/party_uid",
+        "Lakehouse://nebula_pc_silver/Tables/silver_core/party/party_uid",
+        "Lakehouse://nebula_pc_silver/Tables/silver_exposure/insurable_object_party_role/party_uid",
+        "Lakehouse://nebula_pc_silver/Tables/silver_financial/financial_transaction/party_uid",
+        "Lakehouse://nebula_pc_silver/Tables/silver_policy/policy_party_role/party_uid",
+        "Lakehouse://nebula_pc_silver/Tables/silver_submission/submission_party_role/party_uid"
+      ],
+      "tableFQNs": []
+    },
+    {
+      "name": "Party Type",
+      "definition": "A classification that describes the kind of party represented, such as person, organization, household, trust, or other recognized party type.",
+      "category": "core",
+      "sourcePath": "references/glossary/pc/core.md#party-type",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Party Display Name",
+      "definition": "The business-facing name used to identify a party in operational and analytical contexts.",
+      "category": "core",
+      "sourcePath": "references/glossary/pc/core.md#party-display-name",
+      "columnFQNs": [
+        "Lakehouse://nebula_pc_silver/Tables/silver_core/party/party_display_name"
+      ],
+      "tableFQNs": []
+    },
+    {
+      "name": "Legal Name",
+      "definition": "The formal name for a party when contractual, regulatory, or legal context requires it.",
+      "category": "core",
+      "sourcePath": "references/glossary/pc/core.md#legal-name",
+      "columnFQNs": [
+        "Lakehouse://nebula_pc_silver/Tables/silver_core/party/legal_name"
+      ],
+      "tableFQNs": []
+    },
+    {
+      "name": "Person Party",
+      "definition": "A party that represents an individual human being.",
+      "category": "core",
+      "sourcePath": "references/glossary/pc/core.md#person-party",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Organization Party",
+      "definition": "A party that represents a company, agency, carrier, employer, vendor, public entity, or other organized body.",
+      "category": "core",
+      "sourcePath": "references/glossary/pc/core.md#organization-party",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Party Role",
+      "definition": "The participation of a party in a specific business context, separated from the reusable party identity.",
+      "category": "core",
+      "sourcePath": "references/glossary/pc/core.md#party-role",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Role Type",
+      "definition": "A classification of what a party does in a business context, such as insured, claimant, agent, producer, adjuster, beneficiary, employer, or vendor.",
+      "category": "core",
+      "sourcePath": "references/glossary/pc/core.md#role-type",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Business Context",
+      "definition": "The business subject in which a party role applies, such as submission, policy, claim, account, agreement, coverage, or exposure.",
+      "category": "core",
+      "sourcePath": "references/glossary/pc/core.md#business-context",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Context Identifier",
+      "definition": "The canonical identifier of the business context where a party role applies.",
+      "category": "core",
+      "sourcePath": "references/glossary/pc/core.md#context-identifier",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Primary Role",
+      "definition": "The party role treated as the main role of its type within a business context.",
+      "category": "core",
+      "sourcePath": "references/glossary/pc/core.md#primary-role",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Party Relationship",
+      "definition": "A durable relationship between two parties that is not limited to one submission, policy, claim, or other single business context.",
+      "category": "core",
+      "sourcePath": "references/glossary/pc/core.md#party-relationship",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Relationship Direction",
+      "definition": "The orientation of a party relationship from one party to another party.",
+      "category": "core",
+      "sourcePath": "references/glossary/pc/core.md#relationship-direction",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Relationship Type",
+      "definition": "A classification of the business meaning of a party-to-party relationship.",
+      "category": "core",
+      "sourcePath": "references/glossary/pc/core.md#relationship-type",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Effective Date",
+      "definition": "The date when a record, role, relationship, value, or classification becomes valid for canonical business use.",
+      "category": "core",
+      "sourcePath": "references/glossary/pc/core.md#effective-date",
+      "columnFQNs": [
+        "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim_lifecycle_event/effective_date",
+        "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim_party_role/effective_date",
+        "Lakehouse://nebula_pc_silver/Tables/silver_core/account/effective_date",
+        "Lakehouse://nebula_pc_silver/Tables/silver_core/account_party_role/effective_date",
+        "Lakehouse://nebula_pc_silver/Tables/silver_core/account_relationship/effective_date",
+        "Lakehouse://nebula_pc_silver/Tables/silver_core/agreement/effective_date",
+        "Lakehouse://nebula_pc_silver/Tables/silver_core/party/effective_date",
+        "Lakehouse://nebula_pc_silver/Tables/silver_core/party_relationship/effective_date",
+        "Lakehouse://nebula_pc_silver/Tables/silver_coverage/coverage/effective_date",
+        "Lakehouse://nebula_pc_silver/Tables/silver_coverage/policy_coverage/effective_date",
+        "Lakehouse://nebula_pc_silver/Tables/silver_coverage/policy_deductible/effective_date",
+        "Lakehouse://nebula_pc_silver/Tables/silver_coverage/policy_limit/effective_date",
+        "Lakehouse://nebula_pc_silver/Tables/silver_coverage/product_coverage/effective_date",
+        "Lakehouse://nebula_pc_silver/Tables/silver_exposure/exposure/effective_date",
+        "Lakehouse://nebula_pc_silver/Tables/silver_exposure/insurable_object/effective_date",
+        "Lakehouse://nebula_pc_silver/Tables/silver_exposure/insurable_object_classification/effective_date",
+        "Lakehouse://nebula_pc_silver/Tables/silver_exposure/insurable_object_party_role/effective_date",
+        "Lakehouse://nebula_pc_silver/Tables/silver_policy/policy_document/effective_date",
+        "Lakehouse://nebula_pc_silver/Tables/silver_policy/policy_party_role/effective_date",
+        "Lakehouse://nebula_pc_silver/Tables/silver_product/product/effective_date",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/geographic_location/effective_date",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/lifecycle_event_type/effective_date",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/lifecycle_status/effective_date",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/line_of_business/effective_date",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/location_address/effective_date",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/transaction_type/effective_date",
+        "Lakehouse://nebula_pc_silver/Tables/silver_submission/submission_party_role/effective_date",
+        "Lakehouse://nebula_pc_silver/Tables/silver_submission/submission_risk/effective_date"
+      ],
+      "tableFQNs": []
+    },
+    {
+      "name": "Expiration Date",
+      "definition": "The date when a record, role, relationship, value, or classification stops being valid for canonical business use.",
+      "category": "core",
+      "sourcePath": "references/glossary/pc/core.md#expiration-date",
+      "columnFQNs": [
+        "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim_party_role/expiration_date",
+        "Lakehouse://nebula_pc_silver/Tables/silver_core/account/expiration_date",
+        "Lakehouse://nebula_pc_silver/Tables/silver_core/account_party_role/expiration_date",
+        "Lakehouse://nebula_pc_silver/Tables/silver_core/account_relationship/expiration_date",
+        "Lakehouse://nebula_pc_silver/Tables/silver_core/agreement/expiration_date",
+        "Lakehouse://nebula_pc_silver/Tables/silver_core/party/expiration_date",
+        "Lakehouse://nebula_pc_silver/Tables/silver_core/party_relationship/expiration_date",
+        "Lakehouse://nebula_pc_silver/Tables/silver_coverage/coverage/expiration_date",
+        "Lakehouse://nebula_pc_silver/Tables/silver_coverage/policy_coverage/expiration_date",
+        "Lakehouse://nebula_pc_silver/Tables/silver_coverage/policy_deductible/expiration_date",
+        "Lakehouse://nebula_pc_silver/Tables/silver_coverage/policy_limit/expiration_date",
+        "Lakehouse://nebula_pc_silver/Tables/silver_coverage/product_coverage/expiration_date",
+        "Lakehouse://nebula_pc_silver/Tables/silver_exposure/exposure/expiration_date",
+        "Lakehouse://nebula_pc_silver/Tables/silver_exposure/insurable_object/expiration_date",
+        "Lakehouse://nebula_pc_silver/Tables/silver_exposure/insurable_object_classification/expiration_date",
+        "Lakehouse://nebula_pc_silver/Tables/silver_exposure/insurable_object_party_role/expiration_date",
+        "Lakehouse://nebula_pc_silver/Tables/silver_policy/policy_document/expiration_date",
+        "Lakehouse://nebula_pc_silver/Tables/silver_policy/policy_party_role/expiration_date",
+        "Lakehouse://nebula_pc_silver/Tables/silver_product/product/expiration_date",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/geographic_location/expiration_date",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/lifecycle_event_type/expiration_date",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/lifecycle_status/expiration_date",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/line_of_business/expiration_date",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/location_address/expiration_date",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/transaction_type/expiration_date",
+        "Lakehouse://nebula_pc_silver/Tables/silver_submission/submission_party_role/expiration_date",
+        "Lakehouse://nebula_pc_silver/Tables/silver_submission/submission_risk/expiration_date"
+      ],
+      "tableFQNs": []
+    },
+    {
+      "name": "Party Role Type",
+      "definition": "The classification of a role a party plays in a business context, such as insured, claimant, producer, broker, agent, adjuster, loss payee, service provider, or underwriter. Captured through the `PartyRoleTypeCode` codeset.",
+      "category": "core",
+      "sourcePath": "references/glossary/pc/core.md#party-role-type",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Effective Window",
+      "definition": "The pair of effective and expiration dates that bounds when a party identity, party role, or party relationship is valid for canonical business use. Distinct from the SCD2 system-time window.",
+      "category": "core",
+      "sourcePath": "references/glossary/pc/core.md#effective-window",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Coverage",
+      "definition": "A reusable insurance protection concept that can be offered, selected, or applied in a policy context.",
+      "category": "coverage",
+      "sourcePath": "references/glossary/pc/coverage.md#coverage",
+      "columnFQNs": [],
+      "tableFQNs": [
+        "Lakehouse://nebula_pc_silver/Tables/silver_coverage/coverage"
+      ]
+    },
+    {
+      "name": "Coverage Identifier",
+      "definition": "The system identity column on a coverage record (`coverage_uid`). An immutable GUID used as the join key for every reference to the reusable coverage definition.",
+      "category": "coverage",
+      "sourcePath": "references/glossary/pc/coverage.md#coverage-identifier",
+      "columnFQNs": [
+        "Lakehouse://nebula_pc_silver/Tables/silver_coverage/coverage/coverage_uid",
+        "Lakehouse://nebula_pc_silver/Tables/silver_coverage/policy_coverage/coverage_uid",
+        "Lakehouse://nebula_pc_silver/Tables/silver_coverage/product_coverage/coverage_uid"
+      ],
+      "tableFQNs": []
+    },
+    {
+      "name": "Coverage Code",
+      "definition": "A business code that identifies a coverage concept.",
+      "category": "coverage",
+      "sourcePath": "references/glossary/pc/coverage.md#coverage-code",
+      "columnFQNs": [
+        "Lakehouse://nebula_pc_silver/Tables/silver_coverage/coverage/coverage_code"
+      ],
+      "tableFQNs": []
+    },
+    {
+      "name": "Coverage Name",
+      "definition": "The business-facing name for a coverage concept.",
+      "category": "coverage",
+      "sourcePath": "references/glossary/pc/coverage.md#coverage-name",
+      "columnFQNs": [
+        "Lakehouse://nebula_pc_silver/Tables/silver_coverage/coverage/coverage_name"
+      ],
+      "tableFQNs": []
+    },
+    {
+      "name": "Coverage Type",
+      "definition": "A classification of the kind of protection or obligation represented by a coverage.",
+      "category": "coverage",
+      "sourcePath": "references/glossary/pc/coverage.md#coverage-type",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Coverage Category",
+      "definition": "A broader grouping used to organize related coverage concepts.",
+      "category": "coverage",
+      "sourcePath": "references/glossary/pc/coverage.md#coverage-category",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Policy Coverage",
+      "definition": "Coverage selected, required, or applied within a policy, policy term, or exposure context.",
+      "category": "coverage",
+      "sourcePath": "references/glossary/pc/coverage.md#policy-coverage",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Coverage Sequence Number",
+      "definition": "A sequence used to order or distinguish coverages within a policy context.",
+      "category": "coverage",
+      "sourcePath": "references/glossary/pc/coverage.md#coverage-sequence-number",
+      "columnFQNs": [
+        "Lakehouse://nebula_pc_silver/Tables/silver_coverage/policy_coverage/coverage_sequence_number"
+      ],
+      "tableFQNs": []
+    },
+    {
+      "name": "Coverage Status",
+      "definition": "The current lifecycle state of a coverage or policy-applied coverage.",
+      "category": "coverage",
+      "sourcePath": "references/glossary/pc/coverage.md#coverage-status",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Coverage Level",
+      "definition": "The level at which coverage applies, such as policy, term, exposure, location, vehicle, or other recognized context.",
+      "category": "coverage",
+      "sourcePath": "references/glossary/pc/coverage.md#coverage-level",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Coverage Basis",
+      "definition": "The basis used to determine how coverage applies or is measured.",
+      "category": "coverage",
+      "sourcePath": "references/glossary/pc/coverage.md#coverage-basis",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Selected Coverage",
+      "definition": "Coverage chosen or accepted for a policy context.",
+      "category": "coverage",
+      "sourcePath": "references/glossary/pc/coverage.md#selected-coverage",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Mandatory Coverage",
+      "definition": "Coverage required by product, jurisdiction, business rule, or policy structure.",
+      "category": "coverage",
+      "sourcePath": "references/glossary/pc/coverage.md#mandatory-coverage",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Policy Limit",
+      "definition": "Structured detail that defines the maximum amount, quantity, or unit of protection associated with a policy coverage.",
+      "category": "coverage",
+      "sourcePath": "references/glossary/pc/coverage.md#policy-limit",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Limit Type",
+      "definition": "A classification of the kind of limit, such as occurrence, aggregate, per person, per item, or another recognized limit type.",
+      "category": "coverage",
+      "sourcePath": "references/glossary/pc/coverage.md#limit-type",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Limit Basis",
+      "definition": "The basis used to apply or evaluate a limit.",
+      "category": "coverage",
+      "sourcePath": "references/glossary/pc/coverage.md#limit-basis",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Limit Amount",
+      "definition": "The monetary maximum associated with a policy limit.",
+      "category": "coverage",
+      "sourcePath": "references/glossary/pc/coverage.md#limit-amount",
+      "columnFQNs": [
+        "Lakehouse://nebula_pc_silver/Tables/silver_coverage/policy_limit/limit_amount"
+      ],
+      "tableFQNs": []
+    },
+    {
+      "name": "Limit Quantity",
+      "definition": "A non-monetary maximum associated with a policy limit.",
+      "category": "coverage",
+      "sourcePath": "references/glossary/pc/coverage.md#limit-quantity",
+      "columnFQNs": [
+        "Lakehouse://nebula_pc_silver/Tables/silver_coverage/policy_limit/limit_quantity"
+      ],
+      "tableFQNs": []
+    },
+    {
+      "name": "Limit Unit",
+      "definition": "The unit of measure for a non-monetary policy limit.",
+      "category": "coverage",
+      "sourcePath": "references/glossary/pc/coverage.md#limit-unit",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Policy Deductible",
+      "definition": "Structured detail that defines the amount, percentage, or basis retained before coverage responds.",
+      "category": "coverage",
+      "sourcePath": "references/glossary/pc/coverage.md#policy-deductible",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Deductible Type",
+      "definition": "A classification of the kind of deductible associated with a policy coverage.",
+      "category": "coverage",
+      "sourcePath": "references/glossary/pc/coverage.md#deductible-type",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Deductible Basis",
+      "definition": "The basis used to apply or evaluate a deductible.",
+      "category": "coverage",
+      "sourcePath": "references/glossary/pc/coverage.md#deductible-basis",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Deductible Amount",
+      "definition": "The monetary amount of a deductible.",
+      "category": "coverage",
+      "sourcePath": "references/glossary/pc/coverage.md#deductible-amount",
+      "columnFQNs": [
+        "Lakehouse://nebula_pc_silver/Tables/silver_coverage/policy_deductible/deductible_amount"
+      ],
+      "tableFQNs": []
+    },
+    {
+      "name": "Deductible Percent",
+      "definition": "The percentage used to calculate a deductible.",
+      "category": "coverage",
+      "sourcePath": "references/glossary/pc/coverage.md#deductible-percent",
+      "columnFQNs": [
+        "Lakehouse://nebula_pc_silver/Tables/silver_coverage/policy_deductible/deductible_percent"
+      ],
+      "tableFQNs": []
+    },
+    {
+      "name": "Minimum Deductible",
+      "definition": "The lowest deductible amount that can apply under the deductible terms.",
+      "category": "coverage",
+      "sourcePath": "references/glossary/pc/coverage.md#minimum-deductible",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Maximum Deductible",
+      "definition": "The highest deductible amount that can apply under the deductible terms.",
+      "category": "coverage",
+      "sourcePath": "references/glossary/pc/coverage.md#maximum-deductible",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Product Coverage",
+      "definition": "The many-to-many junction relating a marketed product to a reusable coverage definition. Carries product-coverage-specific defaults (selection, limits, deductibles), constraints (mandatory, minimum and maximum limits), and filing references.",
+      "category": "coverage",
+      "sourcePath": "references/glossary/pc/coverage.md#product-coverage",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Default Selected Indicator",
+      "definition": "An indicator on a product-coverage record that the coverage is selected by default when the product is offered.",
+      "category": "coverage",
+      "sourcePath": "references/glossary/pc/coverage.md#default-selected-indicator",
+      "columnFQNs": [
+        "Lakehouse://nebula_pc_silver/Tables/silver_coverage/product_coverage/default_selected_indicator"
+      ],
+      "tableFQNs": []
+    },
+    {
+      "name": "Default Limit",
+      "definition": "The limit amount that applies by default when a product is sold under a particular product-coverage filing. Paired with a currency code.",
+      "category": "coverage",
+      "sourcePath": "references/glossary/pc/coverage.md#default-limit",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Default Deductible",
+      "definition": "The deductible amount that applies by default when a product is sold under a particular product-coverage filing. Paired with a currency code.",
+      "category": "coverage",
+      "sourcePath": "references/glossary/pc/coverage.md#default-deductible",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Filing Reference",
+      "definition": "A form code, edition, or jurisdiction reference associated with a product-coverage offering when filings vary by jurisdiction or revision.",
+      "category": "coverage",
+      "sourcePath": "references/glossary/pc/coverage.md#filing-reference",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Form Code",
+      "definition": "A filed form code associated with a product-coverage offering.",
+      "category": "coverage",
+      "sourcePath": "references/glossary/pc/coverage.md#form-code",
+      "columnFQNs": [
+        "Lakehouse://nebula_pc_silver/Tables/silver_coverage/product_coverage/form_code"
+      ],
+      "tableFQNs": []
+    },
+    {
+      "name": "Form Edition Code",
+      "definition": "A filed form edition or revision code associated with a product-coverage offering.",
+      "category": "coverage",
+      "sourcePath": "references/glossary/pc/coverage.md#form-edition-code",
+      "columnFQNs": [
+        "Lakehouse://nebula_pc_silver/Tables/silver_coverage/product_coverage/form_edition_code"
+      ],
+      "tableFQNs": []
+    },
+    {
+      "name": "Insurable Object",
+      "definition": "An object, property, vehicle, operation, interest, or location that may be insured.",
+      "category": "exposure",
+      "sourcePath": "references/glossary/pc/exposure.md#insurable-object",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Insurable Object Type",
+      "definition": "A classification of the kind of insurable object represented.",
+      "category": "exposure",
+      "sourcePath": "references/glossary/pc/exposure.md#insurable-object-type",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Insurable Object Classification",
+      "definition": "A durable classification used to organize insurable objects for underwriting, rating, reporting, or analytics.",
+      "category": "exposure",
+      "sourcePath": "references/glossary/pc/exposure.md#insurable-object-classification",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Classification Scheme",
+      "definition": "The business scheme or grouping from which an insurable object classification is drawn.",
+      "category": "exposure",
+      "sourcePath": "references/glossary/pc/exposure.md#classification-scheme",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Exposure",
+      "definition": "The measurable risk basis associated with a policy, coverage, claim, submission, underwriting, or analytical context.",
+      "category": "exposure",
+      "sourcePath": "references/glossary/pc/exposure.md#exposure",
+      "columnFQNs": [],
+      "tableFQNs": [
+        "Lakehouse://nebula_pc_silver/Tables/silver_exposure/exposure"
+      ]
+    },
+    {
+      "name": "Exposure Identifier",
+      "definition": "The system identity column on an exposure record (`exposure_uid`). An immutable GUID used as the join key for every reference to the exposure.",
+      "category": "exposure",
+      "sourcePath": "references/glossary/pc/exposure.md#exposure-identifier",
+      "columnFQNs": [
+        "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim/exposure_uid",
+        "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim_feature/exposure_uid",
+        "Lakehouse://nebula_pc_silver/Tables/silver_coverage/policy_coverage/exposure_uid",
+        "Lakehouse://nebula_pc_silver/Tables/silver_exposure/exposure/exposure_uid",
+        "Lakehouse://nebula_pc_silver/Tables/silver_exposure/property_exposure/exposure_uid",
+        "Lakehouse://nebula_pc_silver/Tables/silver_exposure/vehicle_exposure/exposure_uid",
+        "Lakehouse://nebula_pc_silver/Tables/silver_exposure/workers_comp_exposure/exposure_uid",
+        "Lakehouse://nebula_pc_silver/Tables/silver_financial/financial_transaction/exposure_uid",
+        "Lakehouse://nebula_pc_silver/Tables/silver_submission/submission_risk/exposure_uid"
+      ],
+      "tableFQNs": []
+    },
+    {
+      "name": "Exposure Type",
+      "definition": "A classification of the kind of risk basis represented.",
+      "category": "exposure",
+      "sourcePath": "references/glossary/pc/exposure.md#exposure-type",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Exposure Basis",
+      "definition": "The basis used to measure exposure.",
+      "category": "exposure",
+      "sourcePath": "references/glossary/pc/exposure.md#exposure-basis",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Exposure Quantity",
+      "definition": "The measured amount of exposure.",
+      "category": "exposure",
+      "sourcePath": "references/glossary/pc/exposure.md#exposure-quantity",
+      "columnFQNs": [
+        "Lakehouse://nebula_pc_silver/Tables/silver_exposure/exposure/exposure_quantity"
+      ],
+      "tableFQNs": []
+    },
+    {
+      "name": "Exposure Unit",
+      "definition": "The unit of measure used for exposure quantity.",
+      "category": "exposure",
+      "sourcePath": "references/glossary/pc/exposure.md#exposure-unit",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Rating Territory",
+      "definition": "A geographic, regulatory, or business territory used in rating or risk evaluation.",
+      "category": "exposure",
+      "sourcePath": "references/glossary/pc/exposure.md#rating-territory",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Geographic Location",
+      "definition": "A canonical location reference that can be associated with an exposure, insurable object, policy, claim, or other business context.",
+      "category": "exposure",
+      "sourcePath": "references/glossary/pc/exposure.md#geographic-location",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Vehicle Exposure",
+      "definition": "Vehicle-specific exposure attributes linked to a canonical exposure.",
+      "category": "exposure",
+      "sourcePath": "references/glossary/pc/exposure.md#vehicle-exposure",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Vehicle Use",
+      "definition": "A classification of how a vehicle is used for insurance risk evaluation.",
+      "category": "exposure",
+      "sourcePath": "references/glossary/pc/exposure.md#vehicle-use",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Vehicle Class",
+      "definition": "A classification of a vehicle for underwriting, rating, reporting, or analytics.",
+      "category": "exposure",
+      "sourcePath": "references/glossary/pc/exposure.md#vehicle-class",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Garaging Location",
+      "definition": "The location where a vehicle is ordinarily kept or principally located.",
+      "category": "exposure",
+      "sourcePath": "references/glossary/pc/exposure.md#garaging-location",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Radius",
+      "definition": "A classification or measure describing the operating radius for a vehicle exposure.",
+      "category": "exposure",
+      "sourcePath": "references/glossary/pc/exposure.md#radius",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Stated Value",
+      "definition": "The value stated for a vehicle or other insured item when used as an exposure or coverage basis.",
+      "category": "exposure",
+      "sourcePath": "references/glossary/pc/exposure.md#stated-value",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Property Exposure",
+      "definition": "Property-specific exposure attributes linked to a canonical exposure.",
+      "category": "exposure",
+      "sourcePath": "references/glossary/pc/exposure.md#property-exposure",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Property Use",
+      "definition": "A classification of how property is used for insurance risk evaluation.",
+      "category": "exposure",
+      "sourcePath": "references/glossary/pc/exposure.md#property-use",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Occupancy Type",
+      "definition": "A classification describing occupancy of a property.",
+      "category": "exposure",
+      "sourcePath": "references/glossary/pc/exposure.md#occupancy-type",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Construction Type",
+      "definition": "A classification describing the construction characteristics of a property.",
+      "category": "exposure",
+      "sourcePath": "references/glossary/pc/exposure.md#construction-type",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Protection Class",
+      "definition": "A classification used to represent fire protection, emergency response, or other protective context for a property exposure.",
+      "category": "exposure",
+      "sourcePath": "references/glossary/pc/exposure.md#protection-class",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Building Value",
+      "definition": "The monetary value associated with the building portion of a property exposure.",
+      "category": "exposure",
+      "sourcePath": "references/glossary/pc/exposure.md#building-value",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Contents Value",
+      "definition": "The monetary value associated with contents for a property exposure.",
+      "category": "exposure",
+      "sourcePath": "references/glossary/pc/exposure.md#contents-value",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Workers Compensation Exposure",
+      "definition": "Workers compensation-specific exposure attributes linked to a canonical exposure.",
+      "category": "exposure",
+      "sourcePath": "references/glossary/pc/exposure.md#workers-compensation-exposure",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Governing Class",
+      "definition": "The classification treated as the primary workers compensation classification for a risk context.",
+      "category": "exposure",
+      "sourcePath": "references/glossary/pc/exposure.md#governing-class",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Job Duty Description",
+      "definition": "A business description of work duties associated with a workers compensation exposure.",
+      "category": "exposure",
+      "sourcePath": "references/glossary/pc/exposure.md#job-duty-description",
+      "columnFQNs": [
+        "Lakehouse://nebula_pc_silver/Tables/silver_exposure/workers_comp_exposure/job_duty_description"
+      ],
+      "tableFQNs": []
+    },
+    {
+      "name": "Payroll Amount",
+      "definition": "Payroll used as an exposure measure for workers compensation risk.",
+      "category": "exposure",
+      "sourcePath": "references/glossary/pc/exposure.md#payroll-amount",
+      "columnFQNs": [
+        "Lakehouse://nebula_pc_silver/Tables/silver_exposure/workers_comp_exposure/payroll_amount"
+      ],
+      "tableFQNs": []
+    },
+    {
+      "name": "Employee Count",
+      "definition": "The number of employees associated with a workers compensation exposure.",
+      "category": "exposure",
+      "sourcePath": "references/glossary/pc/exposure.md#employee-count",
+      "columnFQNs": [
+        "Lakehouse://nebula_pc_silver/Tables/silver_exposure/workers_comp_exposure/employee_count"
+      ],
+      "tableFQNs": []
+    },
+    {
+      "name": "Full Time Equivalent Count",
+      "definition": "The employee count normalized to a full-time equivalent basis.",
+      "category": "exposure",
+      "sourcePath": "references/glossary/pc/exposure.md#full-time-equivalent-count",
+      "columnFQNs": [
+        "Lakehouse://nebula_pc_silver/Tables/silver_exposure/workers_comp_exposure/full_time_equivalent_count"
+      ],
+      "tableFQNs": []
+    },
+    {
+      "name": "Payroll Period",
+      "definition": "The date range for payroll used in a workers compensation exposure.",
+      "category": "exposure",
+      "sourcePath": "references/glossary/pc/exposure.md#payroll-period",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Financial Transaction",
+      "definition": "Monetary activity associated with policy, claim, coverage, party, exposure, accounting, or other Property and Casualty business context.",
+      "category": "financial",
+      "sourcePath": "references/glossary/pc/financial.md#financial-transaction",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Financial Transaction Identifier",
+      "definition": "The system identity column on a financial transaction record (`financial_transaction_uid`). An immutable GUID used as the join key for every reference to the transaction.",
+      "category": "financial",
+      "sourcePath": "references/glossary/pc/financial.md#financial-transaction-identifier",
+      "columnFQNs": [
+        "Lakehouse://nebula_pc_silver/Tables/silver_financial/financial_transaction/financial_transaction_uid"
+      ],
+      "tableFQNs": []
+    },
+    {
+      "name": "Transaction Number",
+      "definition": "The business-friendly reference the source system or business operations assigns to a financial transaction. Distinct from the financial transaction identifier; not used as the primary key or relationship join key.",
+      "category": "financial",
+      "sourcePath": "references/glossary/pc/financial.md#transaction-number",
+      "columnFQNs": [
+        "Lakehouse://nebula_pc_silver/Tables/silver_financial/financial_transaction/transaction_number"
+      ],
+      "tableFQNs": []
+    },
+    {
+      "name": "Transaction Type",
+      "definition": "A classification of operational or financial activity.",
+      "category": "financial",
+      "sourcePath": "references/glossary/pc/financial.md#transaction-type",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Transaction Classification",
+      "definition": "A more specific classification that supports analysis of monetary activity without creating a separate contract for every money subtype.",
+      "category": "financial",
+      "sourcePath": "references/glossary/pc/financial.md#transaction-classification",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Transaction Status",
+      "definition": "The current lifecycle state of a financial transaction.",
+      "category": "financial",
+      "sourcePath": "references/glossary/pc/financial.md#transaction-status",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Transaction Effective Date",
+      "definition": "The date when the transaction takes business effect.",
+      "category": "financial",
+      "sourcePath": "references/glossary/pc/financial.md#transaction-effective-date",
+      "columnFQNs": [
+        "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim_financial_transaction/transaction_effective_date",
+        "Lakehouse://nebula_pc_silver/Tables/silver_financial/financial_transaction/transaction_effective_date",
+        "Lakehouse://nebula_pc_silver/Tables/silver_financial/policy_financial_transaction/transaction_effective_date",
+        "Lakehouse://nebula_pc_silver/Tables/silver_policy/policy_transaction/transaction_effective_date"
+      ],
+      "tableFQNs": []
+    },
+    {
+      "name": "Transaction Posted Date",
+      "definition": "The date when the transaction is posted to an accounting or reporting context.",
+      "category": "financial",
+      "sourcePath": "references/glossary/pc/financial.md#transaction-posted-date",
+      "columnFQNs": [
+        "Lakehouse://nebula_pc_silver/Tables/silver_financial/financial_transaction/transaction_posted_date"
+      ],
+      "tableFQNs": []
+    },
+    {
+      "name": "Accounting Period",
+      "definition": "The accounting or reporting period associated with a financial transaction.",
+      "category": "financial",
+      "sourcePath": "references/glossary/pc/financial.md#accounting-period",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Transaction Amount",
+      "definition": "The monetary amount of a financial transaction.",
+      "category": "financial",
+      "sourcePath": "references/glossary/pc/financial.md#transaction-amount",
+      "columnFQNs": [
+        "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim_financial_transaction/transaction_amount",
+        "Lakehouse://nebula_pc_silver/Tables/silver_financial/financial_transaction/transaction_amount",
+        "Lakehouse://nebula_pc_silver/Tables/silver_financial/policy_financial_transaction/transaction_amount"
+      ],
+      "tableFQNs": []
+    },
+    {
+      "name": "Transaction Currency",
+      "definition": "The currency in which the transaction amount is stated.",
+      "category": "financial",
+      "sourcePath": "references/glossary/pc/financial.md#transaction-currency",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Debit Credit Code",
+      "definition": "A classification that indicates whether a transaction is treated as a debit or credit in the relevant accounting context.",
+      "category": "financial",
+      "sourcePath": "references/glossary/pc/financial.md#debit-credit-code",
+      "columnFQNs": [
+        "Lakehouse://nebula_pc_silver/Tables/silver_financial/financial_transaction/debit_credit_code"
+      ],
+      "tableFQNs": []
+    },
+    {
+      "name": "Source Transaction Reference",
+      "definition": "A source-neutral reference that helps trace or reconcile a financial transaction without making the canonical contract source-specific.",
+      "category": "financial",
+      "sourcePath": "references/glossary/pc/financial.md#source-transaction-reference",
+      "columnFQNs": [
+        "Lakehouse://nebula_pc_silver/Tables/silver_financial/financial_transaction/source_transaction_reference"
+      ],
+      "tableFQNs": []
+    },
+    {
+      "name": "Premium",
+      "definition": "Money charged or recognized for insurance coverage.",
+      "category": "financial",
+      "sourcePath": "references/glossary/pc/financial.md#premium",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Fee",
+      "definition": "Money charged for a service, process, or policy-related item that is not the core premium.",
+      "category": "financial",
+      "sourcePath": "references/glossary/pc/financial.md#fee",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Tax",
+      "definition": "Money charged or collected for a tax obligation associated with insurance activity.",
+      "category": "financial",
+      "sourcePath": "references/glossary/pc/financial.md#tax",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Surcharge",
+      "definition": "An additional charge applied to insurance activity according to a business, regulatory, or product rule.",
+      "category": "financial",
+      "sourcePath": "references/glossary/pc/financial.md#surcharge",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Commission",
+      "definition": "Money associated with compensation for producer, broker, agency, or other distribution participation.",
+      "category": "financial",
+      "sourcePath": "references/glossary/pc/financial.md#commission",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Payment",
+      "definition": "Money transferred to satisfy premium, claim, fee, recovery, or other financial obligation.",
+      "category": "financial",
+      "sourcePath": "references/glossary/pc/financial.md#payment",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Reserve",
+      "definition": "Money estimated or held for expected claim responsibility.",
+      "category": "financial",
+      "sourcePath": "references/glossary/pc/financial.md#reserve",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Deductible Recovery",
+      "definition": "Money recovered from an insured to satisfy a deductible obligation under a coverage.",
+      "category": "financial",
+      "sourcePath": "references/glossary/pc/financial.md#deductible-recovery",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Reinsurance Recovery",
+      "definition": "Money recovered under a reinsurance arrangement in connection with a primary loss. The structural reinsurance contract family is deferred per `references/design-decisions/pc/risk-transfer-scope.md`; reinsurance-recovery activity that flows through carrier financial systems can be represented today as a financial-transaction classification.",
+      "category": "financial",
+      "sourcePath": "references/glossary/pc/financial.md#reinsurance-recovery",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Loss Payment",
+      "definition": "A financial transaction that pays loss amounts under a claim, distinct from expense payments.",
+      "category": "financial",
+      "sourcePath": "references/glossary/pc/financial.md#loss-payment",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Expense Payment",
+      "definition": "A financial transaction that pays expense amounts associated with claim handling, distinct from loss payments.",
+      "category": "financial",
+      "sourcePath": "references/glossary/pc/financial.md#expense-payment",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Loss Reserve",
+      "definition": "Money estimated or held for expected loss responsibility on a claim.",
+      "category": "financial",
+      "sourcePath": "references/glossary/pc/financial.md#loss-reserve",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Expense Reserve",
+      "definition": "Money estimated or held for expected expense responsibility on a claim, distinct from loss reserves.",
+      "category": "financial",
+      "sourcePath": "references/glossary/pc/financial.md#expense-reserve",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Transaction Immutability",
+      "definition": "The convention that a financial transaction row is never updated in place. Corrections are emitted as new transaction rows with `correction_indicator` set to true and `corrects_*_uid` referencing the corrected row. See `cross-cutting.md` for the broader event-and-transaction convention.",
+      "category": "financial",
+      "sourcePath": "references/glossary/pc/financial.md#transaction-immutability",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Policy",
+      "definition": "A durable insurance contract identity and current policy summary for Property and Casualty business.",
+      "category": "policy",
+      "sourcePath": "references/glossary/pc/policy.md#policy",
+      "columnFQNs": [],
+      "tableFQNs": [
+        "Lakehouse://nebula_pc_silver/Tables/silver_policy/policy"
+      ]
+    },
+    {
+      "name": "Policy Identifier",
+      "definition": "The system identity column on a policy record (`policy_uid`). An immutable GUID generated upstream and used as the join key for every reference to the policy.",
+      "category": "policy",
+      "sourcePath": "references/glossary/pc/policy.md#policy-identifier",
+      "columnFQNs": [
+        "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim/policy_uid",
+        "Lakehouse://nebula_pc_silver/Tables/silver_coverage/policy_coverage/policy_uid",
+        "Lakehouse://nebula_pc_silver/Tables/silver_exposure/exposure/policy_uid",
+        "Lakehouse://nebula_pc_silver/Tables/silver_financial/financial_transaction/policy_uid",
+        "Lakehouse://nebula_pc_silver/Tables/silver_financial/policy_financial_transaction/policy_uid",
+        "Lakehouse://nebula_pc_silver/Tables/silver_policy/policy/policy_uid",
+        "Lakehouse://nebula_pc_silver/Tables/silver_policy/policy_document/policy_uid",
+        "Lakehouse://nebula_pc_silver/Tables/silver_policy/policy_lifecycle_event/policy_uid",
+        "Lakehouse://nebula_pc_silver/Tables/silver_policy/policy_party_role/policy_uid",
+        "Lakehouse://nebula_pc_silver/Tables/silver_policy/policy_term/policy_uid",
+        "Lakehouse://nebula_pc_silver/Tables/silver_policy/policy_transaction/policy_uid"
+      ],
+      "tableFQNs": []
+    },
+    {
+      "name": "Policy Number",
+      "definition": "The business-friendly identifier the business or operations assigns to a policy. Distinct from the policy identifier; not used as the primary key or relationship join key.",
+      "category": "policy",
+      "sourcePath": "references/glossary/pc/policy.md#policy-number",
+      "columnFQNs": [
+        "Lakehouse://nebula_pc_silver/Tables/silver_policy/policy/policy_number"
+      ],
+      "tableFQNs": []
+    },
+    {
+      "name": "Policy Status",
+      "definition": "The current lifecycle state of a policy.",
+      "category": "policy",
+      "sourcePath": "references/glossary/pc/policy.md#policy-status",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Policy Type",
+      "definition": "A classification of the kind of policy represented.",
+      "category": "policy",
+      "sourcePath": "references/glossary/pc/policy.md#policy-type",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Line Of Business",
+      "definition": "A grouping of insurance business based on the risk or coverage domain, such as auto, property, liability, workers compensation, or another recognized P&C line.",
+      "category": "policy",
+      "sourcePath": "references/glossary/pc/policy.md#line-of-business",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Product",
+      "definition": "An insurance offering or product context used to organize policies, coverages, jurisdictions, and line-of-business applicability.",
+      "category": "policy",
+      "sourcePath": "references/glossary/pc/policy.md#product",
+      "columnFQNs": [],
+      "tableFQNs": [
+        "Lakehouse://nebula_pc_silver/Tables/silver_product/product"
+      ]
+    },
+    {
+      "name": "Issuing Jurisdiction",
+      "definition": "The jurisdiction whose rules, forms, or authority apply to issuance of a policy or product.",
+      "category": "policy",
+      "sourcePath": "references/glossary/pc/policy.md#issuing-jurisdiction",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Original Effective Date",
+      "definition": "The first date the policy became effective as a durable insurance contract.",
+      "category": "policy",
+      "sourcePath": "references/glossary/pc/policy.md#original-effective-date",
+      "columnFQNs": [
+        "Lakehouse://nebula_pc_silver/Tables/silver_policy/policy/original_effective_date"
+      ],
+      "tableFQNs": []
+    },
+    {
+      "name": "Issue Date",
+      "definition": "The date when the policy was issued.",
+      "category": "policy",
+      "sourcePath": "references/glossary/pc/policy.md#issue-date",
+      "columnFQNs": [
+        "Lakehouse://nebula_pc_silver/Tables/silver_policy/policy/issue_date"
+      ],
+      "tableFQNs": []
+    },
+    {
+      "name": "Current Policy Term",
+      "definition": "The policy term currently associated with the policy summary.",
+      "category": "policy",
+      "sourcePath": "references/glossary/pc/policy.md#current-policy-term",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Prior Policy",
+      "definition": "A previous policy related to the current policy, often through renewal, rewrite, replacement, or similar continuity.",
+      "category": "policy",
+      "sourcePath": "references/glossary/pc/policy.md#prior-policy",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Policy Term",
+      "definition": "A bounded period of coverage or policy activity associated with a policy.",
+      "category": "policy",
+      "sourcePath": "references/glossary/pc/policy.md#policy-term",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Policy Party Role",
+      "definition": "The participation of a party in a policy context.",
+      "category": "policy",
+      "sourcePath": "references/glossary/pc/policy.md#policy-party-role",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Policy Term Number",
+      "definition": "A business-facing sequence or number that identifies a term for a policy.",
+      "category": "policy",
+      "sourcePath": "references/glossary/pc/policy.md#policy-term-number",
+      "columnFQNs": [
+        "Lakehouse://nebula_pc_silver/Tables/silver_policy/policy_term/policy_term_number"
+      ],
+      "tableFQNs": []
+    },
+    {
+      "name": "Term Status",
+      "definition": "The current lifecycle state of a policy term.",
+      "category": "policy",
+      "sourcePath": "references/glossary/pc/policy.md#term-status",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Term Effective Date",
+      "definition": "The date when a policy term starts.",
+      "category": "policy",
+      "sourcePath": "references/glossary/pc/policy.md#term-effective-date",
+      "columnFQNs": [
+        "Lakehouse://nebula_pc_silver/Tables/silver_policy/policy_term/term_effective_date"
+      ],
+      "tableFQNs": []
+    },
+    {
+      "name": "Term Expiration Date",
+      "definition": "The date when a policy term ends.",
+      "category": "policy",
+      "sourcePath": "references/glossary/pc/policy.md#term-expiration-date",
+      "columnFQNs": [
+        "Lakehouse://nebula_pc_silver/Tables/silver_policy/policy_term/term_expiration_date"
+      ],
+      "tableFQNs": []
+    },
+    {
+      "name": "Cancellation Date",
+      "definition": "The date when a policy term or policy context is cancelled.",
+      "category": "policy",
+      "sourcePath": "references/glossary/pc/policy.md#cancellation-date",
+      "columnFQNs": [
+        "Lakehouse://nebula_pc_silver/Tables/silver_policy/policy_term/cancellation_date"
+      ],
+      "tableFQNs": []
+    },
+    {
+      "name": "Renewal",
+      "definition": "Continuation of policy coverage into a new policy term or related policy period.",
+      "category": "policy",
+      "sourcePath": "references/glossary/pc/policy.md#renewal",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Annualized Premium",
+      "definition": "Premium expressed as an annual amount for comparison, reporting, or policy summary context.",
+      "category": "policy",
+      "sourcePath": "references/glossary/pc/policy.md#annualized-premium",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Premium Currency",
+      "definition": "The currency in which premium amounts are stated.",
+      "category": "policy",
+      "sourcePath": "references/glossary/pc/policy.md#premium-currency",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Policy Lifecycle Event",
+      "definition": "A meaningful event that records progress or change in a policy lifecycle.",
+      "category": "policy",
+      "sourcePath": "references/glossary/pc/policy.md#policy-lifecycle-event",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Policy Transaction",
+      "definition": "Transaction-level policy activity with business meaning, such as endorsement, renewal, cancellation, reinstatement, audit, or another policy change process.",
+      "category": "policy",
+      "sourcePath": "references/glossary/pc/policy.md#policy-transaction",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Transaction Sequence Number",
+      "definition": "A sequence used to order policy transactions within a policy or term context.",
+      "category": "policy",
+      "sourcePath": "references/glossary/pc/policy.md#transaction-sequence-number",
+      "columnFQNs": [
+        "Lakehouse://nebula_pc_silver/Tables/silver_policy/policy_transaction/transaction_sequence_number"
+      ],
+      "tableFQNs": []
+    },
+    {
+      "name": "Transaction Processed Datetime",
+      "definition": "The date and time when a policy transaction was processed or recorded.",
+      "category": "policy",
+      "sourcePath": "references/glossary/pc/policy.md#transaction-processed-datetime",
+      "columnFQNs": [
+        "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim_financial_transaction/transaction_processed_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_financial/policy_financial_transaction/transaction_processed_datetime",
+        "Lakehouse://nebula_pc_silver/Tables/silver_policy/policy_transaction/transaction_processed_datetime"
+      ],
+      "tableFQNs": []
+    },
+    {
+      "name": "Premium Change Amount",
+      "definition": "The monetary change in premium associated with a policy transaction.",
+      "category": "policy",
+      "sourcePath": "references/glossary/pc/policy.md#premium-change-amount",
+      "columnFQNs": [
+        "Lakehouse://nebula_pc_silver/Tables/silver_policy/policy_transaction/premium_change_amount"
+      ],
+      "tableFQNs": []
+    },
+    {
+      "name": "Requested By Party",
+      "definition": "The party that requested a policy transaction.",
+      "category": "policy",
+      "sourcePath": "references/glossary/pc/policy.md#requested-by-party",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Processed By Party",
+      "definition": "The party that processed or is accountable for a policy transaction.",
+      "category": "policy",
+      "sourcePath": "references/glossary/pc/policy.md#processed-by-party",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Policy Document",
+      "definition": "A document associated with a policy, policy term, or policy transaction.",
+      "category": "policy",
+      "sourcePath": "references/glossary/pc/policy.md#policy-document",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Bind",
+      "definition": "A business event or state in which coverage is committed before or as part of policy issuance.",
+      "category": "policy",
+      "sourcePath": "references/glossary/pc/policy.md#bind",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Policy Issue",
+      "definition": "A lifecycle event or activity that creates the issued policy record or makes the policy available as an issued contract.",
+      "category": "policy",
+      "sourcePath": "references/glossary/pc/policy.md#policy-issue",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Endorsement",
+      "definition": "A policy change that modifies policy terms, coverages, parties, limits, deductibles, exposures, or related details after initial issue.",
+      "category": "policy",
+      "sourcePath": "references/glossary/pc/policy.md#endorsement",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Reinstatement",
+      "definition": "Restoration of policy effectiveness after cancellation, lapse, or another inactive state.",
+      "category": "policy",
+      "sourcePath": "references/glossary/pc/policy.md#reinstatement",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Non-Renewal",
+      "definition": "A decision or event indicating that a policy will not continue into another term.",
+      "category": "policy",
+      "sourcePath": "references/glossary/pc/policy.md#non-renewal",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Rewrite",
+      "definition": "A policy lifecycle activity that replaces or restates policy context through a new or related policy.",
+      "category": "policy",
+      "sourcePath": "references/glossary/pc/policy.md#rewrite",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Audit",
+      "definition": "A review activity that may adjust policy, exposure, premium, or related details after issue or during the policy lifecycle.",
+      "category": "policy",
+      "sourcePath": "references/glossary/pc/policy.md#audit",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Reference Data",
+      "definition": "Canonical coded or descriptive values used consistently across contracts. Includes both governed codeset contracts (where each row is a code value with a label, optional external-standard mapping, and SCD2 history) and entity-like reference contracts such as `GeographicLocation` and `LocationAddress`.",
+      "category": "reference-data",
+      "sourcePath": "references/glossary/pc/reference-data.md#reference-data",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Codeset Contract",
+      "definition": "A small, governed reference-data contract whose rows enumerate the allowed values for a `*_code` field. Every codeset has the same uniform shape: a system identity column, `code_value`, `code_label`, `code_description`, optional external standard mapping, and SCD2 system-time fields. See `cross-cutting.md` for the broader codeset strategy.",
+      "category": "reference-data",
+      "sourcePath": "references/glossary/pc/reference-data.md#codeset-contract",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "External Standard",
+      "definition": "The external standards body or specification (such as ACORD, NAIC, ISO 4217, or ISO 3166-2) whose code is captured in the codeset's `external_standard_code` field.",
+      "category": "reference-data",
+      "sourcePath": "references/glossary/pc/reference-data.md#external-standard",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Reference Status",
+      "definition": "The lifecycle state of a reference data value.",
+      "category": "reference-data",
+      "sourcePath": "references/glossary/pc/reference-data.md#reference-status",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Active Status Indicator",
+      "definition": "An indicator that a lifecycle status represents an active or in-force state.",
+      "category": "reference-data",
+      "sourcePath": "references/glossary/pc/reference-data.md#active-status-indicator",
+      "columnFQNs": [
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/lifecycle_status/active_status_indicator"
+      ],
+      "tableFQNs": []
+    },
+    {
+      "name": "Terminal Status Indicator",
+      "definition": "An indicator that a lifecycle status represents an ending state for the relevant lifecycle.",
+      "category": "reference-data",
+      "sourcePath": "references/glossary/pc/reference-data.md#terminal-status-indicator",
+      "columnFQNs": [
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/lifecycle_status/terminal_status_indicator"
+      ],
+      "tableFQNs": []
+    },
+    {
+      "name": "Lifecycle Status",
+      "definition": "A reusable lifecycle state for a business subject such as submission, policy, term, coverage, claim, assessment, document, party, or transaction.",
+      "category": "reference-data",
+      "sourcePath": "references/glossary/pc/reference-data.md#lifecycle-status",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Lifecycle Subject",
+      "definition": "The business subject to which a lifecycle status or lifecycle event type applies.",
+      "category": "reference-data",
+      "sourcePath": "references/glossary/pc/reference-data.md#lifecycle-subject",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Lifecycle Event Type",
+      "definition": "A reusable classification of a meaningful lifecycle event.",
+      "category": "reference-data",
+      "sourcePath": "references/glossary/pc/reference-data.md#lifecycle-event-type",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Resulting Lifecycle Status",
+      "definition": "The lifecycle status that normally follows a lifecycle event type.",
+      "category": "reference-data",
+      "sourcePath": "references/glossary/pc/reference-data.md#resulting-lifecycle-status",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Transaction Type Reference",
+      "definition": "Reference data that classifies operational or financial activity.",
+      "category": "reference-data",
+      "sourcePath": "references/glossary/pc/reference-data.md#transaction-type-reference",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Transaction Category",
+      "definition": "A broader grouping of transaction types.",
+      "category": "reference-data",
+      "sourcePath": "references/glossary/pc/reference-data.md#transaction-category",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Financial Transaction Indicator",
+      "definition": "An indicator that a transaction type is used for monetary activity.",
+      "category": "reference-data",
+      "sourcePath": "references/glossary/pc/reference-data.md#financial-transaction-indicator",
+      "columnFQNs": [
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/transaction_type/financial_transaction_indicator"
+      ],
+      "tableFQNs": []
+    },
+    {
+      "name": "Lifecycle Event Indicator",
+      "definition": "An indicator that a transaction type is also used to describe or support lifecycle activity.",
+      "category": "reference-data",
+      "sourcePath": "references/glossary/pc/reference-data.md#lifecycle-event-indicator",
+      "columnFQNs": [
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/transaction_type/lifecycle_event_indicator"
+      ],
+      "tableFQNs": []
+    },
+    {
+      "name": "Line Of Business Reference",
+      "definition": "Reference data that defines a recognized Property and Casualty line of business.",
+      "category": "reference-data",
+      "sourcePath": "references/glossary/pc/reference-data.md#line-of-business-reference",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Business Segment",
+      "definition": "A grouping used to organize lines of business for management, reporting, or product context.",
+      "category": "reference-data",
+      "sourcePath": "references/glossary/pc/reference-data.md#business-segment",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Parent Line Of Business",
+      "definition": "A higher-level line of business used to organize more specific lines.",
+      "category": "reference-data",
+      "sourcePath": "references/glossary/pc/reference-data.md#parent-line-of-business",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Geographic Location Reference",
+      "definition": "Reference data that identifies a place or geographic area used across insurance contexts.",
+      "category": "reference-data",
+      "sourcePath": "references/glossary/pc/reference-data.md#geographic-location-reference",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Location Type",
+      "definition": "A classification of the kind of location represented.",
+      "category": "reference-data",
+      "sourcePath": "references/glossary/pc/reference-data.md#location-type",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Country Subdivision",
+      "definition": "A state, province, territory, or other subdivision within a country.",
+      "category": "reference-data",
+      "sourcePath": "references/glossary/pc/reference-data.md#country-subdivision",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Geocode Precision",
+      "definition": "A classification of how precise a latitude and longitude are for a location.",
+      "category": "reference-data",
+      "sourcePath": "references/glossary/pc/reference-data.md#geocode-precision",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Location Address",
+      "definition": "Address detail associated with a geographic location.",
+      "category": "reference-data",
+      "sourcePath": "references/glossary/pc/reference-data.md#location-address",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Address Type",
+      "definition": "A classification of the business use or form of an address.",
+      "category": "reference-data",
+      "sourcePath": "references/glossary/pc/reference-data.md#address-type",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Record Status Code",
+      "definition": "The codeset that enumerates warehouse-level record states. Allowed values include `ACTIVE`, `SUPERSEDED`, `SOFT_DELETED`, `RESTATED`, and `MERGED`. Referenced from every entity contract's `record_status_code` field.",
+      "category": "reference-data",
+      "sourcePath": "references/glossary/pc/reference-data.md#record-status-code",
+      "columnFQNs": [
+        "Lakehouse://nebula_pc_silver/Tables/silver_claims/catastrophe/record_status_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim/record_status_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim_coverage/record_status_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim_document/record_status_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim_feature/record_status_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim_party_role/record_status_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_claims/occurrence/record_status_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_core/account/record_status_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_core/account_party_role/record_status_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_core/account_relationship/record_status_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_core/agreement/record_status_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_core/party/record_status_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_core/party_relationship/record_status_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_coverage/coverage/record_status_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_coverage/policy_coverage/record_status_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_coverage/policy_deductible/record_status_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_coverage/policy_limit/record_status_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_coverage/product_coverage/record_status_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_exposure/exposure/record_status_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_exposure/insurable_object/record_status_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_exposure/insurable_object_classification/record_status_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_exposure/insurable_object_party_role/record_status_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_exposure/property_exposure/record_status_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_exposure/vehicle_exposure/record_status_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_exposure/workers_comp_exposure/record_status_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_policy/policy/record_status_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_policy/policy_document/record_status_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_policy/policy_party_role/record_status_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_policy/policy_term/record_status_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_product/product/record_status_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/account_relationship_type_code/record_status_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/account_status_code/record_status_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/account_type_code/record_status_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/agreement_status_code/record_status_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/agreement_type_code/record_status_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/assessment_result_code/record_status_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/assessment_status_code/record_status_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/assessment_type_code/record_status_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/catastrophe_status_code/record_status_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/catastrophe_type_code/record_status_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/cause_of_loss_code/record_status_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/claim_status_code/record_status_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/claim_type_code/record_status_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/coverage_basis_code/record_status_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/coverage_decision_code/record_status_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/coverage_level_code/record_status_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/coverage_status_code/record_status_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/currency_code/record_status_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/document_status_code/record_status_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/document_type_code/record_status_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/feature_status_code/record_status_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/financial_transaction_classification/record_status_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/geographic_location/record_status_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/jurisdiction_code/record_status_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/lifecycle_event_type/record_status_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/lifecycle_status/record_status_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/line_of_business/record_status_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/location_address/record_status_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/occurrence_status_code/record_status_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/occurrence_type_code/record_status_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/party_role_type_code/record_status_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/party_type_code/record_status_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/policy_status_code/record_status_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/policy_type_code/record_status_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/record_status_code/record_status_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/relationship_status_code/record_status_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/relationship_type_code/record_status_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/role_status_code/record_status_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/source_system_code/record_status_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/submission_status_code/record_status_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/submission_type_code/record_status_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/term_status_code/record_status_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/transaction_type/record_status_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_submission/submission/record_status_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_submission/submission_assessment/record_status_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_submission/submission_document/record_status_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_submission/submission_party_role/record_status_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_submission/submission_risk/record_status_code"
+      ],
+      "tableFQNs": []
+    },
+    {
+      "name": "Currency Code",
+      "definition": "The codeset that enumerates currencies used in monetary fields across the contract set. Mapped to the ISO 4217 standard. Referenced from every `*_currency_code` field.",
+      "category": "reference-data",
+      "sourcePath": "references/glossary/pc/reference-data.md#currency-code",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Jurisdiction Code",
+      "definition": "The codeset that enumerates jurisdictions in which insurance contracts are issued, governed, or regulated. Mapped to ISO 3166-2 where applicable.",
+      "category": "reference-data",
+      "sourcePath": "references/glossary/pc/reference-data.md#jurisdiction-code",
+      "columnFQNs": [
+        "Lakehouse://nebula_pc_silver/Tables/silver_coverage/product_coverage/jurisdiction_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_exposure/workers_comp_exposure/jurisdiction_code"
+      ],
+      "tableFQNs": []
+    },
+    {
+      "name": "Policy Status Code",
+      "definition": "The codeset that enumerates policy lifecycle status values such as quoted, bound, issued, in-force, cancelled, lapsed, expired, and reinstated.",
+      "category": "reference-data",
+      "sourcePath": "references/glossary/pc/reference-data.md#policy-status-code",
+      "columnFQNs": [
+        "Lakehouse://nebula_pc_silver/Tables/silver_policy/policy/policy_status_code"
+      ],
+      "tableFQNs": []
+    },
+    {
+      "name": "Policy Type Code",
+      "definition": "The codeset that enumerates policy classification values such as new business, renewal, rewrite, and replacement.",
+      "category": "reference-data",
+      "sourcePath": "references/glossary/pc/reference-data.md#policy-type-code",
+      "columnFQNs": [
+        "Lakehouse://nebula_pc_silver/Tables/silver_policy/policy/policy_type_code"
+      ],
+      "tableFQNs": []
+    },
+    {
+      "name": "Term Status Code",
+      "definition": "The codeset that enumerates policy term lifecycle status values such as pending, active, cancelled, expired, and replaced.",
+      "category": "reference-data",
+      "sourcePath": "references/glossary/pc/reference-data.md#term-status-code",
+      "columnFQNs": [
+        "Lakehouse://nebula_pc_silver/Tables/silver_policy/policy_term/policy_term_status_code"
+      ],
+      "tableFQNs": []
+    },
+    {
+      "name": "Coverage Basis Code",
+      "definition": "The codeset that enumerates coverage basis classifications used to apply a coverage within a policy context.",
+      "category": "reference-data",
+      "sourcePath": "references/glossary/pc/reference-data.md#coverage-basis-code",
+      "columnFQNs": [
+        "Lakehouse://nebula_pc_silver/Tables/silver_coverage/policy_coverage/coverage_basis_code"
+      ],
+      "tableFQNs": []
+    },
+    {
+      "name": "Coverage Level Code",
+      "definition": "The codeset that enumerates the level at which a coverage applies, such as policy, term, location, item, exposure, or coverage part.",
+      "category": "reference-data",
+      "sourcePath": "references/glossary/pc/reference-data.md#coverage-level-code",
+      "columnFQNs": [
+        "Lakehouse://nebula_pc_silver/Tables/silver_coverage/policy_coverage/coverage_level_code"
+      ],
+      "tableFQNs": []
+    },
+    {
+      "name": "Coverage Status Code",
+      "definition": "The codeset that enumerates the lifecycle status of a coverage within a policy context.",
+      "category": "reference-data",
+      "sourcePath": "references/glossary/pc/reference-data.md#coverage-status-code",
+      "columnFQNs": [
+        "Lakehouse://nebula_pc_silver/Tables/silver_coverage/coverage/coverage_status_code",
+        "Lakehouse://nebula_pc_silver/Tables/silver_coverage/policy_coverage/coverage_status_code"
+      ],
+      "tableFQNs": []
+    },
+    {
+      "name": "Party Type Code",
+      "definition": "The codeset that enumerates party classification values such as person, organization, household, and trust.",
+      "category": "reference-data",
+      "sourcePath": "references/glossary/pc/reference-data.md#party-type-code",
+      "columnFQNs": [
+        "Lakehouse://nebula_pc_silver/Tables/silver_core/party/party_type_code"
+      ],
+      "tableFQNs": []
+    },
+    {
+      "name": "Party Role Type Code",
+      "definition": "The codeset that enumerates party role types used across submission, policy, claim, coverage, and insurable-object role contracts.",
+      "category": "reference-data",
+      "sourcePath": "references/glossary/pc/reference-data.md#party-role-type-code",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Claim Status Code",
+      "definition": "The codeset that enumerates claim lifecycle status values such as open, closed, reopened, denied, and withdrawn.",
+      "category": "reference-data",
+      "sourcePath": "references/glossary/pc/reference-data.md#claim-status-code",
+      "columnFQNs": [
+        "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim/claim_status_code"
+      ],
+      "tableFQNs": []
+    },
+    {
+      "name": "Cause Of Loss Code",
+      "definition": "The codeset that enumerates causes of loss associated with a claim or claim feature.",
+      "category": "reference-data",
+      "sourcePath": "references/glossary/pc/reference-data.md#cause-of-loss-code",
+      "columnFQNs": [
+        "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim_feature/cause_of_loss_code"
+      ],
+      "tableFQNs": []
+    },
+    {
+      "name": "Submission",
+      "definition": "A pre-policy insurance request or application that is being evaluated for quote, bind, decline, withdrawal, or later policy issuance.",
+      "category": "submission",
+      "sourcePath": "references/glossary/pc/submission.md#submission",
+      "columnFQNs": [],
+      "tableFQNs": [
+        "Lakehouse://nebula_pc_silver/Tables/silver_submission/submission"
+      ]
+    },
+    {
+      "name": "Submission Identifier",
+      "definition": "The system identity column on a submission record (`submission_uid`). An immutable GUID used as the join key for every reference to the submission.",
+      "category": "submission",
+      "sourcePath": "references/glossary/pc/submission.md#submission-identifier",
+      "columnFQNs": [
+        "Lakehouse://nebula_pc_silver/Tables/silver_submission/submission/submission_uid",
+        "Lakehouse://nebula_pc_silver/Tables/silver_submission/submission_assessment/submission_uid",
+        "Lakehouse://nebula_pc_silver/Tables/silver_submission/submission_document/submission_uid",
+        "Lakehouse://nebula_pc_silver/Tables/silver_submission/submission_lifecycle_event/submission_uid",
+        "Lakehouse://nebula_pc_silver/Tables/silver_submission/submission_party_role/submission_uid",
+        "Lakehouse://nebula_pc_silver/Tables/silver_submission/submission_risk/submission_uid"
+      ],
+      "tableFQNs": []
+    },
+    {
+      "name": "Submission Number",
+      "definition": "The business-friendly identifier the business or operations assigns to a submission. Distinct from the submission identifier; not used as the primary key or relationship join key.",
+      "category": "submission",
+      "sourcePath": "references/glossary/pc/submission.md#submission-number",
+      "columnFQNs": [
+        "Lakehouse://nebula_pc_silver/Tables/silver_submission/submission/submission_number"
+      ],
+      "tableFQNs": []
+    },
+    {
+      "name": "Submission Status",
+      "definition": "The current lifecycle state of a submission.",
+      "category": "submission",
+      "sourcePath": "references/glossary/pc/submission.md#submission-status",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Submission Type",
+      "definition": "A classification of the kind of submission being evaluated.",
+      "category": "submission",
+      "sourcePath": "references/glossary/pc/submission.md#submission-type",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Received Date",
+      "definition": "The date when the submission was received for intake or evaluation.",
+      "category": "submission",
+      "sourcePath": "references/glossary/pc/submission.md#received-date",
+      "columnFQNs": [
+        "Lakehouse://nebula_pc_silver/Tables/silver_submission/submission/received_date"
+      ],
+      "tableFQNs": []
+    },
+    {
+      "name": "Requested Effective Date",
+      "definition": "The date when the requester wants coverage or policy activity to become effective.",
+      "category": "submission",
+      "sourcePath": "references/glossary/pc/submission.md#requested-effective-date",
+      "columnFQNs": [
+        "Lakehouse://nebula_pc_silver/Tables/silver_submission/submission/requested_effective_date"
+      ],
+      "tableFQNs": []
+    },
+    {
+      "name": "Quote Date",
+      "definition": "The date when a quote or price indication is provided for a submission.",
+      "category": "submission",
+      "sourcePath": "references/glossary/pc/submission.md#quote-date",
+      "columnFQNs": [
+        "Lakehouse://nebula_pc_silver/Tables/silver_submission/submission/quote_date"
+      ],
+      "tableFQNs": []
+    },
+    {
+      "name": "Bind Date",
+      "definition": "The date when coverage is bound or committed for a submission, subject to the applicable business process.",
+      "category": "submission",
+      "sourcePath": "references/glossary/pc/submission.md#bind-date",
+      "columnFQNs": [
+        "Lakehouse://nebula_pc_silver/Tables/silver_submission/submission/bind_date"
+      ],
+      "tableFQNs": []
+    },
+    {
+      "name": "Decline Date",
+      "definition": "The date when the submission is declined.",
+      "category": "submission",
+      "sourcePath": "references/glossary/pc/submission.md#decline-date",
+      "columnFQNs": [
+        "Lakehouse://nebula_pc_silver/Tables/silver_submission/submission/decline_date"
+      ],
+      "tableFQNs": []
+    },
+    {
+      "name": "Withdrawn Date",
+      "definition": "The date when the submission is withdrawn from consideration.",
+      "category": "submission",
+      "sourcePath": "references/glossary/pc/submission.md#withdrawn-date",
+      "columnFQNs": [
+        "Lakehouse://nebula_pc_silver/Tables/silver_submission/submission/withdrawn_date"
+      ],
+      "tableFQNs": []
+    },
+    {
+      "name": "Related Policy",
+      "definition": "A policy connected to a submission, usually after bind, issue, renewal, or another policy-forming activity.",
+      "category": "submission",
+      "sourcePath": "references/glossary/pc/submission.md#related-policy",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Submission Party Role",
+      "definition": "The participation of a party in a submission context.",
+      "category": "submission",
+      "sourcePath": "references/glossary/pc/submission.md#submission-party-role",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Submission Risk",
+      "definition": "Risk information presented or evaluated as part of a submission.",
+      "category": "submission",
+      "sourcePath": "references/glossary/pc/submission.md#submission-risk",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Requested Coverage",
+      "definition": "Coverage requested or indicated for a submitted risk.",
+      "category": "submission",
+      "sourcePath": "references/glossary/pc/submission.md#requested-coverage",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Submission Assessment",
+      "definition": "An underwriting, triage, clearance, referral, or risk evaluation activity performed within a submission.",
+      "category": "submission",
+      "sourcePath": "references/glossary/pc/submission.md#submission-assessment",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Assessment Type",
+      "definition": "A classification of the kind of assessment performed on a submission or submitted risk.",
+      "category": "submission",
+      "sourcePath": "references/glossary/pc/submission.md#assessment-type",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Assessment Status",
+      "definition": "The current lifecycle state of a submission assessment.",
+      "category": "submission",
+      "sourcePath": "references/glossary/pc/submission.md#assessment-status",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Assessment Result",
+      "definition": "The outcome or conclusion of a submission assessment.",
+      "category": "submission",
+      "sourcePath": "references/glossary/pc/submission.md#assessment-result",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Referral",
+      "definition": "An indication that a submission or submitted risk requires review by a person, team, or process beyond the initial handling path.",
+      "category": "submission",
+      "sourcePath": "references/glossary/pc/submission.md#referral",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Assessment Summary",
+      "definition": "A concise business summary of the assessment result or rationale.",
+      "category": "submission",
+      "sourcePath": "references/glossary/pc/submission.md#assessment-summary",
+      "columnFQNs": [
+        "Lakehouse://nebula_pc_silver/Tables/silver_submission/submission_assessment/assessment_summary"
+      ],
+      "tableFQNs": []
+    },
+    {
+      "name": "Submission Document",
+      "definition": "A document associated with a submission, such as supporting information, forms, correspondence, or issued material.",
+      "category": "submission",
+      "sourcePath": "references/glossary/pc/submission.md#submission-document",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Document Reference",
+      "definition": "A source-neutral pointer or reference to where a document can be found or retrieved.",
+      "category": "submission",
+      "sourcePath": "references/glossary/pc/submission.md#document-reference",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Required Document",
+      "definition": "A document expected or required for submission evaluation or completion.",
+      "category": "submission",
+      "sourcePath": "references/glossary/pc/submission.md#required-document",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Submission Lifecycle Event",
+      "definition": "A meaningful event that changes or records progress in the submission lifecycle.",
+      "category": "submission",
+      "sourcePath": "references/glossary/pc/submission.md#submission-lifecycle-event",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Prior Status",
+      "definition": "The lifecycle status before a lifecycle event occurred.",
+      "category": "submission",
+      "sourcePath": "references/glossary/pc/submission.md#prior-status",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Resulting Status",
+      "definition": "The lifecycle status after a lifecycle event occurred.",
+      "category": "submission",
+      "sourcePath": "references/glossary/pc/submission.md#resulting-status",
+      "columnFQNs": [],
+      "tableFQNs": []
+    },
+    {
+      "name": "Initiating Party",
+      "definition": "The party that started, requested, or caused a lifecycle event.",
+      "category": "submission",
+      "sourcePath": "references/glossary/pc/submission.md#initiating-party",
+      "columnFQNs": [],
+      "tableFQNs": []
+    }
+  ]
+}

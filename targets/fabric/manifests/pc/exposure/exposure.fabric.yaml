@@ -1,0 +1,496 @@
+manifestVersion: 1.0.0
+contract:
+  id: pc.exposure
+  name: Exposure
+  version: 0.4.1
+  domain: property-and-casualty
+  description: Canonical contract for the measurable risk basis associated with Property and Casualty
+    policy, coverage, claim, underwriting, or analytics context.
+  classificationProfile: RESTRICTED
+  subjectToHipaa: false
+  contractKind: entity
+  subjectArea: exposure
+  adrs:
+  - authoring-source-primacy
+  - canonical-alignment
+  - codeset-strategy
+  - data-classification
+  - exposure-modeling
+  - identifier-strategy
+  - null-semantics
+  - record-state
+  - scd2-primary-key
+  - separation-and-nesting
+  - status-promotion
+  - temporal-modeling
+  - versioning-policy
+fabric:
+  lakehouse: nebula_pc_silver
+  schema: silver_exposure
+  table:
+    name: exposure
+    delta:
+      tableProperties:
+        delta.appendOnly: false
+        delta.autoOptimize.optimizeWrite: true
+        delta.autoOptimize.autoCompact: true
+        delta.enableChangeDataFeed: true
+      partitionedBy:
+      - is_current_indicator
+      zorderBy:
+      - exposure_uid
+      vorder: true
+  columns:
+  - name: exposure_uid
+    sparkType: STRING
+    nullable: false
+    primaryKey: true
+    role: identity
+    description: Immutable system-generated GUID that uniquely identifies the canonical exposure record
+      across snapshots and source systems.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: source_system_code
+    sparkType: STRING
+    nullable: true
+    role: source-attribution
+    description: Identifier of the upstream system that produced or last asserted this record. Used for
+      multi-source mastering and lineage.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    codeReference:
+      codeset: pc.source-system-code
+      codesetTable: silver_reference_data.source_system_code
+      codesetField: code_value
+  - name: source_natural_key
+    sparkType: STRING
+    nullable: true
+    role: source-attribution
+    description: Natural key assigned by the source system. Captured for provenance; not used as the canonical
+      primary key.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: exposure_type_code
+    sparkType: STRING
+    nullable: false
+    role: data
+    description: Classification of the exposure by risk basis or insured-object type.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: exposure_basis_code
+    sparkType: STRING
+    nullable: true
+    role: data
+    description: Classification of the measurement basis used for the exposure, such as vehicle, property
+      value, payroll, sales, area, or unit count.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: exposure_status_code
+    sparkType: STRING
+    nullable: false
+    role: data
+    description: Current lifecycle status of the exposure.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: policy_uid
+    sparkType: STRING
+    nullable: true
+    role: foreign-key
+    description: Identifier (GUID reference) for the policy associated with the exposure when policy context
+      is available.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    foreignKey:
+      targetContract: pc.policy
+      targetTable: silver_policy.policy
+      targetField: policy_uid
+  - name: policy_term_uid
+    sparkType: STRING
+    nullable: true
+    role: foreign-key
+    description: Identifier (GUID reference) for the policy term associated with the exposure when term
+      detail is represented separately.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    foreignKey:
+      targetContract: pc.policy-term
+      targetTable: silver_policy.policy_term
+      targetField: policy_term_uid
+  - name: policy_coverage_uid
+    sparkType: STRING
+    nullable: true
+    role: foreign-key
+    description: Identifier (GUID reference) for the policy coverage associated with the exposure when
+      coverage context is known.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    foreignKey:
+      targetContract: pc.policy-coverage
+      targetTable: silver_coverage.policy_coverage
+      targetField: policy_coverage_uid
+  - name: insurable_object_uid
+    sparkType: STRING
+    nullable: true
+    role: foreign-key
+    description: Identifier (GUID reference) for the object, property, vehicle, operation, or interest
+      that may be insured when represented separately.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    foreignKey:
+      targetContract: pc.insurable-object
+      targetTable: silver_exposure.insurable_object
+      targetField: insurable_object_uid
+  - name: geographic_location_uid
+    sparkType: STRING
+    nullable: true
+    role: data
+    description: Identifier (GUID reference) for the location associated with the exposure when a canonical
+      geographic location is available.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    codeReference:
+      codeset: pc.geographic-location
+      codesetTable: silver_reference_data.geographic_location
+      codesetField: geographic_location_uid
+  - name: exposure_quantity
+    sparkType: DECIMAL(18, 2)
+    nullable: true
+    role: data
+    description: Measured quantity for the exposure when the exposure basis can be represented as a numeric
+      value.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: exposure_unit_code
+    sparkType: STRING
+    nullable: true
+    role: data
+    description: Unit of measure for the exposure quantity.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: rating_territory_code
+    sparkType: STRING
+    nullable: true
+    role: data
+    description: Territory classification used for rating or risk analysis when applicable.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: exposure_description
+    sparkType: STRING
+    nullable: true
+    role: data
+    description: Source-neutral business description of the exposure when additional context is needed.
+    classifications:
+      sensitivity: CONFIDENTIAL
+      regulatoryTags:
+      - PII
+    purview:
+      sensitivityLabel: Confidential
+  - name: effective_date
+    sparkType: DATE
+    nullable: true
+    role: data
+    description: Date when the exposure becomes effective in the business context.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: expiration_date
+    sparkType: DATE
+    nullable: true
+    role: data
+    description: Date when the exposure stops being effective in the business context.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: source_created_datetime
+    sparkType: TIMESTAMP
+    nullable: true
+    role: source-time
+    description: Source-system timestamp asserting when this record was created. Captured for late-arriving-data
+      analysis; distinct from the SCD2 system-time start in valid_from_datetime.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: source_updated_datetime
+    sparkType: TIMESTAMP
+    nullable: true
+    role: source-time
+    description: Source-system timestamp asserting when this record was last updated. Captured for late-arriving-data
+      analysis; distinct from the SCD2 system-time markers valid_from_datetime / valid_to_datetime.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: record_status_code
+    sparkType: STRING
+    nullable: false
+    role: record-state
+    description: Warehouse-level state of the record. References the RecordStatusCode codeset (ACTIVE,
+      SUPERSEDED, SOFT_DELETED, RESTATED, MERGED).
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    codeReference:
+      codeset: pc.record-status-code
+      codesetTable: silver_reference_data.record_status_code
+      codesetField: code_value
+  - name: valid_from_datetime
+    sparkType: TIMESTAMP
+    nullable: false
+    primaryKey: true
+    role: scd2-valid-from
+    description: System-time start of the SCD2 window for this record version.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: valid_to_datetime
+    sparkType: TIMESTAMP
+    nullable: true
+    role: scd2-valid-to
+    description: System-time end of the SCD2 window for this record version. Null indicates the current
+      row.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: is_current_indicator
+    sparkType: BOOLEAN
+    nullable: false
+    role: scd2-is-current
+    description: True for exactly one row per logical key, indicating the current record version.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  scd2:
+    enabled: true
+    validFrom: valid_from_datetime
+    validTo: valid_to_datetime
+    isCurrent: is_current_indicator
+    naturalKey:
+    - exposure_uid
+    deletionAware: false
+    changeDetection:
+      excludeFromHashing:
+      - valid_from_datetime
+      - valid_to_datetime
+      - is_current_indicator
+      - record_status_code
+  recordState:
+    enabled: true
+    field: record_status_code
+    activeValue: ACTIVE
+    supersededValue: SUPERSEDED
+    softDeletedValue: SOFT_DELETED
+  appendOnly:
+    enabled: false
+    correctionIndicator: null
+    correctsRefField: null
+    businessTimeField: null
+    partitionExpression: null
+  qualityRules:
+  - id: exposure_uid_required
+    type: not_null
+    column: exposure_uid
+    severity: error
+    sourceRule: exposure_uid_required
+  - id: exposure_type_code_required
+    type: not_null
+    column: exposure_type_code
+    severity: error
+    sourceRule: exposure_type_code_required
+  - id: exposure_status_code_required
+    type: not_null
+    column: exposure_status_code
+    severity: error
+    sourceRule: exposure_status_code_required
+  - id: exposure_quantity_not_negative
+    type: expression
+    expression: 'TRUE  -- TODO: derive from contract description: Exposure quantity should not be negative
+      when populated.'
+    severity: warning
+    sourceRule: exposure_quantity_not_negative
+  - id: exposure_effective_date_not_after_expiration_date
+    type: expression
+    expression: effective_date IS NULL OR expiration_date IS NULL OR effective_date <= expiration_date
+    severity: error
+    sourceRule: exposure_effective_date_not_after_expiration_date
+  - id: valid_from_datetime_required
+    type: not_null
+    column: valid_from_datetime
+    severity: error
+    sourceRule: valid_from_datetime_required
+  - id: valid_window_consistent
+    type: expression
+    expression: valid_to_datetime IS NULL OR valid_to_datetime > valid_from_datetime
+    severity: error
+    sourceRule: valid_window_consistent
+  - id: single_current_row_per_key
+    type: unique
+    keyColumns:
+    - exposure_uid
+    filter: is_current_indicator = true
+    severity: error
+    sourceRule: single_current_row_per_key
+  - id: record_status_code_required
+    type: not_null
+    column: record_status_code
+    severity: error
+    sourceRule: record_status_code_required
+  - id: source_system_code_in_codeset
+    type: accepted_values
+    column: source_system_code
+    codeset: pc.source-system-code
+    codesetTable: silver_reference_data.source_system_code
+    codesetField: code_value
+    severity: error
+    sourceRule: derived
+  - id: geographic_location_uid_in_codeset
+    type: accepted_values
+    column: geographic_location_uid
+    codeset: pc.geographic-location
+    codesetTable: silver_reference_data.geographic_location
+    codesetField: geographic_location_uid
+    severity: error
+    sourceRule: derived
+  - id: record_status_code_in_codeset
+    type: accepted_values
+    column: record_status_code
+    codeset: pc.record-status-code
+    codesetTable: silver_reference_data.record_status_code
+    codesetField: code_value
+    severity: error
+    sourceRule: derived
+  bronze:
+    table: bronze.exposure_raw
+    incrementalColumn: _ingested_at
+    expectedColumns:
+    - exposure_uid
+    - source_system_code
+    - source_natural_key
+    - exposure_type_code
+    - exposure_basis_code
+    - exposure_status_code
+    - policy_uid
+    - policy_term_uid
+    - policy_coverage_uid
+    - insurable_object_uid
+    - geographic_location_uid
+    - exposure_quantity
+    - exposure_unit_code
+    - rating_territory_code
+    - exposure_description
+    - effective_date
+    - expiration_date
+    - source_created_datetime
+    - source_updated_datetime
+    - record_status_code
+    - valid_from_datetime
+    - valid_to_datetime
+    - is_current_indicator
+relationships:
+- name: exposure_to_policy
+  description: Relates an exposure to the policy associated with the risk basis when policy context is
+    available.
+  cardinality: many-to-one
+  targetContract: pc.policy
+  targetTable: silver_policy.policy
+  sourceFields:
+  - policy_uid
+  targetFields:
+  - policy_uid
+- name: exposure_to_policy_term
+  description: Relates an exposure to the policy term associated with the risk basis when term detail
+    is available.
+  cardinality: many-to-one
+  targetContract: pc.policy-term
+  targetTable: silver_policy.policy_term
+  sourceFields:
+  - policy_term_uid
+  targetFields:
+  - policy_term_uid
+- name: exposure_to_policy_coverage
+  description: Relates an exposure to the policy coverage associated with the risk basis when coverage
+    context is known.
+  cardinality: many-to-one
+  targetContract: pc.policy-coverage
+  targetTable: silver_coverage.policy_coverage
+  sourceFields:
+  - policy_coverage_uid
+  targetFields:
+  - policy_coverage_uid
+- name: exposure_to_insurable_object
+  description: Relates an exposure to the insurable object that may be insured when object detail is represented
+    separately.
+  cardinality: many-to-one
+  targetContract: pc.insurable-object
+  targetTable: silver_exposure.insurable_object
+  sourceFields:
+  - insurable_object_uid
+  targetFields:
+  - insurable_object_uid
+- name: exposure_to_geographic_location
+  description: Relates an exposure to the geographic location associated with the risk basis when location
+    detail is available.
+  cardinality: many-to-one
+  targetContract: pc.geographic-location
+  targetTable: silver_reference_data.geographic_location
+  sourceFields:
+  - geographic_location_uid
+  targetFields:
+  - geographic_location_uid
+- name: exposure_source_system_code_to_source_system_code
+  description: Binds source_system_code to the canonical source-system-code codeset.
+  cardinality: many-to-one
+  targetContract: pc.source-system-code
+  targetTable: silver_reference_data.source_system_code
+  sourceFields:
+  - source_system_code
+  targetFields:
+  - code_value
+- name: exposure_record_status_code_to_record_status_code
+  description: Binds record_status_code to the canonical record-status-code codeset.
+  cardinality: many-to-one
+  targetContract: pc.record-status-code
+  targetTable: silver_reference_data.record_status_code
+  sourceFields:
+  - record_status_code
+  targetFields:
+  - code_value
+generation:
+  generatorVersion: 1.0.0
+  generatedAt: '2026-05-07T00:00:00Z'
+  sourceContractPath: references/odcs/pc/exposure/exposure.odcs.yaml
+  sourceContractDigest: sha256:ef5eef01ed5512ac315f2e6ef8c64fefafd089ee2112af479b779ea6eb6bbbc1

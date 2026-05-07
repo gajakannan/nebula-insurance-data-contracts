@@ -1,0 +1,574 @@
+manifestVersion: 1.0.0
+contract:
+  id: pc.product-coverage
+  name: ProductCoverage
+  version: 0.4.0
+  domain: property-and-casualty
+  description: Canonical many-to-many junction contract relating a Product to a Coverage with product-coverage-specific
+    defaults, constraints, and filing context.
+  classificationProfile: CONFIDENTIAL
+  subjectToHipaa: false
+  contractKind: entity
+  subjectArea: coverage
+  adrs:
+  - authoring-source-primacy
+  - canonical-alignment
+  - codeset-strategy
+  - currency-convention
+  - data-classification
+  - identifier-strategy
+  - null-semantics
+  - product-coverage-modeling
+  - record-state
+  - scd2-primary-key
+  - status-promotion
+  - temporal-modeling
+  - versioning-policy
+fabric:
+  lakehouse: nebula_pc_silver
+  schema: silver_coverage
+  table:
+    name: product_coverage
+    delta:
+      tableProperties:
+        delta.appendOnly: false
+        delta.autoOptimize.optimizeWrite: true
+        delta.autoOptimize.autoCompact: true
+        delta.enableChangeDataFeed: true
+      partitionedBy:
+      - is_current_indicator
+      zorderBy:
+      - product_coverage_uid
+      vorder: true
+  columns:
+  - name: product_coverage_uid
+    sparkType: STRING
+    nullable: false
+    primaryKey: true
+    role: identity
+    description: Immutable system-generated GUID that uniquely identifies the canonical product-coverage
+      record across snapshots and source systems.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: source_system_code
+    sparkType: STRING
+    nullable: true
+    role: source-attribution
+    description: Identifier of the upstream system that produced or last asserted this record. Used for
+      multi-source mastering and lineage.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    codeReference:
+      codeset: pc.source-system-code
+      codesetTable: silver_reference_data.source_system_code
+      codesetField: code_value
+  - name: source_natural_key
+    sparkType: STRING
+    nullable: true
+    role: source-attribution
+    description: Natural key assigned by the source system. Captured for provenance; not used as the canonical
+      primary key.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: product_uid
+    sparkType: STRING
+    nullable: false
+    role: foreign-key
+    description: Identifier (GUID reference) for the product offering this coverage.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    foreignKey:
+      targetContract: pc.product
+      targetTable: silver_product.product
+      targetField: product_uid
+  - name: coverage_uid
+    sparkType: STRING
+    nullable: false
+    role: foreign-key
+    description: Identifier (GUID reference) for the reusable coverage definition offered by this product.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    foreignKey:
+      targetContract: pc.coverage
+      targetTable: silver_coverage.coverage
+      targetField: coverage_uid
+  - name: jurisdiction_code
+    sparkType: STRING
+    nullable: true
+    role: code-reference
+    description: Jurisdiction in which this product-coverage filing applies. References the JurisdictionCode
+      codeset.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    codeReference:
+      codeset: pc.jurisdiction-code
+      codesetTable: silver_reference_data.jurisdiction_code
+      codesetField: code_value
+  - name: form_code
+    sparkType: STRING
+    nullable: true
+    role: data
+    description: Filed form code associated with the product-coverage offering when applicable.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: form_edition_code
+    sparkType: STRING
+    nullable: true
+    role: data
+    description: Form edition or revision code associated with the filed form when applicable.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: mandatory_indicator
+    sparkType: BOOLEAN
+    nullable: true
+    role: data
+    description: Indicates whether the coverage is mandatory when the product is sold within the applicable
+      scope.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: default_selected_indicator
+    sparkType: BOOLEAN
+    nullable: true
+    role: data
+    description: Indicates whether the coverage is selected by default when the product is offered.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: default_limit_amount
+    sparkType: DECIMAL(18, 2)
+    nullable: true
+    role: monetary-amount
+    description: Default limit amount associated with the coverage in this product context when one is
+      filed.
+    classifications:
+      sensitivity: CONFIDENTIAL
+      regulatoryTags:
+      - FINANCIAL
+    purview:
+      sensitivityLabel: Confidential
+    currencyPair:
+      pairedColumn: default_limit_currency_code
+  - name: default_limit_currency_code
+    sparkType: STRING
+    nullable: true
+    role: monetary-currency
+    description: Currency code for the default limit amount. References the CurrencyCode codeset.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    codeReference:
+      codeset: pc.currency-code
+      codesetTable: silver_reference_data.currency_code
+      codesetField: code_value
+  - name: default_deductible_amount
+    sparkType: DECIMAL(18, 2)
+    nullable: true
+    role: monetary-amount
+    description: Default deductible amount associated with the coverage in this product context when one
+      is filed.
+    classifications:
+      sensitivity: CONFIDENTIAL
+      regulatoryTags:
+      - FINANCIAL
+    purview:
+      sensitivityLabel: Confidential
+    currencyPair:
+      pairedColumn: default_deductible_currency_code
+  - name: default_deductible_currency_code
+    sparkType: STRING
+    nullable: true
+    role: monetary-currency
+    description: Currency code for the default deductible amount. References the CurrencyCode codeset.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    codeReference:
+      codeset: pc.currency-code
+      codesetTable: silver_reference_data.currency_code
+      codesetField: code_value
+  - name: minimum_limit_amount
+    sparkType: DECIMAL(18, 2)
+    nullable: true
+    role: monetary-amount
+    description: Minimum allowable limit amount for the coverage when offered under this product.
+    classifications:
+      sensitivity: CONFIDENTIAL
+      regulatoryTags:
+      - FINANCIAL
+    purview:
+      sensitivityLabel: Confidential
+    currencyPair:
+      pairedColumn: default_deductible_currency_code
+  - name: maximum_limit_amount
+    sparkType: DECIMAL(18, 2)
+    nullable: true
+    role: monetary-amount
+    description: Maximum allowable limit amount for the coverage when offered under this product.
+    classifications:
+      sensitivity: CONFIDENTIAL
+      regulatoryTags:
+      - FINANCIAL
+    purview:
+      sensitivityLabel: Confidential
+    currencyPair:
+      pairedColumn: default_deductible_currency_code
+  - name: limit_constraint_currency_code
+    sparkType: STRING
+    nullable: true
+    role: code-reference
+    description: Currency code for the minimum and maximum limit constraint amounts. References the CurrencyCode
+      codeset.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    codeReference:
+      codeset: pc.currency-code
+      codesetTable: silver_reference_data.currency_code
+      codesetField: code_value
+  - name: effective_date
+    sparkType: DATE
+    nullable: true
+    role: data
+    description: Date when the product-coverage offering becomes effective for new business.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: expiration_date
+    sparkType: DATE
+    nullable: true
+    role: data
+    description: Date when the product-coverage offering stops being effective for new business.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: record_status_code
+    sparkType: STRING
+    nullable: false
+    role: record-state
+    description: Warehouse-level state of the record. References the RecordStatusCode codeset.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    codeReference:
+      codeset: pc.record-status-code
+      codesetTable: silver_reference_data.record_status_code
+      codesetField: code_value
+  - name: valid_from_datetime
+    sparkType: TIMESTAMP
+    nullable: false
+    primaryKey: true
+    role: scd2-valid-from
+    description: System-time start of the SCD2 window for this record version.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: valid_to_datetime
+    sparkType: TIMESTAMP
+    nullable: true
+    role: scd2-valid-to
+    description: System-time end of the SCD2 window for this record version. Null indicates the current
+      row.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: is_current_indicator
+    sparkType: BOOLEAN
+    nullable: false
+    role: scd2-is-current
+    description: True for exactly one row per logical key, indicating the current record version.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  scd2:
+    enabled: true
+    validFrom: valid_from_datetime
+    validTo: valid_to_datetime
+    isCurrent: is_current_indicator
+    naturalKey:
+    - product_coverage_uid
+    deletionAware: false
+    changeDetection:
+      excludeFromHashing:
+      - valid_from_datetime
+      - valid_to_datetime
+      - is_current_indicator
+      - record_status_code
+  recordState:
+    enabled: true
+    field: record_status_code
+    activeValue: ACTIVE
+    supersededValue: SUPERSEDED
+    softDeletedValue: SOFT_DELETED
+  appendOnly:
+    enabled: false
+    correctionIndicator: null
+    correctsRefField: null
+    businessTimeField: null
+    partitionExpression: null
+  qualityRules:
+  - id: product_coverage_uid_required
+    type: not_null
+    column: product_coverage_uid
+    severity: error
+    sourceRule: product_coverage_uid_required
+  - id: product_coverage_product_uid_required
+    type: not_null
+    column: product_uid
+    severity: error
+    sourceRule: product_coverage_product_uid_required
+  - id: product_coverage_coverage_uid_required
+    type: not_null
+    column: coverage_uid
+    severity: error
+    sourceRule: product_coverage_coverage_uid_required
+  - id: product_coverage_default_limit_has_currency
+    type: expression
+    expression: 'TRUE  -- TODO: derive from contract description: Default limit currency code must be
+      populated when default limit amount is populated.'
+    severity: warning
+    sourceRule: product_coverage_default_limit_has_currency
+  - id: product_coverage_default_deductible_has_currency
+    type: expression
+    expression: 'TRUE  -- TODO: derive from contract description: Default deductible currency code must
+      be populated when default deductible amount is populated.'
+    severity: warning
+    sourceRule: product_coverage_default_deductible_has_currency
+  - id: product_coverage_min_max_consistency
+    type: expression
+    expression: 'TRUE  -- TODO: derive from contract description: Minimum limit amount must not exceed
+      maximum limit amount when both are populated.'
+    severity: error
+    sourceRule: product_coverage_min_max_consistency
+  - id: product_coverage_effective_not_after_expiration
+    type: expression
+    expression: 'TRUE  -- TODO: derive from contract description: Effective date must not be later than
+      expiration date when both dates are populated.'
+    severity: error
+    sourceRule: product_coverage_effective_not_after_expiration
+  - id: valid_from_datetime_required
+    type: not_null
+    column: valid_from_datetime
+    severity: error
+    sourceRule: valid_from_datetime_required
+  - id: valid_window_consistent
+    type: expression
+    expression: valid_to_datetime IS NULL OR valid_to_datetime > valid_from_datetime
+    severity: error
+    sourceRule: valid_window_consistent
+  - id: single_current_row_per_key
+    type: unique
+    keyColumns:
+    - product_coverage_uid
+    filter: is_current_indicator = true
+    severity: error
+    sourceRule: single_current_row_per_key
+  - id: record_status_code_required
+    type: not_null
+    column: record_status_code
+    severity: error
+    sourceRule: record_status_code_required
+  - id: default_limit_amount_currency_pair
+    type: currency_pair
+    amountColumn: default_limit_amount
+    currencyColumn: default_limit_currency_code
+    severity: error
+    sourceRule: derived
+  - id: default_deductible_amount_currency_pair
+    type: currency_pair
+    amountColumn: default_deductible_amount
+    currencyColumn: default_deductible_currency_code
+    severity: error
+    sourceRule: derived
+  - id: minimum_limit_amount_currency_pair
+    type: currency_pair
+    amountColumn: minimum_limit_amount
+    currencyColumn: default_deductible_currency_code
+    severity: error
+    sourceRule: derived
+  - id: maximum_limit_amount_currency_pair
+    type: currency_pair
+    amountColumn: maximum_limit_amount
+    currencyColumn: default_deductible_currency_code
+    severity: error
+    sourceRule: derived
+  - id: source_system_code_in_codeset
+    type: accepted_values
+    column: source_system_code
+    codeset: pc.source-system-code
+    codesetTable: silver_reference_data.source_system_code
+    codesetField: code_value
+    severity: error
+    sourceRule: derived
+  - id: jurisdiction_code_in_codeset
+    type: accepted_values
+    column: jurisdiction_code
+    codeset: pc.jurisdiction-code
+    codesetTable: silver_reference_data.jurisdiction_code
+    codesetField: code_value
+    severity: error
+    sourceRule: derived
+  - id: default_limit_currency_code_in_codeset
+    type: accepted_values
+    column: default_limit_currency_code
+    codeset: pc.currency-code
+    codesetTable: silver_reference_data.currency_code
+    codesetField: code_value
+    severity: error
+    sourceRule: derived
+  - id: default_deductible_currency_code_in_codeset
+    type: accepted_values
+    column: default_deductible_currency_code
+    codeset: pc.currency-code
+    codesetTable: silver_reference_data.currency_code
+    codesetField: code_value
+    severity: error
+    sourceRule: derived
+  - id: limit_constraint_currency_code_in_codeset
+    type: accepted_values
+    column: limit_constraint_currency_code
+    codeset: pc.currency-code
+    codesetTable: silver_reference_data.currency_code
+    codesetField: code_value
+    severity: error
+    sourceRule: derived
+  - id: record_status_code_in_codeset
+    type: accepted_values
+    column: record_status_code
+    codeset: pc.record-status-code
+    codesetTable: silver_reference_data.record_status_code
+    codesetField: code_value
+    severity: error
+    sourceRule: derived
+  bronze:
+    table: bronze.product_coverage_raw
+    incrementalColumn: _ingested_at
+    expectedColumns:
+    - product_coverage_uid
+    - source_system_code
+    - source_natural_key
+    - product_uid
+    - coverage_uid
+    - jurisdiction_code
+    - form_code
+    - form_edition_code
+    - mandatory_indicator
+    - default_selected_indicator
+    - default_limit_amount
+    - default_limit_currency_code
+    - default_deductible_amount
+    - default_deductible_currency_code
+    - minimum_limit_amount
+    - maximum_limit_amount
+    - limit_constraint_currency_code
+    - effective_date
+    - expiration_date
+    - record_status_code
+    - valid_from_datetime
+    - valid_to_datetime
+    - is_current_indicator
+relationships:
+- name: product_coverage_to_product
+  description: Relates a product-coverage record to the product offering the coverage.
+  cardinality: many-to-one
+  targetContract: pc.product
+  targetTable: silver_product.product
+  sourceFields:
+  - product_uid
+  targetFields:
+  - product_uid
+- name: product_coverage_to_coverage
+  description: Relates a product-coverage record to the reusable coverage definition.
+  cardinality: many-to-one
+  targetContract: pc.coverage
+  targetTable: silver_coverage.coverage
+  sourceFields:
+  - coverage_uid
+  targetFields:
+  - coverage_uid
+- name: product_coverage_to_jurisdiction
+  description: Relates a product-coverage record to the jurisdiction in which it is filed when applicable.
+  cardinality: many-to-one
+  targetContract: pc.jurisdiction-code
+  targetTable: silver_reference_data.jurisdiction_code
+  sourceFields:
+  - jurisdiction_code
+  targetFields:
+  - code_value
+- name: product_coverage_to_default_limit_currency
+  description: Relates the default limit amount to its currency code.
+  cardinality: many-to-one
+  targetContract: pc.currency-code
+  targetTable: silver_reference_data.currency_code
+  sourceFields:
+  - default_limit_currency_code
+  targetFields:
+  - code_value
+- name: product_coverage_to_default_deductible_currency
+  description: Relates the default deductible amount to its currency code.
+  cardinality: many-to-one
+  targetContract: pc.currency-code
+  targetTable: silver_reference_data.currency_code
+  sourceFields:
+  - default_deductible_currency_code
+  targetFields:
+  - code_value
+- name: product_coverage_source_system_code_to_source_system_code
+  description: Binds source_system_code to the canonical source-system-code codeset.
+  cardinality: many-to-one
+  targetContract: pc.source-system-code
+  targetTable: silver_reference_data.source_system_code
+  sourceFields:
+  - source_system_code
+  targetFields:
+  - code_value
+- name: product_coverage_limit_constraint_currency_code_to_currency_code
+  description: Binds limit_constraint_currency_code to the canonical currency-code codeset.
+  cardinality: many-to-one
+  targetContract: pc.currency-code
+  targetTable: silver_reference_data.currency_code
+  sourceFields:
+  - limit_constraint_currency_code
+  targetFields:
+  - code_value
+- name: product_coverage_record_status_code_to_record_status_code
+  description: Binds record_status_code to the canonical record-status-code codeset.
+  cardinality: many-to-one
+  targetContract: pc.record-status-code
+  targetTable: silver_reference_data.record_status_code
+  sourceFields:
+  - record_status_code
+  targetFields:
+  - code_value
+generation:
+  generatorVersion: 1.0.0
+  generatedAt: '2026-05-07T00:00:00Z'
+  sourceContractPath: references/odcs/pc/coverage/product-coverage.odcs.yaml
+  sourceContractDigest: sha256:29f1c95c8ee10a163188fe4ac5506291bc756dcdffdfe94f058c59b8710b0b7a

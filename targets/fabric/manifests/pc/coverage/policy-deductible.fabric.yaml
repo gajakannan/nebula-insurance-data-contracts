@@ -1,0 +1,441 @@
+manifestVersion: 1.0.0
+contract:
+  id: pc.policy-deductible
+  name: PolicyDeductible
+  version: 0.4.1
+  domain: property-and-casualty
+  description: Canonical contract for structured deductible detail associated with a Property and Casualty
+    policy coverage.
+  classificationProfile: CONFIDENTIAL
+  subjectToHipaa: false
+  contractKind: entity
+  subjectArea: coverage
+  adrs:
+  - authoring-source-primacy
+  - canonical-alignment
+  - codeset-strategy
+  - currency-convention
+  - data-classification
+  - identifier-strategy
+  - null-semantics
+  - product-coverage-modeling
+  - record-state
+  - scd2-primary-key
+  - separation-and-nesting
+  - status-promotion
+  - temporal-modeling
+  - versioning-policy
+fabric:
+  lakehouse: nebula_pc_silver
+  schema: silver_coverage
+  table:
+    name: policy_deductible
+    delta:
+      tableProperties:
+        delta.appendOnly: false
+        delta.autoOptimize.optimizeWrite: true
+        delta.autoOptimize.autoCompact: true
+        delta.enableChangeDataFeed: true
+      partitionedBy:
+      - is_current_indicator
+      zorderBy:
+      - policy_deductible_uid
+      vorder: true
+  columns:
+  - name: policy_deductible_uid
+    sparkType: STRING
+    nullable: false
+    primaryKey: true
+    role: identity
+    description: Immutable system-generated GUID that uniquely identifies the canonical policy deductible
+      record across snapshots and source systems.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: source_system_code
+    sparkType: STRING
+    nullable: true
+    role: source-attribution
+    description: Identifier of the upstream system that produced or last asserted this record. Used for
+      multi-source mastering and lineage.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    codeReference:
+      codeset: pc.source-system-code
+      codesetTable: silver_reference_data.source_system_code
+      codesetField: code_value
+  - name: source_natural_key
+    sparkType: STRING
+    nullable: true
+    role: source-attribution
+    description: Natural key assigned by the source system. Captured for provenance; not used as the canonical
+      primary key.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: policy_coverage_uid
+    sparkType: STRING
+    nullable: false
+    role: foreign-key
+    description: Identifier (GUID reference) for the policy coverage associated with the deductible.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    foreignKey:
+      targetContract: pc.policy-coverage
+      targetTable: silver_coverage.policy_coverage
+      targetField: policy_coverage_uid
+  - name: deductible_type_code
+    sparkType: STRING
+    nullable: false
+    role: data
+    description: Classification of the deductible type.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: deductible_basis_code
+    sparkType: STRING
+    nullable: true
+    role: data
+    description: Classification of the basis to which the deductible applies, such as occurrence, claim,
+      item, location, or policy term.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: deductible_amount
+    sparkType: DECIMAL(18, 2)
+    nullable: true
+    role: monetary-amount
+    description: Monetary amount of the deductible when represented as an amount.
+    classifications:
+      sensitivity: CONFIDENTIAL
+      regulatoryTags:
+      - FINANCIAL
+    purview:
+      sensitivityLabel: Confidential
+    currencyPair:
+      pairedColumn: deductible_currency_code
+  - name: deductible_currency_code
+    sparkType: STRING
+    nullable: true
+    role: monetary-currency
+    description: Currency code for the deductible amount.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    codeReference:
+      codeset: pc.currency-code
+      codesetTable: silver_reference_data.currency_code
+      codesetField: code_value
+  - name: deductible_percent
+    sparkType: DECIMAL(18, 2)
+    nullable: true
+    role: data
+    description: Percentage value of the deductible when represented as a percentage.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: minimum_deductible_amount
+    sparkType: DECIMAL(18, 2)
+    nullable: true
+    role: monetary-amount
+    description: Minimum monetary deductible amount when the deductible uses a threshold.
+    classifications:
+      sensitivity: CONFIDENTIAL
+      regulatoryTags:
+      - FINANCIAL
+    purview:
+      sensitivityLabel: Confidential
+    currencyPair:
+      pairedColumn: deductible_currency_code
+  - name: maximum_deductible_amount
+    sparkType: DECIMAL(18, 2)
+    nullable: true
+    role: monetary-amount
+    description: Maximum monetary deductible amount when the deductible uses a cap.
+    classifications:
+      sensitivity: CONFIDENTIAL
+      regulatoryTags:
+      - FINANCIAL
+    purview:
+      sensitivityLabel: Confidential
+    currencyPair:
+      pairedColumn: deductible_currency_code
+  - name: effective_date
+    sparkType: DATE
+    nullable: true
+    role: data
+    description: Date when the policy deductible becomes effective within the policy coverage context.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: expiration_date
+    sparkType: DATE
+    nullable: true
+    role: data
+    description: Date when the policy deductible stops being effective within the policy coverage context.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: source_created_datetime
+    sparkType: TIMESTAMP
+    nullable: true
+    role: source-time
+    description: Source-system timestamp asserting when this record was created. Captured for late-arriving-data
+      analysis; distinct from the SCD2 system-time start in valid_from_datetime.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: source_updated_datetime
+    sparkType: TIMESTAMP
+    nullable: true
+    role: source-time
+    description: Source-system timestamp asserting when this record was last updated. Captured for late-arriving-data
+      analysis; distinct from the SCD2 system-time markers valid_from_datetime / valid_to_datetime.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: record_status_code
+    sparkType: STRING
+    nullable: false
+    role: record-state
+    description: Warehouse-level state of the record. References the RecordStatusCode codeset (ACTIVE,
+      SUPERSEDED, SOFT_DELETED, RESTATED, MERGED).
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    codeReference:
+      codeset: pc.record-status-code
+      codesetTable: silver_reference_data.record_status_code
+      codesetField: code_value
+  - name: valid_from_datetime
+    sparkType: TIMESTAMP
+    nullable: false
+    primaryKey: true
+    role: scd2-valid-from
+    description: System-time start of the SCD2 window for this record version.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: valid_to_datetime
+    sparkType: TIMESTAMP
+    nullable: true
+    role: scd2-valid-to
+    description: System-time end of the SCD2 window for this record version. Null indicates the current
+      row.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: is_current_indicator
+    sparkType: BOOLEAN
+    nullable: false
+    role: scd2-is-current
+    description: True for exactly one row per logical key, indicating the current record version.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  scd2:
+    enabled: true
+    validFrom: valid_from_datetime
+    validTo: valid_to_datetime
+    isCurrent: is_current_indicator
+    naturalKey:
+    - policy_deductible_uid
+    deletionAware: false
+    changeDetection:
+      excludeFromHashing:
+      - valid_from_datetime
+      - valid_to_datetime
+      - is_current_indicator
+      - record_status_code
+  recordState:
+    enabled: true
+    field: record_status_code
+    activeValue: ACTIVE
+    supersededValue: SUPERSEDED
+    softDeletedValue: SOFT_DELETED
+  appendOnly:
+    enabled: false
+    correctionIndicator: null
+    correctsRefField: null
+    businessTimeField: null
+    partitionExpression: null
+  qualityRules:
+  - id: policy_deductible_uid_required
+    type: not_null
+    column: policy_deductible_uid
+    severity: error
+    sourceRule: policy_deductible_uid_required
+  - id: policy_deductible_policy_coverage_uid_required
+    type: not_null
+    column: policy_coverage_uid
+    severity: error
+    sourceRule: policy_deductible_policy_coverage_uid_required
+  - id: policy_deductible_type_code_required
+    type: not_null
+    column: deductible_type_code
+    severity: error
+    sourceRule: policy_deductible_type_code_required
+  - id: policy_deductible_amounts_not_negative
+    type: expression
+    expression: 'TRUE  -- TODO: derive from contract description: Deductible amounts should not be negative
+      when populated.'
+    severity: warning
+    sourceRule: policy_deductible_amounts_not_negative
+  - id: policy_deductible_percent_not_negative
+    type: expression
+    expression: 'TRUE  -- TODO: derive from contract description: Deductible percent should not be negative
+      when populated.'
+    severity: warning
+    sourceRule: policy_deductible_percent_not_negative
+  - id: policy_deductible_effective_date_not_after_expiration_date
+    type: expression
+    expression: effective_date IS NULL OR expiration_date IS NULL OR effective_date <= expiration_date
+    severity: error
+    sourceRule: policy_deductible_effective_date_not_after_expiration_date
+  - id: valid_from_datetime_required
+    type: not_null
+    column: valid_from_datetime
+    severity: error
+    sourceRule: valid_from_datetime_required
+  - id: valid_window_consistent
+    type: expression
+    expression: valid_to_datetime IS NULL OR valid_to_datetime > valid_from_datetime
+    severity: error
+    sourceRule: valid_window_consistent
+  - id: single_current_row_per_key
+    type: unique
+    keyColumns:
+    - policy_deductible_uid
+    filter: is_current_indicator = true
+    severity: error
+    sourceRule: single_current_row_per_key
+  - id: record_status_code_required
+    type: not_null
+    column: record_status_code
+    severity: error
+    sourceRule: record_status_code_required
+  - id: deductible_amount_currency_pair
+    type: currency_pair
+    amountColumn: deductible_amount
+    currencyColumn: deductible_currency_code
+    severity: error
+    sourceRule: derived
+  - id: minimum_deductible_amount_currency_pair
+    type: currency_pair
+    amountColumn: minimum_deductible_amount
+    currencyColumn: deductible_currency_code
+    severity: error
+    sourceRule: derived
+  - id: maximum_deductible_amount_currency_pair
+    type: currency_pair
+    amountColumn: maximum_deductible_amount
+    currencyColumn: deductible_currency_code
+    severity: error
+    sourceRule: derived
+  - id: source_system_code_in_codeset
+    type: accepted_values
+    column: source_system_code
+    codeset: pc.source-system-code
+    codesetTable: silver_reference_data.source_system_code
+    codesetField: code_value
+    severity: error
+    sourceRule: derived
+  - id: deductible_currency_code_in_codeset
+    type: accepted_values
+    column: deductible_currency_code
+    codeset: pc.currency-code
+    codesetTable: silver_reference_data.currency_code
+    codesetField: code_value
+    severity: error
+    sourceRule: derived
+  - id: record_status_code_in_codeset
+    type: accepted_values
+    column: record_status_code
+    codeset: pc.record-status-code
+    codesetTable: silver_reference_data.record_status_code
+    codesetField: code_value
+    severity: error
+    sourceRule: derived
+  bronze:
+    table: bronze.policy_deductible_raw
+    incrementalColumn: _ingested_at
+    expectedColumns:
+    - policy_deductible_uid
+    - source_system_code
+    - source_natural_key
+    - policy_coverage_uid
+    - deductible_type_code
+    - deductible_basis_code
+    - deductible_amount
+    - deductible_currency_code
+    - deductible_percent
+    - minimum_deductible_amount
+    - maximum_deductible_amount
+    - effective_date
+    - expiration_date
+    - source_created_datetime
+    - source_updated_datetime
+    - record_status_code
+    - valid_from_datetime
+    - valid_to_datetime
+    - is_current_indicator
+relationships:
+- name: policy_deductible_to_policy_coverage
+  description: Relates a policy deductible to the policy coverage where the deductible applies.
+  cardinality: many-to-one
+  targetContract: pc.policy-coverage
+  targetTable: silver_coverage.policy_coverage
+  sourceFields:
+  - policy_coverage_uid
+  targetFields:
+  - policy_coverage_uid
+- name: policy_deductible_source_system_code_to_source_system_code
+  description: Binds source_system_code to the canonical source-system-code codeset.
+  cardinality: many-to-one
+  targetContract: pc.source-system-code
+  targetTable: silver_reference_data.source_system_code
+  sourceFields:
+  - source_system_code
+  targetFields:
+  - code_value
+- name: policy_deductible_deductible_currency_code_to_currency_code
+  description: Binds deductible_currency_code to the canonical currency-code codeset.
+  cardinality: many-to-one
+  targetContract: pc.currency-code
+  targetTable: silver_reference_data.currency_code
+  sourceFields:
+  - deductible_currency_code
+  targetFields:
+  - code_value
+- name: policy_deductible_record_status_code_to_record_status_code
+  description: Binds record_status_code to the canonical record-status-code codeset.
+  cardinality: many-to-one
+  targetContract: pc.record-status-code
+  targetTable: silver_reference_data.record_status_code
+  sourceFields:
+  - record_status_code
+  targetFields:
+  - code_value
+generation:
+  generatorVersion: 1.0.0
+  generatedAt: '2026-05-07T00:00:00Z'
+  sourceContractPath: references/odcs/pc/coverage/policy-deductible.odcs.yaml
+  sourceContractDigest: sha256:66f5875385af6ec7aa2c9f9214849fa11f93975eb8b7d9df8278b827d11087f7

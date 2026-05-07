@@ -1,0 +1,428 @@
+manifestVersion: 1.0.0
+contract:
+  id: pc.claim-financial-transaction
+  name: ClaimFinancialTransaction
+  version: 0.1.1
+  domain: property-and-casualty
+  description: Canonical contract for claim-related financial activity such as reserves, payments, recoveries,
+    salvage, subrogation, and expense activity.
+  classificationProfile: CONFIDENTIAL
+  subjectToHipaa: false
+  contractKind: transaction
+  subjectArea: claims
+  adrs:
+  - authoring-source-primacy
+  - canonical-alignment
+  - claims-modeling
+  - codeset-strategy
+  - currency-convention
+  - data-classification
+  - event-and-transaction
+  - financial-modeling
+  - identifier-strategy
+  - status-promotion
+  - temporal-modeling
+  - versioning-policy
+fabric:
+  lakehouse: nebula_pc_silver
+  schema: silver_claims
+  table:
+    name: claim_financial_transaction
+    delta:
+      tableProperties:
+        delta.appendOnly: true
+        delta.autoOptimize.optimizeWrite: true
+        delta.autoOptimize.autoCompact: true
+        delta.enableChangeDataFeed: true
+      partitionedBy:
+      - transaction_effective_date
+      zorderBy: []
+      vorder: true
+  columns:
+  - name: claim_financial_transaction_uid
+    sparkType: STRING
+    nullable: false
+    primaryKey: true
+    role: identity
+    description: Immutable system-generated GUID that uniquely identifies the canonical claim financial
+      transaction record across snapshots and source systems.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: claim_uid
+    sparkType: STRING
+    nullable: false
+    role: foreign-key
+    description: Identifier (GUID reference) for the claim associated with the transaction.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    foreignKey:
+      targetContract: pc.claim
+      targetTable: silver_claims.claim
+      targetField: claim_uid
+  - name: claim_feature_uid
+    sparkType: STRING
+    nullable: true
+    role: foreign-key
+    description: Identifier (GUID reference) for the claim feature when the transaction is feature-specific.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    foreignKey:
+      targetContract: pc.claim-feature
+      targetTable: silver_claims.claim_feature
+      targetField: claim_feature_uid
+  - name: claim_coverage_uid
+    sparkType: STRING
+    nullable: true
+    role: foreign-key
+    description: Identifier (GUID reference) for the claim coverage that the transaction is booked against
+      when known.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    foreignKey:
+      targetContract: pc.claim-coverage
+      targetTable: silver_claims.claim_coverage
+      targetField: claim_coverage_uid
+  - name: payee_party_role_uid
+    sparkType: STRING
+    nullable: true
+    role: foreign-key
+    description: Identifier (GUID reference) for the claim party role that is the payee of the transaction
+      when applicable.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    foreignKey:
+      targetContract: pc.claim-party-role
+      targetTable: silver_claims.claim_party_role
+      targetField: claim_party_role_uid
+  - name: transaction_type_code
+    sparkType: STRING
+    nullable: false
+    role: code-reference
+    description: Classification of the transaction such as PAYMENT, RESERVE_CHANGE, RECOVERY, SALVAGE,
+      SUBROGATION, DEDUCTIBLE_RECOVERY, or EXPENSE. References the TransactionType codeset.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    codeReference:
+      codeset: pc.transaction-type
+      codesetTable: silver_reference_data.transaction_type
+      codesetField: code_value
+  - name: transaction_classification_code
+    sparkType: STRING
+    nullable: true
+    role: code-reference
+    description: Optional secondary classification (e.g. INDEMNITY, EXPENSE_ALAE, EXPENSE_ULAE, RESERVE_INDEMNITY,
+      RESERVE_EXPENSE) used by analytics and reporting.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    codeReference:
+      codeset: pc.financial-transaction-classification
+      codesetTable: silver_reference_data.financial_transaction_classification
+      codesetField: code_value
+  - name: reserve_category_code
+    sparkType: STRING
+    nullable: true
+    role: data
+    description: Reserve category for transactions that affect a reserve, such as INDEMNITY_RESERVE or
+      EXPENSE_RESERVE. Null for transactions that do not affect a reserve.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: transaction_amount
+    sparkType: DECIMAL(18, 2)
+    nullable: false
+    role: monetary-amount
+    description: Signed monetary amount of the transaction in the transactional currency. Sign convention
+      is positive for outbound payments and reserve increases, negative for recoveries and reserve decreases.
+    classifications:
+      sensitivity: CONFIDENTIAL
+      regulatoryTags:
+      - FINANCIAL
+    purview:
+      sensitivityLabel: Confidential
+    currencyPair:
+      pairedColumn: transaction_currency_code
+  - name: transaction_currency_code
+    sparkType: STRING
+    nullable: false
+    role: monetary-currency
+    description: Currency code for the transaction amount. References the CurrencyCode codeset.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    codeReference:
+      codeset: pc.currency-code
+      codesetTable: silver_reference_data.currency_code
+      codesetField: code_value
+  - name: transaction_effective_date
+    sparkType: DATE
+    nullable: false
+    role: data
+    description: Business-effective date of the transaction.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: transaction_processed_datetime
+    sparkType: TIMESTAMP
+    nullable: true
+    role: data
+    description: Datetime when the transaction was processed or posted.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: accounting_period_code
+    sparkType: STRING
+    nullable: true
+    role: data
+    description: Accounting period to which the transaction is booked (e.g. YYYY-MM, YYYY-QN) when known.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: lifecycle_event_uid
+    sparkType: STRING
+    nullable: true
+    role: lifecycle-event-link
+    description: Optional reference to the claim lifecycle event that this transaction realizes (per the
+      event-and-transaction ADR).
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: transaction_narrative
+    sparkType: STRING
+    nullable: true
+    role: data
+    description: Source-neutral narrative describing the transaction when additional context is needed.
+    classifications:
+      sensitivity: CONFIDENTIAL
+      regulatoryTags:
+      - PII
+    purview:
+      sensitivityLabel: Confidential
+  - name: correction_indicator
+    sparkType: BOOLEAN
+    nullable: false
+    role: event-correction-flag
+    description: True when this row corrects a previously emitted row. False for original (uncorrected)
+      rows.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: corrects_claim_financial_transaction_uid
+    sparkType: STRING
+    nullable: true
+    role: event-corrects-ref
+    description: Reference to the prior row that this row corrects. Populated only when correction_indicator
+      is true.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  scd2:
+    enabled: false
+    validFrom: null
+    validTo: null
+    isCurrent: null
+    naturalKey: []
+    deletionAware: false
+    changeDetection:
+      excludeFromHashing: []
+  recordState:
+    enabled: false
+    field: null
+    activeValue: null
+    supersededValue: null
+    softDeletedValue: null
+  appendOnly:
+    enabled: true
+    correctionIndicator: correction_indicator
+    correctsRefField: corrects_claim_financial_transaction_uid
+    businessTimeField: transaction_effective_date
+    partitionExpression: MONTH(transaction_effective_date)
+  qualityRules:
+  - id: claim_financial_transaction_uid_required
+    type: not_null
+    column: claim_financial_transaction_uid
+    severity: error
+    sourceRule: claim_financial_transaction_uid_required
+  - id: claim_financial_transaction_claim_uid_required
+    type: not_null
+    column: claim_uid
+    severity: error
+    sourceRule: claim_financial_transaction_claim_uid_required
+  - id: claim_financial_transaction_type_code_required
+    type: not_null
+    column: transaction_type_code
+    severity: error
+    sourceRule: claim_financial_transaction_type_code_required
+  - id: claim_financial_transaction_amount_required
+    type: not_null
+    column: transaction_amount
+    severity: error
+    sourceRule: claim_financial_transaction_amount_required
+  - id: claim_financial_transaction_currency_required
+    type: expression
+    expression: 'TRUE  -- TODO: derive from contract description: Transaction currency code must be populated
+      whenever transaction amount is populated.'
+    severity: error
+    sourceRule: claim_financial_transaction_currency_required
+  - id: claim_financial_transaction_effective_date_required
+    type: not_null
+    column: transaction_effective_date
+    severity: error
+    sourceRule: claim_financial_transaction_effective_date_required
+  - id: correction_indicator_required
+    type: not_null
+    column: correction_indicator
+    severity: error
+    sourceRule: correction_indicator_required
+  - id: transaction_amount_currency_pair
+    type: currency_pair
+    amountColumn: transaction_amount
+    currencyColumn: transaction_currency_code
+    severity: error
+    sourceRule: derived
+  - id: transaction_type_code_in_codeset
+    type: accepted_values
+    column: transaction_type_code
+    codeset: pc.transaction-type
+    codesetTable: silver_reference_data.transaction_type
+    codesetField: code_value
+    severity: error
+    sourceRule: derived
+  - id: transaction_classification_code_in_codeset
+    type: accepted_values
+    column: transaction_classification_code
+    codeset: pc.financial-transaction-classification
+    codesetTable: silver_reference_data.financial_transaction_classification
+    codesetField: code_value
+    severity: error
+    sourceRule: derived
+  - id: transaction_currency_code_in_codeset
+    type: accepted_values
+    column: transaction_currency_code
+    codeset: pc.currency-code
+    codesetTable: silver_reference_data.currency_code
+    codesetField: code_value
+    severity: error
+    sourceRule: derived
+  bronze:
+    table: bronze.claim_financial_transaction_raw
+    incrementalColumn: _ingested_at
+    expectedColumns:
+    - claim_financial_transaction_uid
+    - claim_uid
+    - claim_feature_uid
+    - claim_coverage_uid
+    - payee_party_role_uid
+    - transaction_type_code
+    - transaction_classification_code
+    - reserve_category_code
+    - transaction_amount
+    - transaction_currency_code
+    - transaction_effective_date
+    - transaction_processed_datetime
+    - accounting_period_code
+    - lifecycle_event_uid
+    - transaction_narrative
+    - correction_indicator
+    - corrects_claim_financial_transaction_uid
+relationships:
+- name: claim_financial_transaction_to_claim
+  description: Relates a claim financial transaction to the claim associated with the transaction.
+  cardinality: many-to-one
+  targetContract: pc.claim
+  targetTable: silver_claims.claim
+  sourceFields:
+  - claim_uid
+  targetFields:
+  - claim_uid
+- name: claim_financial_transaction_to_claim_feature
+  description: Relates a claim financial transaction to the claim feature when feature context is known.
+  cardinality: many-to-one
+  targetContract: pc.claim-feature
+  targetTable: silver_claims.claim_feature
+  sourceFields:
+  - claim_feature_uid
+  targetFields:
+  - claim_feature_uid
+- name: claim_financial_transaction_to_claim_coverage
+  description: Relates a claim financial transaction to the claim coverage that it is booked against when
+    known.
+  cardinality: many-to-one
+  targetContract: pc.claim-coverage
+  targetTable: silver_claims.claim_coverage
+  sourceFields:
+  - claim_coverage_uid
+  targetFields:
+  - claim_coverage_uid
+- name: claim_financial_transaction_to_payee_party_role
+  description: Relates a claim financial transaction to the claim party role that is the payee when applicable.
+  cardinality: many-to-one
+  targetContract: pc.claim-party-role
+  targetTable: silver_claims.claim_party_role
+  sourceFields:
+  - payee_party_role_uid
+  targetFields:
+  - claim_party_role_uid
+- name: claim_financial_transaction_to_transaction_type
+  description: Relates a claim financial transaction to the TransactionType codeset.
+  cardinality: many-to-one
+  targetContract: pc.transaction-type
+  targetTable: silver_reference_data.transaction_type
+  sourceFields:
+  - transaction_type_code
+  targetFields:
+  - code_value
+- name: claim_financial_transaction_to_currency
+  description: Relates the transaction amount to its currency code.
+  cardinality: many-to-one
+  targetContract: pc.currency-code
+  targetTable: silver_reference_data.currency_code
+  sourceFields:
+  - transaction_currency_code
+  targetFields:
+  - code_value
+- name: claim_financial_transaction_to_lifecycle_event
+  description: Relates a claim financial transaction to the lifecycle event it realizes when applicable.
+  cardinality: many-to-one
+  targetContract: pc.claim-lifecycle-event
+  targetTable: silver_claims.claim_lifecycle_event
+  sourceFields:
+  - lifecycle_event_uid
+  targetFields:
+  - claim_lifecycle_event_uid
+- name: claim_financial_transaction_transaction_classification_code_to_financial_transaction_classification
+  description: Binds transaction_classification_code to the canonical financial-transaction-classification
+    codeset.
+  cardinality: many-to-one
+  targetContract: pc.financial-transaction-classification
+  targetTable: silver_reference_data.financial_transaction_classification
+  sourceFields:
+  - transaction_classification_code
+  targetFields:
+  - code_value
+generation:
+  generatorVersion: 1.0.0
+  generatedAt: '2026-05-07T00:00:00Z'
+  sourceContractPath: references/odcs/pc/claims/claim-financial-transaction.odcs.yaml
+  sourceContractDigest: sha256:a542b8ede5d57aa9879d11b044997ba4fede56d0b266d7007da981e6df70989a

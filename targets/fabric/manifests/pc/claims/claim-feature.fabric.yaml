@@ -1,0 +1,416 @@
+manifestVersion: 1.0.0
+contract:
+  id: pc.claim-feature
+  name: ClaimFeature
+  version: 0.3.1
+  domain: property-and-casualty
+  description: Canonical contract for a claim feature, partitioning a claim into independent handling
+    streams by coverage, peril, claimant, or other business dimension.
+  classificationProfile: CONFIDENTIAL
+  subjectToHipaa: false
+  contractKind: entity
+  subjectArea: claims
+  adrs:
+  - authoring-source-primacy
+  - canonical-alignment
+  - claims-modeling
+  - codeset-strategy
+  - data-classification
+  - identifier-strategy
+  - null-semantics
+  - record-state
+  - scd2-primary-key
+  - status-promotion
+  - temporal-modeling
+  - versioning-policy
+fabric:
+  lakehouse: nebula_pc_silver
+  schema: silver_claims
+  table:
+    name: claim_feature
+    delta:
+      tableProperties:
+        delta.appendOnly: false
+        delta.autoOptimize.optimizeWrite: true
+        delta.autoOptimize.autoCompact: true
+        delta.enableChangeDataFeed: true
+      partitionedBy:
+      - is_current_indicator
+      zorderBy:
+      - claim_feature_uid
+      vorder: true
+  columns:
+  - name: claim_feature_uid
+    sparkType: STRING
+    nullable: false
+    primaryKey: true
+    role: identity
+    description: Immutable system-generated GUID that uniquely identifies the canonical claim feature
+      record across snapshots and source systems.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: source_system_code
+    sparkType: STRING
+    nullable: true
+    role: source-attribution
+    description: Identifier of the upstream system that produced or last asserted this record. Used for
+      multi-source mastering and lineage.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    codeReference:
+      codeset: pc.source-system-code
+      codesetTable: silver_reference_data.source_system_code
+      codesetField: code_value
+  - name: source_natural_key
+    sparkType: STRING
+    nullable: true
+    role: source-attribution
+    description: Natural key assigned by the source system. Captured for provenance; not used as the canonical
+      primary key.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: claim_uid
+    sparkType: STRING
+    nullable: false
+    role: foreign-key
+    description: Identifier (GUID reference) for the claim that this feature partitions.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    foreignKey:
+      targetContract: pc.claim
+      targetTable: silver_claims.claim
+      targetField: claim_uid
+  - name: feature_number
+    sparkType: STRING
+    nullable: true
+    role: business-key
+    description: Business-friendly identifier for the feature within the claim.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: feature_status_code
+    sparkType: STRING
+    nullable: false
+    role: code-reference
+    description: Current lifecycle status of the claim feature.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    codeReference:
+      codeset: pc.feature-status-code
+      codesetTable: silver_reference_data.feature_status_code
+      codesetField: code_value
+  - name: cause_of_loss_code
+    sparkType: STRING
+    nullable: true
+    role: code-reference
+    description: Cause of loss classification associated with the feature when known. References the CauseOfLossCode
+      codeset.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    codeReference:
+      codeset: pc.cause-of-loss-code
+      codesetTable: silver_reference_data.cause_of_loss_code
+      codesetField: code_value
+  - name: policy_coverage_uid
+    sparkType: STRING
+    nullable: true
+    role: foreign-key
+    description: Identifier (GUID reference) for the policy coverage that this feature primarily responds
+      to when known.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    foreignKey:
+      targetContract: pc.policy-coverage
+      targetTable: silver_coverage.policy_coverage
+      targetField: policy_coverage_uid
+  - name: exposure_uid
+    sparkType: STRING
+    nullable: true
+    role: foreign-key
+    description: Identifier (GUID reference) for the exposure associated with the feature when exposure
+      context is known.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    foreignKey:
+      targetContract: pc.exposure
+      targetTable: silver_exposure.exposure
+      targetField: exposure_uid
+  - name: opened_date
+    sparkType: DATE
+    nullable: true
+    role: data
+    description: Date when the claim feature was opened for handling.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: closed_date
+    sparkType: DATE
+    nullable: true
+    role: data
+    description: Date when the claim feature was closed.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: feature_description
+    sparkType: STRING
+    nullable: true
+    role: data
+    description: Source-neutral business description of the claim feature when additional context is needed.
+    classifications:
+      sensitivity: CONFIDENTIAL
+      regulatoryTags:
+      - PII
+    purview:
+      sensitivityLabel: Confidential
+  - name: record_status_code
+    sparkType: STRING
+    nullable: false
+    role: record-state
+    description: Warehouse-level state of the record. References the RecordStatusCode codeset.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    codeReference:
+      codeset: pc.record-status-code
+      codesetTable: silver_reference_data.record_status_code
+      codesetField: code_value
+  - name: valid_from_datetime
+    sparkType: TIMESTAMP
+    nullable: false
+    primaryKey: true
+    role: scd2-valid-from
+    description: System-time start of the SCD2 window for this record version.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: valid_to_datetime
+    sparkType: TIMESTAMP
+    nullable: true
+    role: scd2-valid-to
+    description: System-time end of the SCD2 window for this record version. Null indicates the current
+      row.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: is_current_indicator
+    sparkType: BOOLEAN
+    nullable: false
+    role: scd2-is-current
+    description: True for exactly one row per logical key, indicating the current record version.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  scd2:
+    enabled: true
+    validFrom: valid_from_datetime
+    validTo: valid_to_datetime
+    isCurrent: is_current_indicator
+    naturalKey:
+    - claim_feature_uid
+    deletionAware: false
+    changeDetection:
+      excludeFromHashing:
+      - valid_from_datetime
+      - valid_to_datetime
+      - is_current_indicator
+      - record_status_code
+  recordState:
+    enabled: true
+    field: record_status_code
+    activeValue: ACTIVE
+    supersededValue: SUPERSEDED
+    softDeletedValue: SOFT_DELETED
+  appendOnly:
+    enabled: false
+    correctionIndicator: null
+    correctsRefField: null
+    businessTimeField: null
+    partitionExpression: null
+  qualityRules:
+  - id: claim_feature_uid_required
+    type: not_null
+    column: claim_feature_uid
+    severity: error
+    sourceRule: claim_feature_uid_required
+  - id: claim_feature_claim_uid_required
+    type: not_null
+    column: claim_uid
+    severity: error
+    sourceRule: claim_feature_claim_uid_required
+  - id: claim_feature_status_code_required
+    type: not_null
+    column: feature_status_code
+    severity: error
+    sourceRule: claim_feature_status_code_required
+  - id: claim_feature_closed_not_before_opened
+    type: expression
+    expression: 'TRUE  -- TODO: derive from contract description: Closed date must not be earlier than
+      opened date when both dates are populated.'
+    severity: error
+    sourceRule: claim_feature_closed_not_before_opened
+  - id: valid_from_datetime_required
+    type: not_null
+    column: valid_from_datetime
+    severity: error
+    sourceRule: valid_from_datetime_required
+  - id: valid_window_consistent
+    type: expression
+    expression: valid_to_datetime IS NULL OR valid_to_datetime > valid_from_datetime
+    severity: error
+    sourceRule: valid_window_consistent
+  - id: single_current_row_per_key
+    type: unique
+    keyColumns:
+    - claim_feature_uid
+    filter: is_current_indicator = true
+    severity: error
+    sourceRule: single_current_row_per_key
+  - id: record_status_code_required
+    type: not_null
+    column: record_status_code
+    severity: error
+    sourceRule: record_status_code_required
+  - id: source_system_code_in_codeset
+    type: accepted_values
+    column: source_system_code
+    codeset: pc.source-system-code
+    codesetTable: silver_reference_data.source_system_code
+    codesetField: code_value
+    severity: error
+    sourceRule: derived
+  - id: feature_status_code_in_codeset
+    type: accepted_values
+    column: feature_status_code
+    codeset: pc.feature-status-code
+    codesetTable: silver_reference_data.feature_status_code
+    codesetField: code_value
+    severity: error
+    sourceRule: derived
+  - id: cause_of_loss_code_in_codeset
+    type: accepted_values
+    column: cause_of_loss_code
+    codeset: pc.cause-of-loss-code
+    codesetTable: silver_reference_data.cause_of_loss_code
+    codesetField: code_value
+    severity: error
+    sourceRule: derived
+  - id: record_status_code_in_codeset
+    type: accepted_values
+    column: record_status_code
+    codeset: pc.record-status-code
+    codesetTable: silver_reference_data.record_status_code
+    codesetField: code_value
+    severity: error
+    sourceRule: derived
+  bronze:
+    table: bronze.claim_feature_raw
+    incrementalColumn: _ingested_at
+    expectedColumns:
+    - claim_feature_uid
+    - source_system_code
+    - source_natural_key
+    - claim_uid
+    - feature_number
+    - feature_status_code
+    - cause_of_loss_code
+    - policy_coverage_uid
+    - exposure_uid
+    - opened_date
+    - closed_date
+    - feature_description
+    - record_status_code
+    - valid_from_datetime
+    - valid_to_datetime
+    - is_current_indicator
+relationships:
+- name: claim_feature_to_claim
+  description: Relates a claim feature to the claim that it partitions.
+  cardinality: many-to-one
+  targetContract: pc.claim
+  targetTable: silver_claims.claim
+  sourceFields:
+  - claim_uid
+  targetFields:
+  - claim_uid
+- name: claim_feature_to_policy_coverage
+  description: Relates a claim feature to the policy coverage it primarily responds to when known.
+  cardinality: many-to-one
+  targetContract: pc.policy-coverage
+  targetTable: silver_coverage.policy_coverage
+  sourceFields:
+  - policy_coverage_uid
+  targetFields:
+  - policy_coverage_uid
+- name: claim_feature_to_exposure
+  description: Relates a claim feature to its associated exposure when exposure context is known.
+  cardinality: many-to-one
+  targetContract: pc.exposure
+  targetTable: silver_exposure.exposure
+  sourceFields:
+  - exposure_uid
+  targetFields:
+  - exposure_uid
+- name: claim_feature_to_cause_of_loss
+  description: Relates a claim feature to the CauseOfLossCode codeset.
+  cardinality: many-to-one
+  targetContract: pc.cause-of-loss-code
+  targetTable: silver_reference_data.cause_of_loss_code
+  sourceFields:
+  - cause_of_loss_code
+  targetFields:
+  - code_value
+- name: claim_feature_source_system_code_to_source_system_code
+  description: Binds source_system_code to the canonical source-system-code codeset.
+  cardinality: many-to-one
+  targetContract: pc.source-system-code
+  targetTable: silver_reference_data.source_system_code
+  sourceFields:
+  - source_system_code
+  targetFields:
+  - code_value
+- name: claim_feature_feature_status_code_to_feature_status_code
+  description: Binds feature_status_code to the canonical feature-status-code codeset.
+  cardinality: many-to-one
+  targetContract: pc.feature-status-code
+  targetTable: silver_reference_data.feature_status_code
+  sourceFields:
+  - feature_status_code
+  targetFields:
+  - code_value
+- name: claim_feature_record_status_code_to_record_status_code
+  description: Binds record_status_code to the canonical record-status-code codeset.
+  cardinality: many-to-one
+  targetContract: pc.record-status-code
+  targetTable: silver_reference_data.record_status_code
+  sourceFields:
+  - record_status_code
+  targetFields:
+  - code_value
+generation:
+  generatorVersion: 1.0.0
+  generatedAt: '2026-05-07T00:00:00Z'
+  sourceContractPath: references/odcs/pc/claims/claim-feature.odcs.yaml
+  sourceContractDigest: sha256:27250f3cd49feceaf9fb4666ce3b475438b535b75170001f831f9b8f287c62d7

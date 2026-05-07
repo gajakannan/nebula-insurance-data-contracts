@@ -1,0 +1,484 @@
+manifestVersion: 1.0.0
+contract:
+  id: pc.policy-document
+  name: PolicyDocument
+  version: 0.4.2
+  domain: property-and-casualty
+  description: Canonical contract for documents associated with a Property and Casualty policy.
+  classificationProfile: INTERNAL
+  subjectToHipaa: false
+  contractKind: entity
+  subjectArea: policy
+  adrs:
+  - authoring-source-primacy
+  - canonical-alignment
+  - codeset-strategy
+  - data-classification
+  - identifier-strategy
+  - null-semantics
+  - record-state
+  - scd2-primary-key
+  - separation-and-nesting
+  - status-promotion
+  - temporal-modeling
+  - versioning-policy
+fabric:
+  lakehouse: nebula_pc_silver
+  schema: silver_policy
+  table:
+    name: policy_document
+    delta:
+      tableProperties:
+        delta.appendOnly: false
+        delta.autoOptimize.optimizeWrite: true
+        delta.autoOptimize.autoCompact: true
+        delta.enableChangeDataFeed: true
+      partitionedBy:
+      - is_current_indicator
+      zorderBy:
+      - policy_document_uid
+      vorder: true
+  columns:
+  - name: policy_document_uid
+    sparkType: STRING
+    nullable: false
+    primaryKey: true
+    role: identity
+    description: Immutable system-generated GUID that uniquely identifies the canonical policy document
+      record across snapshots and source systems.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: source_system_code
+    sparkType: STRING
+    nullable: true
+    role: source-attribution
+    description: Identifier of the upstream system that produced or last asserted this record. Used for
+      multi-source mastering and lineage.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    codeReference:
+      codeset: pc.source-system-code
+      codesetTable: silver_reference_data.source_system_code
+      codesetField: code_value
+  - name: source_natural_key
+    sparkType: STRING
+    nullable: true
+    role: source-attribution
+    description: Natural key assigned by the source system. Captured for provenance; not used as the canonical
+      primary key.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: policy_uid
+    sparkType: STRING
+    nullable: false
+    role: foreign-key
+    description: Identifier (GUID reference) for the policy associated with the document.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    foreignKey:
+      targetContract: pc.policy
+      targetTable: silver_policy.policy
+      targetField: policy_uid
+  - name: policy_term_uid
+    sparkType: STRING
+    nullable: true
+    role: foreign-key
+    description: Identifier (GUID reference) for the policy term associated with the document when term
+      context is known.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    foreignKey:
+      targetContract: pc.policy-term
+      targetTable: silver_policy.policy_term
+      targetField: policy_term_uid
+  - name: policy_transaction_uid
+    sparkType: STRING
+    nullable: true
+    role: foreign-key
+    description: Identifier (GUID reference) for the policy transaction associated with the document when
+      transaction context is known.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    foreignKey:
+      targetContract: pc.policy-transaction
+      targetTable: silver_policy.policy_transaction
+      targetField: policy_transaction_uid
+  - name: document_type_code
+    sparkType: STRING
+    nullable: false
+    role: code-reference
+    description: Classification of the policy document type.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    codeReference:
+      codeset: pc.document-type-code
+      codesetTable: silver_reference_data.document_type_code
+      codesetField: code_value
+  - name: document_status_code
+    sparkType: STRING
+    nullable: false
+    role: code-reference
+    description: Current lifecycle status of the policy document.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    codeReference:
+      codeset: pc.document-status-code
+      codesetTable: silver_reference_data.document_status_code
+      codesetField: code_value
+  - name: document_title
+    sparkType: STRING
+    nullable: true
+    role: data
+    description: Business-facing title for the policy document.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: external_storage_reference
+    sparkType: STRING
+    nullable: true
+    role: data
+    description: Source-neutral reference used to locate or reconcile the policy document in its system
+      of record (storage URI, document-management identifier, etc.).
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: capture_datetime
+    sparkType: TIMESTAMP
+    nullable: true
+    role: data
+    description: Datetime when the canonical policy document record was captured into the warehouse. Distinct
+      from issued / received which carry business semantics.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: issued_datetime
+    sparkType: TIMESTAMP
+    nullable: true
+    role: data
+    description: Datetime when the policy document was issued or generated.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: received_datetime
+    sparkType: TIMESTAMP
+    nullable: true
+    role: data
+    description: Datetime when the policy document was received when applicable.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: contains_phi_indicator
+    sparkType: BOOLEAN
+    nullable: true
+    role: data
+    description: Indicates whether the document contains protected health information; informs downstream
+      masking and access controls.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: effective_date
+    sparkType: DATE
+    nullable: true
+    role: data
+    description: Date when the policy document becomes effective for business use.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: expiration_date
+    sparkType: DATE
+    nullable: true
+    role: data
+    description: Date when the policy document stops being effective for business use.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: source_created_datetime
+    sparkType: TIMESTAMP
+    nullable: true
+    role: source-time
+    description: Source-system timestamp asserting when this record was created. Captured for late-arriving-data
+      analysis; distinct from the SCD2 system-time start in valid_from_datetime.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: source_updated_datetime
+    sparkType: TIMESTAMP
+    nullable: true
+    role: source-time
+    description: Source-system timestamp asserting when this record was last updated. Captured for late-arriving-data
+      analysis; distinct from the SCD2 system-time markers valid_from_datetime / valid_to_datetime.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: record_status_code
+    sparkType: STRING
+    nullable: false
+    role: record-state
+    description: Warehouse-level state of the record. References the RecordStatusCode codeset (ACTIVE,
+      SUPERSEDED, SOFT_DELETED, RESTATED, MERGED).
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    codeReference:
+      codeset: pc.record-status-code
+      codesetTable: silver_reference_data.record_status_code
+      codesetField: code_value
+  - name: valid_from_datetime
+    sparkType: TIMESTAMP
+    nullable: false
+    primaryKey: true
+    role: scd2-valid-from
+    description: System-time start of the SCD2 window for this record version.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: valid_to_datetime
+    sparkType: TIMESTAMP
+    nullable: true
+    role: scd2-valid-to
+    description: System-time end of the SCD2 window for this record version. Null indicates the current
+      row.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: is_current_indicator
+    sparkType: BOOLEAN
+    nullable: false
+    role: scd2-is-current
+    description: True for exactly one row per logical key, indicating the current record version.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  scd2:
+    enabled: true
+    validFrom: valid_from_datetime
+    validTo: valid_to_datetime
+    isCurrent: is_current_indicator
+    naturalKey:
+    - policy_document_uid
+    deletionAware: false
+    changeDetection:
+      excludeFromHashing:
+      - valid_from_datetime
+      - valid_to_datetime
+      - is_current_indicator
+      - record_status_code
+  recordState:
+    enabled: true
+    field: record_status_code
+    activeValue: ACTIVE
+    supersededValue: SUPERSEDED
+    softDeletedValue: SOFT_DELETED
+  appendOnly:
+    enabled: false
+    correctionIndicator: null
+    correctsRefField: null
+    businessTimeField: null
+    partitionExpression: null
+  qualityRules:
+  - id: policy_document_uid_required
+    type: not_null
+    column: policy_document_uid
+    severity: error
+    sourceRule: policy_document_uid_required
+  - id: policy_document_policy_uid_required
+    type: not_null
+    column: policy_uid
+    severity: error
+    sourceRule: policy_document_policy_uid_required
+  - id: policy_document_type_code_required
+    type: not_null
+    column: document_type_code
+    severity: error
+    sourceRule: policy_document_type_code_required
+  - id: policy_document_status_code_required
+    type: not_null
+    column: document_status_code
+    severity: error
+    sourceRule: policy_document_status_code_required
+  - id: policy_document_effective_date_not_after_expiration_date
+    type: expression
+    expression: effective_date IS NULL OR expiration_date IS NULL OR effective_date <= expiration_date
+    severity: error
+    sourceRule: policy_document_effective_date_not_after_expiration_date
+  - id: valid_from_datetime_required
+    type: not_null
+    column: valid_from_datetime
+    severity: error
+    sourceRule: valid_from_datetime_required
+  - id: valid_window_consistent
+    type: expression
+    expression: valid_to_datetime IS NULL OR valid_to_datetime > valid_from_datetime
+    severity: error
+    sourceRule: valid_window_consistent
+  - id: single_current_row_per_key
+    type: unique
+    keyColumns:
+    - policy_document_uid
+    filter: is_current_indicator = true
+    severity: error
+    sourceRule: single_current_row_per_key
+  - id: record_status_code_required
+    type: not_null
+    column: record_status_code
+    severity: error
+    sourceRule: record_status_code_required
+  - id: source_system_code_in_codeset
+    type: accepted_values
+    column: source_system_code
+    codeset: pc.source-system-code
+    codesetTable: silver_reference_data.source_system_code
+    codesetField: code_value
+    severity: error
+    sourceRule: derived
+  - id: document_type_code_in_codeset
+    type: accepted_values
+    column: document_type_code
+    codeset: pc.document-type-code
+    codesetTable: silver_reference_data.document_type_code
+    codesetField: code_value
+    severity: error
+    sourceRule: derived
+  - id: document_status_code_in_codeset
+    type: accepted_values
+    column: document_status_code
+    codeset: pc.document-status-code
+    codesetTable: silver_reference_data.document_status_code
+    codesetField: code_value
+    severity: error
+    sourceRule: derived
+  - id: record_status_code_in_codeset
+    type: accepted_values
+    column: record_status_code
+    codeset: pc.record-status-code
+    codesetTable: silver_reference_data.record_status_code
+    codesetField: code_value
+    severity: error
+    sourceRule: derived
+  bronze:
+    table: bronze.policy_document_raw
+    incrementalColumn: _ingested_at
+    expectedColumns:
+    - policy_document_uid
+    - source_system_code
+    - source_natural_key
+    - policy_uid
+    - policy_term_uid
+    - policy_transaction_uid
+    - document_type_code
+    - document_status_code
+    - document_title
+    - external_storage_reference
+    - capture_datetime
+    - issued_datetime
+    - received_datetime
+    - contains_phi_indicator
+    - effective_date
+    - expiration_date
+    - source_created_datetime
+    - source_updated_datetime
+    - record_status_code
+    - valid_from_datetime
+    - valid_to_datetime
+    - is_current_indicator
+relationships:
+- name: policy_document_to_policy
+  description: Relates a policy document to the policy associated with the document.
+  cardinality: many-to-one
+  targetContract: pc.policy
+  targetTable: silver_policy.policy
+  sourceFields:
+  - policy_uid
+  targetFields:
+  - policy_uid
+- name: policy_document_to_policy_term
+  description: Relates a policy document to the policy term associated with the document when term context
+    is known.
+  cardinality: many-to-one
+  targetContract: pc.policy-term
+  targetTable: silver_policy.policy_term
+  sourceFields:
+  - policy_term_uid
+  targetFields:
+  - policy_term_uid
+- name: policy_document_to_policy_transaction
+  description: Relates a policy document to the policy transaction associated with the document when transaction
+    context is known.
+  cardinality: many-to-one
+  targetContract: pc.policy-transaction
+  targetTable: silver_policy.policy_transaction
+  sourceFields:
+  - policy_transaction_uid
+  targetFields:
+  - policy_transaction_uid
+- name: policy_document_source_system_code_to_source_system_code
+  description: Binds source_system_code to the canonical source-system-code codeset.
+  cardinality: many-to-one
+  targetContract: pc.source-system-code
+  targetTable: silver_reference_data.source_system_code
+  sourceFields:
+  - source_system_code
+  targetFields:
+  - code_value
+- name: policy_document_document_type_code_to_document_type_code
+  description: Binds document_type_code to the canonical document-type-code codeset.
+  cardinality: many-to-one
+  targetContract: pc.document-type-code
+  targetTable: silver_reference_data.document_type_code
+  sourceFields:
+  - document_type_code
+  targetFields:
+  - code_value
+- name: policy_document_document_status_code_to_document_status_code
+  description: Binds document_status_code to the canonical document-status-code codeset.
+  cardinality: many-to-one
+  targetContract: pc.document-status-code
+  targetTable: silver_reference_data.document_status_code
+  sourceFields:
+  - document_status_code
+  targetFields:
+  - code_value
+- name: policy_document_record_status_code_to_record_status_code
+  description: Binds record_status_code to the canonical record-status-code codeset.
+  cardinality: many-to-one
+  targetContract: pc.record-status-code
+  targetTable: silver_reference_data.record_status_code
+  sourceFields:
+  - record_status_code
+  targetFields:
+  - code_value
+generation:
+  generatorVersion: 1.0.0
+  generatedAt: '2026-05-07T00:00:00Z'
+  sourceContractPath: references/odcs/pc/policy/policy-document.odcs.yaml
+  sourceContractDigest: sha256:37b059809d67c3dda16e86aa8f2b55df62033c79399c89452247785947821ffe

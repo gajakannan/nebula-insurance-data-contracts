@@ -1,0 +1,394 @@
+manifestVersion: 1.0.0
+contract:
+  id: pc.insurable-object-party-role
+  name: InsurableObjectPartyRole
+  version: 0.1.1
+  domain: property-and-casualty
+  description: Canonical contract for a party participating in an insurable object context — named drivers
+    on a vehicle, additional insureds on a property, loss-payees, lessees, and other object-scoped party
+    participations.
+  classificationProfile: INTERNAL
+  subjectToHipaa: false
+  contractKind: entity
+  subjectArea: exposure
+  adrs:
+  - authoring-source-primacy
+  - canonical-alignment
+  - codeset-strategy
+  - data-classification
+  - exposure-modeling
+  - identifier-strategy
+  - null-semantics
+  - record-state
+  - role-modeling
+  - scd2-primary-key
+  - status-promotion
+  - temporal-modeling
+  - versioning-policy
+fabric:
+  lakehouse: nebula_pc_silver
+  schema: silver_exposure
+  table:
+    name: insurable_object_party_role
+    delta:
+      tableProperties:
+        delta.appendOnly: false
+        delta.autoOptimize.optimizeWrite: true
+        delta.autoOptimize.autoCompact: true
+        delta.enableChangeDataFeed: true
+      partitionedBy:
+      - is_current_indicator
+      zorderBy:
+      - insurable_object_party_role_uid
+      vorder: true
+  columns:
+  - name: insurable_object_party_role_uid
+    sparkType: STRING
+    nullable: false
+    primaryKey: true
+    role: identity
+    description: Immutable system-generated GUID that uniquely identifies the canonical insurable-object
+      party role record across snapshots and source systems.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: source_system_code
+    sparkType: STRING
+    nullable: true
+    role: source-attribution
+    description: Identifier of the upstream system that produced or last asserted this record. Used for
+      multi-source mastering and lineage.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    codeReference:
+      codeset: pc.source-system-code
+      codesetTable: silver_reference_data.source_system_code
+      codesetField: code_value
+  - name: source_natural_key
+    sparkType: STRING
+    nullable: true
+    role: source-attribution
+    description: Natural key assigned by the source system. Captured for provenance; not used as the canonical
+      primary key.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: insurable_object_uid
+    sparkType: STRING
+    nullable: false
+    role: foreign-key
+    description: Identifier (GUID reference) for the insurable object the party role applies to.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    foreignKey:
+      targetContract: pc.insurable-object
+      targetTable: silver_exposure.insurable_object
+      targetField: insurable_object_uid
+  - name: party_uid
+    sparkType: STRING
+    nullable: false
+    role: foreign-key
+    description: Identifier (GUID reference) for the party participating in the insurable object context.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    foreignKey:
+      targetContract: pc.party
+      targetTable: silver_core.party
+      targetField: party_uid
+  - name: role_type_code
+    sparkType: STRING
+    nullable: false
+    role: code-reference
+    description: Classification of the role the party plays for the insurable object (NAMED_DRIVER, ADDITIONAL_INSURED,
+      LOSS_PAYEE, LESSEE, etc.). References the PartyRoleTypeCode codeset.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    codeReference:
+      codeset: pc.party-role-type-code
+      codesetTable: silver_reference_data.party_role_type_code
+      codesetField: code_value
+  - name: role_status_code
+    sparkType: STRING
+    nullable: false
+    role: code-reference
+    description: Current lifecycle status of the party role within the insurable-object context.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    codeReference:
+      codeset: pc.role-status-code
+      codesetTable: silver_reference_data.role_status_code
+      codesetField: code_value
+  - name: primary_role_indicator
+    sparkType: BOOLEAN
+    nullable: true
+    role: data
+    description: Indicates whether this is the primary party for the role type within the insurable-object
+      context (e.g. primary named driver).
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: effective_date
+    sparkType: DATE
+    nullable: true
+    role: data
+    description: Date when the party role becomes effective within the insurable-object context.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: expiration_date
+    sparkType: DATE
+    nullable: true
+    role: data
+    description: Date when the party role stops being effective within the insurable-object context.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: record_status_code
+    sparkType: STRING
+    nullable: false
+    role: record-state
+    description: Warehouse-level state of the record. References the RecordStatusCode codeset (ACTIVE,
+      SUPERSEDED, SOFT_DELETED, RESTATED, MERGED).
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    codeReference:
+      codeset: pc.record-status-code
+      codesetTable: silver_reference_data.record_status_code
+      codesetField: code_value
+  - name: valid_from_datetime
+    sparkType: TIMESTAMP
+    nullable: false
+    primaryKey: true
+    role: scd2-valid-from
+    description: System-time start of the SCD2 window for this record version.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: valid_to_datetime
+    sparkType: TIMESTAMP
+    nullable: true
+    role: scd2-valid-to
+    description: System-time end of the SCD2 window for this record version. Null indicates the current
+      row.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: is_current_indicator
+    sparkType: BOOLEAN
+    nullable: false
+    role: scd2-is-current
+    description: True for exactly one row per logical key, indicating the current record version.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  scd2:
+    enabled: true
+    validFrom: valid_from_datetime
+    validTo: valid_to_datetime
+    isCurrent: is_current_indicator
+    naturalKey:
+    - insurable_object_party_role_uid
+    deletionAware: false
+    changeDetection:
+      excludeFromHashing:
+      - valid_from_datetime
+      - valid_to_datetime
+      - is_current_indicator
+      - record_status_code
+  recordState:
+    enabled: true
+    field: record_status_code
+    activeValue: ACTIVE
+    supersededValue: SUPERSEDED
+    softDeletedValue: SOFT_DELETED
+  appendOnly:
+    enabled: false
+    correctionIndicator: null
+    correctsRefField: null
+    businessTimeField: null
+    partitionExpression: null
+  qualityRules:
+  - id: insurable_object_party_role_uid_required
+    type: not_null
+    column: insurable_object_party_role_uid
+    severity: error
+    sourceRule: insurable_object_party_role_uid_required
+  - id: insurable_object_party_role_object_uid_required
+    type: expression
+    expression: 'TRUE  -- TODO: derive from contract description: insurable_object_uid must be populated
+      for every insurable-object party role record.'
+    severity: error
+    sourceRule: insurable_object_party_role_object_uid_required
+  - id: insurable_object_party_role_party_uid_required
+    type: not_null
+    column: party_uid
+    severity: error
+    sourceRule: insurable_object_party_role_party_uid_required
+  - id: insurable_object_party_role_type_code_required
+    type: not_null
+    column: role_type_code
+    severity: error
+    sourceRule: insurable_object_party_role_type_code_required
+  - id: insurable_object_party_role_status_code_required
+    type: not_null
+    column: role_status_code
+    severity: error
+    sourceRule: insurable_object_party_role_status_code_required
+  - id: insurable_object_party_role_effective_not_after_expiration
+    type: expression
+    expression: 'TRUE  -- TODO: derive from contract description: Effective date must not be later than
+      expiration date when both dates are populated.'
+    severity: error
+    sourceRule: insurable_object_party_role_effective_not_after_expiration
+  - id: valid_from_datetime_required
+    type: not_null
+    column: valid_from_datetime
+    severity: error
+    sourceRule: valid_from_datetime_required
+  - id: valid_window_consistent
+    type: expression
+    expression: valid_to_datetime IS NULL OR valid_to_datetime > valid_from_datetime
+    severity: error
+    sourceRule: valid_window_consistent
+  - id: single_current_row_per_key
+    type: unique
+    keyColumns:
+    - insurable_object_party_role_uid
+    filter: is_current_indicator = true
+    severity: error
+    sourceRule: single_current_row_per_key
+  - id: record_status_code_required
+    type: not_null
+    column: record_status_code
+    severity: error
+    sourceRule: record_status_code_required
+  - id: source_system_code_in_codeset
+    type: accepted_values
+    column: source_system_code
+    codeset: pc.source-system-code
+    codesetTable: silver_reference_data.source_system_code
+    codesetField: code_value
+    severity: error
+    sourceRule: derived
+  - id: role_type_code_in_codeset
+    type: accepted_values
+    column: role_type_code
+    codeset: pc.party-role-type-code
+    codesetTable: silver_reference_data.party_role_type_code
+    codesetField: code_value
+    severity: error
+    sourceRule: derived
+  - id: role_status_code_in_codeset
+    type: accepted_values
+    column: role_status_code
+    codeset: pc.role-status-code
+    codesetTable: silver_reference_data.role_status_code
+    codesetField: code_value
+    severity: error
+    sourceRule: derived
+  - id: record_status_code_in_codeset
+    type: accepted_values
+    column: record_status_code
+    codeset: pc.record-status-code
+    codesetTable: silver_reference_data.record_status_code
+    codesetField: code_value
+    severity: error
+    sourceRule: derived
+  bronze:
+    table: bronze.insurable_object_party_role_raw
+    incrementalColumn: _ingested_at
+    expectedColumns:
+    - insurable_object_party_role_uid
+    - source_system_code
+    - source_natural_key
+    - insurable_object_uid
+    - party_uid
+    - role_type_code
+    - role_status_code
+    - primary_role_indicator
+    - effective_date
+    - expiration_date
+    - record_status_code
+    - valid_from_datetime
+    - valid_to_datetime
+    - is_current_indicator
+relationships:
+- name: insurable_object_party_role_to_insurable_object
+  description: Relates the role to the insurable object the party participates in.
+  cardinality: many-to-one
+  targetContract: pc.insurable-object
+  targetTable: silver_exposure.insurable_object
+  sourceFields:
+  - insurable_object_uid
+  targetFields:
+  - insurable_object_uid
+- name: insurable_object_party_role_to_party
+  description: Relates the role to the party participating in the insurable-object context.
+  cardinality: many-to-one
+  targetContract: pc.party
+  targetTable: silver_core.party
+  sourceFields:
+  - party_uid
+  targetFields:
+  - party_uid
+- name: insurable_object_party_role_to_role_type
+  description: Relates the role to the PartyRoleTypeCode codeset.
+  cardinality: many-to-one
+  targetContract: pc.party-role-type-code
+  targetTable: silver_reference_data.party_role_type_code
+  sourceFields:
+  - role_type_code
+  targetFields:
+  - code_value
+- name: insurable_object_party_role_to_role_status
+  description: Relates the role to the RoleStatusCode codeset.
+  cardinality: many-to-one
+  targetContract: pc.role-status-code
+  targetTable: silver_reference_data.role_status_code
+  sourceFields:
+  - role_status_code
+  targetFields:
+  - code_value
+- name: insurable_object_party_role_to_record_status
+  description: Relates the role to the RecordStatusCode codeset.
+  cardinality: many-to-one
+  targetContract: pc.record-status-code
+  targetTable: silver_reference_data.record_status_code
+  sourceFields:
+  - record_status_code
+  targetFields:
+  - code_value
+- name: insurable_object_party_role_source_system_code_to_source_system_code
+  description: Binds source_system_code to the canonical source-system-code codeset.
+  cardinality: many-to-one
+  targetContract: pc.source-system-code
+  targetTable: silver_reference_data.source_system_code
+  sourceFields:
+  - source_system_code
+  targetFields:
+  - code_value
+generation:
+  generatorVersion: 1.0.0
+  generatedAt: '2026-05-07T00:00:00Z'
+  sourceContractPath: references/odcs/pc/exposure/insurable-object-party-role.odcs.yaml
+  sourceContractDigest: sha256:aef3999a7f108822cc425919e71202dffb7b74b5b181576e3143afd3416a1ec3

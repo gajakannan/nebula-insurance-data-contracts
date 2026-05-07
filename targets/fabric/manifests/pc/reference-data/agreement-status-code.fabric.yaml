@@ -1,0 +1,219 @@
+manifestVersion: 1.0.0
+contract:
+  id: pc.agreement-status-code
+  name: AgreementStatusCode
+  version: 0.1.0
+  domain: property-and-casualty
+  description: Canonical codeset for agreement lifecycle status values such as draft, active, expired,
+    and terminated.
+  classificationProfile: PUBLIC
+  subjectToHipaa: false
+  contractKind: codeset
+  subjectArea: core
+  adrs:
+  - authoring-source-primacy
+  - canonical-alignment
+  - codeset-strategy
+  - data-classification
+  - identifier-strategy
+  - record-state
+  - scd2-primary-key
+  - status-promotion
+  - temporal-modeling
+  - versioning-policy
+fabric:
+  lakehouse: nebula_pc_silver
+  schema: silver_reference_data
+  table:
+    name: agreement_status_code
+    delta:
+      tableProperties:
+        delta.appendOnly: false
+        delta.autoOptimize.optimizeWrite: true
+        delta.autoOptimize.autoCompact: true
+        delta.enableChangeDataFeed: true
+      partitionedBy:
+      - is_current_indicator
+      zorderBy:
+      - agreement_status_code_uid
+      vorder: true
+  columns:
+  - name: agreement_status_code_uid
+    sparkType: STRING
+    nullable: false
+    primaryKey: true
+    role: identity
+    description: Immutable system-generated GUID that uniquely identifies the canonical AgreementStatusCode
+      record across snapshots.
+    classifications:
+      sensitivity: PUBLIC
+    purview:
+      sensitivityLabel: Public
+  - name: code_value
+    sparkType: STRING
+    nullable: false
+    role: data
+    description: Business-friendly code value referenced by entity contracts.
+    classifications:
+      sensitivity: PUBLIC
+    purview:
+      sensitivityLabel: Public
+  - name: code_label
+    sparkType: STRING
+    nullable: false
+    role: data
+    description: Human-readable label for the code value.
+    classifications:
+      sensitivity: PUBLIC
+    purview:
+      sensitivityLabel: Public
+  - name: code_description
+    sparkType: STRING
+    nullable: true
+    role: data
+    description: Extended description of the code value.
+    classifications:
+      sensitivity: PUBLIC
+    purview:
+      sensitivityLabel: Public
+  - name: external_standard_code
+    sparkType: STRING
+    nullable: true
+    role: data
+    description: Code value as defined by an external standard (ACORD, NAIC, ISO, etc.) when a mapping
+      is recorded.
+    classifications:
+      sensitivity: PUBLIC
+    purview:
+      sensitivityLabel: Public
+  - name: external_standard_name
+    sparkType: STRING
+    nullable: true
+    role: data
+    description: Name of the external standard whose code is captured in external_standard_code.
+    classifications:
+      sensitivity: PUBLIC
+    purview:
+      sensitivityLabel: Public
+  - name: record_status_code
+    sparkType: STRING
+    nullable: false
+    role: record-state
+    description: Warehouse-level state of the record. References the RecordStatusCode codeset.
+    classifications:
+      sensitivity: PUBLIC
+    purview:
+      sensitivityLabel: Public
+  - name: valid_from_datetime
+    sparkType: TIMESTAMP
+    nullable: false
+    primaryKey: true
+    role: scd2-valid-from
+    description: System-time start of the SCD2 window for this record version.
+    classifications:
+      sensitivity: PUBLIC
+    purview:
+      sensitivityLabel: Public
+  - name: valid_to_datetime
+    sparkType: TIMESTAMP
+    nullable: true
+    role: scd2-valid-to
+    description: System-time end of the SCD2 window for this record version. Null indicates the current
+      row.
+    classifications:
+      sensitivity: PUBLIC
+    purview:
+      sensitivityLabel: Public
+  - name: is_current_indicator
+    sparkType: BOOLEAN
+    nullable: false
+    role: scd2-is-current
+    description: True for exactly one row per logical key, indicating the current record version.
+    classifications:
+      sensitivity: PUBLIC
+    purview:
+      sensitivityLabel: Public
+  scd2:
+    enabled: true
+    validFrom: valid_from_datetime
+    validTo: valid_to_datetime
+    isCurrent: is_current_indicator
+    naturalKey:
+    - agreement_status_code_uid
+    deletionAware: true
+    changeDetection:
+      excludeFromHashing:
+      - valid_from_datetime
+      - valid_to_datetime
+      - is_current_indicator
+      - record_status_code
+  recordState:
+    enabled: true
+    field: record_status_code
+    activeValue: ACTIVE
+    supersededValue: SUPERSEDED
+    softDeletedValue: SOFT_DELETED
+  appendOnly:
+    enabled: false
+    correctionIndicator: null
+    correctsRefField: null
+    businessTimeField: null
+    partitionExpression: null
+  qualityRules:
+  - id: agreement_status_code_uid_required
+    type: not_null
+    column: agreement_status_code_uid
+    severity: error
+    sourceRule: agreement_status_code_uid_required
+  - id: code_value_required
+    type: not_null
+    column: code_value
+    severity: error
+    sourceRule: code_value_required
+  - id: code_label_required
+    type: not_null
+    column: code_label
+    severity: error
+    sourceRule: code_label_required
+  - id: valid_from_datetime_required
+    type: not_null
+    column: valid_from_datetime
+    severity: error
+    sourceRule: valid_from_datetime_required
+  - id: valid_window_consistent
+    type: expression
+    expression: valid_to_datetime IS NULL OR valid_to_datetime > valid_from_datetime
+    severity: error
+    sourceRule: valid_window_consistent
+  - id: single_current_row_per_key
+    type: unique
+    keyColumns:
+    - agreement_status_code_uid
+    filter: is_current_indicator = true
+    severity: error
+    sourceRule: single_current_row_per_key
+  - id: record_status_code_required
+    type: not_null
+    column: record_status_code
+    severity: error
+    sourceRule: record_status_code_required
+  bronze:
+    table: bronze.agreement_status_code_raw
+    incrementalColumn: _ingested_at
+    expectedColumns:
+    - agreement_status_code_uid
+    - code_value
+    - code_label
+    - code_description
+    - external_standard_code
+    - external_standard_name
+    - record_status_code
+    - valid_from_datetime
+    - valid_to_datetime
+    - is_current_indicator
+relationships: []
+generation:
+  generatorVersion: 1.0.0
+  generatedAt: '2026-05-07T00:00:00Z'
+  sourceContractPath: references/odcs/pc/reference-data/agreement-status-code.odcs.yaml
+  sourceContractDigest: sha256:4d31cc4a7e575e8f4ff57a7d6411d443410a307fdac8bcaafacdd060a183d38d
