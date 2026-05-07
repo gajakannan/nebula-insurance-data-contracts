@@ -2,7 +2,7 @@ apiVersion: v3.0.2
 kind: DataContract
 id: pc.submission
 name: Submission
-version: 0.4.1
+version: 0.4.2
 status: draft
 description: Canonical contract for Property and Casualty submission intake and current submission summary.
 domain: property-and-casualty
@@ -159,19 +159,19 @@ schema:
         sensitivity: CONFIDENTIAL
         regulatoryTags:
         - PII
-  - name: created_datetime
-    businessName: Created Datetime
+  - name: source_created_datetime
+    businessName: Source Created Datetime
     logicalType: datetime
     required: false
-    description: Datetime when the canonical submission record was created.
+    description: Source-system timestamp asserting when this record was created. Captured for late-arriving-data analysis; distinct from the SCD2 system-time start in valid_from_datetime.
     customProperties:
       classifications:
         sensitivity: INTERNAL
-  - name: updated_datetime
-    businessName: Updated Datetime
+  - name: source_updated_datetime
+    businessName: Source Updated Datetime
     logicalType: datetime
     required: false
-    description: Datetime when the canonical submission record was last updated.
+    description: Source-system timestamp asserting when this record was last updated. Captured for late-arriving-data analysis; distinct from the SCD2 system-time markers valid_from_datetime / valid_to_datetime.
     customProperties:
       classifications:
         sensitivity: INTERNAL
@@ -318,6 +318,11 @@ quality:
   description: record_status_code must be populated for every record.
   dimension: completeness
   severity: error
+- rule: submission_outcome_dates_mutually_exclusive
+  description: At most one of bind_date, decline_date, or withdrawn_date is populated per snapshot. Submission outcomes are mutually exclusive — a submission cannot be both bound and declined, both bound
+    and withdrawn, or both declined and withdrawn.
+  dimension: consistency
+  severity: error
 customProperties:
   canonicalLayer: silver
   contractFamily: property-and-casualty
@@ -345,3 +350,5 @@ customProperties:
     INTERNAL → CONFIDENTIAL (matches max field sensitivity).'
   - '0.4.0: Canonical hardening C4.5 — add account_uid FK to new pc.account contract and agreement_uid FK to new pc.agreement contract for commercial-lines submissions.'
   - '0.4.1: Canonical hardening C5 — bind 5 *_code field(s) to codeset(s) (C5.2).'
+  - '0.4.2: Canonical hardening C7 — add mutually-exclusive-outcome quality rule on bind_date / decline_date / withdrawn_date (C7.3); rename created_datetime → source_created_datetime; updated_datetime
+    → source_updated_datetime — capture source-system time, distinct from SCD2 system time (C7.4).'

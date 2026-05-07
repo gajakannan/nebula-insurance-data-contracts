@@ -2,7 +2,7 @@ apiVersion: v3.0.2
 kind: DataContract
 id: pc.vehicle-exposure
 name: VehicleExposure
-version: 0.4.0
+version: 0.4.1
 status: draft
 description: Canonical contract for vehicle-specific exposure attributes in Property and Casualty insurance.
 domain: property-and-casualty
@@ -44,11 +44,11 @@ schema:
     customProperties:
       classifications:
         sensitivity: INTERNAL
-  - name: vehicle_identifier
-    businessName: Vehicle Identifier
+  - name: vin_number
+    businessName: VIN Number
     logicalType: string
     required: false
-    description: Business-facing identifier for the vehicle when available.
+    description: Vehicle Identification Number assigned to the vehicle when available. Business key per identifier-strategy ADR (`*_number` form).
     customProperties:
       classifications:
         sensitivity: INTERNAL
@@ -132,19 +132,19 @@ schema:
     customProperties:
       classifications:
         sensitivity: INTERNAL
-  - name: created_datetime
-    businessName: Created Datetime
+  - name: source_created_datetime
+    businessName: Source Created Datetime
     logicalType: datetime
     required: false
-    description: Datetime when the canonical vehicle exposure detail record was created.
+    description: Source-system timestamp asserting when this record was created. Captured for late-arriving-data analysis; distinct from the SCD2 system-time start in valid_from_datetime.
     customProperties:
       classifications:
         sensitivity: INTERNAL
-  - name: updated_datetime
-    businessName: Updated Datetime
+  - name: source_updated_datetime
+    businessName: Source Updated Datetime
     logicalType: datetime
     required: false
-    description: Datetime when the canonical vehicle exposure detail record was last updated.
+    description: Source-system timestamp asserting when this record was last updated. Captured for late-arriving-data analysis; distinct from the SCD2 system-time markers valid_from_datetime / valid_to_datetime.
     customProperties:
       classifications:
         sensitivity: INTERNAL
@@ -281,3 +281,5 @@ customProperties:
   - '0.2.0: Apply cross-cutting ADRs (identifier strategy, SCD2 temporal, record state, classifications, codeset references, source attribution).'
   - '0.3.0: Canonical hardening C3 — composite SCD2 PK on (uid, valid_from_datetime) per scd2-primary-key ADR; add stated_value_currency_code sibling for stated_value_amount.'
   - '0.4.0: Canonical hardening C5 — bind 2 *_code field(s) to codeset(s) (C5.2); add codesetExempt to 3 field(s) (C5.2).'
+  - '0.4.1: Canonical hardening C7 — rename vehicle_identifier → vin_number (C7.1); rename created_datetime → source_created_datetime; updated_datetime → source_updated_datetime — capture source-system
+    time, distinct from SCD2 system time (C7.4).'

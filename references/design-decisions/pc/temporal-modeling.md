@@ -43,6 +43,7 @@ The naming convention does **not** apply to:
 - Append-only event contracts (`*LifecycleEvent`, `*Transaction`) do not carry SCD2 fields at all. Each event row is immutable; corrections are emitted as new rows referencing the corrected row via `correction_indicator` + `corrects_*_uid` (per the event-and-transaction ADR). The system-time the record landed is captured upstream by ingestion metadata and is not modeled as a canonical column on these contracts.
 - Junction contracts (e.g. `ProductCoverage`) follow SCD2 because the relationship itself can change over time.
 - Downstream targets (dbt snapshots, Fabric Lakehouse Delta tables) materialize SCD2 directly. The contract carries the seam; the target chooses the storage strategy.
+- Optional source-system timestamps (`source_created_datetime`, `source_updated_datetime`) capture when the upstream source asserts the record was created or last updated. They are distinct from the SCD2 system-time fields (`valid_from_datetime` / `valid_to_datetime`), which capture when the canonical record version is valid in the warehouse. Source-time is a third axis useful for late-arriving-data analysis (when did the source know vs. when did we know); it does not replace either business time or system time. These fields are forbidden on append-only contracts — append-only rows are immutable, so a source "updated" timestamp is incoherent. The validator's C1.5 rule enforces this.
 
 ## Related
 

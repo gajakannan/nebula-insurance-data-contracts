@@ -588,11 +588,23 @@ def validate_correction_companion(path: Path, data: dict[str, Any]) -> list[Find
 
 
 def validate_append_only_datetime_ban(path: Path, data: dict[str, Any]) -> list[Finding]:
-    """C1.5 — append-only contracts must not carry `created_datetime` or `updated_datetime`."""
+    """C1.5 — append-only contracts must not carry mutable record timestamps.
+
+    Both the legacy names (`created_datetime`, `updated_datetime`) and the post-C7.4
+    source-time names (`source_created_datetime`, `source_updated_datetime`) are
+    banned. Append-only rows are immutable; an "updated" timestamp — whether
+    canonical or source-time — is incoherent on an immutable row.
+    """
     findings: list[Finding] = []
     schema = data.get("schema")
     if not isinstance(schema, list):
         return findings
+    forbidden_names = (
+        "created_datetime",
+        "updated_datetime",
+        "source_created_datetime",
+        "source_updated_datetime",
+    )
     for entry_index, entry in enumerate(schema):
         if not isinstance(entry, dict):
             continue
@@ -602,7 +614,7 @@ def validate_append_only_datetime_ban(path: Path, data: dict[str, Any]) -> list[
         names = {_prop_name(p) for p in properties if isinstance(p, dict)}
         if "correction_indicator" not in names:
             continue
-        for forbidden in ("created_datetime", "updated_datetime"):
+        for forbidden in forbidden_names:
             if forbidden in names:
                 findings.append(
                     Finding(

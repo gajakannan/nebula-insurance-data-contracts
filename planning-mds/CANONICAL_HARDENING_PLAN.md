@@ -4,7 +4,7 @@ This plan defines how the locked-but-imperfect 0.2.0 P&C canonical surface is br
 
 This document is authoritative for canonical hardening. ADRs, validator code, contract YAML, and pattern documents follow what this plan specifies; if they diverge, this plan is the source of truth and the artifacts must be re-aligned.
 
-Last updated: 2026-05-06.
+Last updated: 2026-05-07 (canonical hardening C1–C7 complete).
 
 ## 1. Intent
 
@@ -107,7 +107,7 @@ Deliverables (all in `scripts/validation/validate-contracts.py`):
 - **C1.2** `*_code` codeset reference resolution. For each property ending `_code` (excluding codeset contracts themselves), require either (a) a `relationships:` entry whose `sourceFields` contains it pointing at a codeset contract under `references/odcs/pc/reference-data/`, or (b) `customProperties.codesetExempt: true` with rationale.
 - **C1.3** `targetContractId` resolution. Build the set of contract ids from filenames; for every relationship's `targetContractId`, verify the target exists. Flag typos and dead references.
 - **C1.4** `corrects_*_uid` field presence on append-only contracts. Currently only `correction_indicator` is checked. Add: when `correction_indicator` is present, a `corrects_*_uid` field must also be present.
-- **C1.5** Forbid `created_datetime` / `updated_datetime` on append-only contracts (those carrying `correction_indicator`). Append-only rows are immutable; an "updated" datetime is incoherent.
+- **C1.5** Forbid mutable record timestamps (`created_datetime`, `updated_datetime`, plus the post-C7.4 source-time names `source_created_datetime`, `source_updated_datetime`) on append-only contracts (those carrying `correction_indicator`). Append-only rows are immutable; an "updated" timestamp is incoherent regardless of whether the timestamp captures canonical or source time.
 - **C1.6** Forbid `*_uid` + `*_code` redundancy for the same lookup. Detect pairs `<name>_uid` and `<name>_code` in the same schema where `<name>` matches a known codeset; flag for review.
 - **C1.7** Narrative free-text classification heuristic. Detect properties whose name ends in `_description` / `_notes` / `_narrative` / `_text` / `_summary` and require sensitivity ≥ `CONFIDENTIAL` and at least one regulatory tag, unless `customProperties.classifications.narrativeException: true`.
 - **C1.8** Status / period / territory over-classification heuristic. Flag any field whose name contains `_status_code` / `_result_code` / `_period_code` / `_territory_code` / `_region_code` / `_accounting_*` AND tagged `RESTRICTED + PII` for reviewer attention (warning, not error).

@@ -2,7 +2,7 @@ apiVersion: v3.0.2
 kind: DataContract
 id: pc.insurable-object-classification
 name: InsurableObjectClassification
-version: 0.4.0
+version: 0.4.1
 status: draft
 description: Canonical contract for durable classification of insurable objects in Property and Casualty insurance.
 domain: property-and-casualty
@@ -106,19 +106,19 @@ schema:
     customProperties:
       classifications:
         sensitivity: INTERNAL
-  - name: created_datetime
-    businessName: Created Datetime
+  - name: source_created_datetime
+    businessName: Source Created Datetime
     logicalType: datetime
     required: false
-    description: Datetime when the canonical insurable object classification record was created.
+    description: Source-system timestamp asserting when this record was created. Captured for late-arriving-data analysis; distinct from the SCD2 system-time start in valid_from_datetime.
     customProperties:
       classifications:
         sensitivity: INTERNAL
-  - name: updated_datetime
-    businessName: Updated Datetime
+  - name: source_updated_datetime
+    businessName: Source Updated Datetime
     logicalType: datetime
     required: false
-    description: Datetime when the canonical insurable object classification record was last updated.
+    description: Source-system timestamp asserting when this record was last updated. Captured for late-arriving-data analysis; distinct from the SCD2 system-time markers valid_from_datetime / valid_to_datetime.
     customProperties:
       classifications:
         sensitivity: INTERNAL
@@ -252,3 +252,4 @@ customProperties:
     classificationProfile INTERNAL → CONFIDENTIAL (matches max field sensitivity).'
   - '0.4.0: Canonical hardening C5 — rename status_code field(s): status_code → insurable_object_classification_status_code; bind 3 *_code field(s) to codeset(s) (C5.2); add codesetExempt to 2 field(s)
     (C5.2).'
+  - '0.4.1: Canonical hardening C7 — rename created_datetime → source_created_datetime; updated_datetime → source_updated_datetime — capture source-system time, distinct from SCD2 system time (C7.4).'

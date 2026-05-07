@@ -238,17 +238,29 @@ class TestC1_5AppendOnlyDatetimeBan(unittest.TestCase):
     def test_pass_no_correction(self):
         data = _contract([
             _prop("test_uid", primaryKey=True, required=True),
-            _prop("created_datetime", logicalType="datetime"),
+            _prop("source_created_datetime", logicalType="datetime"),
         ])
         self.assertEqual(validator.validate_append_only_datetime_ban(PATH, data), [])
 
-    def test_fail_with_correction(self):
+    def test_fail_with_correction_legacy_names(self):
         data = _contract([
             _prop("test_uid", primaryKey=True, required=True),
             _prop("correction_indicator", logicalType="boolean", required=True),
             _prop("corrects_test_uid"),
             _prop("created_datetime", logicalType="datetime"),
             _prop("updated_datetime", logicalType="datetime"),
+        ])
+        findings = validator.validate_append_only_datetime_ban(PATH, data)
+        self.assertEqual(len(findings), 2)
+
+    def test_fail_with_correction_source_names(self):
+        """Post-C7.4: the source_* names are banned on append-only contracts too."""
+        data = _contract([
+            _prop("test_uid", primaryKey=True, required=True),
+            _prop("correction_indicator", logicalType="boolean", required=True),
+            _prop("corrects_test_uid"),
+            _prop("source_created_datetime", logicalType="datetime"),
+            _prop("source_updated_datetime", logicalType="datetime"),
         ])
         findings = validator.validate_append_only_datetime_ban(PATH, data)
         self.assertEqual(len(findings), 2)

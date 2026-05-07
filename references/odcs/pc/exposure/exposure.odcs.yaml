@@ -2,7 +2,7 @@ apiVersion: v3.0.2
 kind: DataContract
 id: pc.exposure
 name: Exposure
-version: 0.4.0
+version: 0.4.1
 status: draft
 description: Canonical contract for the measurable risk basis associated with Property and Casualty policy, coverage, claim, underwriting, or analytics context.
 domain: property-and-casualty
@@ -160,19 +160,19 @@ schema:
     customProperties:
       classifications:
         sensitivity: INTERNAL
-  - name: created_datetime
-    businessName: Created Datetime
+  - name: source_created_datetime
+    businessName: Source Created Datetime
     logicalType: datetime
     required: false
-    description: Datetime when the canonical exposure record was created.
+    description: Source-system timestamp asserting when this record was created. Captured for late-arriving-data analysis; distinct from the SCD2 system-time start in valid_from_datetime.
     customProperties:
       classifications:
         sensitivity: INTERNAL
-  - name: updated_datetime
-    businessName: Updated Datetime
+  - name: source_updated_datetime
+    businessName: Source Updated Datetime
     logicalType: datetime
     required: false
-    description: Datetime when the canonical exposure record was last updated.
+    description: Source-system timestamp asserting when this record was last updated. Captured for late-arriving-data analysis; distinct from the SCD2 system-time markers valid_from_datetime / valid_to_datetime.
     customProperties:
       classifications:
         sensitivity: INTERNAL
@@ -329,3 +329,4 @@ customProperties:
   - '0.3.0: Canonical hardening C3 — composite SCD2 PK on (uid, valid_from_datetime) per scd2-primary-key ADR; re-tag over-classified field(s) to INTERNAL: rating_territory_code; re-tag narrative free-text
     field(s) to CONFIDENTIAL + PII: exposure_description.'
   - '0.4.0: Canonical hardening C5 — bind 2 *_code field(s) to codeset(s) (C5.2); add codesetExempt to 5 field(s) (C5.2).'
+  - '0.4.1: Canonical hardening C7 — rename created_datetime → source_created_datetime; updated_datetime → source_updated_datetime — capture source-system time, distinct from SCD2 system time (C7.4).'

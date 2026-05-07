@@ -2,7 +2,7 @@ apiVersion: v3.0.2
 kind: DataContract
 id: pc.claim
 name: Claim
-version: 0.4.1
+version: 0.4.2
 status: draft
 description: Canonical contract for Property and Casualty claim identity, loss context, and current claim summary.
 domain: property-and-casualty
@@ -194,19 +194,19 @@ schema:
         sensitivity: CONFIDENTIAL
         regulatoryTags:
         - PII
-  - name: created_datetime
-    businessName: Created Datetime
+  - name: source_created_datetime
+    businessName: Source Created Datetime
     logicalType: datetime
     required: false
-    description: Datetime when the canonical claim record was created.
+    description: Source-system timestamp asserting when this record was created. Captured for late-arriving-data analysis; distinct from the SCD2 system-time start in valid_from_datetime.
     customProperties:
       classifications:
         sensitivity: INTERNAL
-  - name: updated_datetime
-    businessName: Updated Datetime
+  - name: source_updated_datetime
+    businessName: Source Updated Datetime
     logicalType: datetime
     required: false
-    description: Datetime when the canonical claim record was last updated.
+    description: Source-system timestamp asserting when this record was last updated. Captured for late-arriving-data analysis; distinct from the SCD2 system-time markers valid_from_datetime / valid_to_datetime.
     customProperties:
       classifications:
         sensitivity: INTERNAL
@@ -409,3 +409,4 @@ customProperties:
   - '0.4.0: Canonical hardening C4 — add insurable_object_uid FK (one-hop path to insured object, C4.4); add occurrence_uid FK to new pc.occurrence contract (C4.1); replace catastrophe_code free string
     with catastrophe_uid FK to new pc.catastrophe contract (C4.2); add account_uid FK to new pc.account contract for one-hop loss runs (C4.5); add claim_insurable_object_path_consistent quality rule.'
   - '0.4.1: Canonical hardening C5 — bind 4 *_code field(s) to codeset(s) (C5.2); add codesetExempt to 1 field(s) (C5.2).'
+  - '0.4.2: Canonical hardening C7 — rename created_datetime → source_created_datetime; updated_datetime → source_updated_datetime — capture source-system time, distinct from SCD2 system time (C7.4).'

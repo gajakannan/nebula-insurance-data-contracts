@@ -2,7 +2,7 @@ apiVersion: v3.0.2
 kind: DataContract
 id: pc.policy
 name: Policy
-version: 0.4.1
+version: 0.4.2
 status: draft
 description: Canonical contract for durable Property and Casualty policy identity and current policy summary.
 domain: property-and-casualty
@@ -142,19 +142,19 @@ schema:
         sensitivity: CONFIDENTIAL
         regulatoryTags:
         - PII
-  - name: created_datetime
-    businessName: Created Datetime
+  - name: source_created_datetime
+    businessName: Source Created Datetime
     logicalType: datetime
     required: false
-    description: Datetime when the canonical policy record was created.
+    description: Source-system timestamp asserting when this record was created. Captured for late-arriving-data analysis; distinct from the SCD2 system-time start in valid_from_datetime.
     customProperties:
       classifications:
         sensitivity: INTERNAL
-  - name: updated_datetime
-    businessName: Updated Datetime
+  - name: source_updated_datetime
+    businessName: Source Updated Datetime
     logicalType: datetime
     required: false
-    description: Datetime when the canonical policy record was last updated.
+    description: Source-system timestamp asserting when this record was last updated. Captured for late-arriving-data analysis; distinct from the SCD2 system-time markers valid_from_datetime / valid_to_datetime.
     customProperties:
       classifications:
         sensitivity: INTERNAL
@@ -336,3 +336,4 @@ customProperties:
     INTERNAL → CONFIDENTIAL (matches max field sensitivity).'
   - '0.4.0: Canonical hardening C4.5 — add account_uid FK to new pc.account contract and agreement_uid FK to new pc.agreement contract for commercial-lines rollups.'
   - '0.4.1: Canonical hardening C5 — bind 6 *_code field(s) to codeset(s) (C5.2).'
+  - '0.4.2: Canonical hardening C7 — rename created_datetime → source_created_datetime; updated_datetime → source_updated_datetime — capture source-system time, distinct from SCD2 system time (C7.4).'
