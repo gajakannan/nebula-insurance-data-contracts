@@ -2,7 +2,7 @@ apiVersion: v3.0.2
 kind: DataContract
 id: pc.line-of-business
 name: LineOfBusiness
-version: 0.3.0
+version: 0.4.0
 status: draft
 description: Canonical contract for Property and Casualty line of business reference data.
 domain: property-and-casualty
@@ -27,7 +27,7 @@ schema:
     description: Business-friendly code value referenced by entity contracts.
     customProperties:
       classifications:
-        sensitivity: INTERNAL
+        sensitivity: PUBLIC
   - name: code_label
     businessName: Code Label
     logicalType: string
@@ -76,7 +76,7 @@ schema:
     customProperties:
       classifications:
         sensitivity: INTERNAL
-  - name: status_code
+  - name: line_of_business_status_code
     businessName: Status Code
     logicalType: string
     required: true
@@ -200,3 +200,4 @@ customProperties:
   changelog:
   - '0.2.0: Apply cross-cutting ADRs (identifier strategy, SCD2 temporal, record state, classifications, codeset references, source attribution).'
   - '0.3.0: Canonical hardening C3 — composite SCD2 PK on (uid, valid_from_datetime) per scd2-primary-key ADR.'
+  - '0.4.0: Canonical hardening C5 — rename status_code field(s): status_code → line_of_business_status_code; lift code_value sensitivity to PUBLIC (C5.7).'

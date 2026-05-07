@@ -2,7 +2,7 @@ apiVersion: v3.0.2
 kind: DataContract
 id: pc.property-exposure
 name: PropertyExposure
-version: 0.3.0
+version: 0.4.0
 status: draft
 description: Canonical contract for property-specific exposure attributes in Property and Casualty insurance.
 domain: property-and-casualty
@@ -60,6 +60,8 @@ schema:
     customProperties:
       classifications:
         sensitivity: INTERNAL
+      codesetExempt: true
+      codesetExemptReason: ISO property-use taxonomy; canonical layer carries the value but does not re-publish the external standard as a codeset.
   - name: occupancy_type_code
     businessName: Occupancy Type Code
     logicalType: string
@@ -68,6 +70,8 @@ schema:
     customProperties:
       classifications:
         sensitivity: INTERNAL
+      codesetExempt: true
+      codesetExemptReason: ISO occupancy-type taxonomy; canonical layer carries the value but does not re-publish the external standard as a codeset.
   - name: construction_type_code
     businessName: Construction Type Code
     logicalType: string
@@ -76,6 +80,8 @@ schema:
     customProperties:
       classifications:
         sensitivity: INTERNAL
+      codesetExempt: true
+      codesetExemptReason: ISO construction-type taxonomy; canonical layer carries the value but does not re-publish the external standard as a codeset.
   - name: protection_class_code
     businessName: Protection Class Code
     logicalType: string
@@ -84,6 +90,8 @@ schema:
     customProperties:
       classifications:
         sensitivity: INTERNAL
+      codesetExempt: true
+      codesetExemptReason: ISO protection-class rating; canonical layer references the external rating scheme rather than re-publishing.
   - name: year_built_number
     businessName: Year Built Number
     logicalType: integer
@@ -218,6 +226,22 @@ relationships:
   - contents_value_currency_code
   targetFields:
   - code_value
+- name: property_exposure_source_system_code_to_source_system_code
+  description: Binds source_system_code to the canonical source-system-code codeset.
+  relationshipType: many-to-one
+  targetContractId: pc.source-system-code
+  sourceFields:
+  - source_system_code
+  targetFields:
+  - code_value
+- name: property_exposure_record_status_code_to_record_status_code
+  description: Binds record_status_code to the canonical record-status-code codeset.
+  relationshipType: many-to-one
+  targetContractId: pc.record-status-code
+  sourceFields:
+  - record_status_code
+  targetFields:
+  - code_value
 quality:
 - rule: property_exposure_uid_required
   description: property_exposure_uid must be populated for every record.
@@ -263,3 +287,4 @@ customProperties:
   - '0.2.0: Apply cross-cutting ADRs (identifier strategy, SCD2 temporal, record state, classifications, codeset references, source attribution).'
   - '0.3.0: Canonical hardening C3 — composite SCD2 PK on (uid, valid_from_datetime) per scd2-primary-key ADR; add building_value_currency_code sibling for building_value_amount; add contents_value_currency_code
     sibling for contents_value_amount.'
+  - '0.4.0: Canonical hardening C5 — bind 2 *_code field(s) to codeset(s) (C5.2); add codesetExempt to 4 field(s) (C5.2).'

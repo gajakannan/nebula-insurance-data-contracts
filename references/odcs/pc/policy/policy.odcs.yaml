@@ -2,7 +2,7 @@ apiVersion: v3.0.2
 kind: DataContract
 id: pc.policy
 name: Policy
-version: 0.4.0
+version: 0.4.1
 status: draft
 description: Canonical contract for durable Property and Casualty policy identity and current policy summary.
 domain: property-and-casualty
@@ -224,6 +224,54 @@ relationships:
   - agreement_uid
   targetFields:
   - agreement_uid
+- name: policy_source_system_code_to_source_system_code
+  description: Binds source_system_code to the canonical source-system-code codeset.
+  relationshipType: many-to-one
+  targetContractId: pc.source-system-code
+  sourceFields:
+  - source_system_code
+  targetFields:
+  - code_value
+- name: policy_policy_status_code_to_policy_status_code
+  description: Binds policy_status_code to the canonical policy-status-code codeset.
+  relationshipType: many-to-one
+  targetContractId: pc.policy-status-code
+  sourceFields:
+  - policy_status_code
+  targetFields:
+  - code_value
+- name: policy_policy_type_code_to_policy_type_code
+  description: Binds policy_type_code to the canonical policy-type-code codeset.
+  relationshipType: many-to-one
+  targetContractId: pc.policy-type-code
+  sourceFields:
+  - policy_type_code
+  targetFields:
+  - code_value
+- name: policy_line_of_business_code_to_line_of_business
+  description: Binds line_of_business_code to the canonical line-of-business codeset.
+  relationshipType: many-to-one
+  targetContractId: pc.line-of-business
+  sourceFields:
+  - line_of_business_code
+  targetFields:
+  - code_value
+- name: policy_issuing_jurisdiction_code_to_jurisdiction_code
+  description: Binds issuing_jurisdiction_code to the canonical jurisdiction-code codeset.
+  relationshipType: many-to-one
+  targetContractId: pc.jurisdiction-code
+  sourceFields:
+  - issuing_jurisdiction_code
+  targetFields:
+  - code_value
+- name: policy_record_status_code_to_record_status_code
+  description: Binds record_status_code to the canonical record-status-code codeset.
+  relationshipType: many-to-one
+  targetContractId: pc.record-status-code
+  sourceFields:
+  - record_status_code
+  targetFields:
+  - code_value
 quality:
 - rule: policy_uid_required
   description: policy_uid must be populated for every record.
@@ -273,3 +321,4 @@ customProperties:
   - '0.3.0: Canonical hardening C3 — composite SCD2 PK on (uid, valid_from_datetime) per scd2-primary-key ADR; re-tag narrative free-text field(s) to CONFIDENTIAL + PII: policy_description; raise classificationProfile
     INTERNAL → CONFIDENTIAL (matches max field sensitivity).'
   - '0.4.0: Canonical hardening C4.5 — add account_uid FK to new pc.account contract and agreement_uid FK to new pc.agreement contract for commercial-lines rollups.'
+  - '0.4.1: Canonical hardening C5 — bind 6 *_code field(s) to codeset(s) (C5.2).'

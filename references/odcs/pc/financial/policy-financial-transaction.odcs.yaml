@@ -2,14 +2,15 @@ apiVersion: v3.0.2
 kind: DataContract
 id: pc.policy-financial-transaction
 name: PolicyFinancialTransaction
-version: 0.2.0
+version: 0.2.1
 status: draft
 description: Canonical contract for policy-related financial activity such as premium movements, fee posts, commission accruals, surcharges, and other policy-side transactions.
 domain: property-and-casualty
 schema:
 - name: policy_financial_transaction
   physicalType: table
-  description: Append-only canonical record of a financial movement attached to a policy. Specializes the FinancialTransaction pattern with policy, term, coverage, party-role, and lifecycle-event context. Original rows are immutable; corrections are emitted as new rows referencing the corrected row.
+  description: Append-only canonical record of a financial movement attached to a policy. Specializes the FinancialTransaction pattern with policy, term, coverage, party-role, and lifecycle-event context.
+    Original rows are immutable; corrections are emitted as new rows referencing the corrected row.
   properties:
   - name: policy_financial_transaction_uid
     businessName: Policy Financial Transaction Identifier
@@ -48,7 +49,8 @@ schema:
     businessName: Account Identifier
     logicalType: string
     required: false
-    description: Identifier (GUID reference) for the commercial account the transaction rolls up to. Enables account-level financial rollups (master-program billing, account-level commission accruals) without traversing policy.
+    description: Identifier (GUID reference) for the commercial account the transaction rolls up to. Enables account-level financial rollups (master-program billing, account-level commission accruals) without
+      traversing policy.
     customProperties:
       classifications:
         sensitivity: INTERNAL
@@ -96,7 +98,8 @@ schema:
     businessName: Transaction Classification Code
     logicalType: string
     required: false
-    description: Optional secondary classification (e.g. WRITTEN_PREMIUM, EARNED_PREMIUM, FEE_POLICY, FEE_INSPECTION, COMMISSION_BASE, COMMISSION_OVERRIDE) used by analytics and reporting. References the FinancialTransactionClassification codeset.
+    description: Optional secondary classification (e.g. WRITTEN_PREMIUM, EARNED_PREMIUM, FEE_POLICY, FEE_INSPECTION, COMMISSION_BASE, COMMISSION_OVERRIDE) used by analytics and reporting. References the
+      FinancialTransactionClassification codeset.
     customProperties:
       classifications:
         sensitivity: INTERNAL
@@ -142,6 +145,8 @@ schema:
     customProperties:
       classifications:
         sensitivity: INTERNAL
+      codesetExempt: true
+      codesetExemptReason: Carrier-accounting period identifier (YYYY-MM or YYYYNN); format varies per carrier and is not canonical.
   - name: policy_lifecycle_event_uid
     businessName: Policy Lifecycle Event Identifier
     logicalType: string
@@ -257,6 +262,14 @@ relationships:
   - policy_lifecycle_event_uid
   targetFields:
   - policy_lifecycle_event_uid
+- name: policy_financial_transaction_source_system_code_to_source_system_code
+  description: Binds source_system_code to the canonical source-system-code codeset.
+  relationshipType: many-to-one
+  targetContractId: pc.source-system-code
+  sourceFields:
+  - source_system_code
+  targetFields:
+  - code_value
 quality:
 - rule: policy_financial_transaction_uid_required
   description: policy_financial_transaction_uid must be populated for every record.
@@ -296,3 +309,4 @@ customProperties:
   changelog:
   - '0.1.0: Initial policy financial transaction contract per financial-modeling and event-and-transaction ADRs; canonical hardening C4.6.'
   - '0.2.0: Canonical hardening C4.5 — add account_uid FK to new pc.account contract and agreement_uid FK to new pc.agreement contract for commercial-lines financial rollups.'
+  - '0.2.1: Canonical hardening C5 — bind 1 *_code field(s) to codeset(s) (C5.2); add codesetExempt to 1 field(s) (C5.2).'

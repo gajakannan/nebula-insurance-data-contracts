@@ -2,7 +2,7 @@ apiVersion: v3.0.2
 kind: DataContract
 id: pc.party
 name: Party
-version: 0.3.0
+version: 0.4.0
 status: draft
 description: Canonical contract for a reusable person, organization, or group identity in Property and Casualty insurance.
 domain: property-and-casualty
@@ -120,7 +120,9 @@ schema:
     customProperties:
       classifications:
         sensitivity: INTERNAL
-  - name: status_code
+      codesetExempt: true
+      codesetExemptReason: Organization sub-classification refined within party_type_code = ORGANIZATION; canonical codeset deferred.
+  - name: party_status_code
     businessName: Status Code
     logicalType: string
     required: true
@@ -128,6 +130,9 @@ schema:
     customProperties:
       classifications:
         sensitivity: INTERNAL
+      codesetExempt: true
+      codesetExemptReason: Party-lifecycle state varies between person parties (active, deceased, inactive) and organization parties (active, dissolved, merged); canonical codeset deferred until party-lifecycle
+        modeling expands.
   - name: effective_date
     businessName: Effective Date
     logicalType: date
@@ -240,4 +245,29 @@ customProperties:
   changelog:
   - '0.2.0: Apply cross-cutting ADRs (identifier strategy, SCD2 temporal, record state, classifications, codeset references, source attribution).'
   - '0.3.0: Canonical hardening C3 — composite SCD2 PK on (uid, valid_from_datetime) per scd2-primary-key ADR.'
-relationships: []
+  - '0.4.0: Canonical hardening C5 — rename status_code field(s): status_code → party_status_code; bind 3 *_code field(s) to codeset(s) (C5.2); add codesetExempt to 2 field(s) (C5.2).'
+relationships:
+- name: party_source_system_code_to_source_system_code
+  description: Binds source_system_code to the canonical source-system-code codeset.
+  relationshipType: many-to-one
+  targetContractId: pc.source-system-code
+  sourceFields:
+  - source_system_code
+  targetFields:
+  - code_value
+- name: party_party_type_code_to_party_type_code
+  description: Binds party_type_code to the canonical party-type-code codeset.
+  relationshipType: many-to-one
+  targetContractId: pc.party-type-code
+  sourceFields:
+  - party_type_code
+  targetFields:
+  - code_value
+- name: party_record_status_code_to_record_status_code
+  description: Binds record_status_code to the canonical record-status-code codeset.
+  relationshipType: many-to-one
+  targetContractId: pc.record-status-code
+  sourceFields:
+  - record_status_code
+  targetFields:
+  - code_value

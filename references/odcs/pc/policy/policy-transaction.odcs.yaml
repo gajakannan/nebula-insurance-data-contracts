@@ -2,7 +2,7 @@ apiVersion: v3.0.2
 kind: DataContract
 id: pc.policy-transaction
 name: PolicyTransaction
-version: 0.3.0
+version: 0.4.0
 status: draft
 description: Canonical contract for transaction-level policy activity in Property and Casualty insurance.
 domain: property-and-casualty
@@ -185,6 +185,14 @@ relationships:
   - processed_by_party_uid
   targetFields:
   - party_uid
+- name: policy_transaction_premium_change_currency_code_to_currency_code
+  description: Binds premium_change_currency_code to the canonical currency-code codeset.
+  relationshipType: many-to-one
+  targetContractId: pc.currency-code
+  sourceFields:
+  - premium_change_currency_code
+  targetFields:
+  - code_value
 quality:
 - rule: policy_transaction_uid_required
   description: policy_transaction_uid must be populated for every record.
@@ -222,3 +230,4 @@ customProperties:
   - '0.3.0: Canonical hardening C3 — drop created_datetime, updated_datetime (append-only per temporal-modeling ADR); drop mutable transaction_status_code (status belongs on lifecycle events); rename premium_currency_code
     → premium_change_currency_code for currency pairing on premium_change_amount; re-tag narrative free-text field(s) to CONFIDENTIAL + PII: transaction_description; drop redundant transaction_type_uid
     (keep transaction_type_code).'
+  - '0.4.0: Canonical hardening C5 — bind 1 *_code field(s) to codeset(s) (C5.2).'

@@ -2,7 +2,7 @@ apiVersion: v3.0.2
 kind: DataContract
 id: pc.claim-status-code
 name: ClaimStatusCode
-version: 0.3.0
+version: 0.4.0
 status: draft
 description: Canonical codeset for claim lifecycle status values such as open, closed, reopened, denied, and withdrawn.
 domain: property-and-casualty
@@ -67,7 +67,7 @@ schema:
     description: Warehouse-level state of the record. References the RecordStatusCode codeset.
     customProperties:
       classifications:
-        sensitivity: INTERNAL
+        sensitivity: PUBLIC
   - name: valid_from_datetime
     businessName: Valid From Datetime
     logicalType: datetime
@@ -75,7 +75,7 @@ schema:
     description: System-time start of the SCD2 window for this record version.
     customProperties:
       classifications:
-        sensitivity: INTERNAL
+        sensitivity: PUBLIC
     primaryKey: true
   - name: valid_to_datetime
     businessName: Valid To Datetime
@@ -84,7 +84,7 @@ schema:
     description: System-time end of the SCD2 window for this record version. Null indicates the current row.
     customProperties:
       classifications:
-        sensitivity: INTERNAL
+        sensitivity: PUBLIC
   - name: is_current_indicator
     businessName: Is Current Indicator
     logicalType: boolean
@@ -92,7 +92,7 @@ schema:
     description: True for exactly one row per logical key, indicating the current record version.
     customProperties:
       classifications:
-        sensitivity: INTERNAL
+        sensitivity: PUBLIC
 quality:
 - rule: claim_status_code_uid_required
   description: claim_status_code_uid must be populated for every record.
@@ -128,8 +128,9 @@ customProperties:
   domainPackage: pc
   subjectArea: claims
   codesetContract: true
-  classificationProfile: INTERNAL
+  classificationProfile: PUBLIC
   changelog:
   - '0.1.0: Initial codeset contract generated per codeset-strategy ADR.'
   - '0.3.0: Canonical hardening C3 — composite SCD2 PK on (uid, valid_from_datetime) per scd2-primary-key ADR.'
+  - '0.4.0: Canonical hardening C5 — lift classificationProfile to PUBLIC (C5.4 pure codeset); flip 4 field sensitivities to PUBLIC (C5.4 pure codeset).'
 relationships: []

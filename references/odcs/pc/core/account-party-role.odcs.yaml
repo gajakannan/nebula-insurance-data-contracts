@@ -2,7 +2,7 @@ apiVersion: v3.0.2
 kind: DataContract
 id: pc.account-party-role
 name: AccountPartyRole
-version: 0.1.0
+version: 0.1.1
 status: draft
 description: Canonical contract for a party participating in an account context — account managers, billing contacts, key contacts, master-program administrators, and other account-scoped party participations.
 domain: property-and-casualty
@@ -56,7 +56,8 @@ schema:
     businessName: Role Type Code
     logicalType: string
     required: true
-    description: Classification of the role the party plays in the account context (ACCOUNT_MANAGER, BILLING_CONTACT, KEY_CONTACT, MASTER_PROGRAM_ADMINISTRATOR, PRIMARY_INSURED, etc.). References the PartyRoleTypeCode codeset.
+    description: Classification of the role the party plays in the account context (ACCOUNT_MANAGER, BILLING_CONTACT, KEY_CONTACT, MASTER_PROGRAM_ADMINISTRATOR, PRIMARY_INSURED, etc.). References the PartyRoleTypeCode
+      codeset.
     customProperties:
       classifications:
         sensitivity: INTERNAL
@@ -166,6 +167,14 @@ relationships:
   - record_status_code
   targetFields:
   - code_value
+- name: account_party_role_source_system_code_to_source_system_code
+  description: Binds source_system_code to the canonical source-system-code codeset.
+  relationshipType: many-to-one
+  targetContractId: pc.source-system-code
+  sourceFields:
+  - source_system_code
+  targetFields:
+  - code_value
 quality:
 - rule: account_party_role_uid_required
   description: account_party_role_uid must be populated for every record.
@@ -216,3 +225,4 @@ customProperties:
   classificationProfile: INTERNAL
   changelog:
   - '0.1.0: Initial AccountPartyRole contract per role-modeling ADR; canonical hardening C4.5 ship decision (commercial-lines focus).'
+  - '0.1.1: Canonical hardening C5 — bind 1 *_code field(s) to codeset(s) (C5.2).'

@@ -2,7 +2,7 @@ apiVersion: v3.0.2
 kind: DataContract
 id: pc.policy-lifecycle-event
 name: PolicyLifecycleEvent
-version: 0.3.0
+version: 0.4.0
 status: draft
 description: Canonical contract for meaningful lifecycle events in a Property and Casualty policy.
 domain: property-and-casualty
@@ -151,6 +151,30 @@ relationships:
   - initiated_by_party_uid
   targetFields:
   - party_uid
+- name: policy_lifecycle_event_lifecycle_event_status_code_to_lifecycle_status
+  description: Binds lifecycle_event_status_code to the canonical lifecycle-status codeset.
+  relationshipType: many-to-one
+  targetContractId: pc.lifecycle-status
+  sourceFields:
+  - lifecycle_event_status_code
+  targetFields:
+  - code_value
+- name: policy_lifecycle_event_prior_status_code_to_lifecycle_status
+  description: Binds prior_status_code to the canonical lifecycle-status codeset.
+  relationshipType: many-to-one
+  targetContractId: pc.lifecycle-status
+  sourceFields:
+  - prior_status_code
+  targetFields:
+  - code_value
+- name: policy_lifecycle_event_resulting_status_code_to_lifecycle_status
+  description: Binds resulting_status_code to the canonical lifecycle-status codeset.
+  relationshipType: many-to-one
+  targetContractId: pc.lifecycle-status
+  sourceFields:
+  - resulting_status_code
+  targetFields:
+  - code_value
 quality:
 - rule: policy_lifecycle_event_uid_required
   description: policy_lifecycle_event_uid must be populated for every record.
@@ -183,3 +207,4 @@ customProperties:
   - '0.2.0: Apply cross-cutting ADRs (identifier strategy, SCD2 temporal, record state, classifications, codeset references, source attribution).'
   - '0.3.0: Canonical hardening C3 — drop created_datetime, updated_datetime (append-only per temporal-modeling ADR); re-tag over-classified field(s) to INTERNAL: resulting_status_code; re-tag narrative
     free-text field(s) to CONFIDENTIAL + PII: event_description; drop redundant lifecycle_event_type_uid (keep lifecycle_event_type_code).'
+  - '0.4.0: Canonical hardening C5 — bind 3 *_code field(s) to codeset(s) (C5.2).'

@@ -2,7 +2,7 @@ apiVersion: v3.0.2
 kind: DataContract
 id: pc.product-coverage
 name: ProductCoverage
-version: 0.3.0
+version: 0.4.0
 status: draft
 description: Canonical many-to-many junction contract relating a Product to a Coverage with product-coverage-specific defaults, constraints, and filing context.
 domain: property-and-casualty
@@ -69,6 +69,8 @@ schema:
     customProperties:
       classifications:
         sensitivity: INTERNAL
+      codesetExempt: true
+      codesetExemptReason: Industry form-library code (ISO/ACORD); canonical layer carries the value but does not re-publish the external library as a codeset.
   - name: form_edition_code
     businessName: Form Edition Code
     logicalType: string
@@ -77,6 +79,8 @@ schema:
     customProperties:
       classifications:
         sensitivity: INTERNAL
+      codesetExempt: true
+      codesetExemptReason: Form edition designator paired with form_code; same rationale as form_code.
   - name: mandatory_indicator
     businessName: Mandatory Indicator
     logicalType: boolean
@@ -251,6 +255,30 @@ relationships:
   - default_deductible_currency_code
   targetFields:
   - code_value
+- name: product_coverage_source_system_code_to_source_system_code
+  description: Binds source_system_code to the canonical source-system-code codeset.
+  relationshipType: many-to-one
+  targetContractId: pc.source-system-code
+  sourceFields:
+  - source_system_code
+  targetFields:
+  - code_value
+- name: product_coverage_limit_constraint_currency_code_to_currency_code
+  description: Binds limit_constraint_currency_code to the canonical currency-code codeset.
+  relationshipType: many-to-one
+  targetContractId: pc.currency-code
+  sourceFields:
+  - limit_constraint_currency_code
+  targetFields:
+  - code_value
+- name: product_coverage_record_status_code_to_record_status_code
+  description: Binds record_status_code to the canonical record-status-code codeset.
+  relationshipType: many-to-one
+  targetContractId: pc.record-status-code
+  sourceFields:
+  - record_status_code
+  targetFields:
+  - code_value
 quality:
 - rule: product_coverage_uid_required
   description: product_coverage_uid must be populated for every record.
@@ -307,3 +335,4 @@ customProperties:
   - '0.1.0: Initial junction contract per product-coverage-modeling ADR.'
   - '0.3.0: Canonical hardening C3 — composite SCD2 PK on (uid, valid_from_datetime) per scd2-primary-key ADR; exempt minimum_limit_amount (shares limit_constraint_currency_code); exempt maximum_limit_amount
     (shares limit_constraint_currency_code).'
+  - '0.4.0: Canonical hardening C5 — bind 3 *_code field(s) to codeset(s) (C5.2); add codesetExempt to 2 field(s) (C5.2).'

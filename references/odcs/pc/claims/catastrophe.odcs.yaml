@@ -2,14 +2,16 @@ apiVersion: v3.0.2
 kind: DataContract
 id: pc.catastrophe
 name: Catastrophe
-version: 0.1.0
+version: 0.1.1
 status: draft
-description: Canonical contract for a catastrophe — a named industry or company event (named storm, wildfire, earthquake, civil event) used to aggregate exposures, occurrences, and claims for reinsurance recovery, regulatory reporting, and industry benchmarking.
+description: Canonical contract for a catastrophe — a named industry or company event (named storm, wildfire, earthquake, civil event) used to aggregate exposures, occurrences, and claims for reinsurance
+  recovery, regulatory reporting, and industry benchmarking.
 domain: property-and-casualty
 schema:
 - name: catastrophe
   physicalType: table
-  description: Canonical catastrophe record. Multiple occurrences and claims can reference the same catastrophe so per-event totals are answerable. Both an industry-recognized code (PCS, NAIC, etc.) and a company-internal code are carried so external aggregation and internal accumulation can both join correctly.
+  description: Canonical catastrophe record. Multiple occurrences and claims can reference the same catastrophe so per-event totals are answerable. Both an industry-recognized code (PCS, NAIC, etc.) and
+    a company-internal code are carried so external aggregation and internal accumulation can both join correctly.
   properties:
   - name: catastrophe_uid
     businessName: Catastrophe Identifier
@@ -44,6 +46,8 @@ schema:
     customProperties:
       classifications:
         sensitivity: INTERNAL
+      codesetExempt: true
+      codesetExemptReason: Industry-issued catastrophe identifier (e.g. PCS code) sourced from external authority; canonical layer carries the value but does not re-publish.
   - name: company_catastrophe_code
     businessName: Company Catastrophe Code
     logicalType: string
@@ -52,6 +56,8 @@ schema:
     customProperties:
       classifications:
         sensitivity: INTERNAL
+      codesetExempt: true
+      codesetExemptReason: Carrier-internal catastrophe identifier; populated per carrier and not standardized canonically.
   - name: catastrophe_name
     businessName: Catastrophe Name
     logicalType: string
@@ -160,6 +166,14 @@ relationships:
   - record_status_code
   targetFields:
   - code_value
+- name: catastrophe_source_system_code_to_source_system_code
+  description: Binds source_system_code to the canonical source-system-code codeset.
+  relationshipType: many-to-one
+  targetContractId: pc.source-system-code
+  sourceFields:
+  - source_system_code
+  targetFields:
+  - code_value
 quality:
 - rule: catastrophe_uid_required
   description: catastrophe_uid must be populated for every record.
@@ -201,3 +215,4 @@ customProperties:
   classificationProfile: CONFIDENTIAL
   changelog:
   - '0.1.0: Initial catastrophe contract per claims-modeling ADR; canonical hardening C4.2.'
+  - '0.1.1: Canonical hardening C5 — bind 1 *_code field(s) to codeset(s) (C5.2); add codesetExempt to 2 field(s) (C5.2).'

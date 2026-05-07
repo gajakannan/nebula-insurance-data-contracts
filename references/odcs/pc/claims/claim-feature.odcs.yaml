@@ -2,7 +2,7 @@ apiVersion: v3.0.2
 kind: DataContract
 id: pc.claim-feature
 name: ClaimFeature
-version: 0.3.0
+version: 0.3.1
 status: draft
 description: Canonical contract for a claim feature, partitioning a claim into independent handling streams by coverage, peril, claimant, or other business dimension.
 domain: property-and-casualty
@@ -176,6 +176,30 @@ relationships:
   - cause_of_loss_code
   targetFields:
   - code_value
+- name: claim_feature_source_system_code_to_source_system_code
+  description: Binds source_system_code to the canonical source-system-code codeset.
+  relationshipType: many-to-one
+  targetContractId: pc.source-system-code
+  sourceFields:
+  - source_system_code
+  targetFields:
+  - code_value
+- name: claim_feature_feature_status_code_to_feature_status_code
+  description: Binds feature_status_code to the canonical feature-status-code codeset.
+  relationshipType: many-to-one
+  targetContractId: pc.feature-status-code
+  sourceFields:
+  - feature_status_code
+  targetFields:
+  - code_value
+- name: claim_feature_record_status_code_to_record_status_code
+  description: Binds record_status_code to the canonical record-status-code codeset.
+  relationshipType: many-to-one
+  targetContractId: pc.record-status-code
+  sourceFields:
+  - record_status_code
+  targetFields:
+  - code_value
 quality:
 - rule: claim_feature_uid_required
   description: claim_feature_uid must be populated for every record.
@@ -220,3 +244,4 @@ customProperties:
   - '0.1.0: Initial claim feature contract per claims-modeling ADR.'
   - '0.3.0: Canonical hardening C3 — composite SCD2 PK on (uid, valid_from_datetime) per scd2-primary-key ADR; re-tag narrative free-text field(s) to CONFIDENTIAL + PII: feature_description; raise classificationProfile
     INTERNAL → CONFIDENTIAL (matches max field sensitivity).'
+  - '0.3.1: Canonical hardening C5 — bind 3 *_code field(s) to codeset(s) (C5.2).'

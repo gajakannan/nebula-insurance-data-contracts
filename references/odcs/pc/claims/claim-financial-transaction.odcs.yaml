@@ -2,7 +2,7 @@ apiVersion: v3.0.2
 kind: DataContract
 id: pc.claim-financial-transaction
 name: ClaimFinancialTransaction
-version: 0.1.0
+version: 0.1.1
 status: draft
 description: Canonical contract for claim-related financial activity such as reserves, payments, recoveries, salvage, subrogation, and expense activity.
 domain: property-and-casualty
@@ -77,6 +77,9 @@ schema:
     customProperties:
       classifications:
         sensitivity: INTERNAL
+      codesetExempt: true
+      codesetExemptReason: Claim reserve category (case, IBNR, ALAE, ULAE); canonical taxonomy carried in pc.financial-transaction-classification for transaction rollups, but a reserve-bookkeeping codeset
+        is deferred until reserve modeling expands.
   - name: transaction_amount
     businessName: Transaction Amount
     logicalType: decimal
@@ -119,6 +122,8 @@ schema:
     customProperties:
       classifications:
         sensitivity: INTERNAL
+      codesetExempt: true
+      codesetExemptReason: Carrier-accounting period identifier (YYYY-MM or YYYYNN); format varies per carrier and is not canonical.
   - name: lifecycle_event_uid
     businessName: Lifecycle Event Identifier
     logicalType: string
@@ -210,6 +215,14 @@ relationships:
   - lifecycle_event_uid
   targetFields:
   - claim_lifecycle_event_uid
+- name: claim_financial_transaction_transaction_classification_code_to_financial_transaction_classification
+  description: Binds transaction_classification_code to the canonical financial-transaction-classification codeset.
+  relationshipType: many-to-one
+  targetContractId: pc.financial-transaction-classification
+  sourceFields:
+  - transaction_classification_code
+  targetFields:
+  - code_value
 quality:
 - rule: claim_financial_transaction_uid_required
   description: claim_financial_transaction_uid must be populated for every record.
@@ -248,3 +261,4 @@ customProperties:
   classificationProfile: CONFIDENTIAL
   changelog:
   - '0.1.0: Initial claim financial transaction contract per claims-modeling and event-and-transaction ADRs.'
+  - '0.1.1: Canonical hardening C5 — bind 1 *_code field(s) to codeset(s) (C5.2); add codesetExempt to 2 field(s) (C5.2).'

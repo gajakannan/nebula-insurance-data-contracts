@@ -2,14 +2,15 @@ apiVersion: v3.0.2
 kind: DataContract
 id: pc.agreement
 name: Agreement
-version: 0.1.0
+version: 0.1.1
 status: draft
 description: Canonical contract for a master legal or program agreement between the insurer and an account, broker, MGA, or program administrator. Spawns one or more policies under shared terms.
 domain: property-and-casualty
 schema:
 - name: agreement
   physicalType: table
-  description: Canonical agreement record. Carries the master legal contract that governs an account's coverage relationship — master programs, broker authority agreements, MGA authority, service-level agreements, and binders. Policies and submissions reference an agreement when they live under one.
+  description: Canonical agreement record. Carries the master legal contract that governs an account's coverage relationship — master programs, broker authority agreements, MGA authority, service-level
+    agreements, and binders. Policies and submissions reference an agreement when they live under one.
   properties:
   - name: agreement_uid
     businessName: Agreement Identifier
@@ -186,6 +187,14 @@ relationships:
   - record_status_code
   targetFields:
   - code_value
+- name: agreement_source_system_code_to_source_system_code
+  description: Binds source_system_code to the canonical source-system-code codeset.
+  relationshipType: many-to-one
+  targetContractId: pc.source-system-code
+  sourceFields:
+  - source_system_code
+  targetFields:
+  - code_value
 quality:
 - rule: agreement_uid_required
   description: agreement_uid must be populated for every record.
@@ -243,3 +252,4 @@ customProperties:
   classificationProfile: CONFIDENTIAL
   changelog:
   - '0.1.0: Initial Agreement contract per entity-boundaries ADR; canonical hardening C4.5 ship decision (commercial-lines focus).'
+  - '0.1.1: Canonical hardening C5 — bind 1 *_code field(s) to codeset(s) (C5.2).'

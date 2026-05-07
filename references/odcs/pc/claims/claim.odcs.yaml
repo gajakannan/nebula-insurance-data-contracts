@@ -2,7 +2,7 @@ apiVersion: v3.0.2
 kind: DataContract
 id: pc.claim
 name: Claim
-version: 0.4.0
+version: 0.4.1
 status: draft
 description: Canonical contract for Property and Casualty claim identity, loss context, and current claim summary.
 domain: property-and-casualty
@@ -68,6 +68,8 @@ schema:
     customProperties:
       classifications:
         sensitivity: INTERNAL
+      codesetExempt: true
+      codesetExemptReason: Loss-grouping taxonomy that varies per carrier; cause_of_loss_code is the canonical taxonomy. Codeset deferred.
   - name: policy_uid
     businessName: Policy Identifier
     logicalType: string
@@ -96,7 +98,8 @@ schema:
     businessName: Insurable Object Identifier
     logicalType: string
     required: false
-    description: Identifier (GUID reference) for the insurable object directly associated with the claim. Provides a one-hop path from claim to vehicle / property / workers comp class without forcing a join through exposure. Must align with the path through exposure when both are populated.
+    description: Identifier (GUID reference) for the insurable object directly associated with the claim. Provides a one-hop path from claim to vehicle / property / workers comp class without forcing a
+      join through exposure. Must align with the path through exposure when both are populated.
     customProperties:
       classifications:
         sensitivity: INTERNAL
@@ -160,7 +163,8 @@ schema:
     businessName: Catastrophe Identifier
     logicalType: string
     required: false
-    description: Identifier (GUID reference) for the catastrophe associated with the claim when applicable. References the Catastrophe contract; replaces the prior free-string catastrophe_code so per-event accumulation and reinsurance recovery joins resolve cleanly.
+    description: Identifier (GUID reference) for the catastrophe associated with the claim when applicable. References the Catastrophe contract; replaces the prior free-string catastrophe_code so per-event
+      accumulation and reinsurance recovery joins resolve cleanly.
     customProperties:
       classifications:
         sensitivity: INTERNAL
@@ -304,6 +308,38 @@ relationships:
   - account_uid
   targetFields:
   - account_uid
+- name: claim_source_system_code_to_source_system_code
+  description: Binds source_system_code to the canonical source-system-code codeset.
+  relationshipType: many-to-one
+  targetContractId: pc.source-system-code
+  sourceFields:
+  - source_system_code
+  targetFields:
+  - code_value
+- name: claim_claim_status_code_to_claim_status_code
+  description: Binds claim_status_code to the canonical claim-status-code codeset.
+  relationshipType: many-to-one
+  targetContractId: pc.claim-status-code
+  sourceFields:
+  - claim_status_code
+  targetFields:
+  - code_value
+- name: claim_claim_type_code_to_claim_type_code
+  description: Binds claim_type_code to the canonical claim-type-code codeset.
+  relationshipType: many-to-one
+  targetContractId: pc.claim-type-code
+  sourceFields:
+  - claim_type_code
+  targetFields:
+  - code_value
+- name: claim_record_status_code_to_record_status_code
+  description: Binds record_status_code to the canonical record-status-code codeset.
+  relationshipType: many-to-one
+  targetContractId: pc.record-status-code
+  sourceFields:
+  - record_status_code
+  targetFields:
+  - code_value
 quality:
 - rule: claim_uid_required
   description: claim_uid must be populated for every record.
@@ -356,4 +392,6 @@ customProperties:
   - '0.2.0: Apply cross-cutting ADRs (identifier strategy, SCD2 temporal, record state, classifications, codeset references, source attribution).'
   - '0.3.0: Canonical hardening C3 — composite SCD2 PK on (uid, valid_from_datetime) per scd2-primary-key ADR; re-tag narrative free-text field(s) to CONFIDENTIAL + PII: claim_description; raise classificationProfile
     INTERNAL → CONFIDENTIAL (matches max field sensitivity).'
-  - '0.4.0: Canonical hardening C4 — add insurable_object_uid FK (one-hop path to insured object, C4.4); add occurrence_uid FK to new pc.occurrence contract (C4.1); replace catastrophe_code free string with catastrophe_uid FK to new pc.catastrophe contract (C4.2); add account_uid FK to new pc.account contract for one-hop loss runs (C4.5); add claim_insurable_object_path_consistent quality rule.'
+  - '0.4.0: Canonical hardening C4 — add insurable_object_uid FK (one-hop path to insured object, C4.4); add occurrence_uid FK to new pc.occurrence contract (C4.1); replace catastrophe_code free string
+    with catastrophe_uid FK to new pc.catastrophe contract (C4.2); add account_uid FK to new pc.account contract for one-hop loss runs (C4.5); add claim_insurable_object_path_consistent quality rule.'
+  - '0.4.1: Canonical hardening C5 — bind 4 *_code field(s) to codeset(s) (C5.2); add codesetExempt to 1 field(s) (C5.2).'

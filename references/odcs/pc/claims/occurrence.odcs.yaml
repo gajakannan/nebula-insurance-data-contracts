@@ -2,14 +2,15 @@ apiVersion: v3.0.2
 kind: DataContract
 id: pc.occurrence
 name: Occurrence
-version: 0.1.0
+version: 0.1.1
 status: draft
 description: Canonical contract for an insured occurrence — the underlying event that gives rise to one or more Property and Casualty claims.
 domain: property-and-casualty
 schema:
 - name: occurrence
   physicalType: table
-  description: Canonical occurrence record. One row per loss event in the real world; multiple Claim rows can share an occurrence_uid so per-occurrence limits can be enforced and multi-claim incidents (one auto accident with three claimants, one storm with hundreds of property losses) correlate cleanly.
+  description: Canonical occurrence record. One row per loss event in the real world; multiple Claim rows can share an occurrence_uid so per-occurrence limits can be enforced and multi-claim incidents (one
+    auto accident with three claimants, one storm with hundreds of property losses) correlate cleanly.
   properties:
   - name: occurrence_uid
     businessName: Occurrence Identifier
@@ -176,6 +177,14 @@ relationships:
   - record_status_code
   targetFields:
   - code_value
+- name: occurrence_source_system_code_to_source_system_code
+  description: Binds source_system_code to the canonical source-system-code codeset.
+  relationshipType: many-to-one
+  targetContractId: pc.source-system-code
+  sourceFields:
+  - source_system_code
+  targetFields:
+  - code_value
 quality:
 - rule: occurrence_uid_required
   description: occurrence_uid must be populated for every record.
@@ -213,3 +222,4 @@ customProperties:
   classificationProfile: CONFIDENTIAL
   changelog:
   - '0.1.0: Initial occurrence contract per claims-modeling ADR; canonical hardening C4.1.'
+  - '0.1.1: Canonical hardening C5 — bind 1 *_code field(s) to codeset(s) (C5.2).'

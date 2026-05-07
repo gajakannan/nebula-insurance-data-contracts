@@ -2,14 +2,15 @@ apiVersion: v3.0.2
 kind: DataContract
 id: pc.account
 name: Account
-version: 0.1.0
+version: 0.1.1
 status: draft
 description: Canonical contract for a commercial-lines account — the master customer record that owns one or more policies, agreements, and submissions.
 domain: property-and-casualty
 schema:
 - name: account
   physicalType: table
-  description: Canonical account record used by commercial lines to roll up policies, agreements, and submissions to a master customer entity. Carries a self-referencing primary parent for the simple corporate-hierarchy case; richer multi-parent semantics live on AccountRelationship.
+  description: Canonical account record used by commercial lines to roll up policies, agreements, and submissions to a master customer entity. Carries a self-referencing primary parent for the simple corporate-hierarchy
+    case; richer multi-parent semantics live on AccountRelationship.
   properties:
   - name: account_uid
     businessName: Account Identifier
@@ -74,7 +75,8 @@ schema:
     businessName: Parent Account Identifier
     logicalType: string
     required: false
-    description: Identifier (GUID reference) for the primary parent account when the account belongs to a corporate hierarchy. Self-references the canonical account contract. Multi-parent or non-primary parent relationships live on AccountRelationship.
+    description: Identifier (GUID reference) for the primary parent account when the account belongs to a corporate hierarchy. Self-references the canonical account contract. Multi-parent or non-primary
+      parent relationships live on AccountRelationship.
     customProperties:
       classifications:
         sensitivity: INTERNAL
@@ -186,6 +188,14 @@ relationships:
   - record_status_code
   targetFields:
   - code_value
+- name: account_source_system_code_to_source_system_code
+  description: Binds source_system_code to the canonical source-system-code codeset.
+  relationshipType: many-to-one
+  targetContractId: pc.source-system-code
+  sourceFields:
+  - source_system_code
+  targetFields:
+  - code_value
 quality:
 - rule: account_uid_required
   description: account_uid must be populated for every record.
@@ -239,3 +249,4 @@ customProperties:
   classificationProfile: CONFIDENTIAL
   changelog:
   - '0.1.0: Initial Account contract per role-modeling and entity-boundaries ADRs; canonical hardening C4.5 ship decision (commercial-lines focus).'
+  - '0.1.1: Canonical hardening C5 — bind 1 *_code field(s) to codeset(s) (C5.2).'

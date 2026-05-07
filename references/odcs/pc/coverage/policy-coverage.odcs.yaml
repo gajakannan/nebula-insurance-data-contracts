@@ -2,7 +2,7 @@ apiVersion: v3.0.2
 kind: DataContract
 id: pc.policy-coverage
 name: PolicyCoverage
-version: 0.3.0
+version: 0.4.0
 status: draft
 description: Canonical contract for coverage selected or applied within a Property and Casualty policy context.
 domain: property-and-casualty
@@ -246,6 +246,46 @@ relationships:
   - policy_deductible_uid
   targetFields:
   - policy_deductible_uid
+- name: policy_coverage_source_system_code_to_source_system_code
+  description: Binds source_system_code to the canonical source-system-code codeset.
+  relationshipType: many-to-one
+  targetContractId: pc.source-system-code
+  sourceFields:
+  - source_system_code
+  targetFields:
+  - code_value
+- name: policy_coverage_coverage_status_code_to_coverage_status_code
+  description: Binds coverage_status_code to the canonical coverage-status-code codeset.
+  relationshipType: many-to-one
+  targetContractId: pc.coverage-status-code
+  sourceFields:
+  - coverage_status_code
+  targetFields:
+  - code_value
+- name: policy_coverage_coverage_level_code_to_coverage_level_code
+  description: Binds coverage_level_code to the canonical coverage-level-code codeset.
+  relationshipType: many-to-one
+  targetContractId: pc.coverage-level-code
+  sourceFields:
+  - coverage_level_code
+  targetFields:
+  - code_value
+- name: policy_coverage_coverage_basis_code_to_coverage_basis_code
+  description: Binds coverage_basis_code to the canonical coverage-basis-code codeset.
+  relationshipType: many-to-one
+  targetContractId: pc.coverage-basis-code
+  sourceFields:
+  - coverage_basis_code
+  targetFields:
+  - code_value
+- name: policy_coverage_record_status_code_to_record_status_code
+  description: Binds record_status_code to the canonical record-status-code codeset.
+  relationshipType: many-to-one
+  targetContractId: pc.record-status-code
+  sourceFields:
+  - record_status_code
+  targetFields:
+  - code_value
 quality:
 - rule: policy_coverage_uid_required
   description: policy_coverage_uid must be populated for every record.
@@ -293,3 +333,4 @@ customProperties:
   changelog:
   - '0.2.0: Apply cross-cutting ADRs (identifier strategy, SCD2 temporal, record state, classifications, codeset references, source attribution).'
   - '0.3.0: Canonical hardening C3 — composite SCD2 PK on (uid, valid_from_datetime) per scd2-primary-key ADR.'
+  - '0.4.0: Canonical hardening C5 — bind 5 *_code field(s) to codeset(s) (C5.2).'

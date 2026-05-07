@@ -2,7 +2,7 @@ apiVersion: v3.0.2
 kind: DataContract
 id: pc.claim-lifecycle-event
 name: ClaimLifecycleEvent
-version: 0.1.0
+version: 0.1.1
 status: draft
 description: Canonical contract for lifecycle events in the Property and Casualty claim history.
 domain: property-and-casualty
@@ -77,6 +77,8 @@ schema:
     customProperties:
       classifications:
         sensitivity: INTERNAL
+      codesetExempt: true
+      codesetExemptReason: Free-form classification of why a lifecycle event occurred; canonical codeset deferred until lifecycle-event modeling expands.
   - name: event_narrative
     businessName: Event Narrative
     logicalType: string
@@ -174,3 +176,4 @@ customProperties:
   classificationProfile: CONFIDENTIAL
   changelog:
   - '0.1.0: Initial claim lifecycle event contract per claims-modeling and event-and-transaction ADRs.'
+  - '0.1.1: Canonical hardening C5 — add codesetExempt to 1 field(s) (C5.2).'

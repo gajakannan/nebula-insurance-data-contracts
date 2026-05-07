@@ -32,7 +32,22 @@ Centralizing codes into governed codeset contracts gives a single place to evolv
 - Codesets that map cleanly to an external standard (e.g. ISO 4217 for currency) should still be modeled as canonical codeset contracts, with the external standard captured as a mapping. The canonical layer owns the values it accepts; it does not re-export the external list.
 - Avoid encoding semantics into the `code_value` itself (e.g. `01_PREMIUM`, `02_FEE`). Use a clean alphabetic key and rely on `code_label` for presentation.
 
+## Pure codeset vs reference-data entity (canonical hardening C5.3 addendum)
+
+Two contract shapes live under `references/odcs/pc/reference-data/`. Both are governed reference data, but their conventions differ.
+
+**Pure codeset.** Filename ends `-code` (e.g. `policy-status-code.odcs.yaml`). Single business-meaning field (`code_value`) plus the standard codeset shape (`*_code_uid`, `code_label`, `code_description`, `external_standard_code`, `external_standard_name`, SCD2 fields, `record_status_code`). Carries `customProperties.codesetContract: true` and `classificationProfile: PUBLIC`. All field-level sensitivities are `PUBLIC`. Used for status, type, classification, and outcome enumerations whose values can be exposed publicly without sensitivity concerns.
+
+**Reference-data entity.** Filename does not require the `-code` suffix. Carries the codeset shape's identity columns (`*_uid`, `code_value`, `code_label`, `code_description`) plus richer business attributes (subject classification, parent/child hierarchy, regulatory mappings, effective ranges beyond SCD2 system time). `customProperties.codesetContract` is omitted or `false`. `classificationProfile: INTERNAL` is permitted because the richer attributes are operationally sensitive even when `code_value` and `code_label` are not. Examples: `LineOfBusiness`, `LifecycleStatus`, `LifecycleEventType`, `TransactionType`, `GeographicLocation`, `LocationAddress`. The `code_value` field on a reference-data entity is `PUBLIC`; other fields default to `INTERNAL`.
+
+The validator's C1.2 (`*_code` codeset binding) treats both shapes as valid codeset targets — entity contracts may bind a `*_code` field to either a pure codeset or a reference-data entity via `relationships`.
+
+## `record-status-code` self-reference (canonical hardening C5.8 addendum)
+
+The `record-status-code` codeset contract carries a `record_status_code` field that references the same codeset. This self-reference is intentional. It bootstraps with the codeset's own `ACTIVE` value once; subsequent code-row supersession marks rows `SUPERSEDED` using the same codeset's allowed values. The validator does not flag self-referential bindings on reference-data contracts.
+
 ## Related
 
 - `references/design-decisions/pc/versioning-policy.md`
 - `references/design-decisions/pc/null-semantics.md`
+- `references/design-decisions/pc/data-classification.md`

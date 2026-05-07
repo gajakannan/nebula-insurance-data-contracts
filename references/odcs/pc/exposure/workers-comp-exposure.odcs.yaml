@@ -2,7 +2,7 @@ apiVersion: v3.0.2
 kind: DataContract
 id: pc.workers-comp-exposure
 name: WorkersCompExposure
-version: 0.3.0
+version: 0.4.0
 status: draft
 description: Canonical contract for workers compensation exposure attributes in Property and Casualty insurance.
 domain: property-and-casualty
@@ -60,6 +60,8 @@ schema:
     customProperties:
       classifications:
         sensitivity: INTERNAL
+      codesetExempt: true
+      codesetExemptReason: Polymorphic classification value paired with classification_scheme_code; canonical codeset deferred until classification modeling expands.
   - name: governing_class_indicator
     businessName: Governing Class Indicator
     logicalType: boolean
@@ -194,6 +196,30 @@ relationships:
   - payroll_currency_code
   targetFields:
   - code_value
+- name: workers_comp_exposure_source_system_code_to_source_system_code
+  description: Binds source_system_code to the canonical source-system-code codeset.
+  relationshipType: many-to-one
+  targetContractId: pc.source-system-code
+  sourceFields:
+  - source_system_code
+  targetFields:
+  - code_value
+- name: workers_comp_exposure_jurisdiction_code_to_jurisdiction_code
+  description: Binds jurisdiction_code to the canonical jurisdiction-code codeset.
+  relationshipType: many-to-one
+  targetContractId: pc.jurisdiction-code
+  sourceFields:
+  - jurisdiction_code
+  targetFields:
+  - code_value
+- name: workers_comp_exposure_record_status_code_to_record_status_code
+  description: Binds record_status_code to the canonical record-status-code codeset.
+  relationshipType: many-to-one
+  targetContractId: pc.record-status-code
+  sourceFields:
+  - record_status_code
+  targetFields:
+  - code_value
 quality:
 - rule: workers_comp_exposure_uid_required
   description: workers_comp_exposure_uid must be populated for every record.
@@ -247,3 +273,4 @@ customProperties:
   - '0.2.0: Apply cross-cutting ADRs (identifier strategy, SCD2 temporal, record state, classifications, codeset references, source attribution).'
   - '0.3.0: Canonical hardening C3 — composite SCD2 PK on (uid, valid_from_datetime) per scd2-primary-key ADR; add payroll_currency_code sibling for payroll_amount; re-tag narrative free-text field(s) to
     CONFIDENTIAL + PII: job_duty_description.'
+  - '0.4.0: Canonical hardening C5 — bind 3 *_code field(s) to codeset(s) (C5.2); add codesetExempt to 1 field(s) (C5.2).'
