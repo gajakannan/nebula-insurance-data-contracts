@@ -1,0 +1,544 @@
+manifestVersion: 1.0.0
+contract:
+  id: pc.policy
+  name: Policy
+  version: 0.4.2
+  domain: property-and-casualty
+  description: Canonical contract for durable Property and Casualty policy identity and current policy
+    summary.
+  classificationProfile: CONFIDENTIAL
+  subjectToHipaa: false
+  contractKind: entity
+  subjectArea: policy
+  adrs:
+  - authoring-source-primacy
+  - canonical-alignment
+  - codeset-strategy
+  - data-classification
+  - entity-boundaries
+  - identifier-strategy
+  - null-semantics
+  - policy-lifecycle-modeling
+  - record-state
+  - scd2-primary-key
+  - status-promotion
+  - temporal-modeling
+  - versioning-policy
+fabric:
+  lakehouse: nebula_pc_silver
+  schema: silver_policy
+  table:
+    name: policy
+    delta:
+      tableProperties:
+        delta.appendOnly: false
+        delta.autoOptimize.optimizeWrite: true
+        delta.autoOptimize.autoCompact: true
+        delta.enableChangeDataFeed: true
+      partitionedBy:
+      - is_current_indicator
+      zorderBy:
+      - policy_uid
+      vorder: true
+  columns:
+  - name: policy_uid
+    sparkType: STRING
+    nullable: false
+    primaryKey: true
+    role: identity
+    description: Immutable system-generated GUID that uniquely identifies the canonical policy record
+      across snapshots and source systems.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: source_system_code
+    sparkType: STRING
+    nullable: true
+    role: source-attribution
+    description: Identifier of the upstream system that produced or last asserted this record. Used for
+      multi-source mastering and lineage.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    codeReference:
+      codeset: pc.source-system-code
+      codesetTable: silver_reference_data.source_system_code
+      codesetField: code_value
+  - name: source_natural_key
+    sparkType: STRING
+    nullable: true
+    role: source-attribution
+    description: Natural key assigned by the source system. Captured for provenance; not used as the canonical
+      primary key.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: policy_number
+    sparkType: STRING
+    nullable: false
+    role: business-key
+    description: Business-facing number assigned to the policy.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: policy_status_code
+    sparkType: STRING
+    nullable: false
+    role: code-reference
+    description: Current lifecycle status of the policy.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    codeReference:
+      codeset: pc.policy-status-code
+      codesetTable: silver_reference_data.policy_status_code
+      codesetField: code_value
+  - name: policy_type_code
+    sparkType: STRING
+    nullable: true
+    role: code-reference
+    description: Classification of the policy, such as new business, renewal, rewrite, or other recognized
+      policy type.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    codeReference:
+      codeset: pc.policy-type-code
+      codesetTable: silver_reference_data.policy_type_code
+      codesetField: code_value
+  - name: line_of_business_code
+    sparkType: STRING
+    nullable: false
+    role: code-reference
+    description: Classification of the insurance line of business for the policy.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    codeReference:
+      codeset: pc.line-of-business
+      codesetTable: silver_reference_data.line_of_business
+      codesetField: code_value
+  - name: account_uid
+    sparkType: STRING
+    nullable: true
+    role: foreign-key
+    description: Identifier (GUID reference) for the commercial account the policy belongs to. Required
+      for commercial-lines rollups; null for personal-lines policies that do not live under an account.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    foreignKey:
+      targetContract: pc.account
+      targetTable: silver_core.account
+      targetField: account_uid
+  - name: agreement_uid
+    sparkType: STRING
+    nullable: true
+    role: foreign-key
+    description: Identifier (GUID reference) for the master legal or program agreement the policy is issued
+      under, when the policy lives under one. Null when the policy stands alone.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    foreignKey:
+      targetContract: pc.agreement
+      targetTable: silver_core.agreement
+      targetField: agreement_uid
+  - name: product_uid
+    sparkType: STRING
+    nullable: true
+    role: data
+    description: Identifier (GUID reference) for the insurance product associated with the policy when
+      a canonical product is available.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: issuing_jurisdiction_code
+    sparkType: STRING
+    nullable: true
+    role: code-reference
+    description: Jurisdiction where the policy is issued or primarily governed.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    codeReference:
+      codeset: pc.jurisdiction-code
+      codesetTable: silver_reference_data.jurisdiction_code
+      codesetField: code_value
+  - name: original_effective_date
+    sparkType: DATE
+    nullable: true
+    role: data
+    description: Date when the policy first became effective across its durable policy history.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: issue_date
+    sparkType: DATE
+    nullable: true
+    role: data
+    description: Date when the policy was issued.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: current_policy_term_uid
+    sparkType: STRING
+    nullable: true
+    role: foreign-key
+    description: Identifier (GUID reference) for the current policy term when term detail is represented
+      in a separate canonical contract.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    foreignKey:
+      targetContract: pc.policy-term
+      targetTable: silver_policy.policy_term
+      targetField: policy_term_uid
+  - name: prior_policy_uid
+    sparkType: STRING
+    nullable: true
+    role: foreign-key
+    description: Identifier (GUID reference) for the prior policy in a renewal, rewrite, or replacement
+      chain when applicable.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    foreignKey:
+      targetContract: pc.policy
+      targetTable: silver_policy.policy
+      targetField: policy_uid
+  - name: policy_description
+    sparkType: STRING
+    nullable: true
+    role: data
+    description: Source-neutral business description of the policy when additional context is needed.
+    classifications:
+      sensitivity: CONFIDENTIAL
+      regulatoryTags:
+      - PII
+    purview:
+      sensitivityLabel: Confidential
+  - name: source_created_datetime
+    sparkType: TIMESTAMP
+    nullable: true
+    role: source-time
+    description: Source-system timestamp asserting when this record was created. Captured for late-arriving-data
+      analysis; distinct from the SCD2 system-time start in valid_from_datetime.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: source_updated_datetime
+    sparkType: TIMESTAMP
+    nullable: true
+    role: source-time
+    description: Source-system timestamp asserting when this record was last updated. Captured for late-arriving-data
+      analysis; distinct from the SCD2 system-time markers valid_from_datetime / valid_to_datetime.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: record_status_code
+    sparkType: STRING
+    nullable: false
+    role: record-state
+    description: Warehouse-level state of the record. References the RecordStatusCode codeset (ACTIVE,
+      SUPERSEDED, SOFT_DELETED, RESTATED, MERGED).
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+    codeReference:
+      codeset: pc.record-status-code
+      codesetTable: silver_reference_data.record_status_code
+      codesetField: code_value
+  - name: valid_from_datetime
+    sparkType: TIMESTAMP
+    nullable: false
+    primaryKey: true
+    role: scd2-valid-from
+    description: System-time start of the SCD2 window for this record version.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: valid_to_datetime
+    sparkType: TIMESTAMP
+    nullable: true
+    role: scd2-valid-to
+    description: System-time end of the SCD2 window for this record version. Null indicates the current
+      row.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  - name: is_current_indicator
+    sparkType: BOOLEAN
+    nullable: false
+    role: scd2-is-current
+    description: True for exactly one row per logical key, indicating the current record version.
+    classifications:
+      sensitivity: INTERNAL
+    purview:
+      sensitivityLabel: Internal
+  scd2:
+    enabled: true
+    validFrom: valid_from_datetime
+    validTo: valid_to_datetime
+    isCurrent: is_current_indicator
+    naturalKey:
+    - policy_uid
+    deletionAware: false
+    changeDetection:
+      excludeFromHashing:
+      - valid_from_datetime
+      - valid_to_datetime
+      - is_current_indicator
+      - record_status_code
+  recordState:
+    enabled: true
+    field: record_status_code
+    activeValue: ACTIVE
+    supersededValue: SUPERSEDED
+    softDeletedValue: SOFT_DELETED
+  appendOnly:
+    enabled: false
+    correctionIndicator: null
+    correctsRefField: null
+    businessTimeField: null
+    partitionExpression: null
+  qualityRules:
+  - id: policy_uid_required
+    type: not_null
+    column: policy_uid
+    severity: error
+    sourceRule: policy_uid_required
+  - id: policy_number_required
+    type: not_null
+    column: policy_number
+    severity: error
+    sourceRule: policy_number_required
+  - id: policy_status_code_required
+    type: not_null
+    column: policy_status_code
+    severity: error
+    sourceRule: policy_status_code_required
+  - id: policy_line_of_business_code_required
+    type: not_null
+    column: line_of_business_code
+    severity: error
+    sourceRule: policy_line_of_business_code_required
+  - id: policy_prior_policy_must_differ
+    type: expression
+    expression: prior_policy_uid IS NULL OR prior_policy_uid <> policy_uid
+    severity: warning
+    sourceRule: policy_prior_policy_must_differ
+  - id: valid_from_datetime_required
+    type: not_null
+    column: valid_from_datetime
+    severity: error
+    sourceRule: valid_from_datetime_required
+  - id: valid_window_consistent
+    type: expression
+    expression: valid_to_datetime IS NULL OR valid_to_datetime > valid_from_datetime
+    severity: error
+    sourceRule: valid_window_consistent
+  - id: single_current_row_per_key
+    type: unique
+    keyColumns:
+    - policy_uid
+    filter: is_current_indicator = true
+    severity: error
+    sourceRule: single_current_row_per_key
+  - id: record_status_code_required
+    type: not_null
+    column: record_status_code
+    severity: error
+    sourceRule: record_status_code_required
+  - id: source_system_code_in_codeset
+    type: accepted_values
+    column: source_system_code
+    codeset: pc.source-system-code
+    codesetTable: silver_reference_data.source_system_code
+    codesetField: code_value
+    severity: error
+    sourceRule: derived
+  - id: policy_status_code_in_codeset
+    type: accepted_values
+    column: policy_status_code
+    codeset: pc.policy-status-code
+    codesetTable: silver_reference_data.policy_status_code
+    codesetField: code_value
+    severity: error
+    sourceRule: derived
+  - id: policy_type_code_in_codeset
+    type: accepted_values
+    column: policy_type_code
+    codeset: pc.policy-type-code
+    codesetTable: silver_reference_data.policy_type_code
+    codesetField: code_value
+    severity: error
+    sourceRule: derived
+  - id: line_of_business_code_in_codeset
+    type: accepted_values
+    column: line_of_business_code
+    codeset: pc.line-of-business
+    codesetTable: silver_reference_data.line_of_business
+    codesetField: code_value
+    severity: error
+    sourceRule: derived
+  - id: issuing_jurisdiction_code_in_codeset
+    type: accepted_values
+    column: issuing_jurisdiction_code
+    codeset: pc.jurisdiction-code
+    codesetTable: silver_reference_data.jurisdiction_code
+    codesetField: code_value
+    severity: error
+    sourceRule: derived
+  - id: record_status_code_in_codeset
+    type: accepted_values
+    column: record_status_code
+    codeset: pc.record-status-code
+    codesetTable: silver_reference_data.record_status_code
+    codesetField: code_value
+    severity: error
+    sourceRule: derived
+  bronze:
+    table: bronze.policy_raw
+    incrementalColumn: _ingested_at
+    expectedColumns:
+    - policy_uid
+    - source_system_code
+    - source_natural_key
+    - policy_number
+    - policy_status_code
+    - policy_type_code
+    - line_of_business_code
+    - account_uid
+    - agreement_uid
+    - product_uid
+    - issuing_jurisdiction_code
+    - original_effective_date
+    - issue_date
+    - current_policy_term_uid
+    - prior_policy_uid
+    - policy_description
+    - source_created_datetime
+    - source_updated_datetime
+    - record_status_code
+    - valid_from_datetime
+    - valid_to_datetime
+    - is_current_indicator
+relationships:
+- name: policy_to_current_policy_term
+  description: Relates a policy to its current policy term when term detail is available.
+  cardinality: many-to-one
+  targetContract: pc.policy-term
+  targetTable: silver_policy.policy_term
+  sourceFields:
+  - current_policy_term_uid
+  targetFields:
+  - policy_term_uid
+- name: policy_to_prior_policy
+  description: Relates a policy to a prior policy in a renewal, rewrite, or replacement chain when applicable.
+  cardinality: many-to-one
+  targetContract: pc.policy
+  targetTable: silver_policy.policy
+  sourceFields:
+  - prior_policy_uid
+  targetFields:
+  - policy_uid
+- name: policy_to_account
+  description: Relates a policy to the commercial account the policy belongs to when account context is
+    available.
+  cardinality: many-to-one
+  targetContract: pc.account
+  targetTable: silver_core.account
+  sourceFields:
+  - account_uid
+  targetFields:
+  - account_uid
+- name: policy_to_agreement
+  description: Relates a policy to the master legal or program agreement the policy is issued under when
+    the policy lives under one.
+  cardinality: many-to-one
+  targetContract: pc.agreement
+  targetTable: silver_core.agreement
+  sourceFields:
+  - agreement_uid
+  targetFields:
+  - agreement_uid
+- name: policy_source_system_code_to_source_system_code
+  description: Binds source_system_code to the canonical source-system-code codeset.
+  cardinality: many-to-one
+  targetContract: pc.source-system-code
+  targetTable: silver_reference_data.source_system_code
+  sourceFields:
+  - source_system_code
+  targetFields:
+  - code_value
+- name: policy_policy_status_code_to_policy_status_code
+  description: Binds policy_status_code to the canonical policy-status-code codeset.
+  cardinality: many-to-one
+  targetContract: pc.policy-status-code
+  targetTable: silver_reference_data.policy_status_code
+  sourceFields:
+  - policy_status_code
+  targetFields:
+  - code_value
+- name: policy_policy_type_code_to_policy_type_code
+  description: Binds policy_type_code to the canonical policy-type-code codeset.
+  cardinality: many-to-one
+  targetContract: pc.policy-type-code
+  targetTable: silver_reference_data.policy_type_code
+  sourceFields:
+  - policy_type_code
+  targetFields:
+  - code_value
+- name: policy_line_of_business_code_to_line_of_business
+  description: Binds line_of_business_code to the canonical line-of-business codeset.
+  cardinality: many-to-one
+  targetContract: pc.line-of-business
+  targetTable: silver_reference_data.line_of_business
+  sourceFields:
+  - line_of_business_code
+  targetFields:
+  - code_value
+- name: policy_issuing_jurisdiction_code_to_jurisdiction_code
+  description: Binds issuing_jurisdiction_code to the canonical jurisdiction-code codeset.
+  cardinality: many-to-one
+  targetContract: pc.jurisdiction-code
+  targetTable: silver_reference_data.jurisdiction_code
+  sourceFields:
+  - issuing_jurisdiction_code
+  targetFields:
+  - code_value
+- name: policy_record_status_code_to_record_status_code
+  description: Binds record_status_code to the canonical record-status-code codeset.
+  cardinality: many-to-one
+  targetContract: pc.record-status-code
+  targetTable: silver_reference_data.record_status_code
+  sourceFields:
+  - record_status_code
+  targetFields:
+  - code_value
+generation:
+  generatorVersion: 1.0.0
+  generatedAt: '2026-05-07T00:00:00Z'
+  sourceContractPath: references/odcs/pc/policy/policy.odcs.yaml
+  sourceContractDigest: sha256:83d23562ae5949fe15d150fc48a07da5df359ed0945cc929f57a4e439f8983e8
