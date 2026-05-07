@@ -1,0 +1,298 @@
+apiVersion: v3.0.2
+kind: DataContract
+id: pc.policy-financial-transaction
+name: PolicyFinancialTransaction
+version: 0.2.0
+status: draft
+description: Canonical contract for policy-related financial activity such as premium movements, fee posts, commission accruals, surcharges, and other policy-side transactions.
+domain: property-and-casualty
+schema:
+- name: policy_financial_transaction
+  physicalType: table
+  description: Append-only canonical record of a financial movement attached to a policy. Specializes the FinancialTransaction pattern with policy, term, coverage, party-role, and lifecycle-event context. Original rows are immutable; corrections are emitted as new rows referencing the corrected row.
+  properties:
+  - name: policy_financial_transaction_uid
+    businessName: Policy Financial Transaction Identifier
+    logicalType: string
+    required: true
+    primaryKey: true
+    description: Immutable system-generated GUID that uniquely identifies the canonical policy financial transaction record across snapshots and source systems.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: source_system_code
+    businessName: Source System Code
+    logicalType: string
+    required: false
+    description: Identifier of the upstream system that produced or last asserted this record. Used for multi-source mastering and lineage.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: source_natural_key
+    businessName: Source Natural Key
+    logicalType: string
+    required: false
+    description: Natural key assigned by the source system. Captured for provenance; not used as the canonical primary key.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: policy_uid
+    businessName: Policy Identifier
+    logicalType: string
+    required: true
+    description: Identifier (GUID reference) for the policy associated with the transaction.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: account_uid
+    businessName: Account Identifier
+    logicalType: string
+    required: false
+    description: Identifier (GUID reference) for the commercial account the transaction rolls up to. Enables account-level financial rollups (master-program billing, account-level commission accruals) without traversing policy.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: agreement_uid
+    businessName: Agreement Identifier
+    logicalType: string
+    required: false
+    description: Identifier (GUID reference) for the master legal or program agreement under which the transaction was booked, when applicable.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: policy_term_uid
+    businessName: Policy Term Identifier
+    logicalType: string
+    required: false
+    description: Identifier (GUID reference) for the policy term associated with the transaction when term context is known.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: policy_coverage_uid
+    businessName: Policy Coverage Identifier
+    logicalType: string
+    required: false
+    description: Identifier (GUID reference) for the policy coverage that the transaction is booked against when coverage-level allocation is known.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: payee_party_role_uid
+    businessName: Payee Party Role Identifier
+    logicalType: string
+    required: false
+    description: Identifier (GUID reference) for the policy party role that is the payee of the transaction when applicable (e.g. agent commission, broker fee).
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: transaction_type_code
+    businessName: Transaction Type Code
+    logicalType: string
+    required: true
+    description: Classification of the transaction such as PREMIUM, RETURN_PREMIUM, FEE, COMMISSION, SURCHARGE, TAX. References the TransactionType codeset.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: transaction_classification_code
+    businessName: Transaction Classification Code
+    logicalType: string
+    required: false
+    description: Optional secondary classification (e.g. WRITTEN_PREMIUM, EARNED_PREMIUM, FEE_POLICY, FEE_INSPECTION, COMMISSION_BASE, COMMISSION_OVERRIDE) used by analytics and reporting. References the FinancialTransactionClassification codeset.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: transaction_amount
+    businessName: Transaction Amount
+    logicalType: decimal
+    required: true
+    description: Signed monetary amount of the transaction in the transactional currency. Sign convention is positive for charges to the insured, negative for credits and returns.
+    customProperties:
+      classifications:
+        sensitivity: CONFIDENTIAL
+        regulatoryTags:
+        - FINANCIAL
+  - name: transaction_currency_code
+    businessName: Transaction Currency Code
+    logicalType: string
+    required: true
+    description: Currency code for the transaction amount. References the CurrencyCode codeset.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: transaction_effective_date
+    businessName: Transaction Effective Date
+    logicalType: date
+    required: true
+    description: Business-effective date of the transaction.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: transaction_processed_datetime
+    businessName: Transaction Processed Datetime
+    logicalType: datetime
+    required: false
+    description: Datetime when the transaction was processed or posted.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: accounting_period_code
+    businessName: Accounting Period Code
+    logicalType: string
+    required: false
+    description: Accounting period to which the transaction is booked (e.g. YYYY-MM, YYYY-QN) when known.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: policy_lifecycle_event_uid
+    businessName: Policy Lifecycle Event Identifier
+    logicalType: string
+    required: false
+    description: Optional reference to the policy lifecycle event that this transaction realizes (per the event-and-transaction ADR).
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: transaction_narrative
+    businessName: Transaction Narrative
+    logicalType: string
+    required: false
+    description: Source-neutral narrative describing the transaction when additional context is needed.
+    customProperties:
+      classifications:
+        sensitivity: CONFIDENTIAL
+        regulatoryTags:
+        - PII
+  - name: correction_indicator
+    businessName: Correction Indicator
+    logicalType: boolean
+    required: true
+    description: True when this row corrects a previously emitted row. False for original (uncorrected) rows.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: corrects_policy_financial_transaction_uid
+    businessName: Corrects Record Identifier
+    logicalType: string
+    required: false
+    description: Reference to the prior row that this row corrects. Populated only when correction_indicator is true.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+relationships:
+- name: policy_financial_transaction_to_policy
+  description: Relates a policy financial transaction to the policy associated with the transaction.
+  relationshipType: many-to-one
+  targetContractId: pc.policy
+  sourceFields:
+  - policy_uid
+  targetFields:
+  - policy_uid
+- name: policy_financial_transaction_to_account
+  description: Relates a policy financial transaction directly to the commercial account it rolls up to for account-level financial rollups.
+  relationshipType: many-to-one
+  targetContractId: pc.account
+  sourceFields:
+  - account_uid
+  targetFields:
+  - account_uid
+- name: policy_financial_transaction_to_agreement
+  description: Relates a policy financial transaction to the master legal or program agreement under which the transaction was booked when applicable.
+  relationshipType: many-to-one
+  targetContractId: pc.agreement
+  sourceFields:
+  - agreement_uid
+  targetFields:
+  - agreement_uid
+- name: policy_financial_transaction_to_policy_term
+  description: Relates a policy financial transaction to the policy term when term context is known.
+  relationshipType: many-to-one
+  targetContractId: pc.policy-term
+  sourceFields:
+  - policy_term_uid
+  targetFields:
+  - policy_term_uid
+- name: policy_financial_transaction_to_policy_coverage
+  description: Relates a policy financial transaction to the policy coverage that it is booked against when coverage-level allocation is known.
+  relationshipType: many-to-one
+  targetContractId: pc.policy-coverage
+  sourceFields:
+  - policy_coverage_uid
+  targetFields:
+  - policy_coverage_uid
+- name: policy_financial_transaction_to_payee_party_role
+  description: Relates a policy financial transaction to the policy party role that is the payee when applicable.
+  relationshipType: many-to-one
+  targetContractId: pc.policy-party-role
+  sourceFields:
+  - payee_party_role_uid
+  targetFields:
+  - policy_party_role_uid
+- name: policy_financial_transaction_to_transaction_type
+  description: Relates a policy financial transaction to the TransactionType codeset.
+  relationshipType: many-to-one
+  targetContractId: pc.transaction-type
+  sourceFields:
+  - transaction_type_code
+  targetFields:
+  - code_value
+- name: policy_financial_transaction_to_transaction_classification
+  description: Relates a policy financial transaction to the FinancialTransactionClassification codeset.
+  relationshipType: many-to-one
+  targetContractId: pc.financial-transaction-classification
+  sourceFields:
+  - transaction_classification_code
+  targetFields:
+  - code_value
+- name: policy_financial_transaction_to_currency
+  description: Relates the transaction amount to its currency code.
+  relationshipType: many-to-one
+  targetContractId: pc.currency-code
+  sourceFields:
+  - transaction_currency_code
+  targetFields:
+  - code_value
+- name: policy_financial_transaction_to_lifecycle_event
+  description: Relates a policy financial transaction to the lifecycle event it realizes when applicable.
+  relationshipType: many-to-one
+  targetContractId: pc.policy-lifecycle-event
+  sourceFields:
+  - policy_lifecycle_event_uid
+  targetFields:
+  - policy_lifecycle_event_uid
+quality:
+- rule: policy_financial_transaction_uid_required
+  description: policy_financial_transaction_uid must be populated for every record.
+  dimension: completeness
+  severity: error
+- rule: policy_financial_transaction_policy_uid_required
+  description: Policy identifier must be populated for every policy financial transaction.
+  dimension: completeness
+  severity: error
+- rule: policy_financial_transaction_type_code_required
+  description: Transaction type code must be populated for every policy financial transaction.
+  dimension: completeness
+  severity: error
+- rule: policy_financial_transaction_amount_required
+  description: Transaction amount must be populated for every policy financial transaction.
+  dimension: completeness
+  severity: error
+- rule: policy_financial_transaction_currency_required
+  description: Transaction currency code must be populated whenever transaction amount is populated.
+  dimension: completeness
+  severity: error
+- rule: policy_financial_transaction_effective_date_required
+  description: Transaction effective date must be populated for every policy financial transaction.
+  dimension: completeness
+  severity: error
+- rule: correction_indicator_required
+  description: correction_indicator must be populated for every event or transaction row.
+  dimension: completeness
+  severity: error
+customProperties:
+  canonicalLayer: silver
+  contractFamily: property-and-casualty
+  domainPackage: pc
+  subjectArea: financial
+  supportsFinancialTransactionPattern: true
+  classificationProfile: CONFIDENTIAL
+  changelog:
+  - '0.1.0: Initial policy financial transaction contract per financial-modeling and event-and-transaction ADRs; canonical hardening C4.6.'
+  - '0.2.0: Canonical hardening C4.5 — add account_uid FK to new pc.account contract and agreement_uid FK to new pc.agreement contract for commercial-lines financial rollups.'

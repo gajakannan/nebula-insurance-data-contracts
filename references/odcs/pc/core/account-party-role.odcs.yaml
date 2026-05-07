@@ -1,23 +1,22 @@
 apiVersion: v3.0.2
 kind: DataContract
-id: pc.claim-party-role
-name: ClaimPartyRole
-version: 0.4.0
+id: pc.account-party-role
+name: AccountPartyRole
+version: 0.1.0
 status: draft
-description: Canonical contract for a party participating in a Property and Casualty claim context.
+description: Canonical contract for a party participating in an account context — account managers, billing contacts, key contacts, master-program administrators, and other account-scoped party participations.
 domain: property-and-casualty
 schema:
-- name: claim_party_role
+- name: account_party_role
   physicalType: table
-  description: Canonical claim party role record that separates reusable party identity from claim-specific participation such as claimant, insured contact, adjuster, supervisor, attorney, expert, witness,
-    service provider, or recovery party.
+  description: Canonical account party role record that separates reusable party identity from account-scoped participation. Mirrors PolicyPartyRole / ClaimPartyRole / SubmissionPartyRole / InsurableObjectPartyRole.
   properties:
-  - name: claim_party_role_uid
-    businessName: Claim Party Role Identifier
+  - name: account_party_role_uid
+    businessName: Account Party Role Identifier
     logicalType: string
     required: true
     primaryKey: true
-    description: Immutable system-generated GUID that uniquely identifies the canonical claim party role record across snapshots and source systems.
+    description: Immutable system-generated GUID that uniquely identifies the canonical account party role record across snapshots and source systems.
     customProperties:
       classifications:
         sensitivity: INTERNAL
@@ -37,19 +36,11 @@ schema:
     customProperties:
       classifications:
         sensitivity: INTERNAL
-  - name: claim_uid
-    businessName: Claim Identifier
+  - name: account_uid
+    businessName: Account Identifier
     logicalType: string
     required: true
-    description: Identifier (GUID reference) for the claim where the party participates.
-    customProperties:
-      classifications:
-        sensitivity: INTERNAL
-  - name: claim_feature_uid
-    businessName: Claim Feature Identifier
-    logicalType: string
-    required: false
-    description: Identifier (GUID reference) for the claim feature when the role applies to a specific feature rather than the whole claim.
+    description: Identifier (GUID reference) for the account where the party participates.
     customProperties:
       classifications:
         sensitivity: INTERNAL
@@ -57,7 +48,7 @@ schema:
     businessName: Party Identifier
     logicalType: string
     required: true
-    description: Identifier (GUID reference) for the party participating in the claim.
+    description: Identifier (GUID reference) for the party participating in the account context.
     customProperties:
       classifications:
         sensitivity: INTERNAL
@@ -65,7 +56,7 @@ schema:
     businessName: Role Type Code
     logicalType: string
     required: true
-    description: Classification of the role the party plays in the claim. References the PartyRoleTypeCode codeset.
+    description: Classification of the role the party plays in the account context (ACCOUNT_MANAGER, BILLING_CONTACT, KEY_CONTACT, MASTER_PROGRAM_ADMINISTRATOR, PRIMARY_INSURED, etc.). References the PartyRoleTypeCode codeset.
     customProperties:
       classifications:
         sensitivity: INTERNAL
@@ -73,7 +64,15 @@ schema:
     businessName: Role Status Code
     logicalType: string
     required: true
-    description: Current lifecycle status of the party role within the claim context.
+    description: Current lifecycle status of the party role within the account context. References the RoleStatusCode codeset.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: primary_role_indicator
+    businessName: Primary Role Indicator
+    logicalType: boolean
+    required: false
+    description: Indicates whether this is the primary party for the role type within the account context.
     customProperties:
       classifications:
         sensitivity: INTERNAL
@@ -81,7 +80,7 @@ schema:
     businessName: Effective Date
     logicalType: date
     required: false
-    description: Date when the party role becomes effective within the claim context.
+    description: Date when the party role becomes effective within the account context.
     customProperties:
       classifications:
         sensitivity: INTERNAL
@@ -89,15 +88,7 @@ schema:
     businessName: Expiration Date
     logicalType: date
     required: false
-    description: Date when the party role stops being effective within the claim context.
-    customProperties:
-      classifications:
-        sensitivity: INTERNAL
-  - name: primary_indicator
-    businessName: Primary Indicator
-    logicalType: boolean
-    required: false
-    description: Indicates whether this is the primary party for the role type within the claim context.
+    description: Date when the party role stops being effective within the account context.
     customProperties:
       classifications:
         sensitivity: INTERNAL
@@ -105,7 +96,7 @@ schema:
     businessName: Record Status Code
     logicalType: string
     required: true
-    description: Warehouse-level state of the record. References the RecordStatusCode codeset.
+    description: Warehouse-level state of the record. References the RecordStatusCode codeset (ACTIVE, SUPERSEDED, SOFT_DELETED, RESTATED, MERGED).
     customProperties:
       classifications:
         sensitivity: INTERNAL
@@ -113,11 +104,11 @@ schema:
     businessName: Valid From Datetime
     logicalType: datetime
     required: true
+    primaryKey: true
     description: System-time start of the SCD2 window for this record version.
     customProperties:
       classifications:
         sensitivity: INTERNAL
-    primaryKey: true
   - name: valid_to_datetime
     businessName: Valid To Datetime
     logicalType: datetime
@@ -135,60 +126,68 @@ schema:
       classifications:
         sensitivity: INTERNAL
 relationships:
-- name: claim_party_role_to_claim
-  description: Relates a claim party role to the claim where the party participates.
+- name: account_party_role_to_account
+  description: Relates the role to the account where the party participates.
   relationshipType: many-to-one
-  targetContractId: pc.claim
+  targetContractId: pc.account
   sourceFields:
-  - claim_uid
+  - account_uid
   targetFields:
-  - claim_uid
-- name: claim_party_role_to_claim_feature
-  description: Relates a claim party role to the claim feature when the role applies to a specific feature.
-  relationshipType: many-to-one
-  targetContractId: pc.claim-feature
-  sourceFields:
-  - claim_feature_uid
-  targetFields:
-  - claim_feature_uid
-- name: claim_party_role_to_party
-  description: Relates a claim party role to the party participating in the claim.
+  - account_uid
+- name: account_party_role_to_party
+  description: Relates the role to the party participating in the account context.
   relationshipType: many-to-one
   targetContractId: pc.party
   sourceFields:
   - party_uid
   targetFields:
   - party_uid
-- name: claim_party_role_to_party_role_type
-  description: Relates a claim party role to the party-role-type codeset.
+- name: account_party_role_to_role_type
+  description: Relates the role to the PartyRoleTypeCode codeset.
   relationshipType: many-to-one
   targetContractId: pc.party-role-type-code
   sourceFields:
   - role_type_code
   targetFields:
   - code_value
+- name: account_party_role_to_role_status
+  description: Relates the role to the RoleStatusCode codeset.
+  relationshipType: many-to-one
+  targetContractId: pc.role-status-code
+  sourceFields:
+  - role_status_code
+  targetFields:
+  - code_value
+- name: account_party_role_to_record_status
+  description: Relates the role to the RecordStatusCode codeset.
+  relationshipType: many-to-one
+  targetContractId: pc.record-status-code
+  sourceFields:
+  - record_status_code
+  targetFields:
+  - code_value
 quality:
-- rule: claim_party_role_uid_required
-  description: claim_party_role_uid must be populated for every record.
+- rule: account_party_role_uid_required
+  description: account_party_role_uid must be populated for every record.
   dimension: completeness
   severity: error
-- rule: claim_party_role_claim_uid_required
-  description: Claim identifier must be populated for every claim party role record.
+- rule: account_party_role_account_uid_required
+  description: account_uid must be populated for every account party role record.
   dimension: completeness
   severity: error
-- rule: claim_party_role_party_uid_required
-  description: Party identifier must be populated for every claim party role record.
+- rule: account_party_role_party_uid_required
+  description: party_uid must be populated for every account party role record.
   dimension: completeness
   severity: error
-- rule: claim_role_type_code_required
-  description: Role type code must be populated for every claim party role record.
+- rule: account_party_role_type_code_required
+  description: role_type_code must be populated for every account party role record.
   dimension: completeness
   severity: error
-- rule: claim_party_role_status_code_required
-  description: Role status code must be populated for every claim party role record.
+- rule: account_party_role_status_code_required
+  description: role_status_code must be populated for every account party role record.
   dimension: completeness
   severity: error
-- rule: claim_party_role_effective_not_after_expiration
+- rule: account_party_role_effective_not_after_expiration
   description: Effective date must not be later than expiration date when both dates are populated.
   dimension: consistency
   severity: error
@@ -212,10 +211,8 @@ customProperties:
   canonicalLayer: silver
   contractFamily: property-and-casualty
   domainPackage: pc
-  subjectArea: claims
+  subjectArea: core
   supportsPartyRolePattern: true
   classificationProfile: INTERNAL
   changelog:
-  - '0.1.0: Initial claim party role contract per claims-modeling ADR.'
-  - '0.3.0: Canonical hardening C3 — composite SCD2 PK on (uid, valid_from_datetime) per scd2-primary-key ADR.'
-  - '0.4.0: Canonical hardening C4 — rename party_role_type_code to role_type_code for consistency with other party-role contracts (C4.8).'
+  - '0.1.0: Initial AccountPartyRole contract per role-modeling ADR; canonical hardening C4.5 ship decision (commercial-lines focus).'

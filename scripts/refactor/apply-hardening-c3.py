@@ -25,6 +25,7 @@ TARGET_VERSION = "0.3.0"
 EVENT_OR_TRANSACTION_SLUGS = {
     "policy-lifecycle-event",
     "policy-transaction",
+    "policy-financial-transaction",
     "submission-lifecycle-event",
     "claim-lifecycle-event",
     "financial-transaction",

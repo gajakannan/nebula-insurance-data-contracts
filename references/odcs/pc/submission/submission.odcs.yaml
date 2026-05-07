@@ -2,7 +2,7 @@ apiVersion: v3.0.2
 kind: DataContract
 id: pc.submission
 name: Submission
-version: 0.3.0
+version: 0.4.0
 status: draft
 description: Canonical contract for Property and Casualty submission intake and current submission summary.
 domain: property-and-casualty
@@ -65,6 +65,22 @@ schema:
     logicalType: string
     required: true
     description: Line of business associated with the submission.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: account_uid
+    businessName: Account Identifier
+    logicalType: string
+    required: false
+    description: Identifier (GUID reference) for the commercial account the submission belongs to. Required for commercial-lines submissions; null for personal-lines submissions that do not live under an account.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: agreement_uid
+    businessName: Agreement Identifier
+    logicalType: string
+    required: false
+    description: Identifier (GUID reference) for the master legal or program agreement the submission is being placed under, when applicable (typically renewals or extensions under an existing master program).
     customProperties:
       classifications:
         sensitivity: INTERNAL
@@ -208,6 +224,22 @@ relationships:
   - related_policy_uid
   targetFields:
   - policy_uid
+- name: submission_to_account
+  description: Relates a submission to the commercial account it belongs to when account context is available.
+  relationshipType: many-to-one
+  targetContractId: pc.account
+  sourceFields:
+  - account_uid
+  targetFields:
+  - account_uid
+- name: submission_to_agreement
+  description: Relates a submission to the master legal or program agreement it is being placed under when applicable.
+  relationshipType: many-to-one
+  targetContractId: pc.agreement
+  sourceFields:
+  - agreement_uid
+  targetFields:
+  - agreement_uid
 quality:
 - rule: submission_uid_required
   description: submission_uid must be populated for every record.
@@ -256,3 +288,4 @@ customProperties:
   - '0.2.0: Apply cross-cutting ADRs (identifier strategy, SCD2 temporal, record state, classifications, codeset references, source attribution).'
   - '0.3.0: Canonical hardening C3 — composite SCD2 PK on (uid, valid_from_datetime) per scd2-primary-key ADR; re-tag narrative free-text field(s) to CONFIDENTIAL + PII: submission_description; raise classificationProfile
     INTERNAL → CONFIDENTIAL (matches max field sensitivity).'
+  - '0.4.0: Canonical hardening C4.5 — add account_uid FK to new pc.account contract and agreement_uid FK to new pc.agreement contract for commercial-lines submissions.'

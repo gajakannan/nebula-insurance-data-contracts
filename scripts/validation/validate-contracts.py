@@ -52,6 +52,7 @@ VERSION_RE = re.compile(r"^\d+\.\d+\.\d+$")
 EVENT_OR_TRANSACTION_SLUGS = {
     "policy-lifecycle-event",
     "policy-transaction",
+    "policy-financial-transaction",
     "submission-lifecycle-event",
     "claim-lifecycle-event",
     "financial-transaction",

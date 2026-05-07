@@ -2,7 +2,7 @@ apiVersion: v3.0.2
 kind: DataContract
 id: pc.policy-document
 name: PolicyDocument
-version: 0.3.0
+version: 0.4.0
 status: draft
 description: Canonical contract for documents associated with a Property and Casualty policy.
 domain: property-and-casualty
@@ -76,19 +76,27 @@ schema:
     customProperties:
       classifications:
         sensitivity: INTERNAL
-  - name: document_name
-    businessName: Document Name
+  - name: document_title
+    businessName: Document Title
     logicalType: string
     required: false
-    description: Business-facing name or label for the policy document.
+    description: Business-facing title for the policy document.
     customProperties:
       classifications:
         sensitivity: INTERNAL
-  - name: document_reference
-    businessName: Document Reference
+  - name: external_storage_reference
+    businessName: External Storage Reference
     logicalType: string
     required: false
-    description: Source-neutral business reference used to locate or reconcile the policy document.
+    description: Source-neutral reference used to locate or reconcile the policy document in its system of record (storage URI, document-management identifier, etc.).
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: capture_datetime
+    businessName: Capture Datetime
+    logicalType: datetime
+    required: false
+    description: Datetime when the canonical policy document record was captured into the warehouse. Distinct from issued / received which carry business semantics.
     customProperties:
       classifications:
         sensitivity: INTERNAL
@@ -105,6 +113,14 @@ schema:
     logicalType: datetime
     required: false
     description: Datetime when the policy document was received when applicable.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: contains_phi_indicator
+    businessName: Contains PHI Indicator
+    logicalType: boolean
+    required: false
+    description: Indicates whether the document contains protected health information; informs downstream masking and access controls.
     customProperties:
       classifications:
         sensitivity: INTERNAL
@@ -245,3 +261,4 @@ customProperties:
   changelog:
   - '0.2.0: Apply cross-cutting ADRs (identifier strategy, SCD2 temporal, record state, classifications, codeset references, source attribution).'
   - '0.3.0: Canonical hardening C3 — composite SCD2 PK on (uid, valid_from_datetime) per scd2-primary-key ADR.'
+  - '0.4.0: Canonical hardening C4 — align document-contract field naming on the claim-document shape (C4.9): rename document_name → document_title, document_reference → external_storage_reference; add capture_datetime alongside existing issued/received_datetime; add contains_phi_indicator.'

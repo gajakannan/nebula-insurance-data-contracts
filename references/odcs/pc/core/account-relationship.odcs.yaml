@@ -1,0 +1,219 @@
+apiVersion: v3.0.2
+kind: DataContract
+id: pc.account-relationship
+name: AccountRelationship
+version: 0.1.0
+status: draft
+description: Canonical contract for relationships between accounts — corporate hierarchies, billing parents, master programs, ultimate parents, and merger restructurings.
+domain: property-and-casualty
+schema:
+- name: account_relationship
+  physicalType: table
+  description: Canonical account-to-account relationship record. Mirrors PartyRelationship; supports the cases where the simple parent_account_uid self-FK on Account is not enough — billing parent ≠ underwriting parent ≠ ultimate parent, time-bounded restructurings, mergers, demergers.
+  properties:
+  - name: account_relationship_uid
+    businessName: Account Relationship Identifier
+    logicalType: string
+    required: true
+    primaryKey: true
+    description: Immutable system-generated GUID that uniquely identifies the canonical account relationship record across snapshots and source systems.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: source_system_code
+    businessName: Source System Code
+    logicalType: string
+    required: false
+    description: Identifier of the upstream system that produced or last asserted this record. Used for multi-source mastering and lineage.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: source_natural_key
+    businessName: Source Natural Key
+    logicalType: string
+    required: false
+    description: Natural key assigned by the source system. Captured for provenance; not used as the canonical primary key.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: from_account_uid
+    businessName: From Account Identifier
+    logicalType: string
+    required: true
+    description: Identifier (GUID reference) for the originating account in the relationship.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: to_account_uid
+    businessName: To Account Identifier
+    logicalType: string
+    required: true
+    description: Identifier (GUID reference) for the receiving account in the relationship (e.g. the parent in a parent-child relationship).
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: relationship_type_code
+    businessName: Relationship Type Code
+    logicalType: string
+    required: true
+    description: Classification of the relationship (PARENT, BILLING_PARENT, UNDERWRITING_PARENT, MASTER_PROGRAM, ULTIMATE_PARENT, MERGED_INTO, DEMERGED_FROM, etc.). References the AccountRelationshipTypeCode codeset.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: relationship_status_code
+    businessName: Relationship Status Code
+    logicalType: string
+    required: true
+    description: Current lifecycle status of the relationship. References the RelationshipStatusCode codeset.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: relationship_description
+    businessName: Relationship Description
+    logicalType: string
+    required: false
+    description: Source-neutral business description of the relationship when additional context is needed.
+    customProperties:
+      classifications:
+        sensitivity: CONFIDENTIAL
+        regulatoryTags:
+        - PII
+  - name: effective_date
+    businessName: Effective Date
+    logicalType: date
+    required: false
+    description: Date when the relationship becomes effective.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: expiration_date
+    businessName: Expiration Date
+    logicalType: date
+    required: false
+    description: Date when the relationship stops being effective.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: record_status_code
+    businessName: Record Status Code
+    logicalType: string
+    required: true
+    description: Warehouse-level state of the record. References the RecordStatusCode codeset (ACTIVE, SUPERSEDED, SOFT_DELETED, RESTATED, MERGED).
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: valid_from_datetime
+    businessName: Valid From Datetime
+    logicalType: datetime
+    required: true
+    primaryKey: true
+    description: System-time start of the SCD2 window for this record version.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: valid_to_datetime
+    businessName: Valid To Datetime
+    logicalType: datetime
+    required: false
+    description: System-time end of the SCD2 window for this record version. Null indicates the current row.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: is_current_indicator
+    businessName: Is Current Indicator
+    logicalType: boolean
+    required: true
+    description: True for exactly one row per logical key, indicating the current record version.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+relationships:
+- name: account_relationship_from_account
+  description: Relates the relationship to the originating account.
+  relationshipType: many-to-one
+  targetContractId: pc.account
+  sourceFields:
+  - from_account_uid
+  targetFields:
+  - account_uid
+- name: account_relationship_to_account
+  description: Relates the relationship to the receiving account.
+  relationshipType: many-to-one
+  targetContractId: pc.account
+  sourceFields:
+  - to_account_uid
+  targetFields:
+  - account_uid
+- name: account_relationship_to_relationship_type
+  description: Relates the relationship to the AccountRelationshipTypeCode codeset.
+  relationshipType: many-to-one
+  targetContractId: pc.account-relationship-type-code
+  sourceFields:
+  - relationship_type_code
+  targetFields:
+  - code_value
+- name: account_relationship_to_relationship_status
+  description: Relates the relationship to the RelationshipStatusCode codeset.
+  relationshipType: many-to-one
+  targetContractId: pc.relationship-status-code
+  sourceFields:
+  - relationship_status_code
+  targetFields:
+  - code_value
+- name: account_relationship_to_record_status
+  description: Relates the relationship to the RecordStatusCode codeset.
+  relationshipType: many-to-one
+  targetContractId: pc.record-status-code
+  sourceFields:
+  - record_status_code
+  targetFields:
+  - code_value
+quality:
+- rule: account_relationship_uid_required
+  description: account_relationship_uid must be populated for every record.
+  dimension: completeness
+  severity: error
+- rule: account_relationship_from_account_uid_required
+  description: from_account_uid must be populated for every account relationship record.
+  dimension: completeness
+  severity: error
+- rule: account_relationship_to_account_uid_required
+  description: to_account_uid must be populated for every account relationship record.
+  dimension: completeness
+  severity: error
+- rule: account_relationship_type_code_required
+  description: relationship_type_code must be populated for every account relationship record.
+  dimension: completeness
+  severity: error
+- rule: account_relationship_not_self_reference
+  description: from_account_uid must not equal to_account_uid for any record.
+  dimension: consistency
+  severity: error
+- rule: account_relationship_effective_not_after_expiration
+  description: Effective date must not be later than expiration date when both dates are populated.
+  dimension: consistency
+  severity: error
+- rule: valid_from_datetime_required
+  description: valid_from_datetime must be populated for every record version.
+  dimension: completeness
+  severity: error
+- rule: valid_window_consistent
+  description: valid_to_datetime must be greater than valid_from_datetime when populated.
+  dimension: consistency
+  severity: error
+- rule: single_current_row_per_key
+  description: Exactly one row per logical key has is_current_indicator equal to true.
+  dimension: uniqueness
+  severity: error
+- rule: record_status_code_required
+  description: record_status_code must be populated for every record.
+  dimension: completeness
+  severity: error
+customProperties:
+  canonicalLayer: silver
+  contractFamily: property-and-casualty
+  domainPackage: pc
+  subjectArea: core
+  classificationProfile: CONFIDENTIAL
+  changelog:
+  - '0.1.0: Initial AccountRelationship contract per role-modeling and entity-boundaries ADRs; canonical hardening C4.5 ship decision (commercial-lines focus).'

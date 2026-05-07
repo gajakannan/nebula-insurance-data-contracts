@@ -1,0 +1,215 @@
+apiVersion: v3.0.2
+kind: DataContract
+id: pc.occurrence
+name: Occurrence
+version: 0.1.0
+status: draft
+description: Canonical contract for an insured occurrence — the underlying event that gives rise to one or more Property and Casualty claims.
+domain: property-and-casualty
+schema:
+- name: occurrence
+  physicalType: table
+  description: Canonical occurrence record. One row per loss event in the real world; multiple Claim rows can share an occurrence_uid so per-occurrence limits can be enforced and multi-claim incidents (one auto accident with three claimants, one storm with hundreds of property losses) correlate cleanly.
+  properties:
+  - name: occurrence_uid
+    businessName: Occurrence Identifier
+    logicalType: string
+    required: true
+    primaryKey: true
+    description: Immutable system-generated GUID that uniquely identifies the canonical occurrence record across snapshots and source systems.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: source_system_code
+    businessName: Source System Code
+    logicalType: string
+    required: false
+    description: Identifier of the upstream system that produced or last asserted this record. Used for multi-source mastering and lineage.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: source_natural_key
+    businessName: Source Natural Key
+    logicalType: string
+    required: false
+    description: Natural key assigned by the source system. Captured for provenance; not used as the canonical primary key.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: occurrence_number
+    businessName: Occurrence Number
+    logicalType: string
+    required: false
+    description: Business-facing number assigned to the occurrence, when the source system tracks one independently from claim numbers.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: occurrence_type_code
+    businessName: Occurrence Type Code
+    logicalType: string
+    required: true
+    description: Classification of the occurrence (collision, fire, theft, weather, liability event, etc.). References the OccurrenceTypeCode codeset.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: occurrence_status_code
+    businessName: Occurrence Status Code
+    logicalType: string
+    required: true
+    description: Current lifecycle status of the occurrence record.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: occurrence_date
+    businessName: Occurrence Date
+    logicalType: date
+    required: true
+    description: Date when the occurrence took place.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: occurrence_datetime
+    businessName: Occurrence Datetime
+    logicalType: datetime
+    required: false
+    description: Datetime when the occurrence took place when finer-grained timing is known.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: catastrophe_uid
+    businessName: Catastrophe Identifier
+    logicalType: string
+    required: false
+    description: Identifier (GUID reference) for the catastrophe associated with the occurrence when applicable.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: location_uid
+    businessName: Location Identifier
+    logicalType: string
+    required: false
+    description: Identifier (GUID reference) for the geographic location where the occurrence took place when known.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: occurrence_description
+    businessName: Occurrence Description
+    logicalType: string
+    required: false
+    description: Source-neutral business description of the occurrence when additional context is needed.
+    customProperties:
+      classifications:
+        sensitivity: CONFIDENTIAL
+        regulatoryTags:
+        - PII
+  - name: record_status_code
+    businessName: Record Status Code
+    logicalType: string
+    required: true
+    description: Warehouse-level state of the record. References the RecordStatusCode codeset (ACTIVE, SUPERSEDED, SOFT_DELETED, RESTATED, MERGED).
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: valid_from_datetime
+    businessName: Valid From Datetime
+    logicalType: datetime
+    required: true
+    primaryKey: true
+    description: System-time start of the SCD2 window for this record version.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: valid_to_datetime
+    businessName: Valid To Datetime
+    logicalType: datetime
+    required: false
+    description: System-time end of the SCD2 window for this record version. Null indicates the current row.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: is_current_indicator
+    businessName: Is Current Indicator
+    logicalType: boolean
+    required: true
+    description: True for exactly one row per logical key, indicating the current record version.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+relationships:
+- name: occurrence_to_occurrence_type
+  description: Relates an occurrence to the OccurrenceTypeCode codeset.
+  relationshipType: many-to-one
+  targetContractId: pc.occurrence-type-code
+  sourceFields:
+  - occurrence_type_code
+  targetFields:
+  - code_value
+- name: occurrence_to_occurrence_status
+  description: Relates an occurrence to the OccurrenceStatusCode codeset.
+  relationshipType: many-to-one
+  targetContractId: pc.occurrence-status-code
+  sourceFields:
+  - occurrence_status_code
+  targetFields:
+  - code_value
+- name: occurrence_to_catastrophe
+  description: Relates an occurrence to the catastrophe with which it is associated when applicable.
+  relationshipType: many-to-one
+  targetContractId: pc.catastrophe
+  sourceFields:
+  - catastrophe_uid
+  targetFields:
+  - catastrophe_uid
+- name: occurrence_to_location
+  description: Relates an occurrence to the geographic location where it took place when known.
+  relationshipType: many-to-one
+  targetContractId: pc.geographic-location
+  sourceFields:
+  - location_uid
+  targetFields:
+  - geographic_location_uid
+- name: occurrence_to_record_status
+  description: Relates an occurrence to the RecordStatusCode codeset.
+  relationshipType: many-to-one
+  targetContractId: pc.record-status-code
+  sourceFields:
+  - record_status_code
+  targetFields:
+  - code_value
+quality:
+- rule: occurrence_uid_required
+  description: occurrence_uid must be populated for every record.
+  dimension: completeness
+  severity: error
+- rule: occurrence_type_code_required
+  description: occurrence_type_code must be populated for every occurrence record.
+  dimension: completeness
+  severity: error
+- rule: occurrence_date_required
+  description: occurrence_date must be populated for every occurrence record.
+  dimension: completeness
+  severity: error
+- rule: valid_from_datetime_required
+  description: valid_from_datetime must be populated for every record version.
+  dimension: completeness
+  severity: error
+- rule: valid_window_consistent
+  description: valid_to_datetime must be greater than valid_from_datetime when populated.
+  dimension: consistency
+  severity: error
+- rule: single_current_row_per_key
+  description: Exactly one row per logical key has is_current_indicator equal to true.
+  dimension: uniqueness
+  severity: error
+- rule: record_status_code_required
+  description: record_status_code must be populated for every record.
+  dimension: completeness
+  severity: error
+customProperties:
+  canonicalLayer: silver
+  contractFamily: property-and-casualty
+  domainPackage: pc
+  subjectArea: claims
+  classificationProfile: CONFIDENTIAL
+  changelog:
+  - '0.1.0: Initial occurrence contract per claims-modeling ADR; canonical hardening C4.1.'

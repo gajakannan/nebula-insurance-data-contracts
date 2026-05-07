@@ -2,7 +2,7 @@ apiVersion: v3.0.2
 kind: DataContract
 id: pc.claim
 name: Claim
-version: 0.3.0
+version: 0.4.0
 status: draft
 description: Canonical contract for Property and Casualty claim identity, loss context, and current claim summary.
 domain: property-and-casualty
@@ -92,6 +92,30 @@ schema:
     customProperties:
       classifications:
         sensitivity: INTERNAL
+  - name: insurable_object_uid
+    businessName: Insurable Object Identifier
+    logicalType: string
+    required: false
+    description: Identifier (GUID reference) for the insurable object directly associated with the claim. Provides a one-hop path from claim to vehicle / property / workers comp class without forcing a join through exposure. Must align with the path through exposure when both are populated.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: occurrence_uid
+    businessName: Occurrence Identifier
+    logicalType: string
+    required: false
+    description: Identifier (GUID reference) for the occurrence (loss event) the claim arises from. Multiple claims can share an occurrence so per-event limits and multi-claim correlation are answerable.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: account_uid
+    businessName: Account Identifier
+    logicalType: string
+    required: false
+    description: Identifier (GUID reference) for the commercial account the claim rolls up to. Provides a one-hop path for "loss runs by account" without traversing policy. Reachable via policy when null.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
   - name: loss_location_uid
     businessName: Loss Location Identifier
     logicalType: string
@@ -132,11 +156,11 @@ schema:
     customProperties:
       classifications:
         sensitivity: INTERNAL
-  - name: catastrophe_code
-    businessName: Catastrophe Code
+  - name: catastrophe_uid
+    businessName: Catastrophe Identifier
     logicalType: string
     required: false
-    description: Catastrophe or event classification associated with the claim when applicable.
+    description: Identifier (GUID reference) for the catastrophe associated with the claim when applicable. References the Catastrophe contract; replaces the prior free-string catastrophe_code so per-event accumulation and reinsurance recovery joins resolve cleanly.
     customProperties:
       classifications:
         sensitivity: INTERNAL
@@ -248,6 +272,38 @@ relationships:
   - loss_location_uid
   targetFields:
   - geographic_location_uid
+- name: claim_to_insurable_object
+  description: Relates a claim directly to the insurable object the loss applies to so claims can be located by VIN, property, or workers-comp class without traversing exposure.
+  relationshipType: many-to-one
+  targetContractId: pc.insurable-object
+  sourceFields:
+  - insurable_object_uid
+  targetFields:
+  - insurable_object_uid
+- name: claim_to_occurrence
+  description: Relates a claim to the underlying occurrence (loss event). Multiple claims can share an occurrence so per-event aggregation and multi-claim correlation are answerable.
+  relationshipType: many-to-one
+  targetContractId: pc.occurrence
+  sourceFields:
+  - occurrence_uid
+  targetFields:
+  - occurrence_uid
+- name: claim_to_catastrophe
+  description: Relates a claim to the catastrophe with which it is associated when applicable. Replaces the prior free-string catastrophe_code linkage.
+  relationshipType: many-to-one
+  targetContractId: pc.catastrophe
+  sourceFields:
+  - catastrophe_uid
+  targetFields:
+  - catastrophe_uid
+- name: claim_to_account
+  description: Relates a claim directly to the commercial account it rolls up to so loss runs at account level resolve in one hop. Reachable via policy when null.
+  relationshipType: many-to-one
+  targetContractId: pc.account
+  sourceFields:
+  - account_uid
+  targetFields:
+  - account_uid
 quality:
 - rule: claim_uid_required
   description: claim_uid must be populated for every record.
@@ -269,6 +325,10 @@ quality:
   description: Reported datetime should not be earlier than the loss date unless the claim type explicitly supports prospective reporting.
   dimension: consistency
   severity: warning
+- rule: claim_insurable_object_path_consistent
+  description: When both insurable_object_uid and exposure_uid are populated, the insurable object referenced directly must equal the insurable object reachable through the exposure.
+  dimension: consistency
+  severity: error
 - rule: valid_from_datetime_required
   description: valid_from_datetime must be populated for every record version.
   dimension: completeness
@@ -296,3 +356,4 @@ customProperties:
   - '0.2.0: Apply cross-cutting ADRs (identifier strategy, SCD2 temporal, record state, classifications, codeset references, source attribution).'
   - '0.3.0: Canonical hardening C3 — composite SCD2 PK on (uid, valid_from_datetime) per scd2-primary-key ADR; re-tag narrative free-text field(s) to CONFIDENTIAL + PII: claim_description; raise classificationProfile
     INTERNAL → CONFIDENTIAL (matches max field sensitivity).'
+  - '0.4.0: Canonical hardening C4 — add insurable_object_uid FK (one-hop path to insured object, C4.4); add occurrence_uid FK to new pc.occurrence contract (C4.1); replace catastrophe_code free string with catastrophe_uid FK to new pc.catastrophe contract (C4.2); add account_uid FK to new pc.account contract for one-hop loss runs (C4.5); add claim_insurable_object_path_consistent quality rule.'

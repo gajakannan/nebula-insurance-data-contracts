@@ -15,10 +15,21 @@ Insurance is bi-temporal by nature. A backdated endorsement booked today changes
 
 Single-timeline approximations (Type 1 current-state, append-only events without explicit valid windows) cannot reconstruct both views.
 
+## Naming convention for business-time windows
+
+Where an entity carries a business-time validity window, the two endpoints are named **`effective_date` / `expiration_date`** (or `effective_datetime` / `expiration_datetime` when finer granularity is needed). This is the canonical pair across the entire surface — Policy, PolicyTerm, Coverage, party-role contracts, document contracts, party, party-relationship, insurable-object, catastrophe, and any other entity with a business validity window.
+
+Do not introduce alternative pairs (`start_date` / `end_date`, `from_date` / `to_date`, `inception_date` / `termination_date`, `begin_date` / `end_date`, `active_from` / `active_to`). The single canonical pair removes ambiguity for consumers, makes window-overlap quality rules uniform, and keeps the Fabric target's window-handling code one shape.
+
+The naming convention does **not** apply to:
+
+- **Point-in-time event timestamps** (`loss_date`, `reported_datetime`, `opened_date`, `closed_date`, `bind_date`, `decline_date`, `event_datetime`, `transaction_effective_date`, `transaction_processed_datetime`, `occurrence_date`, etc.). These are single business timestamps with distinct semantics, not window endpoints.
+- **System-time SCD2 fields** (`valid_from_datetime` / `valid_to_datetime`). These describe warehouse system time per this ADR, not business validity.
+
 ## Consequences
 
 - Every entity contract gains `valid_from_datetime`, `valid_to_datetime`, and `is_current_indicator`. `valid_to_datetime` is open-ended (null or far-future sentinel) for the current row; `is_current_indicator` is true for exactly one row per logical key.
-- Business-time fields remain on the contracts where they already exist and are not replaced by the SCD2 fields.
+- Business-time fields remain on the contracts where they already exist and are not replaced by the SCD2 fields. Where they form a validity window, the canonical naming above applies.
 - The composite "natural" SCD2 key for any entity is `(*_uid, valid_from_datetime)`. The `*_uid` alone is not unique across history; it is unique only among current rows.
 - Quality rules per entity contract:
   - `valid_from_datetime` must be populated.

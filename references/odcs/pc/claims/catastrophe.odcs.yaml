@@ -1,0 +1,203 @@
+apiVersion: v3.0.2
+kind: DataContract
+id: pc.catastrophe
+name: Catastrophe
+version: 0.1.0
+status: draft
+description: Canonical contract for a catastrophe — a named industry or company event (named storm, wildfire, earthquake, civil event) used to aggregate exposures, occurrences, and claims for reinsurance recovery, regulatory reporting, and industry benchmarking.
+domain: property-and-casualty
+schema:
+- name: catastrophe
+  physicalType: table
+  description: Canonical catastrophe record. Multiple occurrences and claims can reference the same catastrophe so per-event totals are answerable. Both an industry-recognized code (PCS, NAIC, etc.) and a company-internal code are carried so external aggregation and internal accumulation can both join correctly.
+  properties:
+  - name: catastrophe_uid
+    businessName: Catastrophe Identifier
+    logicalType: string
+    required: true
+    primaryKey: true
+    description: Immutable system-generated GUID that uniquely identifies the canonical catastrophe record across snapshots and source systems.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: source_system_code
+    businessName: Source System Code
+    logicalType: string
+    required: false
+    description: Identifier of the upstream system that produced or last asserted this record. Used for multi-source mastering and lineage.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: source_natural_key
+    businessName: Source Natural Key
+    logicalType: string
+    required: false
+    description: Natural key assigned by the source system. Captured for provenance; not used as the canonical primary key.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: industry_catastrophe_code
+    businessName: Industry Catastrophe Code
+    logicalType: string
+    required: false
+    description: Industry-standard catastrophe identifier (e.g. PCS catastrophe number) used for cross-carrier and reinsurance aggregation when one is assigned.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: company_catastrophe_code
+    businessName: Company Catastrophe Code
+    logicalType: string
+    required: false
+    description: Company-internal catastrophe identifier used for accumulation and reporting when distinct from the industry code.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: catastrophe_name
+    businessName: Catastrophe Name
+    logicalType: string
+    required: true
+    description: Human-readable name of the catastrophe (e.g. named storm, fire complex name, civil event designation).
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: catastrophe_type_code
+    businessName: Catastrophe Type Code
+    logicalType: string
+    required: true
+    description: Classification of the catastrophe (HURRICANE, WILDFIRE, EARTHQUAKE, FLOOD, CIVIL_EVENT, etc.). References the CatastropheTypeCode codeset.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: catastrophe_status_code
+    businessName: Catastrophe Status Code
+    logicalType: string
+    required: true
+    description: Current lifecycle status of the catastrophe record (e.g. OPEN, CLOSED, REOPENED).
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: effective_datetime
+    businessName: Effective Datetime
+    logicalType: datetime
+    required: true
+    description: Datetime when the catastrophe is deemed to begin for accumulation purposes.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: expiration_datetime
+    businessName: Expiration Datetime
+    logicalType: datetime
+    required: false
+    description: Datetime when the catastrophe is deemed to end for accumulation purposes. Null while the event is ongoing.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: catastrophe_description
+    businessName: Catastrophe Description
+    logicalType: string
+    required: false
+    description: Source-neutral business description of the catastrophe when additional context is needed.
+    customProperties:
+      classifications:
+        sensitivity: CONFIDENTIAL
+        regulatoryTags:
+        - PII
+  - name: record_status_code
+    businessName: Record Status Code
+    logicalType: string
+    required: true
+    description: Warehouse-level state of the record. References the RecordStatusCode codeset (ACTIVE, SUPERSEDED, SOFT_DELETED, RESTATED, MERGED).
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: valid_from_datetime
+    businessName: Valid From Datetime
+    logicalType: datetime
+    required: true
+    primaryKey: true
+    description: System-time start of the SCD2 window for this record version.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: valid_to_datetime
+    businessName: Valid To Datetime
+    logicalType: datetime
+    required: false
+    description: System-time end of the SCD2 window for this record version. Null indicates the current row.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: is_current_indicator
+    businessName: Is Current Indicator
+    logicalType: boolean
+    required: true
+    description: True for exactly one row per logical key, indicating the current record version.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+relationships:
+- name: catastrophe_to_catastrophe_type
+  description: Relates a catastrophe to the CatastropheTypeCode codeset.
+  relationshipType: many-to-one
+  targetContractId: pc.catastrophe-type-code
+  sourceFields:
+  - catastrophe_type_code
+  targetFields:
+  - code_value
+- name: catastrophe_to_catastrophe_status
+  description: Relates a catastrophe to the CatastropheStatusCode codeset.
+  relationshipType: many-to-one
+  targetContractId: pc.catastrophe-status-code
+  sourceFields:
+  - catastrophe_status_code
+  targetFields:
+  - code_value
+- name: catastrophe_to_record_status
+  description: Relates a catastrophe to the RecordStatusCode codeset.
+  relationshipType: many-to-one
+  targetContractId: pc.record-status-code
+  sourceFields:
+  - record_status_code
+  targetFields:
+  - code_value
+quality:
+- rule: catastrophe_uid_required
+  description: catastrophe_uid must be populated for every record.
+  dimension: completeness
+  severity: error
+- rule: catastrophe_name_required
+  description: catastrophe_name must be populated for every catastrophe record.
+  dimension: completeness
+  severity: error
+- rule: catastrophe_type_code_required
+  description: catastrophe_type_code must be populated for every catastrophe record.
+  dimension: completeness
+  severity: error
+- rule: catastrophe_window_consistent
+  description: expiration_datetime must not be earlier than effective_datetime when both are populated.
+  dimension: consistency
+  severity: error
+- rule: valid_from_datetime_required
+  description: valid_from_datetime must be populated for every record version.
+  dimension: completeness
+  severity: error
+- rule: valid_window_consistent
+  description: valid_to_datetime must be greater than valid_from_datetime when populated.
+  dimension: consistency
+  severity: error
+- rule: single_current_row_per_key
+  description: Exactly one row per logical key has is_current_indicator equal to true.
+  dimension: uniqueness
+  severity: error
+- rule: record_status_code_required
+  description: record_status_code must be populated for every record.
+  dimension: completeness
+  severity: error
+customProperties:
+  canonicalLayer: silver
+  contractFamily: property-and-casualty
+  domainPackage: pc
+  subjectArea: claims
+  classificationProfile: CONFIDENTIAL
+  changelog:
+  - '0.1.0: Initial catastrophe contract per claims-modeling ADR; canonical hardening C4.2.'

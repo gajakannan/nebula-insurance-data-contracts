@@ -10,13 +10,15 @@ A party should not be duplicated across every business context. Keep the party i
 
 ```text
 Party
-PartyRole
 PartyRelationship
 SubmissionPartyRole
 PolicyPartyRole
 ClaimPartyRole
 InsurableObjectPartyRole
+AccountPartyRole
 ```
+
+A generic `PartyRole` contract is **not** part of the canonical surface. The polymorphic `context_type_code + context_uid` shape it would require cannot be validated by ODCS, and every shipped use case maps to one of the five context-specific role contracts. Authors needing a new role context add a new context-specific contract following the same shape.
 
 ## Common Role Examples
 

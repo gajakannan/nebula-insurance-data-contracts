@@ -1,22 +1,22 @@
 apiVersion: v3.0.2
 kind: DataContract
-id: pc.party-role
-name: PartyRole
-version: 0.3.0
+id: pc.insurable-object-party-role
+name: InsurableObjectPartyRole
+version: 0.1.0
 status: draft
-description: Canonical contract for a party participating in a business context in Property and Casualty insurance.
+description: Canonical contract for a party participating in an insurable object context — named drivers on a vehicle, additional insureds on a property, loss-payees, lessees, and other object-scoped party participations.
 domain: property-and-casualty
 schema:
-- name: party_role
+- name: insurable_object_party_role
   physicalType: table
-  description: Canonical party role record that separates reusable party identity from contextual participation.
+  description: Canonical insurable-object party role record that separates reusable party identity from object-scoped participation. Enables canonical expression of "named driver of vehicle", "additional insured on building", "loss-payee on property", and similar patterns without overloading the policy or claim context.
   properties:
-  - name: party_role_uid
-    businessName: Party Role Identifier
+  - name: insurable_object_party_role_uid
+    businessName: Insurable Object Party Role Identifier
     logicalType: string
     required: true
     primaryKey: true
-    description: Immutable system-generated GUID that uniquely identifies the canonical party role record across snapshots and source systems.
+    description: Immutable system-generated GUID that uniquely identifies the canonical insurable-object party role record across snapshots and source systems.
     customProperties:
       classifications:
         sensitivity: INTERNAL
@@ -36,11 +36,19 @@ schema:
     customProperties:
       classifications:
         sensitivity: INTERNAL
+  - name: insurable_object_uid
+    businessName: Insurable Object Identifier
+    logicalType: string
+    required: true
+    description: Identifier (GUID reference) for the insurable object the party role applies to.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
   - name: party_uid
     businessName: Party Identifier
     logicalType: string
     required: true
-    description: Identifier (GUID reference) for the party participating in the role.
+    description: Identifier (GUID reference) for the party participating in the insurable object context.
     customProperties:
       classifications:
         sensitivity: INTERNAL
@@ -48,23 +56,7 @@ schema:
     businessName: Role Type Code
     logicalType: string
     required: true
-    description: Classification of the role the party plays in the business context.
-    customProperties:
-      classifications:
-        sensitivity: INTERNAL
-  - name: context_type_code
-    businessName: Context Type Code
-    logicalType: string
-    required: true
-    description: Classification of the business context for the role, such as submission, policy, claim, account, agreement, coverage, or exposure.
-    customProperties:
-      classifications:
-        sensitivity: INTERNAL
-  - name: context_uid
-    businessName: Context Identifier
-    logicalType: string
-    required: false
-    description: Identifier (GUID reference) of the business context where the party role applies when the context has a canonical identifier.
+    description: Classification of the role the party plays for the insurable object (NAMED_DRIVER, ADDITIONAL_INSURED, LOSS_PAYEE, LESSEE, etc.). References the PartyRoleTypeCode codeset.
     customProperties:
       classifications:
         sensitivity: INTERNAL
@@ -72,7 +64,7 @@ schema:
     businessName: Role Status Code
     logicalType: string
     required: true
-    description: Current lifecycle status of the party role within its business context.
+    description: Current lifecycle status of the party role within the insurable-object context.
     customProperties:
       classifications:
         sensitivity: INTERNAL
@@ -80,7 +72,7 @@ schema:
     businessName: Primary Role Indicator
     logicalType: boolean
     required: false
-    description: Indicates whether this party role is the primary role of its type within the business context.
+    description: Indicates whether this is the primary party for the role type within the insurable-object context (e.g. primary named driver).
     customProperties:
       classifications:
         sensitivity: INTERNAL
@@ -88,7 +80,7 @@ schema:
     businessName: Effective Date
     logicalType: date
     required: false
-    description: Date when the party role becomes effective in the business context.
+    description: Date when the party role becomes effective within the insurable-object context.
     customProperties:
       classifications:
         sensitivity: INTERNAL
@@ -96,23 +88,7 @@ schema:
     businessName: Expiration Date
     logicalType: date
     required: false
-    description: Date when the party role stops being effective in the business context.
-    customProperties:
-      classifications:
-        sensitivity: INTERNAL
-  - name: created_datetime
-    businessName: Created Datetime
-    logicalType: datetime
-    required: false
-    description: Datetime when the canonical party role record was created.
-    customProperties:
-      classifications:
-        sensitivity: INTERNAL
-  - name: updated_datetime
-    businessName: Updated Datetime
-    logicalType: datetime
-    required: false
-    description: Datetime when the canonical party role record was last updated.
+    description: Date when the party role stops being effective within the insurable-object context.
     customProperties:
       classifications:
         sensitivity: INTERNAL
@@ -128,11 +104,11 @@ schema:
     businessName: Valid From Datetime
     logicalType: datetime
     required: true
+    primaryKey: true
     description: System-time start of the SCD2 window for this record version.
     customProperties:
       classifications:
         sensitivity: INTERNAL
-    primaryKey: true
   - name: valid_to_datetime
     businessName: Valid To Datetime
     logicalType: datetime
@@ -150,32 +126,68 @@ schema:
       classifications:
         sensitivity: INTERNAL
 relationships:
-- name: party_role_to_party
-  description: Relates a party role to the reusable party identity that participates in the context.
+- name: insurable_object_party_role_to_insurable_object
+  description: Relates the role to the insurable object the party participates in.
+  relationshipType: many-to-one
+  targetContractId: pc.insurable-object
+  sourceFields:
+  - insurable_object_uid
+  targetFields:
+  - insurable_object_uid
+- name: insurable_object_party_role_to_party
+  description: Relates the role to the party participating in the insurable-object context.
   relationshipType: many-to-one
   targetContractId: pc.party
   sourceFields:
   - party_uid
   targetFields:
   - party_uid
+- name: insurable_object_party_role_to_role_type
+  description: Relates the role to the PartyRoleTypeCode codeset.
+  relationshipType: many-to-one
+  targetContractId: pc.party-role-type-code
+  sourceFields:
+  - role_type_code
+  targetFields:
+  - code_value
+- name: insurable_object_party_role_to_role_status
+  description: Relates the role to the RoleStatusCode codeset.
+  relationshipType: many-to-one
+  targetContractId: pc.role-status-code
+  sourceFields:
+  - role_status_code
+  targetFields:
+  - code_value
+- name: insurable_object_party_role_to_record_status
+  description: Relates the role to the RecordStatusCode codeset.
+  relationshipType: many-to-one
+  targetContractId: pc.record-status-code
+  sourceFields:
+  - record_status_code
+  targetFields:
+  - code_value
 quality:
-- rule: party_role_uid_required
-  description: party_role_uid must be populated for every record.
+- rule: insurable_object_party_role_uid_required
+  description: insurable_object_party_role_uid must be populated for every record.
   dimension: completeness
   severity: error
-- rule: party_role_party_uid_required
-  description: Party identifier must be populated for every party role.
+- rule: insurable_object_party_role_object_uid_required
+  description: insurable_object_uid must be populated for every insurable-object party role record.
   dimension: completeness
   severity: error
-- rule: party_role_type_code_required
-  description: Role type code must be populated for every party role.
+- rule: insurable_object_party_role_party_uid_required
+  description: party_uid must be populated for every insurable-object party role record.
   dimension: completeness
   severity: error
-- rule: party_role_context_type_code_required
-  description: Context type code must be populated for every party role.
+- rule: insurable_object_party_role_type_code_required
+  description: role_type_code must be populated for every insurable-object party role record.
   dimension: completeness
   severity: error
-- rule: party_role_effective_date_not_after_expiration_date
+- rule: insurable_object_party_role_status_code_required
+  description: role_status_code must be populated for every insurable-object party role record.
+  dimension: completeness
+  severity: error
+- rule: insurable_object_party_role_effective_not_after_expiration
   description: Effective date must not be later than expiration date when both dates are populated.
   dimension: consistency
   severity: error
@@ -199,9 +211,8 @@ customProperties:
   canonicalLayer: silver
   contractFamily: property-and-casualty
   domainPackage: pc
-  subjectArea: core
+  subjectArea: exposure
   supportsPartyRolePattern: true
   classificationProfile: INTERNAL
   changelog:
-  - '0.2.0: Apply cross-cutting ADRs (identifier strategy, SCD2 temporal, record state, classifications, codeset references, source attribution).'
-  - '0.3.0: Canonical hardening C3 — composite SCD2 PK on (uid, valid_from_datetime) per scd2-primary-key ADR.'
+  - '0.1.0: Initial insurable-object party role contract per role-modeling ADR; canonical hardening C4.3.'

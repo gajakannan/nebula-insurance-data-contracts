@@ -1,0 +1,245 @@
+apiVersion: v3.0.2
+kind: DataContract
+id: pc.agreement
+name: Agreement
+version: 0.1.0
+status: draft
+description: Canonical contract for a master legal or program agreement between the insurer and an account, broker, MGA, or program administrator. Spawns one or more policies under shared terms.
+domain: property-and-casualty
+schema:
+- name: agreement
+  physicalType: table
+  description: Canonical agreement record. Carries the master legal contract that governs an account's coverage relationship — master programs, broker authority agreements, MGA authority, service-level agreements, and binders. Policies and submissions reference an agreement when they live under one.
+  properties:
+  - name: agreement_uid
+    businessName: Agreement Identifier
+    logicalType: string
+    required: true
+    primaryKey: true
+    description: Immutable system-generated GUID that uniquely identifies the canonical agreement record across snapshots and source systems.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: source_system_code
+    businessName: Source System Code
+    logicalType: string
+    required: false
+    description: Identifier of the upstream system that produced or last asserted this record. Used for multi-source mastering and lineage.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: source_natural_key
+    businessName: Source Natural Key
+    logicalType: string
+    required: false
+    description: Natural key assigned by the source system. Captured for provenance; not used as the canonical primary key.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: agreement_number
+    businessName: Agreement Number
+    logicalType: string
+    required: true
+    description: Business-facing number assigned to the agreement.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: agreement_name
+    businessName: Agreement Name
+    logicalType: string
+    required: true
+    description: Business-facing name of the agreement (typically the program name or master-program designation).
+    customProperties:
+      classifications:
+        sensitivity: CONFIDENTIAL
+        regulatoryTags:
+        - PII
+  - name: agreement_type_code
+    businessName: Agreement Type Code
+    logicalType: string
+    required: true
+    description: Classification of the agreement (MASTER_PROGRAM, BROKER_AUTHORITY, MGA_AUTHORITY, SERVICE_AGREEMENT, BINDER_AGREEMENT, etc.). References the AgreementTypeCode codeset.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: agreement_status_code
+    businessName: Agreement Status Code
+    logicalType: string
+    required: true
+    description: Current lifecycle status of the agreement (DRAFT, ACTIVE, EXPIRED, TERMINATED, RENEWED, etc.). References the AgreementStatusCode codeset.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: account_uid
+    businessName: Account Identifier
+    logicalType: string
+    required: true
+    description: Identifier (GUID reference) for the account the agreement belongs to.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: counterparty_party_uid
+    businessName: Counterparty Party Identifier
+    logicalType: string
+    required: false
+    description: Identifier (GUID reference) for the counterparty Party (broker, MGA, program administrator, or master insured) when distinct from the account's primary party.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: effective_date
+    businessName: Effective Date
+    logicalType: date
+    required: true
+    description: Date when the agreement becomes legally effective.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: expiration_date
+    businessName: Expiration Date
+    logicalType: date
+    required: false
+    description: Date when the agreement expires. Null indicates an open-ended agreement (e.g. an evergreen broker authority).
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: agreement_description
+    businessName: Agreement Description
+    logicalType: string
+    required: false
+    description: Source-neutral business description of the agreement when additional context is needed.
+    customProperties:
+      classifications:
+        sensitivity: CONFIDENTIAL
+        regulatoryTags:
+        - PII
+  - name: record_status_code
+    businessName: Record Status Code
+    logicalType: string
+    required: true
+    description: Warehouse-level state of the record. References the RecordStatusCode codeset (ACTIVE, SUPERSEDED, SOFT_DELETED, RESTATED, MERGED).
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: valid_from_datetime
+    businessName: Valid From Datetime
+    logicalType: datetime
+    required: true
+    primaryKey: true
+    description: System-time start of the SCD2 window for this record version.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: valid_to_datetime
+    businessName: Valid To Datetime
+    logicalType: datetime
+    required: false
+    description: System-time end of the SCD2 window for this record version. Null indicates the current row.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+  - name: is_current_indicator
+    businessName: Is Current Indicator
+    logicalType: boolean
+    required: true
+    description: True for exactly one row per logical key, indicating the current record version.
+    customProperties:
+      classifications:
+        sensitivity: INTERNAL
+relationships:
+- name: agreement_to_agreement_type
+  description: Relates an agreement to the AgreementTypeCode codeset.
+  relationshipType: many-to-one
+  targetContractId: pc.agreement-type-code
+  sourceFields:
+  - agreement_type_code
+  targetFields:
+  - code_value
+- name: agreement_to_agreement_status
+  description: Relates an agreement to the AgreementStatusCode codeset.
+  relationshipType: many-to-one
+  targetContractId: pc.agreement-status-code
+  sourceFields:
+  - agreement_status_code
+  targetFields:
+  - code_value
+- name: agreement_to_account
+  description: Relates an agreement to the account it belongs to.
+  relationshipType: many-to-one
+  targetContractId: pc.account
+  sourceFields:
+  - account_uid
+  targetFields:
+  - account_uid
+- name: agreement_to_counterparty_party
+  description: Relates an agreement to its counterparty Party (broker, MGA, program administrator, or master insured) when applicable.
+  relationshipType: many-to-one
+  targetContractId: pc.party
+  sourceFields:
+  - counterparty_party_uid
+  targetFields:
+  - party_uid
+- name: agreement_to_record_status
+  description: Relates an agreement to the RecordStatusCode codeset.
+  relationshipType: many-to-one
+  targetContractId: pc.record-status-code
+  sourceFields:
+  - record_status_code
+  targetFields:
+  - code_value
+quality:
+- rule: agreement_uid_required
+  description: agreement_uid must be populated for every record.
+  dimension: completeness
+  severity: error
+- rule: agreement_number_required
+  description: agreement_number must be populated for every agreement record.
+  dimension: completeness
+  severity: error
+- rule: agreement_name_required
+  description: agreement_name must be populated for every agreement record.
+  dimension: completeness
+  severity: error
+- rule: agreement_type_code_required
+  description: agreement_type_code must be populated for every agreement record.
+  dimension: completeness
+  severity: error
+- rule: agreement_status_code_required
+  description: agreement_status_code must be populated for every agreement record.
+  dimension: completeness
+  severity: error
+- rule: agreement_account_uid_required
+  description: account_uid must be populated for every agreement record.
+  dimension: completeness
+  severity: error
+- rule: agreement_effective_date_required
+  description: effective_date must be populated for every agreement record.
+  dimension: completeness
+  severity: error
+- rule: agreement_effective_not_after_expiration
+  description: Effective date must not be later than expiration date when both dates are populated.
+  dimension: consistency
+  severity: error
+- rule: valid_from_datetime_required
+  description: valid_from_datetime must be populated for every record version.
+  dimension: completeness
+  severity: error
+- rule: valid_window_consistent
+  description: valid_to_datetime must be greater than valid_from_datetime when populated.
+  dimension: consistency
+  severity: error
+- rule: single_current_row_per_key
+  description: Exactly one row per logical key has is_current_indicator equal to true.
+  dimension: uniqueness
+  severity: error
+- rule: record_status_code_required
+  description: record_status_code must be populated for every record.
+  dimension: completeness
+  severity: error
+customProperties:
+  canonicalLayer: silver
+  contractFamily: property-and-casualty
+  domainPackage: pc
+  subjectArea: core
+  classificationProfile: CONFIDENTIAL
+  changelog:
+  - '0.1.0: Initial Agreement contract per entity-boundaries ADR; canonical hardening C4.5 ship decision (commercial-lines focus).'
