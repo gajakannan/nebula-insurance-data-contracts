@@ -1,0 +1,6 @@
+{
+ "comment": "Deployer fills the three default_lakehouse* fields at deployment time. See targets/fabric/conventions.md §9.4.",
+ "default_lakehouse": "",
+ "default_lakehouse_name": "",
+ "default_lakehouse_workspace_id": ""
+}
