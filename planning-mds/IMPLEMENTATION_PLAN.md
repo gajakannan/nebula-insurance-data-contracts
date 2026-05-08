@@ -32,13 +32,15 @@ The canonical surface is at version 0.2.0 and has known hardening work pending b
 - `scripts/validation/` — `validate-contracts.py` enforces the current canonical conventions; canonical hardening adds 12 new rules.
 - `scripts/refactor/` — one-time migration scripts (`apply-adrs.py`, `generate-codesets.py`) that produced the 0.2.0 surface.
 - `docs/` — authoring guide and architecture notes cross-link the ADRs.
-- `targets/` — Fabric is the active target; dbt and other platforms are deferred or dropped. Fabric work is gated on canonical hardening completion.
-- `planning-mds/CANONICAL_HARDENING_PLAN.md` — detailed plan for Milestone 8.5, sequenced C1 → C7.
-- `planning-mds/FABRIC_IMPLEMENTATION_PLAN.md` — detailed plan for the Fabric Lakehouse projection, sequenced F1 → F8.
+- `targets/fabric/` — Fabric target, complete: 4 documentation files (`README.md`, `conventions.md`, `type-mapping.md`, `manifest-schema.md`); 85 generated manifests under `manifests/pc/<area>/`; 85 generated `CREATE TABLE IF NOT EXISTS` files under `ddl/pc/<area>/`; three parameterized notebook templates plus `lakehouse-binding-template.json` under `notebooks/`; consolidated `purview/sensitivity-labels.json` (85 tables, 1235 columns) and `purview/business-glossary.json` (308 terms); worked end-to-end Policy walkthrough at `examples/end-to-end-policy.md`. dbt and other platforms are deferred or dropped.
+- `planning-mds/CANONICAL_HARDENING_PLAN.md` — detailed plan for Milestone 8.5, sequenced C1 → C7 (complete).
+- `planning-mds/FABRIC_IMPLEMENTATION_PLAN.md` — detailed plan for the Fabric Lakehouse projection, sequenced F1 → F8 (complete).
 
-Pending work before Fabric generation can begin: canonical hardening (Milestone 8.5, C1–C7) covering validator strengthening, ADR/validator/glossary reconciliation, bulk 0.3.0 refactor, missing canonical entities (Occurrence, Catastrophe, InsurableObjectPartyRole), codeset taxonomy completion, ADR back-linking, and single-contract cleanup. Surface lands at 0.4.x.
+Canonical hardening (Milestone 8.5, C1–C7) is complete: validator strengthening, ADR/validator/glossary reconciliation, bulk 0.3.0 refactor, missing canonical entities (Occurrence, Catastrophe, InsurableObjectPartyRole, plus the C4.5 commercial-lines spine — Account, AccountRelationship, AccountPartyRole, Agreement), codeset taxonomy completion, ADR back-linking, and single-contract cleanup all shipped. Surface is at 0.4.x.
 
-Remaining gaps after hardening: target generation (Fabric, plan in place per F1–F8), semantic projection (deferred), risk-transfer contract family (deferred), additional targets beyond Fabric (out of scope).
+Fabric target (Milestone 9, F1–F8) is complete: docs, manifest generator + drift validator, manifest fan-out, Purview manifests, Spark SQL DDL, parameterized notebook templates, worked end-to-end Policy walkthrough, and closeout (orchestrator + planning / README pointers) all shipped. The orchestrator at `scripts/generation/generate-fabric.py` runs the four sub-generators in order and ends with a `validate-fabric-manifests.py --require-full-coverage` drift check.
+
+Remaining work: Milestone 10 (examples, docs, release governance) and the deferred-scope items (risk-transfer contract family, semantic projection, additional targets beyond Fabric).
 
 ## Source Review Posture
 
@@ -426,6 +428,8 @@ Acceptance criteria for the milestone:
 
 ## Milestone 9: Target Implementation Guidance
 
+Status: **complete** (W023, F1–F8). The Fabric target ships under `targets/fabric/` and `scripts/generation/`; the orchestrator entry point is `scripts/generation/generate-fabric.py`.
+
 Goal: project canonical contracts onto a target platform without changing canonical meaning.
 
 The first and only target in this milestone is **Microsoft Fabric Lakehouse**. The dbt path was retired (W022) once it became clear the consumer is Fabric-native. Databricks, Snowflake, Kafka, API, and semantic projections are out of scope for this milestone and tracked under deferred scope.
@@ -478,11 +482,13 @@ Acceptance criteria:
 
 ## First Execution Order
 
-The original execution order (Milestones 0–8) is complete: ODCS template, validator, party / policy / coverage / exposure / claim / financial / submission / reference-data contracts, glossary, patterns, and design decisions are all in place. The 54 contracts are at version 0.2.0.
+Milestones 0–8 are complete: ODCS template, validator, party / policy / coverage / exposure / claim / financial / submission / reference-data contracts, glossary, patterns, and design decisions are all in place.
 
-Current execution focus is **Milestone 8.5 — Canonical Hardening** per `planning-mds/CANONICAL_HARDENING_PLAN.md`, sequenced C1 → C7. Internal validation surfaced a canonical-layer backlog (cross-cutting bugs, ADR/validator contradictions, missing first-wave entities, codeset taxonomy gaps, ADR back-linking) that must close before any target projection consumes the canonical surface. Fabric work is gated on hardening completion.
+Milestone 8.5 — Canonical Hardening — is complete: C1 (validator-first enforcement, 12 new rules) → C2 (ADR / validator / glossary reconciliation) → C3 (bulk 0.3.0 refactor) → C4 (canonical entity gaps, including the C4.5 commercial-lines spine reversal) → C5 (codeset and reference-data hygiene) → C6 (cross-source coherence and ADR back-links) → C7 (single-contract cleanups). The canonical surface is at version 0.4.x with 85 contracts that pass the strengthened validator with zero findings.
 
-After hardening, execution moves to the Fabric target (Milestone 9) per `planning-mds/FABRIC_IMPLEMENTATION_PLAN.md`, sequenced F1 → F8 against the 0.4.x canonical surface. After Fabric, the remaining work is Milestone 10 (examples, docs, release governance) and the deferred scope (risk-transfer family, litigation/arbitration as first-class entities, full assessment-subtype hierarchy, semantic projection, additional targets).
+Milestone 9 — Microsoft Fabric Lakehouse target — is complete: F1 (docs) → F2 (manifest generator + golden Policy example) → F3 (85 manifests) → F4 (Purview manifests) → F5 (Spark SQL DDL) → F6 (notebook templates) → F7 (worked end-to-end Policy walkthrough) → F8 (orchestrator + planning / README pointers). Generation flow: `scripts/generation/generate-fabric.py` runs `generate-fabric-manifests.py` → `generate-fabric-purview.py` → `generate-fabric-ddl.py` → `generate-fabric-notebooks.py` and ends with `validate-fabric-manifests.py --require-full-coverage`.
+
+Remaining work: **Milestone 10** (examples, docs, release governance) and the deferred scope (risk-transfer family, litigation/arbitration as first-class entities, full assessment-subtype hierarchy, semantic projection, additional targets beyond Fabric).
 
 ## Cross-Cutting Conventions (ADR-Backed)
 

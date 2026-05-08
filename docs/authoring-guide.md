@@ -69,6 +69,14 @@ Validate all tracked contract files:
 python3 scripts/validation/validate-contracts.py
 ```
 
+When a contract change reaches the Fabric target, regenerate the downstream artifacts and confirm no manifest has drifted from its source contract. The orchestrator runs the four sub-generators in dependency order and then runs the manifest drift validator with full coverage required:
+
+```bash
+python3 scripts/generation/generate-fabric.py
+```
+
+The trailing step is equivalent to running `scripts/validation/validate-fabric-manifests.py --require-full-coverage` directly, and is the canonical drift check for the Fabric target. A manifest that disagrees with its source contract is fixed by re-running the generator, not by hand-editing the manifest. See `targets/fabric/README.md` and `planning-mds/FABRIC_IMPLEMENTATION_PLAN.md` §15.5 / §17 for the full Fabric generation flow.
+
 ## Contract Naming
 
 Use clear, singular, business-meaningful names.

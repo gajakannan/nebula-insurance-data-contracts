@@ -294,18 +294,41 @@ Agent and orchestration behavior lives in `SKILL.md`.
 
 The core contracts remain platform-neutral.
 
-Target-specific implementation guidance belongs under `targets/`:
+Target-specific implementation guidance belongs under `targets/`. The first and only first-wave target is **Microsoft Fabric Lakehouse**, projected from the canonical contracts through a metadata-driven generator chain.
 
 ```text
 targets/fabric/
-targets/databricks/
-targets/snowflake/
-targets/dbt/
-targets/kafka/
-targets/api/
+  README.md                                  # entry point and persona flow
+  conventions.md                             # naming, materialization, runtime conventions
+  type-mapping.md                            # ODCS → Spark SQL types
+  manifest-schema.md                         # full manifest schema reference
+  manifests/pc/<area>/<slug>.fabric.yaml     # 85 generated manifests
+  ddl/pc/<area>/<slug>.spark.sql             # 85 generated CREATE TABLE files
+  notebooks/silver-{scd2-merge,append,codeset-load}-template.ipynb
+  notebooks/lakehouse-binding-template.json  # consumer fills workspace IDs
+  purview/sensitivity-labels.json            # 1235 column-level entries
+  purview/business-glossary.json             # 308 canonical terms
+  examples/end-to-end-policy.md              # worked Policy walkthrough
 ```
 
-See `targets/README.md` for target implementation rules.
+Generators and validator (run from the repository root):
+
+```text
+scripts/generation/generate-fabric.py            # orchestrator: runs the four sub-generators in order
+scripts/generation/generate-fabric-manifests.py  # ODCS → manifests
+scripts/generation/generate-fabric-purview.py    # manifests + glossary → Purview JSON
+scripts/generation/generate-fabric-ddl.py        # manifests → Spark SQL DDL
+scripts/generation/generate-fabric-notebooks.py  # parameterized SCD2 / append / codeset notebook templates
+scripts/validation/validate-fabric-manifests.py  # manifest drift detection (--require-full-coverage)
+```
+
+The recommended starting points for a Fabric consumer:
+
+- `targets/fabric/README.md` — purpose, scope, persona flow, and coexistence with `microsoft/skills-for-fabric`.
+- `targets/fabric/examples/end-to-end-policy.md` — Policy + PolicyTerm + PolicyCoverage + PolicyStatusCode worked through the full six-persona flow.
+- `planning-mds/FABRIC_IMPLEMENTATION_PLAN.md` — authoritative plan for the Fabric target.
+
+Other targets (Databricks, Snowflake, Kafka, API, semantic projection) are deferred or out of scope for this milestone; see `planning-mds/IMPLEMENTATION_PLAN.md` and `targets/README.md` for the full posture.
 
 ---
 
