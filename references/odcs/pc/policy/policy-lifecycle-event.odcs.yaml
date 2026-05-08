@@ -2,8 +2,8 @@ apiVersion: v3.0.2
 kind: DataContract
 id: pc.policy-lifecycle-event
 name: PolicyLifecycleEvent
-version: 0.4.0
-status: draft
+version: 0.4.1
+status: proposed
 description: Canonical contract for meaningful lifecycle events in a Property and Casualty policy.
 domain: property-and-casualty
 schema:
@@ -219,3 +219,4 @@ customProperties:
   - '0.3.0: Canonical hardening C3 — drop created_datetime, updated_datetime (append-only per temporal-modeling ADR); re-tag over-classified field(s) to INTERNAL: resulting_status_code; re-tag narrative
     free-text field(s) to CONFIDENTIAL + PII: event_description; drop redundant lifecycle_event_type_uid (keep lifecycle_event_type_code).'
   - '0.4.0: Canonical hardening C5 — bind 3 *_code field(s) to codeset(s) (C5.2).'
+  - '0.4.1: Promoted from draft to proposed (M10.6, 2026-05-08).'

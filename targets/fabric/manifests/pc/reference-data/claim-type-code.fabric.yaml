@@ -2,7 +2,7 @@ manifestVersion: 1.0.0
 contract:
   id: pc.claim-type-code
   name: ClaimTypeCode
-  version: 0.1.0
+  version: 0.1.1
   domain: property-and-casualty
   description: Canonical codeset for claim type classification values such as first-party-property, third-party-liability,
     workers-compensation, and auto-physical-damage.
@@ -214,6 +214,6 @@ fabric:
 relationships: []
 generation:
   generatorVersion: 1.0.0
-  generatedAt: '2026-05-07T00:00:00Z'
+  generatedAt: '2026-05-08T00:00:00Z'
   sourceContractPath: references/odcs/pc/reference-data/claim-type-code.odcs.yaml
-  sourceContractDigest: sha256:f7a18a5b7b5fbb2dd350f37a36aa6ddaea5721201f0156988f950f86cce92ea7
+  sourceContractDigest: sha256:ea8b3ab86b24214e5a738145843ff552ae64e1232803a72d4c910cc538d84807

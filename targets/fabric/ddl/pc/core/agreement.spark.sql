@@ -1,6 +1,6 @@
 -- Spark SQL DDL for nebula_pc_silver.silver_core.agreement
 -- Generated from targets/fabric/manifests/pc/core/agreement.fabric.yaml
--- Source: pc.agreement v0.1.1 (references/odcs/pc/core/agreement.odcs.yaml)
+-- Source: pc.agreement v0.1.2 (references/odcs/pc/core/agreement.odcs.yaml)
 -- Contract kind: entity
 -- Do not edit by hand. Regenerate via scripts/generation/generate-fabric-ddl.py.
 
@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS nebula_pc_silver.silver_core.agreement (
 )
 USING DELTA
 PARTITIONED BY (is_current_indicator)
-COMMENT 'Canonical contract for a master legal or program agreement between the insurer and an account, broker, MGA, or program administrator. Spawns one or more policies under shared terms. Source: pc.agreement v0.1.1.'
+COMMENT 'Canonical contract for a master legal or program agreement between the insurer and an account, broker, MGA, or program administrator. Spawns one or more policies under shared terms. Source: pc.agreement v0.1.2.'
 TBLPROPERTIES (
   'delta.appendOnly' = 'false',
   'delta.autoOptimize.autoCompact' = 'true',

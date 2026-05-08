@@ -2,7 +2,7 @@ manifestVersion: 1.0.0
 contract:
   id: pc.claim-party-role
   name: ClaimPartyRole
-  version: 0.4.1
+  version: 0.4.2
   domain: property-and-casualty
   description: Canonical contract for a party participating in a Property and Casualty claim context.
   classificationProfile: INTERNAL
@@ -408,6 +408,6 @@ relationships:
   - code_value
 generation:
   generatorVersion: 1.0.0
-  generatedAt: '2026-05-07T00:00:00Z'
+  generatedAt: '2026-05-08T00:00:00Z'
   sourceContractPath: references/odcs/pc/claims/claim-party-role.odcs.yaml
-  sourceContractDigest: sha256:5035644a72ebe955e94e67c90e68e553caa6ab96f4a84488e625695e38a954dd
+  sourceContractDigest: sha256:1b1e5e77a5655484ed90ca9292db3220b09e05bcd360afb6953bffb9f97fb889

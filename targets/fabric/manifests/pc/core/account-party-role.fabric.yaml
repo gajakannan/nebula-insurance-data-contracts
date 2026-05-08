@@ -2,7 +2,7 @@ manifestVersion: 1.0.0
 contract:
   id: pc.account-party-role
   name: AccountPartyRole
-  version: 0.1.1
+  version: 0.1.2
   domain: property-and-casualty
   description: Canonical contract for a party participating in an account context — account managers,
     billing contacts, key contacts, master-program administrators, and other account-scoped party participations.
@@ -388,6 +388,6 @@ relationships:
   - code_value
 generation:
   generatorVersion: 1.0.0
-  generatedAt: '2026-05-07T00:00:00Z'
+  generatedAt: '2026-05-08T00:00:00Z'
   sourceContractPath: references/odcs/pc/core/account-party-role.odcs.yaml
-  sourceContractDigest: sha256:72d0f8b6a1c073ba910d43e776bf9d8a3141361ca6df42f2a1bcc8078719fdb4
+  sourceContractDigest: sha256:9fbc190be5f63e5cab3b75327b88a9747702ccbc30a84cfc3a7641d2ea710e2e

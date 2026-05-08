@@ -2,7 +2,7 @@ manifestVersion: 1.0.0
 contract:
   id: pc.submission-status-code
   name: SubmissionStatusCode
-  version: 0.1.0
+  version: 0.1.1
   domain: property-and-casualty
   description: Canonical codeset for submission lifecycle status values such as received, in-review, quoted,
     declined, withdrawn, and bound.
@@ -214,6 +214,6 @@ fabric:
 relationships: []
 generation:
   generatorVersion: 1.0.0
-  generatedAt: '2026-05-07T00:00:00Z'
+  generatedAt: '2026-05-08T00:00:00Z'
   sourceContractPath: references/odcs/pc/reference-data/submission-status-code.odcs.yaml
-  sourceContractDigest: sha256:1e044e109bad4e27cc05df4b7652eba74870cae83e2ac2ab4a175a2824ddb49a
+  sourceContractDigest: sha256:2b1882a2cedc58e2e9530ff8729d43603ebf76bae58aea8a0442a883389db20f

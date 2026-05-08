@@ -2,7 +2,7 @@ manifestVersion: 1.0.0
 contract:
   id: pc.feature-status-code
   name: FeatureStatusCode
-  version: 0.1.0
+  version: 0.1.1
   domain: property-and-casualty
   description: Canonical codeset for claim feature lifecycle status values such as open, closed, reopened,
     and waived.
@@ -214,6 +214,6 @@ fabric:
 relationships: []
 generation:
   generatorVersion: 1.0.0
-  generatedAt: '2026-05-07T00:00:00Z'
+  generatedAt: '2026-05-08T00:00:00Z'
   sourceContractPath: references/odcs/pc/reference-data/feature-status-code.odcs.yaml
-  sourceContractDigest: sha256:3cd7707d1f3f9b09fc7c50a9eee898785613266fb7ce253eb2116ba516c45d55
+  sourceContractDigest: sha256:86aa286664176cf18471f790cb140fef8e1a06326084bf8c012718069d7761df

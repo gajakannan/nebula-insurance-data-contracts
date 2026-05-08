@@ -2,8 +2,8 @@ apiVersion: v3.0.2
 kind: DataContract
 id: pc.claim-coverage
 name: ClaimCoverage
-version: 0.3.1
-status: draft
+version: 0.3.2
+status: proposed
 description: Canonical contract that connects a claim or claim feature to the policy coverage that responds to it.
 domain: property-and-casualty
 schema:
@@ -288,3 +288,4 @@ customProperties:
   - '0.1.0: Initial claim coverage contract per claims-modeling ADR.'
   - '0.3.0: Canonical hardening C3 — composite SCD2 PK on (uid, valid_from_datetime) per scd2-primary-key ADR.'
   - '0.3.1: Canonical hardening C5 — bind 3 *_code field(s) to codeset(s) (C5.2); add codesetExempt to 1 field(s) (C5.2).'
+  - '0.3.2: Promoted from draft to proposed (M10.6, 2026-05-08).'

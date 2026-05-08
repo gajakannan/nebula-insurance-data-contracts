@@ -2,7 +2,7 @@ manifestVersion: 1.0.0
 contract:
   id: pc.policy-party-role
   name: PolicyPartyRole
-  version: 0.4.1
+  version: 0.4.2
   domain: property-and-casualty
   description: Canonical contract for a party participating in a Property and Casualty policy context.
   classificationProfile: INTERNAL
@@ -429,6 +429,6 @@ relationships:
   - code_value
 generation:
   generatorVersion: 1.0.0
-  generatedAt: '2026-05-07T00:00:00Z'
+  generatedAt: '2026-05-08T00:00:00Z'
   sourceContractPath: references/odcs/pc/policy/policy-party-role.odcs.yaml
-  sourceContractDigest: sha256:a4d7ee270c358810cd8295c6451f47a99716d53a5218059d1641f71336bc4e80
+  sourceContractDigest: sha256:69a84ecc543c991a2e6cd6471123e74982abefa43dfdcaa59a97bdb1c51ab156

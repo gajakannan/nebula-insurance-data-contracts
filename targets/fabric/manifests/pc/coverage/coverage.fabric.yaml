@@ -2,7 +2,7 @@ manifestVersion: 1.0.0
 contract:
   id: pc.coverage
   name: Coverage
-  version: 0.4.1
+  version: 0.4.2
   domain: property-and-casualty
   description: Canonical contract for a reusable Property and Casualty coverage concept.
   classificationProfile: CONFIDENTIAL
@@ -424,6 +424,6 @@ relationships:
   - code_value
 generation:
   generatorVersion: 1.0.0
-  generatedAt: '2026-05-07T00:00:00Z'
+  generatedAt: '2026-05-08T00:00:00Z'
   sourceContractPath: references/odcs/pc/coverage/coverage.odcs.yaml
-  sourceContractDigest: sha256:d8e6bb886900345bc5d05933017eeb39249205e101a985650c85063505918f81
+  sourceContractDigest: sha256:8b585a6a8f0cb63fee21aca54dbb28fd51eec7d54284f6c8db6b95052ee039db

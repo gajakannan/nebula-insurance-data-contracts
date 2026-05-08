@@ -1,6 +1,6 @@
 -- Spark SQL DDL for nebula_pc_silver.silver_reference_data.term_status_code
 -- Generated from targets/fabric/manifests/pc/reference-data/term-status-code.fabric.yaml
--- Source: pc.term-status-code v0.4.0 (references/odcs/pc/reference-data/term-status-code.odcs.yaml)
+-- Source: pc.term-status-code v0.4.1 (references/odcs/pc/reference-data/term-status-code.odcs.yaml)
 -- Contract kind: codeset
 -- Do not edit by hand. Regenerate via scripts/generation/generate-fabric-ddl.py.
 
@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS nebula_pc_silver.silver_reference_data.term_status_co
 )
 USING DELTA
 PARTITIONED BY (is_current_indicator)
-COMMENT 'Canonical codeset for policy term lifecycle status values such as pending, active, cancelled, expired, and replaced. Source: pc.term-status-code v0.4.0.'
+COMMENT 'Canonical codeset for policy term lifecycle status values such as pending, active, cancelled, expired, and replaced. Source: pc.term-status-code v0.4.1.'
 TBLPROPERTIES (
   'delta.appendOnly' = 'false',
   'delta.autoOptimize.autoCompact' = 'true',

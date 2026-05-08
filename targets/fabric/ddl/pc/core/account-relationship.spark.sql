@@ -1,6 +1,6 @@
 -- Spark SQL DDL for nebula_pc_silver.silver_core.account_relationship
 -- Generated from targets/fabric/manifests/pc/core/account-relationship.fabric.yaml
--- Source: pc.account-relationship v0.1.1 (references/odcs/pc/core/account-relationship.odcs.yaml)
+-- Source: pc.account-relationship v0.1.2 (references/odcs/pc/core/account-relationship.odcs.yaml)
 -- Contract kind: entity
 -- Do not edit by hand. Regenerate via scripts/generation/generate-fabric-ddl.py.
 
@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS nebula_pc_silver.silver_core.account_relationship (
 )
 USING DELTA
 PARTITIONED BY (is_current_indicator)
-COMMENT 'Canonical contract for relationships between accounts — corporate hierarchies, billing parents, master programs, ultimate parents, and merger restructurings. Source: pc.account-relationship v0.1.1.'
+COMMENT 'Canonical contract for relationships between accounts — corporate hierarchies, billing parents, master programs, ultimate parents, and merger restructurings. Source: pc.account-relationship v0.1.2.'
 TBLPROPERTIES (
   'delta.appendOnly' = 'false',
   'delta.autoOptimize.autoCompact' = 'true',

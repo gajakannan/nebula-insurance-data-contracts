@@ -2,7 +2,7 @@ manifestVersion: 1.0.0
 contract:
   id: pc.agreement
   name: Agreement
-  version: 0.1.1
+  version: 0.1.2
   domain: property-and-casualty
   description: Canonical contract for a master legal or program agreement between the insurer and an account,
     broker, MGA, or program administrator. Spawns one or more policies under shared terms.
@@ -423,6 +423,6 @@ relationships:
   - code_value
 generation:
   generatorVersion: 1.0.0
-  generatedAt: '2026-05-07T00:00:00Z'
+  generatedAt: '2026-05-08T00:00:00Z'
   sourceContractPath: references/odcs/pc/core/agreement.odcs.yaml
-  sourceContractDigest: sha256:c09d6875afa4b486924b80468f0123881d60d6055840f4d73ceb4d46312d1687
+  sourceContractDigest: sha256:8dc8d50915f217d81c4e362fc89151abf90e1a775bf4763596cec50a94fb43ce

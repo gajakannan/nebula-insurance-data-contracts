@@ -2,7 +2,7 @@ manifestVersion: 1.0.0
 contract:
   id: pc.party
   name: Party
-  version: 0.4.1
+  version: 0.4.2
   domain: property-and-casualty
   description: Canonical contract for a reusable person, organization, or group identity in Property and
     Casualty insurance.
@@ -420,6 +420,6 @@ relationships:
   - code_value
 generation:
   generatorVersion: 1.0.0
-  generatedAt: '2026-05-07T00:00:00Z'
+  generatedAt: '2026-05-08T00:00:00Z'
   sourceContractPath: references/odcs/pc/core/party.odcs.yaml
-  sourceContractDigest: sha256:9ef76b13294b51decd0bdf042461370d2c7361d3e8253554e617e290b2d456c5
+  sourceContractDigest: sha256:0437db5dce1443a3a6e80ea0ca4d3081942b9cedde429bd77673b6183238eb43

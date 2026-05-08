@@ -2,7 +2,7 @@ manifestVersion: 1.0.0
 contract:
   id: pc.account-status-code
   name: AccountStatusCode
-  version: 0.1.0
+  version: 0.1.1
   domain: property-and-casualty
   description: Canonical codeset for account lifecycle status values such as active, suspended, dormant,
     and closed.
@@ -214,6 +214,6 @@ fabric:
 relationships: []
 generation:
   generatorVersion: 1.0.0
-  generatedAt: '2026-05-07T00:00:00Z'
+  generatedAt: '2026-05-08T00:00:00Z'
   sourceContractPath: references/odcs/pc/reference-data/account-status-code.odcs.yaml
-  sourceContractDigest: sha256:4236fd49e354b2014dea10b1c1caad1099b023c5e642239a5b6a7e61f05bd740
+  sourceContractDigest: sha256:c0bec0a933371214c91978fa2c323700edb2553fd3fc5857aee0b80658a6c11e

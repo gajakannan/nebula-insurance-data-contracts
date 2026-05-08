@@ -2,7 +2,7 @@ manifestVersion: 1.0.0
 contract:
   id: pc.property-exposure
   name: PropertyExposure
-  version: 0.4.1
+  version: 0.4.2
   domain: property-and-casualty
   description: Canonical contract for property-specific exposure attributes in Property and Casualty insurance.
   classificationProfile: CONFIDENTIAL
@@ -478,6 +478,6 @@ relationships:
   - code_value
 generation:
   generatorVersion: 1.0.0
-  generatedAt: '2026-05-07T00:00:00Z'
+  generatedAt: '2026-05-08T00:00:00Z'
   sourceContractPath: references/odcs/pc/exposure/property-exposure.odcs.yaml
-  sourceContractDigest: sha256:ebadac34153658da884c0285e1298925f3af573d28b86145676cf7de3e91d11b
+  sourceContractDigest: sha256:54fd3e28eca1a4d9d6404cdeed02b9c9afe90a2b79da29f1feca6ff814ed707a

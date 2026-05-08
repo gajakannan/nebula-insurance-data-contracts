@@ -2,7 +2,7 @@ manifestVersion: 1.0.0
 contract:
   id: pc.line-of-business
   name: LineOfBusiness
-  version: 0.4.1
+  version: 0.4.2
   domain: property-and-casualty
   description: Canonical contract for Property and Casualty line of business reference data.
   classificationProfile: INTERNAL
@@ -313,6 +313,6 @@ relationships:
   - line_of_business_uid
 generation:
   generatorVersion: 1.0.0
-  generatedAt: '2026-05-07T00:00:00Z'
+  generatedAt: '2026-05-08T00:00:00Z'
   sourceContractPath: references/odcs/pc/reference-data/line-of-business.odcs.yaml
-  sourceContractDigest: sha256:6ab00e6fd0b36b2616e2226cad500bc0513467199ae4ee454156e689ec3322d0
+  sourceContractDigest: sha256:12b651e076dcceaea9677263f1badb564925a725fdb3f2056bdd81b0414d8740

@@ -1,6 +1,6 @@
 -- Spark SQL DDL for nebula_pc_silver.silver_reference_data.cause_of_loss_code
 -- Generated from targets/fabric/manifests/pc/reference-data/cause-of-loss-code.fabric.yaml
--- Source: pc.cause-of-loss-code v0.4.0 (references/odcs/pc/reference-data/cause-of-loss-code.odcs.yaml)
+-- Source: pc.cause-of-loss-code v0.4.1 (references/odcs/pc/reference-data/cause-of-loss-code.odcs.yaml)
 -- Contract kind: codeset
 -- Do not edit by hand. Regenerate via scripts/generation/generate-fabric-ddl.py.
 
@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS nebula_pc_silver.silver_reference_data.cause_of_loss_
 )
 USING DELTA
 PARTITIONED BY (is_current_indicator)
-COMMENT 'Canonical codeset for the cause of loss classification associated with a claim or claim feature. Source: pc.cause-of-loss-code v0.4.0.'
+COMMENT 'Canonical codeset for the cause of loss classification associated with a claim or claim feature. Source: pc.cause-of-loss-code v0.4.1.'
 TBLPROPERTIES (
   'delta.appendOnly' = 'false',
   'delta.autoOptimize.autoCompact' = 'true',

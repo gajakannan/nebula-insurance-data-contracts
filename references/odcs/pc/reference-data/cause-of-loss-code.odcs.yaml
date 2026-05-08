@@ -2,8 +2,8 @@ apiVersion: v3.0.2
 kind: DataContract
 id: pc.cause-of-loss-code
 name: CauseOfLossCode
-version: 0.4.0
-status: draft
+version: 0.4.1
+status: proposed
 description: Canonical codeset for the cause of loss classification associated with a claim or claim feature.
 domain: property-and-casualty
 schema:
@@ -144,4 +144,5 @@ customProperties:
   - '0.1.0: Initial codeset contract generated per codeset-strategy ADR.'
   - '0.3.0: Canonical hardening C3 — composite SCD2 PK on (uid, valid_from_datetime) per scd2-primary-key ADR.'
   - '0.4.0: Canonical hardening C5 — lift classificationProfile to PUBLIC (C5.4 pure codeset); flip 4 field sensitivities to PUBLIC (C5.4 pure codeset).'
+  - '0.4.1: Promoted from draft to proposed (M10.6, 2026-05-08).'
 relationships: []

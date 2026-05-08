@@ -2,7 +2,7 @@ manifestVersion: 1.0.0
 contract:
   id: pc.document-type-code
   name: DocumentTypeCode
-  version: 0.1.0
+  version: 0.1.1
   domain: property-and-casualty
   description: Canonical codeset for document type values used across submission, policy, and claim document
     contracts (e.g. application, declaration, endorsement, photograph, invoice).
@@ -214,6 +214,6 @@ fabric:
 relationships: []
 generation:
   generatorVersion: 1.0.0
-  generatedAt: '2026-05-07T00:00:00Z'
+  generatedAt: '2026-05-08T00:00:00Z'
   sourceContractPath: references/odcs/pc/reference-data/document-type-code.odcs.yaml
-  sourceContractDigest: sha256:d5410a64ac5b016fc62da5c04564e7bf1f0cc15848c2d9c38b2741ae9badc4de
+  sourceContractDigest: sha256:9654a987aca51b9588f81ecafdb6d2c03714476ccca0d2a8c5e80129b17ff23a

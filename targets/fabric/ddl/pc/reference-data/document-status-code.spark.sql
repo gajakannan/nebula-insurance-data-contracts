@@ -1,6 +1,6 @@
 -- Spark SQL DDL for nebula_pc_silver.silver_reference_data.document_status_code
 -- Generated from targets/fabric/manifests/pc/reference-data/document-status-code.fabric.yaml
--- Source: pc.document-status-code v0.1.0 (references/odcs/pc/reference-data/document-status-code.odcs.yaml)
+-- Source: pc.document-status-code v0.1.1 (references/odcs/pc/reference-data/document-status-code.odcs.yaml)
 -- Contract kind: codeset
 -- Do not edit by hand. Regenerate via scripts/generation/generate-fabric-ddl.py.
 
@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS nebula_pc_silver.silver_reference_data.document_statu
 )
 USING DELTA
 PARTITIONED BY (is_current_indicator)
-COMMENT 'Canonical codeset for document lifecycle status values such as captured, indexed, validated, and archived. Source: pc.document-status-code v0.1.0.'
+COMMENT 'Canonical codeset for document lifecycle status values such as captured, indexed, validated, and archived. Source: pc.document-status-code v0.1.1.'
 TBLPROPERTIES (
   'delta.appendOnly' = 'false',
   'delta.autoOptimize.autoCompact' = 'true',

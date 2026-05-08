@@ -2,7 +2,7 @@ manifestVersion: 1.0.0
 contract:
   id: pc.policy-document
   name: PolicyDocument
-  version: 0.4.2
+  version: 0.4.3
   domain: property-and-casualty
   description: Canonical contract for documents associated with a Property and Casualty policy.
   classificationProfile: INTERNAL
@@ -479,6 +479,6 @@ relationships:
   - code_value
 generation:
   generatorVersion: 1.0.0
-  generatedAt: '2026-05-07T00:00:00Z'
+  generatedAt: '2026-05-08T00:00:00Z'
   sourceContractPath: references/odcs/pc/policy/policy-document.odcs.yaml
-  sourceContractDigest: sha256:37b059809d67c3dda16e86aa8f2b55df62033c79399c89452247785947821ffe
+  sourceContractDigest: sha256:c1cdab0fd7937ad7106425b08b3195aafce9540c02bfb88ee7192ead6ef55ba5

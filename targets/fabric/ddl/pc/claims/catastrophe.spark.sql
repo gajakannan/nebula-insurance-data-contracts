@@ -1,6 +1,6 @@
 -- Spark SQL DDL for nebula_pc_silver.silver_claims.catastrophe
 -- Generated from targets/fabric/manifests/pc/claims/catastrophe.fabric.yaml
--- Source: pc.catastrophe v0.1.1 (references/odcs/pc/claims/catastrophe.odcs.yaml)
+-- Source: pc.catastrophe v0.1.2 (references/odcs/pc/claims/catastrophe.odcs.yaml)
 -- Contract kind: entity
 -- Do not edit by hand. Regenerate via scripts/generation/generate-fabric-ddl.py.
 
@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS nebula_pc_silver.silver_claims.catastrophe (
 )
 USING DELTA
 PARTITIONED BY (is_current_indicator)
-COMMENT 'Canonical contract for a catastrophe — a named industry or company event (named storm, wildfire, earthquake, civil event) used to aggregate exposures, occurrences, and claims for reinsurance recovery, regulatory reporting, and industry benchmarking. Source: pc.catastrophe v0.1.1.'
+COMMENT 'Canonical contract for a catastrophe — a named industry or company event (named storm, wildfire, earthquake, civil event) used to aggregate exposures, occurrences, and claims for reinsurance recovery, regulatory reporting, and industry benchmarking. Source: pc.catastrophe v0.1.2.'
 TBLPROPERTIES (
   'delta.appendOnly' = 'false',
   'delta.autoOptimize.autoCompact' = 'true',

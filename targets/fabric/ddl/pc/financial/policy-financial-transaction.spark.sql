@@ -1,6 +1,6 @@
 -- Spark SQL DDL for nebula_pc_silver.silver_financial.policy_financial_transaction
 -- Generated from targets/fabric/manifests/pc/financial/policy-financial-transaction.fabric.yaml
--- Source: pc.policy-financial-transaction v0.2.1 (references/odcs/pc/financial/policy-financial-transaction.odcs.yaml)
+-- Source: pc.policy-financial-transaction v0.2.2 (references/odcs/pc/financial/policy-financial-transaction.odcs.yaml)
 -- Contract kind: transaction
 -- Do not edit by hand. Regenerate via scripts/generation/generate-fabric-ddl.py.
 
@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS nebula_pc_silver.silver_financial.policy_financial_tr
 )
 USING DELTA
 PARTITIONED BY (transaction_effective_date)
-COMMENT 'Canonical contract for policy-related financial activity such as premium movements, fee posts, commission accruals, surcharges, and other policy-side transactions. Source: pc.policy-financial-transaction v0.2.1.'
+COMMENT 'Canonical contract for policy-related financial activity such as premium movements, fee posts, commission accruals, surcharges, and other policy-side transactions. Source: pc.policy-financial-transaction v0.2.2.'
 TBLPROPERTIES (
   'delta.appendOnly' = 'true',
   'delta.autoOptimize.autoCompact' = 'true',

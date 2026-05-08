@@ -1,6 +1,6 @@
 -- Spark SQL DDL for nebula_pc_silver.silver_coverage.product_coverage
 -- Generated from targets/fabric/manifests/pc/coverage/product-coverage.fabric.yaml
--- Source: pc.product-coverage v0.4.0 (references/odcs/pc/coverage/product-coverage.odcs.yaml)
+-- Source: pc.product-coverage v0.4.1 (references/odcs/pc/coverage/product-coverage.odcs.yaml)
 -- Contract kind: entity
 -- Do not edit by hand. Regenerate via scripts/generation/generate-fabric-ddl.py.
 
@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS nebula_pc_silver.silver_coverage.product_coverage (
 )
 USING DELTA
 PARTITIONED BY (is_current_indicator)
-COMMENT 'Canonical many-to-many junction contract relating a Product to a Coverage with product-coverage-specific defaults, constraints, and filing context. Source: pc.product-coverage v0.4.0.'
+COMMENT 'Canonical many-to-many junction contract relating a Product to a Coverage with product-coverage-specific defaults, constraints, and filing context. Source: pc.product-coverage v0.4.1.'
 TBLPROPERTIES (
   'delta.appendOnly' = 'false',
   'delta.autoOptimize.autoCompact' = 'true',

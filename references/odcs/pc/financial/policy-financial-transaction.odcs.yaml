@@ -2,8 +2,8 @@ apiVersion: v3.0.2
 kind: DataContract
 id: pc.policy-financial-transaction
 name: PolicyFinancialTransaction
-version: 0.2.1
-status: draft
+version: 0.2.2
+status: proposed
 description: Canonical contract for policy-related financial activity such as premium movements, fee posts, commission accruals, surcharges, and other policy-side transactions.
 domain: property-and-casualty
 schema:
@@ -323,3 +323,4 @@ customProperties:
   - '0.1.0: Initial policy financial transaction contract per financial-modeling and event-and-transaction ADRs; canonical hardening C4.6.'
   - '0.2.0: Canonical hardening C4.5 — add account_uid FK to new pc.account contract and agreement_uid FK to new pc.agreement contract for commercial-lines financial rollups.'
   - '0.2.1: Canonical hardening C5 — bind 1 *_code field(s) to codeset(s) (C5.2); add codesetExempt to 1 field(s) (C5.2).'
+  - '0.2.2: Promoted from draft to proposed (M10.6, 2026-05-08).'

@@ -2,7 +2,7 @@ manifestVersion: 1.0.0
 contract:
   id: pc.party-relationship
   name: PartyRelationship
-  version: 0.4.1
+  version: 0.4.2
   domain: property-and-casualty
   description: Canonical contract for a durable relationship between two parties in Property and Casualty
     insurance.
@@ -409,6 +409,6 @@ relationships:
   - code_value
 generation:
   generatorVersion: 1.0.0
-  generatedAt: '2026-05-07T00:00:00Z'
+  generatedAt: '2026-05-08T00:00:00Z'
   sourceContractPath: references/odcs/pc/core/party-relationship.odcs.yaml
-  sourceContractDigest: sha256:b97e02b040d061f7026aa0ebbd811a78f5b518c4d180fc19ffeb2f8d17a2c6fd
+  sourceContractDigest: sha256:c1f6110b74ff63fd372d11f4b8774636e28a60dd074528e954ea39902ea67617

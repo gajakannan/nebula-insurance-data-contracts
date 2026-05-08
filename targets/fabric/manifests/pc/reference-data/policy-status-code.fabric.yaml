@@ -2,7 +2,7 @@ manifestVersion: 1.0.0
 contract:
   id: pc.policy-status-code
   name: PolicyStatusCode
-  version: 0.4.0
+  version: 0.4.1
   domain: property-and-casualty
   description: Canonical codeset for policy lifecycle status values such as quoted, bound, issued, in-force,
     cancelled, lapsed, expired, and reinstated.
@@ -214,6 +214,6 @@ fabric:
 relationships: []
 generation:
   generatorVersion: 1.0.0
-  generatedAt: '2026-05-07T00:00:00Z'
+  generatedAt: '2026-05-08T00:00:00Z'
   sourceContractPath: references/odcs/pc/reference-data/policy-status-code.odcs.yaml
-  sourceContractDigest: sha256:4ddedb9205da635bf9e535f957ceb56ee50a22a9100b7e552f730ec73ba52eb4
+  sourceContractDigest: sha256:a4eeba0d7590a62e71941f9f21a49cc8cd15487c9f436586e8dbac12ab38e84a

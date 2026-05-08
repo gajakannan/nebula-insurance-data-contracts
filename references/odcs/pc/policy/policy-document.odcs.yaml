@@ -2,8 +2,8 @@ apiVersion: v3.0.2
 kind: DataContract
 id: pc.policy-document
 name: PolicyDocument
-version: 0.4.2
-status: draft
+version: 0.4.3
+status: proposed
 description: Canonical contract for documents associated with a Property and Casualty policy.
 domain: property-and-casualty
 schema:
@@ -310,3 +310,4 @@ customProperties:
     capture_datetime alongside existing issued/received_datetime; add contains_phi_indicator.'
   - '0.4.1: Canonical hardening C5 — bind 4 *_code field(s) to codeset(s) (C5.2).'
   - '0.4.2: Canonical hardening C7 — rename created_datetime → source_created_datetime; updated_datetime → source_updated_datetime — capture source-system time, distinct from SCD2 system time (C7.4).'
+  - '0.4.3: Promoted from draft to proposed (M10.6, 2026-05-08).'

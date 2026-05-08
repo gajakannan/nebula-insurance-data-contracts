@@ -2,7 +2,7 @@ manifestVersion: 1.0.0
 contract:
   id: pc.term-status-code
   name: TermStatusCode
-  version: 0.4.0
+  version: 0.4.1
   domain: property-and-casualty
   description: Canonical codeset for policy term lifecycle status values such as pending, active, cancelled,
     expired, and replaced.
@@ -214,6 +214,6 @@ fabric:
 relationships: []
 generation:
   generatorVersion: 1.0.0
-  generatedAt: '2026-05-07T00:00:00Z'
+  generatedAt: '2026-05-08T00:00:00Z'
   sourceContractPath: references/odcs/pc/reference-data/term-status-code.odcs.yaml
-  sourceContractDigest: sha256:caa455d9acdd1e7d42b6b37bd55023217c72b121458c522653f6b56d52c38787
+  sourceContractDigest: sha256:ae56246c863aa9aeff747c2312aa50aa978c9f49317b311c0af40f15faccc8eb

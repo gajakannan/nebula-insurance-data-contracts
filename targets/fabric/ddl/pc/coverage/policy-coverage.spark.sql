@@ -1,6 +1,6 @@
 -- Spark SQL DDL for nebula_pc_silver.silver_coverage.policy_coverage
 -- Generated from targets/fabric/manifests/pc/coverage/policy-coverage.fabric.yaml
--- Source: pc.policy-coverage v0.4.1 (references/odcs/pc/coverage/policy-coverage.odcs.yaml)
+-- Source: pc.policy-coverage v0.4.2 (references/odcs/pc/coverage/policy-coverage.odcs.yaml)
 -- Contract kind: entity
 -- Do not edit by hand. Regenerate via scripts/generation/generate-fabric-ddl.py.
 
@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS nebula_pc_silver.silver_coverage.policy_coverage (
 )
 USING DELTA
 PARTITIONED BY (is_current_indicator)
-COMMENT 'Canonical contract for coverage selected or applied within a Property and Casualty policy context. Source: pc.policy-coverage v0.4.1.'
+COMMENT 'Canonical contract for coverage selected or applied within a Property and Casualty policy context. Source: pc.policy-coverage v0.4.2.'
 TBLPROPERTIES (
   'delta.appendOnly' = 'false',
   'delta.autoOptimize.autoCompact' = 'true',

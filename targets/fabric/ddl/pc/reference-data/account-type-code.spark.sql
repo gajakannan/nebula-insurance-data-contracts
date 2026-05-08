@@ -1,6 +1,6 @@
 -- Spark SQL DDL for nebula_pc_silver.silver_reference_data.account_type_code
 -- Generated from targets/fabric/manifests/pc/reference-data/account-type-code.fabric.yaml
--- Source: pc.account-type-code v0.1.0 (references/odcs/pc/reference-data/account-type-code.odcs.yaml)
+-- Source: pc.account-type-code v0.1.1 (references/odcs/pc/reference-data/account-type-code.odcs.yaml)
 -- Contract kind: codeset
 -- Do not edit by hand. Regenerate via scripts/generation/generate-fabric-ddl.py.
 
@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS nebula_pc_silver.silver_reference_data.account_type_c
 )
 USING DELTA
 PARTITIONED BY (is_current_indicator)
-COMMENT 'Canonical codeset for account classification values such as commercial-named-insured, household, parent, and subsidiary. Source: pc.account-type-code v0.1.0.'
+COMMENT 'Canonical codeset for account classification values such as commercial-named-insured, household, parent, and subsidiary. Source: pc.account-type-code v0.1.1.'
 TBLPROPERTIES (
   'delta.appendOnly' = 'false',
   'delta.autoOptimize.autoCompact' = 'true',

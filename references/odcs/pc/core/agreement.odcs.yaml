@@ -2,8 +2,8 @@ apiVersion: v3.0.2
 kind: DataContract
 id: pc.agreement
 name: Agreement
-version: 0.1.1
-status: draft
+version: 0.1.2
+status: proposed
 description: Canonical contract for a master legal or program agreement between the insurer and an account, broker, MGA, or program administrator. Spawns one or more policies under shared terms.
 domain: property-and-casualty
 schema:
@@ -266,3 +266,4 @@ customProperties:
   changelog:
   - '0.1.0: Initial Agreement contract per entity-boundaries ADR; canonical hardening C4.5 ship decision (commercial-lines focus).'
   - '0.1.1: Canonical hardening C5 — bind 1 *_code field(s) to codeset(s) (C5.2).'
+  - '0.1.2: Promoted from draft to proposed (M10.6, 2026-05-08).'

@@ -2,7 +2,7 @@ manifestVersion: 1.0.0
 contract:
   id: pc.coverage-basis-code
   name: CoverageBasisCode
-  version: 0.4.0
+  version: 0.4.1
   domain: property-and-casualty
   description: Canonical codeset for coverage basis classifications used to apply a coverage within a
     policy context.
@@ -214,6 +214,6 @@ fabric:
 relationships: []
 generation:
   generatorVersion: 1.0.0
-  generatedAt: '2026-05-07T00:00:00Z'
+  generatedAt: '2026-05-08T00:00:00Z'
   sourceContractPath: references/odcs/pc/reference-data/coverage-basis-code.odcs.yaml
-  sourceContractDigest: sha256:2014c55d480c8ab71a45616301a663f4ade0be12be5416cbf3094577266b1bea
+  sourceContractDigest: sha256:88b87f3e7ec331ac291de38103e6df0f8341899ead31d50e6413d2afa9e4da36

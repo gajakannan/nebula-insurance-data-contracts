@@ -2,7 +2,7 @@ manifestVersion: 1.0.0
 contract:
   id: pc.party-role-type-code
   name: PartyRoleTypeCode
-  version: 0.4.0
+  version: 0.4.1
   domain: property-and-casualty
   description: Canonical codeset for party role types used across submission, policy, claim, coverage,
     and insurable-object role contracts. Examples include insured, producer, broker, agent, claimant,
@@ -215,6 +215,6 @@ fabric:
 relationships: []
 generation:
   generatorVersion: 1.0.0
-  generatedAt: '2026-05-07T00:00:00Z'
+  generatedAt: '2026-05-08T00:00:00Z'
   sourceContractPath: references/odcs/pc/reference-data/party-role-type-code.odcs.yaml
-  sourceContractDigest: sha256:fc9a60e7f8e31d166370c81264a0e55934e9f24f584a9c465dac32290da82987
+  sourceContractDigest: sha256:bc83b2bdb3b54ec6874df8787b86a74140c2c594977e877e323a6f4acf24c632

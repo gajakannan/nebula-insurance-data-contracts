@@ -2,7 +2,7 @@ manifestVersion: 1.0.0
 contract:
   id: pc.claim-lifecycle-event
   name: ClaimLifecycleEvent
-  version: 0.1.1
+  version: 0.1.2
   domain: property-and-casualty
   description: Canonical contract for lifecycle events in the Property and Casualty claim history.
   classificationProfile: CONFIDENTIAL
@@ -278,6 +278,6 @@ relationships:
   - party_uid
 generation:
   generatorVersion: 1.0.0
-  generatedAt: '2026-05-07T00:00:00Z'
+  generatedAt: '2026-05-08T00:00:00Z'
   sourceContractPath: references/odcs/pc/claims/claim-lifecycle-event.odcs.yaml
-  sourceContractDigest: sha256:6112eb049b9137bb1dbbbf5fb3d155c48d755fe3128cde33af0834695424ce04
+  sourceContractDigest: sha256:37cfeb80a07ff75fbf255cc831cf1a4a905da651b249359c9edb9843a4c32828

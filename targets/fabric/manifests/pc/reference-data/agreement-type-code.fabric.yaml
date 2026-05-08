@@ -2,7 +2,7 @@ manifestVersion: 1.0.0
 contract:
   id: pc.agreement-type-code
   name: AgreementTypeCode
-  version: 0.1.0
+  version: 0.1.1
   domain: property-and-casualty
   description: Canonical codeset for agreement classification values such as program-agreement, master-services-agreement,
     broker-of-record, and binder.
@@ -214,6 +214,6 @@ fabric:
 relationships: []
 generation:
   generatorVersion: 1.0.0
-  generatedAt: '2026-05-07T00:00:00Z'
+  generatedAt: '2026-05-08T00:00:00Z'
   sourceContractPath: references/odcs/pc/reference-data/agreement-type-code.odcs.yaml
-  sourceContractDigest: sha256:89fc7e4eae027797827939b454c4d1ef8e066d744bd68a0faa61d2a63e58c349
+  sourceContractDigest: sha256:24dafff6af1df5b122ea18a14dbe39bb4cd7dec5a12773d1f26a40a19285dfb2

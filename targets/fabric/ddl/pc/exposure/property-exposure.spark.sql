@@ -1,6 +1,6 @@
 -- Spark SQL DDL for nebula_pc_silver.silver_exposure.property_exposure
 -- Generated from targets/fabric/manifests/pc/exposure/property-exposure.fabric.yaml
--- Source: pc.property-exposure v0.4.1 (references/odcs/pc/exposure/property-exposure.odcs.yaml)
+-- Source: pc.property-exposure v0.4.2 (references/odcs/pc/exposure/property-exposure.odcs.yaml)
 -- Contract kind: entity
 -- Do not edit by hand. Regenerate via scripts/generation/generate-fabric-ddl.py.
 
@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS nebula_pc_silver.silver_exposure.property_exposure (
 )
 USING DELTA
 PARTITIONED BY (is_current_indicator)
-COMMENT 'Canonical contract for property-specific exposure attributes in Property and Casualty insurance. Source: pc.property-exposure v0.4.1.'
+COMMENT 'Canonical contract for property-specific exposure attributes in Property and Casualty insurance. Source: pc.property-exposure v0.4.2.'
 TBLPROPERTIES (
   'delta.appendOnly' = 'false',
   'delta.autoOptimize.autoCompact' = 'true',

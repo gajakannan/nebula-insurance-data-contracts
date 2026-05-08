@@ -2,7 +2,7 @@ manifestVersion: 1.0.0
 contract:
   id: pc.claim-financial-transaction
   name: ClaimFinancialTransaction
-  version: 0.1.1
+  version: 0.1.2
   domain: property-and-casualty
   description: Canonical contract for claim-related financial activity such as reserves, payments, recoveries,
     salvage, subrogation, and expense activity.
@@ -423,6 +423,6 @@ relationships:
   - code_value
 generation:
   generatorVersion: 1.0.0
-  generatedAt: '2026-05-07T00:00:00Z'
+  generatedAt: '2026-05-08T00:00:00Z'
   sourceContractPath: references/odcs/pc/claims/claim-financial-transaction.odcs.yaml
-  sourceContractDigest: sha256:a542b8ede5d57aa9879d11b044997ba4fede56d0b266d7007da981e6df70989a
+  sourceContractDigest: sha256:8357c2e1e2c2abf2ce547ee76da69ee692828bb375abad0d0883c424c7161713

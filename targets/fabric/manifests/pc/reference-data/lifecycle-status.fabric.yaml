@@ -2,7 +2,7 @@ manifestVersion: 1.0.0
 contract:
   id: pc.lifecycle-status
   name: LifecycleStatus
-  version: 0.4.1
+  version: 0.4.2
   domain: property-and-casualty
   description: Canonical contract for lifecycle status reference data used across Property and Casualty
     contracts.
@@ -303,6 +303,6 @@ fabric:
 relationships: []
 generation:
   generatorVersion: 1.0.0
-  generatedAt: '2026-05-07T00:00:00Z'
+  generatedAt: '2026-05-08T00:00:00Z'
   sourceContractPath: references/odcs/pc/reference-data/lifecycle-status.odcs.yaml
-  sourceContractDigest: sha256:11fb30e86e9a6f9f1510e1aa66035c796763681770119c043e07bd4b04739b8b
+  sourceContractDigest: sha256:cda86f17cf894e1228440abdd050a34f3a4f235e1b76073acc751f352fe10313

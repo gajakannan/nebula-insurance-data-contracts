@@ -2,7 +2,7 @@ manifestVersion: 1.0.0
 contract:
   id: pc.submission-type-code
   name: SubmissionTypeCode
-  version: 0.1.0
+  version: 0.1.1
   domain: property-and-casualty
   description: Canonical codeset for submission classification values such as new business, renewal, mid-term
     endorsement, and rewrite.
@@ -214,6 +214,6 @@ fabric:
 relationships: []
 generation:
   generatorVersion: 1.0.0
-  generatedAt: '2026-05-07T00:00:00Z'
+  generatedAt: '2026-05-08T00:00:00Z'
   sourceContractPath: references/odcs/pc/reference-data/submission-type-code.odcs.yaml
-  sourceContractDigest: sha256:ebfd8f72f5c16b487ebee8a0d12a22663f56be7082405dfec84ddd45e6e41b76
+  sourceContractDigest: sha256:8fc12b90213d6eec2126dec41a52370a89a0a6f1462e3fca1b5b3400c8315e1e

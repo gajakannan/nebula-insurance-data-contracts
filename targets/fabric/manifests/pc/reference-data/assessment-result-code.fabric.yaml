@@ -2,7 +2,7 @@ manifestVersion: 1.0.0
 contract:
   id: pc.assessment-result-code
   name: AssessmentResultCode
-  version: 0.1.0
+  version: 0.1.1
   domain: property-and-casualty
   description: Canonical codeset for submission assessment result values such as accept, decline, refer,
     and conditional.
@@ -214,6 +214,6 @@ fabric:
 relationships: []
 generation:
   generatorVersion: 1.0.0
-  generatedAt: '2026-05-07T00:00:00Z'
+  generatedAt: '2026-05-08T00:00:00Z'
   sourceContractPath: references/odcs/pc/reference-data/assessment-result-code.odcs.yaml
-  sourceContractDigest: sha256:05d250f312de86e788a63b1c4a8b9a04ebd82dab75646110e98e26702b94b432
+  sourceContractDigest: sha256:1d8a896ab6159025a9c0592195f5d1e13c2ce53595b1cb3319897b944de1368a

@@ -2,8 +2,8 @@ apiVersion: v3.0.2
 kind: DataContract
 id: pc.catastrophe-status-code
 name: CatastropheStatusCode
-version: 0.1.0
-status: draft
+version: 0.1.1
+status: proposed
 description: Canonical codeset for catastrophe lifecycle status values such as active, monitoring, closed, and reopened.
 domain: property-and-casualty
 schema:
@@ -142,3 +142,4 @@ customProperties:
   - versioning-policy
   changelog:
   - '0.1.0: Initial codeset contract generated per codeset-strategy ADR (canonical hardening C5.1).'
+  - '0.1.1: Promoted from draft to proposed (M10.6, 2026-05-08).'

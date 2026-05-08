@@ -2,7 +2,7 @@ manifestVersion: 1.0.0
 contract:
   id: pc.source-system-code
   name: SourceSystemCode
-  version: 0.1.0
+  version: 0.1.1
   domain: property-and-casualty
   description: Canonical codeset for upstream source-system identifiers populated per deployment. Every
     entity contract's source_system_code field references this codeset.
@@ -214,6 +214,6 @@ fabric:
 relationships: []
 generation:
   generatorVersion: 1.0.0
-  generatedAt: '2026-05-07T00:00:00Z'
+  generatedAt: '2026-05-08T00:00:00Z'
   sourceContractPath: references/odcs/pc/reference-data/source-system-code.odcs.yaml
-  sourceContractDigest: sha256:73a7cd4c3fb00e89f922a7defb44feb06add8fdcbb2fa1f2e8702259239c6265
+  sourceContractDigest: sha256:bd7ef828da0a297919489ee130feebc9e8e261eb3561a0a1d4f803abe3c28d42

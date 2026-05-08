@@ -2,8 +2,8 @@ apiVersion: v3.0.2
 kind: DataContract
 id: pc.submission-lifecycle-event
 name: SubmissionLifecycleEvent
-version: 0.4.1
-status: draft
+version: 0.4.2
+status: proposed
 description: Canonical contract for meaningful lifecycle events in a Property and Casualty submission.
 domain: property-and-casualty
 schema:
@@ -197,3 +197,4 @@ customProperties:
     free-text field(s) to CONFIDENTIAL + PII: event_description; drop redundant lifecycle_event_type_uid (keep lifecycle_event_type_code).'
   - '0.4.0: Canonical hardening C5 — bind 3 *_code field(s) to codeset(s) (C5.2).'
   - '0.4.1: Canonical hardening C7 — drop triggering_transaction_uid dead reference — no submission-transaction contract exists; submission lifecycle is event-only (C7.2).'
+  - '0.4.2: Promoted from draft to proposed (M10.6, 2026-05-08).'

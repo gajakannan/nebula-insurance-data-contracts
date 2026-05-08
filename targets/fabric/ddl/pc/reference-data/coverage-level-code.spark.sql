@@ -1,6 +1,6 @@
 -- Spark SQL DDL for nebula_pc_silver.silver_reference_data.coverage_level_code
 -- Generated from targets/fabric/manifests/pc/reference-data/coverage-level-code.fabric.yaml
--- Source: pc.coverage-level-code v0.4.0 (references/odcs/pc/reference-data/coverage-level-code.odcs.yaml)
+-- Source: pc.coverage-level-code v0.4.1 (references/odcs/pc/reference-data/coverage-level-code.odcs.yaml)
 -- Contract kind: codeset
 -- Do not edit by hand. Regenerate via scripts/generation/generate-fabric-ddl.py.
 
@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS nebula_pc_silver.silver_reference_data.coverage_level
 )
 USING DELTA
 PARTITIONED BY (is_current_indicator)
-COMMENT 'Canonical codeset for the level at which a coverage applies, such as policy, term, location, item, exposure, or coverage part. Source: pc.coverage-level-code v0.4.0.'
+COMMENT 'Canonical codeset for the level at which a coverage applies, such as policy, term, location, item, exposure, or coverage part. Source: pc.coverage-level-code v0.4.1.'
 TBLPROPERTIES (
   'delta.appendOnly' = 'false',
   'delta.autoOptimize.autoCompact' = 'true',

@@ -2,7 +2,7 @@ manifestVersion: 1.0.0
 contract:
   id: pc.coverage-status-code
   name: CoverageStatusCode
-  version: 0.4.0
+  version: 0.4.1
   domain: property-and-casualty
   description: Canonical codeset for the lifecycle status of a coverage within a policy context.
   classificationProfile: PUBLIC
@@ -213,6 +213,6 @@ fabric:
 relationships: []
 generation:
   generatorVersion: 1.0.0
-  generatedAt: '2026-05-07T00:00:00Z'
+  generatedAt: '2026-05-08T00:00:00Z'
   sourceContractPath: references/odcs/pc/reference-data/coverage-status-code.odcs.yaml
-  sourceContractDigest: sha256:86b0b9d9dcc3b0b7402002cfa035822da41f41ec5f953462d6acbb472a3981f5
+  sourceContractDigest: sha256:7f5057caba6fdd6faa1bcbf7d0831cb1c9c33c74431fe17c71ab7eeec77d6685

@@ -2,7 +2,7 @@ manifestVersion: 1.0.0
 contract:
   id: pc.account-relationship-type-code
   name: AccountRelationshipTypeCode
-  version: 0.1.0
+  version: 0.1.1
   domain: property-and-casualty
   description: Canonical codeset for account-relationship type values such as parent, subsidiary, affiliate,
     joint-venture, and managing-agent.
@@ -214,6 +214,6 @@ fabric:
 relationships: []
 generation:
   generatorVersion: 1.0.0
-  generatedAt: '2026-05-07T00:00:00Z'
+  generatedAt: '2026-05-08T00:00:00Z'
   sourceContractPath: references/odcs/pc/reference-data/account-relationship-type-code.odcs.yaml
-  sourceContractDigest: sha256:6eabc9c6f9c5e0342596ad8d185d2996bdfe1d096b96d0b2eba93ddffe52dbde
+  sourceContractDigest: sha256:c0df329e4260965148b5d50f545aa9b8e1b1bea29d1a12f398f7c7b444e8069d

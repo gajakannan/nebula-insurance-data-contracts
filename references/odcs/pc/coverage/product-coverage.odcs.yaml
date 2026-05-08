@@ -2,8 +2,8 @@ apiVersion: v3.0.2
 kind: DataContract
 id: pc.product-coverage
 name: ProductCoverage
-version: 0.4.0
-status: draft
+version: 0.4.1
+status: proposed
 description: Canonical many-to-many junction contract relating a Product to a Coverage with product-coverage-specific defaults, constraints, and filing context.
 domain: property-and-casualty
 schema:
@@ -350,3 +350,4 @@ customProperties:
   - '0.3.0: Canonical hardening C3 — composite SCD2 PK on (uid, valid_from_datetime) per scd2-primary-key ADR; exempt minimum_limit_amount (shares limit_constraint_currency_code); exempt maximum_limit_amount
     (shares limit_constraint_currency_code).'
   - '0.4.0: Canonical hardening C5 — bind 3 *_code field(s) to codeset(s) (C5.2); add codesetExempt to 2 field(s) (C5.2).'
+  - '0.4.1: Promoted from draft to proposed (M10.6, 2026-05-08).'

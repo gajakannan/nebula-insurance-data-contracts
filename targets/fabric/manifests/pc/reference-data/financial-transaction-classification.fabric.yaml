@@ -2,7 +2,7 @@ manifestVersion: 1.0.0
 contract:
   id: pc.financial-transaction-classification
   name: FinancialTransactionClassification
-  version: 0.1.1
+  version: 0.1.2
   domain: property-and-casualty
   description: Canonical codeset for the secondary classification of financial transactions, used by analytics
     and reporting to roll up transactions across policy and claim sides (INDEMNITY, EXPENSE_ALAE, EXPENSE_ULAE,
@@ -216,6 +216,6 @@ fabric:
 relationships: []
 generation:
   generatorVersion: 1.0.0
-  generatedAt: '2026-05-07T00:00:00Z'
+  generatedAt: '2026-05-08T00:00:00Z'
   sourceContractPath: references/odcs/pc/reference-data/financial-transaction-classification.odcs.yaml
-  sourceContractDigest: sha256:05d2ae2935ad2710bb1423298606ba941193d9b48082589ad2625dd66db3212f
+  sourceContractDigest: sha256:1e105ca3c8cc38629be044d86b1bfed7dc88ae74239b0f680dcb5f640d2a0957

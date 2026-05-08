@@ -2,7 +2,7 @@ manifestVersion: 1.0.0
 contract:
   id: pc.insurable-object-party-role
   name: InsurableObjectPartyRole
-  version: 0.1.1
+  version: 0.1.2
   domain: property-and-casualty
   description: Canonical contract for a party participating in an insurable object context — named drivers
     on a vehicle, additional insureds on a property, loss-payees, lessees, and other object-scoped party
@@ -389,6 +389,6 @@ relationships:
   - code_value
 generation:
   generatorVersion: 1.0.0
-  generatedAt: '2026-05-07T00:00:00Z'
+  generatedAt: '2026-05-08T00:00:00Z'
   sourceContractPath: references/odcs/pc/exposure/insurable-object-party-role.odcs.yaml
-  sourceContractDigest: sha256:aef3999a7f108822cc425919e71202dffb7b74b5b181576e3143afd3416a1ec3
+  sourceContractDigest: sha256:bb626cc54d4d9c389897fc31594b71c00f4d5bd162c704a58cf7da212d459ec2

@@ -2,8 +2,8 @@ apiVersion: v3.0.2
 kind: DataContract
 id: pc.submission-assessment
 name: SubmissionAssessment
-version: 0.4.1
-status: draft
+version: 0.4.2
+status: proposed
 description: Canonical contract for underwriting, triage, clearance, referral, or risk assessment activity within a Property and Casualty submission.
 domain: property-and-casualty
 schema:
@@ -283,3 +283,4 @@ customProperties:
     INTERNAL → CONFIDENTIAL (matches max field sensitivity).'
   - '0.4.0: Canonical hardening C5 — bind 5 *_code field(s) to codeset(s) (C5.2).'
   - '0.4.1: Canonical hardening C7 — rename created_datetime → source_created_datetime; updated_datetime → source_updated_datetime — capture source-system time, distinct from SCD2 system time (C7.4).'
+  - '0.4.2: Promoted from draft to proposed (M10.6, 2026-05-08).'

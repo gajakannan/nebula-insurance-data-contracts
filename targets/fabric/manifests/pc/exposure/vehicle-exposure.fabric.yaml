@@ -2,7 +2,7 @@ manifestVersion: 1.0.0
 contract:
   id: pc.vehicle-exposure
   name: VehicleExposure
-  version: 0.4.1
+  version: 0.4.2
   domain: property-and-casualty
   description: Canonical contract for vehicle-specific exposure attributes in Property and Casualty insurance.
   classificationProfile: CONFIDENTIAL
@@ -436,6 +436,6 @@ relationships:
   - code_value
 generation:
   generatorVersion: 1.0.0
-  generatedAt: '2026-05-07T00:00:00Z'
+  generatedAt: '2026-05-08T00:00:00Z'
   sourceContractPath: references/odcs/pc/exposure/vehicle-exposure.odcs.yaml
-  sourceContractDigest: sha256:ed0b1e24a891dc2418b8608a1eb93c56f1124194821514ecdfccf6087148bf78
+  sourceContractDigest: sha256:4294eda4379640eda2c0b0fba7e329e7a307d61dac44ba7d507f49b4ec78d08d

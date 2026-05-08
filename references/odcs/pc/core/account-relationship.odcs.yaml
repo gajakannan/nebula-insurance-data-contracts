@@ -2,8 +2,8 @@ apiVersion: v3.0.2
 kind: DataContract
 id: pc.account-relationship
 name: AccountRelationship
-version: 0.1.1
-status: draft
+version: 0.1.2
+status: proposed
 description: Canonical contract for relationships between accounts — corporate hierarchies, billing parents, master programs, ultimate parents, and merger restructurings.
 domain: property-and-casualty
 schema:
@@ -241,3 +241,4 @@ customProperties:
   changelog:
   - '0.1.0: Initial AccountRelationship contract per role-modeling and entity-boundaries ADRs; canonical hardening C4.5 ship decision (commercial-lines focus).'
   - '0.1.1: Canonical hardening C5 — bind 1 *_code field(s) to codeset(s) (C5.2).'
+  - '0.1.2: Promoted from draft to proposed (M10.6, 2026-05-08).'

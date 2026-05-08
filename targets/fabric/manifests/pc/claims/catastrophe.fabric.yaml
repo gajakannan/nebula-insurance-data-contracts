@@ -2,7 +2,7 @@ manifestVersion: 1.0.0
 contract:
   id: pc.catastrophe
   name: Catastrophe
-  version: 0.1.1
+  version: 0.1.2
   domain: property-and-casualty
   description: Canonical contract for a catastrophe — a named industry or company event (named storm,
     wildfire, earthquake, civil event) used to aggregate exposures, occurrences, and claims for reinsurance
@@ -366,6 +366,6 @@ relationships:
   - code_value
 generation:
   generatorVersion: 1.0.0
-  generatedAt: '2026-05-07T00:00:00Z'
+  generatedAt: '2026-05-08T00:00:00Z'
   sourceContractPath: references/odcs/pc/claims/catastrophe.odcs.yaml
-  sourceContractDigest: sha256:48f49f657ae7a3e576c2c2cb07958b2b8d6ae8e7d618216ef92b8e8f8ae107e5
+  sourceContractDigest: sha256:9da4c514b74dc6356a8185c784635fd269ae97236247a191ec66f4a7fcca1348

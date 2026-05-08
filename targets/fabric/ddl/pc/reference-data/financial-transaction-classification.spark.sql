@@ -1,6 +1,6 @@
 -- Spark SQL DDL for nebula_pc_silver.silver_reference_data.financial_transaction_classification
 -- Generated from targets/fabric/manifests/pc/reference-data/financial-transaction-classification.fabric.yaml
--- Source: pc.financial-transaction-classification v0.1.1 (references/odcs/pc/reference-data/financial-transaction-classification.odcs.yaml)
+-- Source: pc.financial-transaction-classification v0.1.2 (references/odcs/pc/reference-data/financial-transaction-classification.odcs.yaml)
 -- Contract kind: codeset
 -- Do not edit by hand. Regenerate via scripts/generation/generate-fabric-ddl.py.
 
@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS nebula_pc_silver.silver_reference_data.financial_tran
 )
 USING DELTA
 PARTITIONED BY (is_current_indicator)
-COMMENT 'Canonical codeset for the secondary classification of financial transactions, used by analytics and reporting to roll up transactions across policy and claim sides (INDEMNITY, EXPENSE_ALAE, EXPENSE_ULAE, RESERVE_INDEMNITY, RESERVE_EXPENSE, WRITTEN_PREMIUM, EARNED_PREMIUM, COMMISSION_BASE, etc.). Source: pc.financial-transaction-classification v0.1.1.'
+COMMENT 'Canonical codeset for the secondary classification of financial transactions, used by analytics and reporting to roll up transactions across policy and claim sides (INDEMNITY, EXPENSE_ALAE, EXPENSE_ULAE, RESERVE_INDEMNITY, RESERVE_EXPENSE, WRITTEN_PREMIUM, EARNED_PREMIUM, COMMISSION_BASE, etc.). Source: pc.financial-transaction-classification v0.1.2.'
 TBLPROPERTIES (
   'delta.appendOnly' = 'false',
   'delta.autoOptimize.autoCompact' = 'true',

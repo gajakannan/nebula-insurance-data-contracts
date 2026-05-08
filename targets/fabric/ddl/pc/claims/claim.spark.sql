@@ -1,6 +1,6 @@
 -- Spark SQL DDL for nebula_pc_silver.silver_claims.claim
 -- Generated from targets/fabric/manifests/pc/claims/claim.fabric.yaml
--- Source: pc.claim v0.4.2 (references/odcs/pc/claims/claim.odcs.yaml)
+-- Source: pc.claim v0.4.3 (references/odcs/pc/claims/claim.odcs.yaml)
 -- Contract kind: entity
 -- Do not edit by hand. Regenerate via scripts/generation/generate-fabric-ddl.py.
 
@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS nebula_pc_silver.silver_claims.claim (
 )
 USING DELTA
 PARTITIONED BY (is_current_indicator)
-COMMENT 'Canonical contract for Property and Casualty claim identity, loss context, and current claim summary. Source: pc.claim v0.4.2.'
+COMMENT 'Canonical contract for Property and Casualty claim identity, loss context, and current claim summary. Source: pc.claim v0.4.3.'
 TBLPROPERTIES (
   'delta.appendOnly' = 'false',
   'delta.autoOptimize.autoCompact' = 'true',

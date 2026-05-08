@@ -1,6 +1,6 @@
 -- Spark SQL DDL for nebula_pc_silver.silver_claims.claim_document
 -- Generated from targets/fabric/manifests/pc/claims/claim-document.fabric.yaml
--- Source: pc.claim-document v0.3.1 (references/odcs/pc/claims/claim-document.odcs.yaml)
+-- Source: pc.claim-document v0.3.2 (references/odcs/pc/claims/claim-document.odcs.yaml)
 -- Contract kind: entity
 -- Do not edit by hand. Regenerate via scripts/generation/generate-fabric-ddl.py.
 
@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS nebula_pc_silver.silver_claims.claim_document (
 )
 USING DELTA
 PARTITIONED BY (is_current_indicator)
-COMMENT 'Canonical contract for documents associated with a Property and Casualty claim. Stores document metadata only; document content is held in an external store. Source: pc.claim-document v0.3.1.'
+COMMENT 'Canonical contract for documents associated with a Property and Casualty claim. Stores document metadata only; document content is held in an external store. Source: pc.claim-document v0.3.2.'
 TBLPROPERTIES (
   'delta.appendOnly' = 'false',
   'delta.autoOptimize.autoCompact' = 'true',

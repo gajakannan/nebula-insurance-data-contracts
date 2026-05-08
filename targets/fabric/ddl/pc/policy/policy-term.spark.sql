@@ -1,6 +1,6 @@
 -- Spark SQL DDL for nebula_pc_silver.silver_policy.policy_term
 -- Generated from targets/fabric/manifests/pc/policy/policy-term.fabric.yaml
--- Source: pc.policy-term v0.4.1 (references/odcs/pc/policy/policy-term.odcs.yaml)
+-- Source: pc.policy-term v0.4.2 (references/odcs/pc/policy/policy-term.odcs.yaml)
 -- Contract kind: entity
 -- Do not edit by hand. Regenerate via scripts/generation/generate-fabric-ddl.py.
 
@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS nebula_pc_silver.silver_policy.policy_term (
 )
 USING DELTA
 PARTITIONED BY (is_current_indicator)
-COMMENT 'Canonical contract for a term period associated with a Property and Casualty policy. Source: pc.policy-term v0.4.1.'
+COMMENT 'Canonical contract for a term period associated with a Property and Casualty policy. Source: pc.policy-term v0.4.2.'
 TBLPROPERTIES (
   'delta.appendOnly' = 'false',
   'delta.autoOptimize.autoCompact' = 'true',

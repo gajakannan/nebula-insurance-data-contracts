@@ -2,7 +2,7 @@ manifestVersion: 1.0.0
 contract:
   id: pc.currency-code
   name: CurrencyCode
-  version: 0.4.0
+  version: 0.4.1
   domain: property-and-casualty
   description: Canonical codeset for currencies used in monetary fields across the contract set.
   classificationProfile: PUBLIC
@@ -212,6 +212,6 @@ fabric:
 relationships: []
 generation:
   generatorVersion: 1.0.0
-  generatedAt: '2026-05-07T00:00:00Z'
+  generatedAt: '2026-05-08T00:00:00Z'
   sourceContractPath: references/odcs/pc/reference-data/currency-code.odcs.yaml
-  sourceContractDigest: sha256:f84a900ab184d6830232f0932ab0524e32e6e52260c18a84604141698a93fb20
+  sourceContractDigest: sha256:c693b4cc62deafd5fd54dcdbc03d90f89add3409afb55323901ac04067a48b88

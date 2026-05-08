@@ -2,8 +2,8 @@ apiVersion: v3.0.2
 kind: DataContract
 id: pc.financial-transaction
 name: FinancialTransaction
-version: 0.4.0
-status: draft
+version: 0.4.1
+status: proposed
 description: Canonical contract for monetary activity associated with Property and Casualty policy, claim, coverage, party, and exposure context.
 domain: property-and-casualty
 schema:
@@ -294,3 +294,4 @@ customProperties:
   - '0.3.0: Canonical hardening C3 — drop created_datetime, updated_datetime (append-only per temporal-modeling ADR); drop mutable transaction_status_code (status belongs on lifecycle events); re-tag over-classified
     field(s) to INTERNAL: accounting_period_code; re-tag narrative free-text field(s) to CONFIDENTIAL + PII: transaction_description.'
   - '0.4.0: Canonical hardening C5 — bind 3 *_code field(s) to codeset(s) (C5.2); add codesetExempt to 2 field(s) (C5.2).'
+  - '0.4.1: Promoted from draft to proposed (M10.6, 2026-05-08).'

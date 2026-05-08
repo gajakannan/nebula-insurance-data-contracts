@@ -2,7 +2,7 @@ manifestVersion: 1.0.0
 contract:
   id: pc.coverage-decision-code
   name: CoverageDecisionCode
-  version: 0.1.0
+  version: 0.1.1
   domain: property-and-casualty
   description: Canonical codeset for claim coverage decision values such as covered, denied, partial,
     pending, and tendered.
@@ -214,6 +214,6 @@ fabric:
 relationships: []
 generation:
   generatorVersion: 1.0.0
-  generatedAt: '2026-05-07T00:00:00Z'
+  generatedAt: '2026-05-08T00:00:00Z'
   sourceContractPath: references/odcs/pc/reference-data/coverage-decision-code.odcs.yaml
-  sourceContractDigest: sha256:154807d7ca5ea88fd94726ec88eeed784522ef85fd9fd0408b8f795d56d7ab5d
+  sourceContractDigest: sha256:1454497c26e24210775edbdc4dc81856ddd98551647f09bc653d392f0b8b8a3e

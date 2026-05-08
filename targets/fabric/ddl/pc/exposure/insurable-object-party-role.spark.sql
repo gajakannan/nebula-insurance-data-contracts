@@ -1,6 +1,6 @@
 -- Spark SQL DDL for nebula_pc_silver.silver_exposure.insurable_object_party_role
 -- Generated from targets/fabric/manifests/pc/exposure/insurable-object-party-role.fabric.yaml
--- Source: pc.insurable-object-party-role v0.1.1 (references/odcs/pc/exposure/insurable-object-party-role.odcs.yaml)
+-- Source: pc.insurable-object-party-role v0.1.2 (references/odcs/pc/exposure/insurable-object-party-role.odcs.yaml)
 -- Contract kind: entity
 -- Do not edit by hand. Regenerate via scripts/generation/generate-fabric-ddl.py.
 
@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS nebula_pc_silver.silver_exposure.insurable_object_par
 )
 USING DELTA
 PARTITIONED BY (is_current_indicator)
-COMMENT 'Canonical contract for a party participating in an insurable object context — named drivers on a vehicle, additional insureds on a property, loss-payees, lessees, and other object-scoped party participations. Source: pc.insurable-object-party-role v0.1.1.'
+COMMENT 'Canonical contract for a party participating in an insurable object context — named drivers on a vehicle, additional insureds on a property, loss-payees, lessees, and other object-scoped party participations. Source: pc.insurable-object-party-role v0.1.2.'
 TBLPROPERTIES (
   'delta.appendOnly' = 'false',
   'delta.autoOptimize.autoCompact' = 'true',

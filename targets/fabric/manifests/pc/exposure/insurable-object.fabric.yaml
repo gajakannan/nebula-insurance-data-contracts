@@ -2,7 +2,7 @@ manifestVersion: 1.0.0
 contract:
   id: pc.insurable-object
   name: InsurableObject
-  version: 0.4.1
+  version: 0.4.2
   domain: property-and-casualty
   description: Canonical contract for an object, property, vehicle, operation, interest, or location that
     may be insured in Property and Casualty insurance.
@@ -377,6 +377,6 @@ relationships:
   - code_value
 generation:
   generatorVersion: 1.0.0
-  generatedAt: '2026-05-07T00:00:00Z'
+  generatedAt: '2026-05-08T00:00:00Z'
   sourceContractPath: references/odcs/pc/exposure/insurable-object.odcs.yaml
-  sourceContractDigest: sha256:c9f4df59ad1d8b4470213924df8636e9abd2f473b1bb9ad2744ef99c6382fc79
+  sourceContractDigest: sha256:28e41c1c0c549a739d116c9534f4410a4a96afcf4e4f2f20cfd7fa64afde11dd

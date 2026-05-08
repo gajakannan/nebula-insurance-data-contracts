@@ -2,7 +2,7 @@ manifestVersion: 1.0.0
 contract:
   id: pc.product
   name: Product
-  version: 0.4.1
+  version: 0.4.2
   domain: property-and-casualty
   description: Canonical contract for Property and Casualty insurance product reference and offering context.
   classificationProfile: CONFIDENTIAL
@@ -400,6 +400,6 @@ relationships:
   - code_value
 generation:
   generatorVersion: 1.0.0
-  generatedAt: '2026-05-07T00:00:00Z'
+  generatedAt: '2026-05-08T00:00:00Z'
   sourceContractPath: references/odcs/pc/coverage/product.odcs.yaml
-  sourceContractDigest: sha256:66165df368762dc02eff24521cd91ae0c03f8b533cd2a64bbd67dfd46806c23c
+  sourceContractDigest: sha256:f27520e947f2b43c196c5d9c80d8f19a47db3f998e73c7e813f92534925346c7

@@ -1,6 +1,6 @@
 -- Spark SQL DDL for nebula_pc_silver.silver_reference_data.coverage_status_code
 -- Generated from targets/fabric/manifests/pc/reference-data/coverage-status-code.fabric.yaml
--- Source: pc.coverage-status-code v0.4.0 (references/odcs/pc/reference-data/coverage-status-code.odcs.yaml)
+-- Source: pc.coverage-status-code v0.4.1 (references/odcs/pc/reference-data/coverage-status-code.odcs.yaml)
 -- Contract kind: codeset
 -- Do not edit by hand. Regenerate via scripts/generation/generate-fabric-ddl.py.
 
@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS nebula_pc_silver.silver_reference_data.coverage_statu
 )
 USING DELTA
 PARTITIONED BY (is_current_indicator)
-COMMENT 'Canonical codeset for the lifecycle status of a coverage within a policy context. Source: pc.coverage-status-code v0.4.0.'
+COMMENT 'Canonical codeset for the lifecycle status of a coverage within a policy context. Source: pc.coverage-status-code v0.4.1.'
 TBLPROPERTIES (
   'delta.appendOnly' = 'false',
   'delta.autoOptimize.autoCompact' = 'true',

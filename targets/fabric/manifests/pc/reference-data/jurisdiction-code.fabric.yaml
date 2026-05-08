@@ -2,7 +2,7 @@ manifestVersion: 1.0.0
 contract:
   id: pc.jurisdiction-code
   name: JurisdictionCode
-  version: 0.4.0
+  version: 0.4.1
   domain: property-and-casualty
   description: Canonical codeset for jurisdictions in which insurance contracts are issued, governed,
     or regulated.
@@ -213,6 +213,6 @@ fabric:
 relationships: []
 generation:
   generatorVersion: 1.0.0
-  generatedAt: '2026-05-07T00:00:00Z'
+  generatedAt: '2026-05-08T00:00:00Z'
   sourceContractPath: references/odcs/pc/reference-data/jurisdiction-code.odcs.yaml
-  sourceContractDigest: sha256:81f141e9db9febf7a366559d1f3c4976222f5281f0439030e338cfc7dddf4ba7
+  sourceContractDigest: sha256:33d07e88e44538d07adb0fb6a2151f2d9c2458a1e5bc143470b8e2e47eece071

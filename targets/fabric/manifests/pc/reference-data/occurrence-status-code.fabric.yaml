@@ -2,7 +2,7 @@ manifestVersion: 1.0.0
 contract:
   id: pc.occurrence-status-code
   name: OccurrenceStatusCode
-  version: 0.1.0
+  version: 0.1.1
   domain: property-and-casualty
   description: Canonical codeset for occurrence lifecycle status values such as reported, under-investigation,
     closed, and reopened.
@@ -214,6 +214,6 @@ fabric:
 relationships: []
 generation:
   generatorVersion: 1.0.0
-  generatedAt: '2026-05-07T00:00:00Z'
+  generatedAt: '2026-05-08T00:00:00Z'
   sourceContractPath: references/odcs/pc/reference-data/occurrence-status-code.odcs.yaml
-  sourceContractDigest: sha256:c816f4c57f75533acd249f013bc05c3e0fa37ca77bb4c30a8f17c8fbafb16cf0
+  sourceContractDigest: sha256:e6af8d00c6c5dd4c22ee9af1fd1cc7298d5ac75d29a47e31963a14bb2a25263c

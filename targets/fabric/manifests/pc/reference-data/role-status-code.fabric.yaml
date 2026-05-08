@@ -2,7 +2,7 @@ manifestVersion: 1.0.0
 contract:
   id: pc.role-status-code
   name: RoleStatusCode
-  version: 0.1.0
+  version: 0.1.1
   domain: property-and-casualty
   description: Canonical codeset for party-role lifecycle status values used across submission, policy,
     claim, account, and insurable-object role contracts.
@@ -214,6 +214,6 @@ fabric:
 relationships: []
 generation:
   generatorVersion: 1.0.0
-  generatedAt: '2026-05-07T00:00:00Z'
+  generatedAt: '2026-05-08T00:00:00Z'
   sourceContractPath: references/odcs/pc/reference-data/role-status-code.odcs.yaml
-  sourceContractDigest: sha256:be47dbdc09793341bc53a0fcc2a47b78c393a7172a5ce8f273098ad3e9cc837b
+  sourceContractDigest: sha256:efafb2c9cfc7cefbc2568f86181c061f23b108b89570cfed3378e850d14a9c1b

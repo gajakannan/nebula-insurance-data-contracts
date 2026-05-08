@@ -2,8 +2,8 @@ apiVersion: v3.0.2
 kind: DataContract
 id: pc.occurrence
 name: Occurrence
-version: 0.1.1
-status: draft
+version: 0.1.2
+status: proposed
 description: Canonical contract for an insured occurrence — the underlying event that gives rise to one or more Property and Casualty claims.
 domain: property-and-casualty
 schema:
@@ -236,3 +236,4 @@ customProperties:
   changelog:
   - '0.1.0: Initial occurrence contract per claims-modeling ADR; canonical hardening C4.1.'
   - '0.1.1: Canonical hardening C5 — bind 1 *_code field(s) to codeset(s) (C5.2).'
+  - '0.1.2: Promoted from draft to proposed (M10.6, 2026-05-08).'

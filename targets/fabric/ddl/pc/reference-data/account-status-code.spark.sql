@@ -1,6 +1,6 @@
 -- Spark SQL DDL for nebula_pc_silver.silver_reference_data.account_status_code
 -- Generated from targets/fabric/manifests/pc/reference-data/account-status-code.fabric.yaml
--- Source: pc.account-status-code v0.1.0 (references/odcs/pc/reference-data/account-status-code.odcs.yaml)
+-- Source: pc.account-status-code v0.1.1 (references/odcs/pc/reference-data/account-status-code.odcs.yaml)
 -- Contract kind: codeset
 -- Do not edit by hand. Regenerate via scripts/generation/generate-fabric-ddl.py.
 
@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS nebula_pc_silver.silver_reference_data.account_status
 )
 USING DELTA
 PARTITIONED BY (is_current_indicator)
-COMMENT 'Canonical codeset for account lifecycle status values such as active, suspended, dormant, and closed. Source: pc.account-status-code v0.1.0.'
+COMMENT 'Canonical codeset for account lifecycle status values such as active, suspended, dormant, and closed. Source: pc.account-status-code v0.1.1.'
 TBLPROPERTIES (
   'delta.appendOnly' = 'false',
   'delta.autoOptimize.autoCompact' = 'true',

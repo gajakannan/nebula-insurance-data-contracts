@@ -2,7 +2,7 @@ manifestVersion: 1.0.0
 contract:
   id: pc.coverage-level-code
   name: CoverageLevelCode
-  version: 0.4.0
+  version: 0.4.1
   domain: property-and-casualty
   description: Canonical codeset for the level at which a coverage applies, such as policy, term, location,
     item, exposure, or coverage part.
@@ -214,6 +214,6 @@ fabric:
 relationships: []
 generation:
   generatorVersion: 1.0.0
-  generatedAt: '2026-05-07T00:00:00Z'
+  generatedAt: '2026-05-08T00:00:00Z'
   sourceContractPath: references/odcs/pc/reference-data/coverage-level-code.odcs.yaml
-  sourceContractDigest: sha256:a6694942b9fb1bd28c694e295ae3b06149b2b594d858faec0b8758c0e2a2f8df
+  sourceContractDigest: sha256:efa9f7b28b1c376433a6b5c0d2125486b9f5e59786014c06f298d64bea40532f

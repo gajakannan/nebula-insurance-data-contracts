@@ -2,8 +2,8 @@ apiVersion: v3.0.2
 kind: DataContract
 id: pc.policy-term
 name: PolicyTerm
-version: 0.4.1
-status: draft
+version: 0.4.2
+status: approved
 description: Canonical contract for a term period associated with a Property and Casualty policy.
 domain: property-and-casualty
 schema:
@@ -268,3 +268,4 @@ customProperties:
   - '0.3.0: Canonical hardening C3 — composite SCD2 PK on (uid, valid_from_datetime) per scd2-primary-key ADR; rename premium_currency_code → annualized_premium_currency_code for currency pairing on annualized_premium_amount.'
   - '0.4.0: Canonical hardening C5 — rename status_code field(s): term_status_code → policy_term_status_code; bind 4 *_code field(s) to codeset(s) (C5.2).'
   - '0.4.1: Canonical hardening C7 — rename created_datetime → source_created_datetime; updated_datetime → source_updated_datetime — capture source-system time, distinct from SCD2 system time (C7.4).'
+  - '0.4.2: Promoted from draft to approved (M10.6, 2026-05-08).'

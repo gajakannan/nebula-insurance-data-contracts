@@ -1,6 +1,6 @@
 -- Spark SQL DDL for nebula_pc_silver.silver_core.party
 -- Generated from targets/fabric/manifests/pc/core/party.fabric.yaml
--- Source: pc.party v0.4.1 (references/odcs/pc/core/party.odcs.yaml)
+-- Source: pc.party v0.4.2 (references/odcs/pc/core/party.odcs.yaml)
 -- Contract kind: entity
 -- Do not edit by hand. Regenerate via scripts/generation/generate-fabric-ddl.py.
 
@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS nebula_pc_silver.silver_core.party (
 )
 USING DELTA
 PARTITIONED BY (is_current_indicator)
-COMMENT 'Canonical contract for a reusable person, organization, or group identity in Property and Casualty insurance. Source: pc.party v0.4.1.'
+COMMENT 'Canonical contract for a reusable person, organization, or group identity in Property and Casualty insurance. Source: pc.party v0.4.2.'
 TBLPROPERTIES (
   'delta.appendOnly' = 'false',
   'delta.autoOptimize.autoCompact' = 'true',

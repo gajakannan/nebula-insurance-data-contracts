@@ -1,6 +1,6 @@
 -- Spark SQL DDL for nebula_pc_silver.silver_submission.submission_risk
 -- Generated from targets/fabric/manifests/pc/submission/submission-risk.fabric.yaml
--- Source: pc.submission-risk v0.4.1 (references/odcs/pc/submission/submission-risk.odcs.yaml)
+-- Source: pc.submission-risk v0.4.2 (references/odcs/pc/submission/submission-risk.odcs.yaml)
 -- Contract kind: entity
 -- Do not edit by hand. Regenerate via scripts/generation/generate-fabric-ddl.py.
 
@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS nebula_pc_silver.silver_submission.submission_risk (
 )
 USING DELTA
 PARTITIONED BY (is_current_indicator)
-COMMENT 'Canonical contract for risk information presented within a Property and Casualty submission. Source: pc.submission-risk v0.4.1.'
+COMMENT 'Canonical contract for risk information presented within a Property and Casualty submission. Source: pc.submission-risk v0.4.2.'
 TBLPROPERTIES (
   'delta.appendOnly' = 'false',
   'delta.autoOptimize.autoCompact' = 'true',

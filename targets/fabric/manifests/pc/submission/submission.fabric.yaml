@@ -2,7 +2,7 @@ manifestVersion: 1.0.0
 contract:
   id: pc.submission
   name: Submission
-  version: 0.4.2
+  version: 0.4.3
   domain: property-and-casualty
   description: Canonical contract for Property and Casualty submission intake and current submission summary.
   classificationProfile: CONFIDENTIAL
@@ -545,6 +545,6 @@ relationships:
   - code_value
 generation:
   generatorVersion: 1.0.0
-  generatedAt: '2026-05-07T00:00:00Z'
+  generatedAt: '2026-05-08T00:00:00Z'
   sourceContractPath: references/odcs/pc/submission/submission.odcs.yaml
-  sourceContractDigest: sha256:2933011249688c521648f85c5232779ff7b95bb21bfdc3e64e44813b07fa6a8e
+  sourceContractDigest: sha256:3785f07a62127347be204af5fc1da18e37b7f457e2040fc68b5cd822737c1846

@@ -2,7 +2,7 @@ manifestVersion: 1.0.0
 contract:
   id: pc.claim-document
   name: ClaimDocument
-  version: 0.3.1
+  version: 0.3.2
   domain: property-and-casualty
   description: Canonical contract for documents associated with a Property and Casualty claim. Stores
     document metadata only; document content is held in an external store.
@@ -414,6 +414,6 @@ relationships:
   - code_value
 generation:
   generatorVersion: 1.0.0
-  generatedAt: '2026-05-07T00:00:00Z'
+  generatedAt: '2026-05-08T00:00:00Z'
   sourceContractPath: references/odcs/pc/claims/claim-document.odcs.yaml
-  sourceContractDigest: sha256:6c90f91850c77374794b3df383c2381a8ff35445edb4f832d9f3574b88de4e50
+  sourceContractDigest: sha256:fa658be3c72f40b205fa421dc607870364cdcdb8f0fc22b0fa5ac9a43196a749

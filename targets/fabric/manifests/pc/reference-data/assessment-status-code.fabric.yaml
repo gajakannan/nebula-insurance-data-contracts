@@ -2,7 +2,7 @@ manifestVersion: 1.0.0
 contract:
   id: pc.assessment-status-code
   name: AssessmentStatusCode
-  version: 0.1.0
+  version: 0.1.1
   domain: property-and-casualty
   description: Canonical codeset for submission assessment lifecycle status values such as in-progress,
     complete, and superseded.
@@ -214,6 +214,6 @@ fabric:
 relationships: []
 generation:
   generatorVersion: 1.0.0
-  generatedAt: '2026-05-07T00:00:00Z'
+  generatedAt: '2026-05-08T00:00:00Z'
   sourceContractPath: references/odcs/pc/reference-data/assessment-status-code.odcs.yaml
-  sourceContractDigest: sha256:7f49cbfe00580b817c488f66c1535e799eeabe88346daab4465bf2e50d0a7448
+  sourceContractDigest: sha256:30f98a649af2d9fea609803b6859d044b6c9e1a1cdd0f5779d8cb9f11c7aa88d

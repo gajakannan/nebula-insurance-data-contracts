@@ -1,6 +1,6 @@
 -- Spark SQL DDL for nebula_pc_silver.silver_reference_data.currency_code
 -- Generated from targets/fabric/manifests/pc/reference-data/currency-code.fabric.yaml
--- Source: pc.currency-code v0.4.0 (references/odcs/pc/reference-data/currency-code.odcs.yaml)
+-- Source: pc.currency-code v0.4.1 (references/odcs/pc/reference-data/currency-code.odcs.yaml)
 -- Contract kind: codeset
 -- Do not edit by hand. Regenerate via scripts/generation/generate-fabric-ddl.py.
 
@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS nebula_pc_silver.silver_reference_data.currency_code 
 )
 USING DELTA
 PARTITIONED BY (is_current_indicator)
-COMMENT 'Canonical codeset for currencies used in monetary fields across the contract set. Source: pc.currency-code v0.4.0.'
+COMMENT 'Canonical codeset for currencies used in monetary fields across the contract set. Source: pc.currency-code v0.4.1.'
 TBLPROPERTIES (
   'delta.appendOnly' = 'false',
   'delta.autoOptimize.autoCompact' = 'true',

@@ -1,6 +1,6 @@
 -- Spark SQL DDL for nebula_pc_silver.silver_reference_data.assessment_result_code
 -- Generated from targets/fabric/manifests/pc/reference-data/assessment-result-code.fabric.yaml
--- Source: pc.assessment-result-code v0.1.0 (references/odcs/pc/reference-data/assessment-result-code.odcs.yaml)
+-- Source: pc.assessment-result-code v0.1.1 (references/odcs/pc/reference-data/assessment-result-code.odcs.yaml)
 -- Contract kind: codeset
 -- Do not edit by hand. Regenerate via scripts/generation/generate-fabric-ddl.py.
 
@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS nebula_pc_silver.silver_reference_data.assessment_res
 )
 USING DELTA
 PARTITIONED BY (is_current_indicator)
-COMMENT 'Canonical codeset for submission assessment result values such as accept, decline, refer, and conditional. Source: pc.assessment-result-code v0.1.0.'
+COMMENT 'Canonical codeset for submission assessment result values such as accept, decline, refer, and conditional. Source: pc.assessment-result-code v0.1.1.'
 TBLPROPERTIES (
   'delta.appendOnly' = 'false',
   'delta.autoOptimize.autoCompact' = 'true',

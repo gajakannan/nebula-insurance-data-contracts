@@ -1,6 +1,6 @@
 -- Spark SQL DDL for nebula_pc_silver.silver_reference_data.role_status_code
 -- Generated from targets/fabric/manifests/pc/reference-data/role-status-code.fabric.yaml
--- Source: pc.role-status-code v0.1.0 (references/odcs/pc/reference-data/role-status-code.odcs.yaml)
+-- Source: pc.role-status-code v0.1.1 (references/odcs/pc/reference-data/role-status-code.odcs.yaml)
 -- Contract kind: codeset
 -- Do not edit by hand. Regenerate via scripts/generation/generate-fabric-ddl.py.
 
@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS nebula_pc_silver.silver_reference_data.role_status_co
 )
 USING DELTA
 PARTITIONED BY (is_current_indicator)
-COMMENT 'Canonical codeset for party-role lifecycle status values used across submission, policy, claim, account, and insurable-object role contracts. Source: pc.role-status-code v0.1.0.'
+COMMENT 'Canonical codeset for party-role lifecycle status values used across submission, policy, claim, account, and insurable-object role contracts. Source: pc.role-status-code v0.1.1.'
 TBLPROPERTIES (
   'delta.appendOnly' = 'false',
   'delta.autoOptimize.autoCompact' = 'true',

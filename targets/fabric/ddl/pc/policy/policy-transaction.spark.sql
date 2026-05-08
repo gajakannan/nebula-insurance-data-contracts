@@ -1,6 +1,6 @@
 -- Spark SQL DDL for nebula_pc_silver.silver_policy.policy_transaction
 -- Generated from targets/fabric/manifests/pc/policy/policy-transaction.fabric.yaml
--- Source: pc.policy-transaction v0.4.0 (references/odcs/pc/policy/policy-transaction.odcs.yaml)
+-- Source: pc.policy-transaction v0.4.1 (references/odcs/pc/policy/policy-transaction.odcs.yaml)
 -- Contract kind: transaction
 -- Do not edit by hand. Regenerate via scripts/generation/generate-fabric-ddl.py.
 
@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS nebula_pc_silver.silver_policy.policy_transaction (
 )
 USING DELTA
 PARTITIONED BY (transaction_effective_date)
-COMMENT 'Canonical contract for transaction-level policy activity in Property and Casualty insurance. Source: pc.policy-transaction v0.4.0.'
+COMMENT 'Canonical contract for transaction-level policy activity in Property and Casualty insurance. Source: pc.policy-transaction v0.4.1.'
 TBLPROPERTIES (
   'delta.appendOnly' = 'true',
   'delta.autoOptimize.autoCompact' = 'true',

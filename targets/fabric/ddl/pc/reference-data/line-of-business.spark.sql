@@ -1,6 +1,6 @@
 -- Spark SQL DDL for nebula_pc_silver.silver_reference_data.line_of_business
 -- Generated from targets/fabric/manifests/pc/reference-data/line-of-business.fabric.yaml
--- Source: pc.line-of-business v0.4.1 (references/odcs/pc/reference-data/line-of-business.odcs.yaml)
+-- Source: pc.line-of-business v0.4.2 (references/odcs/pc/reference-data/line-of-business.odcs.yaml)
 -- Contract kind: codeset
 -- Do not edit by hand. Regenerate via scripts/generation/generate-fabric-ddl.py.
 
@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS nebula_pc_silver.silver_reference_data.line_of_busine
 )
 USING DELTA
 PARTITIONED BY (is_current_indicator)
-COMMENT 'Canonical contract for Property and Casualty line of business reference data. Source: pc.line-of-business v0.4.1.'
+COMMENT 'Canonical contract for Property and Casualty line of business reference data. Source: pc.line-of-business v0.4.2.'
 TBLPROPERTIES (
   'delta.appendOnly' = 'false',
   'delta.autoOptimize.autoCompact' = 'true',

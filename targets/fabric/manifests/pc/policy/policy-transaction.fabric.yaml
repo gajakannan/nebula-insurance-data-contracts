@@ -2,7 +2,7 @@ manifestVersion: 1.0.0
 contract:
   id: pc.policy-transaction
   name: PolicyTransaction
-  version: 0.4.0
+  version: 0.4.1
   domain: property-and-casualty
   description: Canonical contract for transaction-level policy activity in Property and Casualty insurance.
   classificationProfile: CONFIDENTIAL
@@ -379,6 +379,6 @@ relationships:
   - code_value
 generation:
   generatorVersion: 1.0.0
-  generatedAt: '2026-05-07T00:00:00Z'
+  generatedAt: '2026-05-08T00:00:00Z'
   sourceContractPath: references/odcs/pc/policy/policy-transaction.odcs.yaml
-  sourceContractDigest: sha256:fe068106304fa283393368cd2c17d69038fd68d1822bc761c652d92787bab8f9
+  sourceContractDigest: sha256:45ef09eabdd458573f89f028be5d8c35566c233d2576f056d44ecacd0ca39a32

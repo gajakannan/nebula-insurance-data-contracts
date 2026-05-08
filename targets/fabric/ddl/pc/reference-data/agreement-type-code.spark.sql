@@ -1,6 +1,6 @@
 -- Spark SQL DDL for nebula_pc_silver.silver_reference_data.agreement_type_code
 -- Generated from targets/fabric/manifests/pc/reference-data/agreement-type-code.fabric.yaml
--- Source: pc.agreement-type-code v0.1.0 (references/odcs/pc/reference-data/agreement-type-code.odcs.yaml)
+-- Source: pc.agreement-type-code v0.1.1 (references/odcs/pc/reference-data/agreement-type-code.odcs.yaml)
 -- Contract kind: codeset
 -- Do not edit by hand. Regenerate via scripts/generation/generate-fabric-ddl.py.
 
@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS nebula_pc_silver.silver_reference_data.agreement_type
 )
 USING DELTA
 PARTITIONED BY (is_current_indicator)
-COMMENT 'Canonical codeset for agreement classification values such as program-agreement, master-services-agreement, broker-of-record, and binder. Source: pc.agreement-type-code v0.1.0.'
+COMMENT 'Canonical codeset for agreement classification values such as program-agreement, master-services-agreement, broker-of-record, and binder. Source: pc.agreement-type-code v0.1.1.'
 TBLPROPERTIES (
   'delta.appendOnly' = 'false',
   'delta.autoOptimize.autoCompact' = 'true',

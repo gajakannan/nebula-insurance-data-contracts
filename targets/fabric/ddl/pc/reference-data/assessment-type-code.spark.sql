@@ -1,6 +1,6 @@
 -- Spark SQL DDL for nebula_pc_silver.silver_reference_data.assessment_type_code
 -- Generated from targets/fabric/manifests/pc/reference-data/assessment-type-code.fabric.yaml
--- Source: pc.assessment-type-code v0.1.0 (references/odcs/pc/reference-data/assessment-type-code.odcs.yaml)
+-- Source: pc.assessment-type-code v0.1.1 (references/odcs/pc/reference-data/assessment-type-code.odcs.yaml)
 -- Contract kind: codeset
 -- Do not edit by hand. Regenerate via scripts/generation/generate-fabric-ddl.py.
 
@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS nebula_pc_silver.silver_reference_data.assessment_typ
 )
 USING DELTA
 PARTITIONED BY (is_current_indicator)
-COMMENT 'Canonical codeset for submission assessment type values such as risk score, eligibility, model output, and underwriter judgment. Source: pc.assessment-type-code v0.1.0.'
+COMMENT 'Canonical codeset for submission assessment type values such as risk score, eligibility, model output, and underwriter judgment. Source: pc.assessment-type-code v0.1.1.'
 TBLPROPERTIES (
   'delta.appendOnly' = 'false',
   'delta.autoOptimize.autoCompact' = 'true',

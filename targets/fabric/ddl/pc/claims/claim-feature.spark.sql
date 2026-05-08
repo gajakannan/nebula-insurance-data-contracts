@@ -1,6 +1,6 @@
 -- Spark SQL DDL for nebula_pc_silver.silver_claims.claim_feature
 -- Generated from targets/fabric/manifests/pc/claims/claim-feature.fabric.yaml
--- Source: pc.claim-feature v0.3.1 (references/odcs/pc/claims/claim-feature.odcs.yaml)
+-- Source: pc.claim-feature v0.3.2 (references/odcs/pc/claims/claim-feature.odcs.yaml)
 -- Contract kind: entity
 -- Do not edit by hand. Regenerate via scripts/generation/generate-fabric-ddl.py.
 
@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS nebula_pc_silver.silver_claims.claim_feature (
 )
 USING DELTA
 PARTITIONED BY (is_current_indicator)
-COMMENT 'Canonical contract for a claim feature, partitioning a claim into independent handling streams by coverage, peril, claimant, or other business dimension. Source: pc.claim-feature v0.3.1.'
+COMMENT 'Canonical contract for a claim feature, partitioning a claim into independent handling streams by coverage, peril, claimant, or other business dimension. Source: pc.claim-feature v0.3.2.'
 TBLPROPERTIES (
   'delta.appendOnly' = 'false',
   'delta.autoOptimize.autoCompact' = 'true',

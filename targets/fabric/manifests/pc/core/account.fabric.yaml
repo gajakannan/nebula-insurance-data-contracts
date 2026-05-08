@@ -2,7 +2,7 @@ manifestVersion: 1.0.0
 contract:
   id: pc.account
   name: Account
-  version: 0.1.1
+  version: 0.1.2
   domain: property-and-casualty
   description: Canonical contract for a commercial-lines account — the master customer record that owns
     one or more policies, agreements, and submissions.
@@ -421,6 +421,6 @@ relationships:
   - code_value
 generation:
   generatorVersion: 1.0.0
-  generatedAt: '2026-05-07T00:00:00Z'
+  generatedAt: '2026-05-08T00:00:00Z'
   sourceContractPath: references/odcs/pc/core/account.odcs.yaml
-  sourceContractDigest: sha256:e4779598fba9598e385e36929d8bd1a8ff431b9ffea1c13cebea2b9b9d40ac09
+  sourceContractDigest: sha256:c6d6e2623d491d7614f151510790f10ba48bbb5f6ef189aced6b40a672156469

@@ -2,7 +2,7 @@ manifestVersion: 1.0.0
 contract:
   id: pc.workers-comp-exposure
   name: WorkersCompExposure
-  version: 0.4.1
+  version: 0.4.2
   domain: property-and-casualty
   description: Canonical contract for workers compensation exposure attributes in Property and Casualty
     insurance.
@@ -450,6 +450,6 @@ relationships:
   - code_value
 generation:
   generatorVersion: 1.0.0
-  generatedAt: '2026-05-07T00:00:00Z'
+  generatedAt: '2026-05-08T00:00:00Z'
   sourceContractPath: references/odcs/pc/exposure/workers-comp-exposure.odcs.yaml
-  sourceContractDigest: sha256:0acbb4d91ebec525be18518ea69b1595912910c8cb358076128dbb2a147a5d09
+  sourceContractDigest: sha256:c833477a06daee22abcede677d2db9a291756df0ea5251eae5909b56af820585

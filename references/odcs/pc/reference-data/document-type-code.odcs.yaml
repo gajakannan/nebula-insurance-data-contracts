@@ -2,8 +2,8 @@ apiVersion: v3.0.2
 kind: DataContract
 id: pc.document-type-code
 name: DocumentTypeCode
-version: 0.1.0
-status: draft
+version: 0.1.1
+status: proposed
 description: Canonical codeset for document type values used across submission, policy, and claim document contracts (e.g. application, declaration, endorsement, photograph, invoice).
 domain: property-and-casualty
 schema:
@@ -142,3 +142,4 @@ customProperties:
   - versioning-policy
   changelog:
   - '0.1.0: Initial codeset contract generated per codeset-strategy ADR (canonical hardening C5.1).'
+  - '0.1.1: Promoted from draft to proposed (M10.6, 2026-05-08).'

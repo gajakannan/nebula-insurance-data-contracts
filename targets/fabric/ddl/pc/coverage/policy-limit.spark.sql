@@ -1,6 +1,6 @@
 -- Spark SQL DDL for nebula_pc_silver.silver_coverage.policy_limit
 -- Generated from targets/fabric/manifests/pc/coverage/policy-limit.fabric.yaml
--- Source: pc.policy-limit v0.4.1 (references/odcs/pc/coverage/policy-limit.odcs.yaml)
+-- Source: pc.policy-limit v0.4.2 (references/odcs/pc/coverage/policy-limit.odcs.yaml)
 -- Contract kind: entity
 -- Do not edit by hand. Regenerate via scripts/generation/generate-fabric-ddl.py.
 
@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS nebula_pc_silver.silver_coverage.policy_limit (
 )
 USING DELTA
 PARTITIONED BY (is_current_indicator)
-COMMENT 'Canonical contract for structured limit detail associated with a Property and Casualty policy coverage. Source: pc.policy-limit v0.4.1.'
+COMMENT 'Canonical contract for structured limit detail associated with a Property and Casualty policy coverage. Source: pc.policy-limit v0.4.2.'
 TBLPROPERTIES (
   'delta.appendOnly' = 'false',
   'delta.autoOptimize.autoCompact' = 'true',

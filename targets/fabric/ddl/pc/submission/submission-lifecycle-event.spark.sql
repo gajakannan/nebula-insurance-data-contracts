@@ -1,6 +1,6 @@
 -- Spark SQL DDL for nebula_pc_silver.silver_submission.submission_lifecycle_event
 -- Generated from targets/fabric/manifests/pc/submission/submission-lifecycle-event.fabric.yaml
--- Source: pc.submission-lifecycle-event v0.4.1 (references/odcs/pc/submission/submission-lifecycle-event.odcs.yaml)
+-- Source: pc.submission-lifecycle-event v0.4.2 (references/odcs/pc/submission/submission-lifecycle-event.odcs.yaml)
 -- Contract kind: event
 -- Do not edit by hand. Regenerate via scripts/generation/generate-fabric-ddl.py.
 
@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS nebula_pc_silver.silver_submission.submission_lifecyc
 )
 USING DELTA
 PARTITIONED BY (event_datetime)
-COMMENT 'Canonical contract for meaningful lifecycle events in a Property and Casualty submission. Source: pc.submission-lifecycle-event v0.4.1.'
+COMMENT 'Canonical contract for meaningful lifecycle events in a Property and Casualty submission. Source: pc.submission-lifecycle-event v0.4.2.'
 TBLPROPERTIES (
   'delta.appendOnly' = 'true',
   'delta.autoOptimize.autoCompact' = 'true',

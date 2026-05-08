@@ -1,6 +1,6 @@
 -- Spark SQL DDL for nebula_pc_silver.silver_reference_data.coverage_decision_code
 -- Generated from targets/fabric/manifests/pc/reference-data/coverage-decision-code.fabric.yaml
--- Source: pc.coverage-decision-code v0.1.0 (references/odcs/pc/reference-data/coverage-decision-code.odcs.yaml)
+-- Source: pc.coverage-decision-code v0.1.1 (references/odcs/pc/reference-data/coverage-decision-code.odcs.yaml)
 -- Contract kind: codeset
 -- Do not edit by hand. Regenerate via scripts/generation/generate-fabric-ddl.py.
 
@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS nebula_pc_silver.silver_reference_data.coverage_decis
 )
 USING DELTA
 PARTITIONED BY (is_current_indicator)
-COMMENT 'Canonical codeset for claim coverage decision values such as covered, denied, partial, pending, and tendered. Source: pc.coverage-decision-code v0.1.0.'
+COMMENT 'Canonical codeset for claim coverage decision values such as covered, denied, partial, pending, and tendered. Source: pc.coverage-decision-code v0.1.1.'
 TBLPROPERTIES (
   'delta.appendOnly' = 'false',
   'delta.autoOptimize.autoCompact' = 'true',

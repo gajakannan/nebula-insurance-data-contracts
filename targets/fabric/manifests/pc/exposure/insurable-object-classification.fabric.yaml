@@ -2,7 +2,7 @@ manifestVersion: 1.0.0
 contract:
   id: pc.insurable-object-classification
   name: InsurableObjectClassification
-  version: 0.4.1
+  version: 0.4.2
   domain: property-and-casualty
   description: Canonical contract for durable classification of insurable objects in Property and Casualty
     insurance.
@@ -381,6 +381,6 @@ relationships:
   - code_value
 generation:
   generatorVersion: 1.0.0
-  generatedAt: '2026-05-07T00:00:00Z'
+  generatedAt: '2026-05-08T00:00:00Z'
   sourceContractPath: references/odcs/pc/exposure/insurable-object-classification.odcs.yaml
-  sourceContractDigest: sha256:45efef6b807c90b473fd71de236013492736258a765d83c4a6d6cfd7927c4469
+  sourceContractDigest: sha256:838d55d0549022c229c3ebc25a009de440d4a7bb2ac24c51c741485fe2932bb6

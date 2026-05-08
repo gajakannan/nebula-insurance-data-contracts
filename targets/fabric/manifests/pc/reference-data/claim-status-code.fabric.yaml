@@ -2,7 +2,7 @@ manifestVersion: 1.0.0
 contract:
   id: pc.claim-status-code
   name: ClaimStatusCode
-  version: 0.4.0
+  version: 0.4.1
   domain: property-and-casualty
   description: Canonical codeset for claim lifecycle status values such as open, closed, reopened, denied,
     and withdrawn.
@@ -214,6 +214,6 @@ fabric:
 relationships: []
 generation:
   generatorVersion: 1.0.0
-  generatedAt: '2026-05-07T00:00:00Z'
+  generatedAt: '2026-05-08T00:00:00Z'
   sourceContractPath: references/odcs/pc/reference-data/claim-status-code.odcs.yaml
-  sourceContractDigest: sha256:6709efdae2126208226762a5909d067d51bc5480be6870c2ac495b9b9d7ed27c
+  sourceContractDigest: sha256:8f24cb9493c573b05137d147772d268b62fc305fa35aa26d5839aa1333fb569c

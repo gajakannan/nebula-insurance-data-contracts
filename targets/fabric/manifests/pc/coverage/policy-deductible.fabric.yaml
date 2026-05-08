@@ -2,7 +2,7 @@ manifestVersion: 1.0.0
 contract:
   id: pc.policy-deductible
   name: PolicyDeductible
-  version: 0.4.1
+  version: 0.4.2
   domain: property-and-casualty
   description: Canonical contract for structured deductible detail associated with a Property and Casualty
     policy coverage.
@@ -436,6 +436,6 @@ relationships:
   - code_value
 generation:
   generatorVersion: 1.0.0
-  generatedAt: '2026-05-07T00:00:00Z'
+  generatedAt: '2026-05-08T00:00:00Z'
   sourceContractPath: references/odcs/pc/coverage/policy-deductible.odcs.yaml
-  sourceContractDigest: sha256:66f5875385af6ec7aa2c9f9214849fa11f93975eb8b7d9df8278b827d11087f7
+  sourceContractDigest: sha256:87bf23ec124d0c7ea3136d141da9372afb16b01f2d55a2b3588fc0f820c576bf

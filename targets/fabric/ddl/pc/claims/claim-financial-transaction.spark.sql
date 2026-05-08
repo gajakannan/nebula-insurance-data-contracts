@@ -1,6 +1,6 @@
 -- Spark SQL DDL for nebula_pc_silver.silver_claims.claim_financial_transaction
 -- Generated from targets/fabric/manifests/pc/claims/claim-financial-transaction.fabric.yaml
--- Source: pc.claim-financial-transaction v0.1.1 (references/odcs/pc/claims/claim-financial-transaction.odcs.yaml)
+-- Source: pc.claim-financial-transaction v0.1.2 (references/odcs/pc/claims/claim-financial-transaction.odcs.yaml)
 -- Contract kind: transaction
 -- Do not edit by hand. Regenerate via scripts/generation/generate-fabric-ddl.py.
 
@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS nebula_pc_silver.silver_claims.claim_financial_transa
 )
 USING DELTA
 PARTITIONED BY (transaction_effective_date)
-COMMENT 'Canonical contract for claim-related financial activity such as reserves, payments, recoveries, salvage, subrogation, and expense activity. Source: pc.claim-financial-transaction v0.1.1.'
+COMMENT 'Canonical contract for claim-related financial activity such as reserves, payments, recoveries, salvage, subrogation, and expense activity. Source: pc.claim-financial-transaction v0.1.2.'
 TBLPROPERTIES (
   'delta.appendOnly' = 'true',
   'delta.autoOptimize.autoCompact' = 'true',

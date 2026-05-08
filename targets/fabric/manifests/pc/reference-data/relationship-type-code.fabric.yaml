@@ -2,7 +2,7 @@ manifestVersion: 1.0.0
 contract:
   id: pc.relationship-type-code
   name: RelationshipTypeCode
-  version: 0.1.0
+  version: 0.1.1
   domain: property-and-casualty
   description: Canonical codeset for party relationship type values such as parent, subsidiary, affiliate,
     predecessor, and successor.
@@ -214,6 +214,6 @@ fabric:
 relationships: []
 generation:
   generatorVersion: 1.0.0
-  generatedAt: '2026-05-07T00:00:00Z'
+  generatedAt: '2026-05-08T00:00:00Z'
   sourceContractPath: references/odcs/pc/reference-data/relationship-type-code.odcs.yaml
-  sourceContractDigest: sha256:4e65e0cbb3bf7aa14fc7b3d7923a683a7361ae8c5fbfcd1b4ba0afa2e49ae47b
+  sourceContractDigest: sha256:dfc2bef08b3f33401bf7e015289b83af7b80a33edbbf5d972758a375f6eb1455

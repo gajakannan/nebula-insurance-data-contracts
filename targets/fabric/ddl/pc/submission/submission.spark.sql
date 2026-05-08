@@ -1,6 +1,6 @@
 -- Spark SQL DDL for nebula_pc_silver.silver_submission.submission
 -- Generated from targets/fabric/manifests/pc/submission/submission.fabric.yaml
--- Source: pc.submission v0.4.2 (references/odcs/pc/submission/submission.odcs.yaml)
+-- Source: pc.submission v0.4.3 (references/odcs/pc/submission/submission.odcs.yaml)
 -- Contract kind: entity
 -- Do not edit by hand. Regenerate via scripts/generation/generate-fabric-ddl.py.
 
@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS nebula_pc_silver.silver_submission.submission (
 )
 USING DELTA
 PARTITIONED BY (is_current_indicator)
-COMMENT 'Canonical contract for Property and Casualty submission intake and current submission summary. Source: pc.submission v0.4.2.'
+COMMENT 'Canonical contract for Property and Casualty submission intake and current submission summary. Source: pc.submission v0.4.3.'
 TBLPROPERTIES (
   'delta.appendOnly' = 'false',
   'delta.autoOptimize.autoCompact' = 'true',

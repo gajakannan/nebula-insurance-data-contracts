@@ -1,6 +1,6 @@
 -- Spark SQL DDL for nebula_pc_silver.silver_claims.occurrence
 -- Generated from targets/fabric/manifests/pc/claims/occurrence.fabric.yaml
--- Source: pc.occurrence v0.1.1 (references/odcs/pc/claims/occurrence.odcs.yaml)
+-- Source: pc.occurrence v0.1.2 (references/odcs/pc/claims/occurrence.odcs.yaml)
 -- Contract kind: entity
 -- Do not edit by hand. Regenerate via scripts/generation/generate-fabric-ddl.py.
 
@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS nebula_pc_silver.silver_claims.occurrence (
 )
 USING DELTA
 PARTITIONED BY (is_current_indicator)
-COMMENT 'Canonical contract for an insured occurrence — the underlying event that gives rise to one or more Property and Casualty claims. Source: pc.occurrence v0.1.1.'
+COMMENT 'Canonical contract for an insured occurrence — the underlying event that gives rise to one or more Property and Casualty claims. Source: pc.occurrence v0.1.2.'
 TBLPROPERTIES (
   'delta.appendOnly' = 'false',
   'delta.autoOptimize.autoCompact' = 'true',

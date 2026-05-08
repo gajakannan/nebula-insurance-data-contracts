@@ -2,7 +2,7 @@ manifestVersion: 1.0.0
 contract:
   id: pc.policy-limit
   name: PolicyLimit
-  version: 0.4.1
+  version: 0.4.2
   domain: property-and-casualty
   description: Canonical contract for structured limit detail associated with a Property and Casualty
     policy coverage.
@@ -406,6 +406,6 @@ relationships:
   - code_value
 generation:
   generatorVersion: 1.0.0
-  generatedAt: '2026-05-07T00:00:00Z'
+  generatedAt: '2026-05-08T00:00:00Z'
   sourceContractPath: references/odcs/pc/coverage/policy-limit.odcs.yaml
-  sourceContractDigest: sha256:b1c1ab331161d70cd52fc99d3649a3eee26f43637f380ba3bee4ca327cfee2f7
+  sourceContractDigest: sha256:f282c211d3ab1cff0c127260d2a9c728fa634bf85ef3bcaf1d7da1294135b006

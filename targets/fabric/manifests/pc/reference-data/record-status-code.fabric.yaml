@@ -2,7 +2,7 @@ manifestVersion: 1.0.0
 contract:
   id: pc.record-status-code
   name: RecordStatusCode
-  version: 0.4.0
+  version: 0.4.1
   domain: property-and-casualty
   description: Canonical codeset for warehouse-level record state. Allowed values include ACTIVE, SUPERSEDED,
     SOFT_DELETED, RESTATED, and MERGED per the record-state ADR.
@@ -214,6 +214,6 @@ fabric:
 relationships: []
 generation:
   generatorVersion: 1.0.0
-  generatedAt: '2026-05-07T00:00:00Z'
+  generatedAt: '2026-05-08T00:00:00Z'
   sourceContractPath: references/odcs/pc/reference-data/record-status-code.odcs.yaml
-  sourceContractDigest: sha256:54d5a52d217ac2e5586a9dfbc590f3fd39d50492e0cf9091ff3124b9ba4f4f04
+  sourceContractDigest: sha256:fafc529969397c83e2af762faf0cc6f5251852f4425158da256c08ad916bfdff

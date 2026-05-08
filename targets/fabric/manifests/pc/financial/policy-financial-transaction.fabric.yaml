@@ -2,7 +2,7 @@ manifestVersion: 1.0.0
 contract:
   id: pc.policy-financial-transaction
   name: PolicyFinancialTransaction
-  version: 0.2.1
+  version: 0.2.2
   domain: property-and-casualty
   description: Canonical contract for policy-related financial activity such as premium movements, fee
     posts, commission accruals, surcharges, and other policy-side transactions.
@@ -512,6 +512,6 @@ relationships:
   - code_value
 generation:
   generatorVersion: 1.0.0
-  generatedAt: '2026-05-07T00:00:00Z'
+  generatedAt: '2026-05-08T00:00:00Z'
   sourceContractPath: references/odcs/pc/financial/policy-financial-transaction.odcs.yaml
-  sourceContractDigest: sha256:5f8aa53d60568cceca26eadefce73a170e67adc89eafbebc91da814b70a0cd74
+  sourceContractDigest: sha256:3edb4b69e2576e2c13ae71860f42ce5de5309bdeedf38b14782a53c4fe899743

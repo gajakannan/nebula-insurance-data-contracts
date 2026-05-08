@@ -2,8 +2,8 @@ apiVersion: v3.0.2
 kind: DataContract
 id: pc.financial-transaction-classification
 name: FinancialTransactionClassification
-version: 0.1.1
-status: draft
+version: 0.1.2
+status: proposed
 description: Canonical codeset for the secondary classification of financial transactions, used by analytics and reporting to roll up transactions across policy and claim sides (INDEMNITY, EXPENSE_ALAE,
   EXPENSE_ULAE, RESERVE_INDEMNITY, RESERVE_EXPENSE, WRITTEN_PREMIUM, EARNED_PREMIUM, COMMISSION_BASE, etc.).
 domain: property-and-casualty
@@ -145,3 +145,4 @@ customProperties:
   changelog:
   - '0.1.0: Initial codeset contract per codeset-strategy ADR; canonical hardening C4.6.'
   - '0.1.1: Canonical hardening C5 — lift classificationProfile to PUBLIC (C5.4 pure codeset); flip 4 field sensitivities to PUBLIC (C5.4 pure codeset).'
+  - '0.1.2: Promoted from draft to proposed (M10.6, 2026-05-08).'

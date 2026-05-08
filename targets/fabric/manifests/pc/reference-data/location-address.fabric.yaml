@@ -2,7 +2,7 @@ manifestVersion: 1.0.0
 contract:
   id: pc.location-address
   name: LocationAddress
-  version: 0.3.1
+  version: 0.3.2
   domain: property-and-casualty
   description: Canonical contract for address reference data associated with a geographic location in
     Property and Casualty insurance.
@@ -346,6 +346,6 @@ relationships:
   - geographic_location_uid
 generation:
   generatorVersion: 1.0.0
-  generatedAt: '2026-05-07T00:00:00Z'
+  generatedAt: '2026-05-08T00:00:00Z'
   sourceContractPath: references/odcs/pc/reference-data/location-address.odcs.yaml
-  sourceContractDigest: sha256:539da460062cc295159c87c396d9f9c6ba38ee974c8199d9a8c6aba87c613bc9
+  sourceContractDigest: sha256:0de101ee4ff3d8bbe4ec32756d7fb19e18ef98ab83927824ca641ab119dfeecf

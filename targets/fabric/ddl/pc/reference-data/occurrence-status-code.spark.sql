@@ -1,6 +1,6 @@
 -- Spark SQL DDL for nebula_pc_silver.silver_reference_data.occurrence_status_code
 -- Generated from targets/fabric/manifests/pc/reference-data/occurrence-status-code.fabric.yaml
--- Source: pc.occurrence-status-code v0.1.0 (references/odcs/pc/reference-data/occurrence-status-code.odcs.yaml)
+-- Source: pc.occurrence-status-code v0.1.1 (references/odcs/pc/reference-data/occurrence-status-code.odcs.yaml)
 -- Contract kind: codeset
 -- Do not edit by hand. Regenerate via scripts/generation/generate-fabric-ddl.py.
 
@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS nebula_pc_silver.silver_reference_data.occurrence_sta
 )
 USING DELTA
 PARTITIONED BY (is_current_indicator)
-COMMENT 'Canonical codeset for occurrence lifecycle status values such as reported, under-investigation, closed, and reopened. Source: pc.occurrence-status-code v0.1.0.'
+COMMENT 'Canonical codeset for occurrence lifecycle status values such as reported, under-investigation, closed, and reopened. Source: pc.occurrence-status-code v0.1.1.'
 TBLPROPERTIES (
   'delta.appendOnly' = 'false',
   'delta.autoOptimize.autoCompact' = 'true',

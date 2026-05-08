@@ -1,6 +1,6 @@
 -- Spark SQL DDL for nebula_pc_silver.silver_policy.policy_lifecycle_event
 -- Generated from targets/fabric/manifests/pc/policy/policy-lifecycle-event.fabric.yaml
--- Source: pc.policy-lifecycle-event v0.4.0 (references/odcs/pc/policy/policy-lifecycle-event.odcs.yaml)
+-- Source: pc.policy-lifecycle-event v0.4.1 (references/odcs/pc/policy/policy-lifecycle-event.odcs.yaml)
 -- Contract kind: event
 -- Do not edit by hand. Regenerate via scripts/generation/generate-fabric-ddl.py.
 
@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS nebula_pc_silver.silver_policy.policy_lifecycle_event
 )
 USING DELTA
 PARTITIONED BY (event_datetime)
-COMMENT 'Canonical contract for meaningful lifecycle events in a Property and Casualty policy. Source: pc.policy-lifecycle-event v0.4.0.'
+COMMENT 'Canonical contract for meaningful lifecycle events in a Property and Casualty policy. Source: pc.policy-lifecycle-event v0.4.1.'
 TBLPROPERTIES (
   'delta.appendOnly' = 'true',
   'delta.autoOptimize.autoCompact' = 'true',

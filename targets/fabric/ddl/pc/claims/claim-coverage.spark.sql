@@ -1,6 +1,6 @@
 -- Spark SQL DDL for nebula_pc_silver.silver_claims.claim_coverage
 -- Generated from targets/fabric/manifests/pc/claims/claim-coverage.fabric.yaml
--- Source: pc.claim-coverage v0.3.1 (references/odcs/pc/claims/claim-coverage.odcs.yaml)
+-- Source: pc.claim-coverage v0.3.2 (references/odcs/pc/claims/claim-coverage.odcs.yaml)
 -- Contract kind: entity
 -- Do not edit by hand. Regenerate via scripts/generation/generate-fabric-ddl.py.
 
@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS nebula_pc_silver.silver_claims.claim_coverage (
 )
 USING DELTA
 PARTITIONED BY (is_current_indicator)
-COMMENT 'Canonical contract that connects a claim or claim feature to the policy coverage that responds to it. Source: pc.claim-coverage v0.3.1.'
+COMMENT 'Canonical contract that connects a claim or claim feature to the policy coverage that responds to it. Source: pc.claim-coverage v0.3.2.'
 TBLPROPERTIES (
   'delta.appendOnly' = 'false',
   'delta.autoOptimize.autoCompact' = 'true',

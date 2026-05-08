@@ -2,8 +2,8 @@ apiVersion: v3.0.2
 kind: DataContract
 id: pc.line-of-business
 name: LineOfBusiness
-version: 0.4.1
-status: draft
+version: 0.4.2
+status: approved
 description: Canonical contract for Property and Casualty line of business reference data.
 domain: property-and-casualty
 schema:
@@ -214,3 +214,4 @@ customProperties:
   - '0.3.0: Canonical hardening C3 — composite SCD2 PK on (uid, valid_from_datetime) per scd2-primary-key ADR.'
   - '0.4.0: Canonical hardening C5 — rename status_code field(s): status_code → line_of_business_status_code; lift code_value sensitivity to PUBLIC (C5.7).'
   - '0.4.1: Canonical hardening C7 — rename created_datetime → source_created_datetime; updated_datetime → source_updated_datetime — capture source-system time, distinct from SCD2 system time (C7.4).'
+  - '0.4.2: Promoted from draft to approved (M10.6, 2026-05-08).'

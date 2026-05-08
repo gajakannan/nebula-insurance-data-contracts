@@ -2,7 +2,7 @@ manifestVersion: 1.0.0
 contract:
   id: pc.relationship-status-code
   name: RelationshipStatusCode
-  version: 0.1.0
+  version: 0.1.1
   domain: property-and-casualty
   description: Canonical codeset for party relationship lifecycle status values such as active, inactive,
     and terminated.
@@ -214,6 +214,6 @@ fabric:
 relationships: []
 generation:
   generatorVersion: 1.0.0
-  generatedAt: '2026-05-07T00:00:00Z'
+  generatedAt: '2026-05-08T00:00:00Z'
   sourceContractPath: references/odcs/pc/reference-data/relationship-status-code.odcs.yaml
-  sourceContractDigest: sha256:0dda92bffa4c8f9cbf772836bd8dd42d40f94e44ad1b339a48dd8ebe507f5bf8
+  sourceContractDigest: sha256:7177b99bd1e357b74b3ca531c61b8c383663f651247078178ecd8db28d5b4f77

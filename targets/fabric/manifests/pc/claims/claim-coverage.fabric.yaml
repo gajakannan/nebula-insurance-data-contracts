@@ -2,7 +2,7 @@ manifestVersion: 1.0.0
 contract:
   id: pc.claim-coverage
   name: ClaimCoverage
-  version: 0.3.1
+  version: 0.3.2
   domain: property-and-casualty
   description: Canonical contract that connects a claim or claim feature to the policy coverage that responds
     to it.
@@ -471,6 +471,6 @@ relationships:
   - code_value
 generation:
   generatorVersion: 1.0.0
-  generatedAt: '2026-05-07T00:00:00Z'
+  generatedAt: '2026-05-08T00:00:00Z'
   sourceContractPath: references/odcs/pc/claims/claim-coverage.odcs.yaml
-  sourceContractDigest: sha256:9d2f5efa22533074130d9dcc30c41f9310edcd92ce84bed7ca1f412e0524a404
+  sourceContractDigest: sha256:6645cf16351eb959c5c763babe9f585f6c59efab3ee0fffe57ecff658c893a88

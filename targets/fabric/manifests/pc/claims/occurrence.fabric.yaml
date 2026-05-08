@@ -2,7 +2,7 @@ manifestVersion: 1.0.0
 contract:
   id: pc.occurrence
   name: Occurrence
-  version: 0.1.1
+  version: 0.1.2
   domain: property-and-casualty
   description: Canonical contract for an insured occurrence — the underlying event that gives rise to
     one or more Property and Casualty claims.
@@ -391,6 +391,6 @@ relationships:
   - code_value
 generation:
   generatorVersion: 1.0.0
-  generatedAt: '2026-05-07T00:00:00Z'
+  generatedAt: '2026-05-08T00:00:00Z'
   sourceContractPath: references/odcs/pc/claims/occurrence.odcs.yaml
-  sourceContractDigest: sha256:c26c8954a2c9e046ed3f6d245914e982353f64c65500a2a5747b8dc862ed8e36
+  sourceContractDigest: sha256:93e5de204c1fb6efa63ecf4904ac78bb38ff5a0f83555e29410ac2d03b19ed27

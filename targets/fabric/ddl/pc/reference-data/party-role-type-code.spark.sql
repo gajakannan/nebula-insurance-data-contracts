@@ -1,6 +1,6 @@
 -- Spark SQL DDL for nebula_pc_silver.silver_reference_data.party_role_type_code
 -- Generated from targets/fabric/manifests/pc/reference-data/party-role-type-code.fabric.yaml
--- Source: pc.party-role-type-code v0.4.0 (references/odcs/pc/reference-data/party-role-type-code.odcs.yaml)
+-- Source: pc.party-role-type-code v0.4.1 (references/odcs/pc/reference-data/party-role-type-code.odcs.yaml)
 -- Contract kind: codeset
 -- Do not edit by hand. Regenerate via scripts/generation/generate-fabric-ddl.py.
 
@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS nebula_pc_silver.silver_reference_data.party_role_typ
 )
 USING DELTA
 PARTITIONED BY (is_current_indicator)
-COMMENT 'Canonical codeset for party role types used across submission, policy, claim, coverage, and insurable-object role contracts. Examples include insured, producer, broker, agent, claimant, adjuster, loss-payee, service-provider, and underwriter. Source: pc.party-role-type-code v0.4.0.'
+COMMENT 'Canonical codeset for party role types used across submission, policy, claim, coverage, and insurable-object role contracts. Examples include insured, producer, broker, agent, claimant, adjuster, loss-payee, service-provider, and underwriter. Source: pc.party-role-type-code v0.4.1.'
 TBLPROPERTIES (
   'delta.appendOnly' = 'false',
   'delta.autoOptimize.autoCompact' = 'true',

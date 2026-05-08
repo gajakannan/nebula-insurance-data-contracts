@@ -1,6 +1,6 @@
 -- Spark SQL DDL for nebula_pc_silver.silver_reference_data.geographic_location
 -- Generated from targets/fabric/manifests/pc/reference-data/geographic-location.fabric.yaml
--- Source: pc.geographic-location v0.3.1 (references/odcs/pc/reference-data/geographic-location.odcs.yaml)
+-- Source: pc.geographic-location v0.3.2 (references/odcs/pc/reference-data/geographic-location.odcs.yaml)
 -- Contract kind: codeset
 -- Do not edit by hand. Regenerate via scripts/generation/generate-fabric-ddl.py.
 
@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS nebula_pc_silver.silver_reference_data.geographic_loc
 )
 USING DELTA
 PARTITIONED BY (is_current_indicator)
-COMMENT 'Canonical contract for geographic location reference data used across Property and Casualty insurance contexts. Source: pc.geographic-location v0.3.1.'
+COMMENT 'Canonical contract for geographic location reference data used across Property and Casualty insurance contexts. Source: pc.geographic-location v0.3.2.'
 TBLPROPERTIES (
   'delta.appendOnly' = 'false',
   'delta.autoOptimize.autoCompact' = 'true',

@@ -1,6 +1,6 @@
 -- Spark SQL DDL for nebula_pc_silver.silver_reference_data.coverage_basis_code
 -- Generated from targets/fabric/manifests/pc/reference-data/coverage-basis-code.fabric.yaml
--- Source: pc.coverage-basis-code v0.4.0 (references/odcs/pc/reference-data/coverage-basis-code.odcs.yaml)
+-- Source: pc.coverage-basis-code v0.4.1 (references/odcs/pc/reference-data/coverage-basis-code.odcs.yaml)
 -- Contract kind: codeset
 -- Do not edit by hand. Regenerate via scripts/generation/generate-fabric-ddl.py.
 
@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS nebula_pc_silver.silver_reference_data.coverage_basis
 )
 USING DELTA
 PARTITIONED BY (is_current_indicator)
-COMMENT 'Canonical codeset for coverage basis classifications used to apply a coverage within a policy context. Source: pc.coverage-basis-code v0.4.0.'
+COMMENT 'Canonical codeset for coverage basis classifications used to apply a coverage within a policy context. Source: pc.coverage-basis-code v0.4.1.'
 TBLPROPERTIES (
   'delta.appendOnly' = 'false',
   'delta.autoOptimize.autoCompact' = 'true',

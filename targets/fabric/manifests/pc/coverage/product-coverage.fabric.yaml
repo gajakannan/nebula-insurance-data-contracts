@@ -2,7 +2,7 @@ manifestVersion: 1.0.0
 contract:
   id: pc.product-coverage
   name: ProductCoverage
-  version: 0.4.0
+  version: 0.4.1
   domain: property-and-casualty
   description: Canonical many-to-many junction contract relating a Product to a Coverage with product-coverage-specific
     defaults, constraints, and filing context.
@@ -569,6 +569,6 @@ relationships:
   - code_value
 generation:
   generatorVersion: 1.0.0
-  generatedAt: '2026-05-07T00:00:00Z'
+  generatedAt: '2026-05-08T00:00:00Z'
   sourceContractPath: references/odcs/pc/coverage/product-coverage.odcs.yaml
-  sourceContractDigest: sha256:29f1c95c8ee10a163188fe4ac5506291bc756dcdffdfe94f058c59b8710b0b7a
+  sourceContractDigest: sha256:b12d968d3904d541439d3d755baae79f8618fdcb77d6a9bde58707256e629624

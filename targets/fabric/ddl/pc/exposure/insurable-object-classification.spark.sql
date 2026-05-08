@@ -1,6 +1,6 @@
 -- Spark SQL DDL for nebula_pc_silver.silver_exposure.insurable_object_classification
 -- Generated from targets/fabric/manifests/pc/exposure/insurable-object-classification.fabric.yaml
--- Source: pc.insurable-object-classification v0.4.1 (references/odcs/pc/exposure/insurable-object-classification.odcs.yaml)
+-- Source: pc.insurable-object-classification v0.4.2 (references/odcs/pc/exposure/insurable-object-classification.odcs.yaml)
 -- Contract kind: entity
 -- Do not edit by hand. Regenerate via scripts/generation/generate-fabric-ddl.py.
 
@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS nebula_pc_silver.silver_exposure.insurable_object_cla
 )
 USING DELTA
 PARTITIONED BY (is_current_indicator)
-COMMENT 'Canonical contract for durable classification of insurable objects in Property and Casualty insurance. Source: pc.insurable-object-classification v0.4.1.'
+COMMENT 'Canonical contract for durable classification of insurable objects in Property and Casualty insurance. Source: pc.insurable-object-classification v0.4.2.'
 TBLPROPERTIES (
   'delta.appendOnly' = 'false',
   'delta.autoOptimize.autoCompact' = 'true',

@@ -1,6 +1,6 @@
 -- Spark SQL DDL for nebula_pc_silver.silver_reference_data.jurisdiction_code
 -- Generated from targets/fabric/manifests/pc/reference-data/jurisdiction-code.fabric.yaml
--- Source: pc.jurisdiction-code v0.4.0 (references/odcs/pc/reference-data/jurisdiction-code.odcs.yaml)
+-- Source: pc.jurisdiction-code v0.4.1 (references/odcs/pc/reference-data/jurisdiction-code.odcs.yaml)
 -- Contract kind: codeset
 -- Do not edit by hand. Regenerate via scripts/generation/generate-fabric-ddl.py.
 
@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS nebula_pc_silver.silver_reference_data.jurisdiction_c
 )
 USING DELTA
 PARTITIONED BY (is_current_indicator)
-COMMENT 'Canonical codeset for jurisdictions in which insurance contracts are issued, governed, or regulated. Source: pc.jurisdiction-code v0.4.0.'
+COMMENT 'Canonical codeset for jurisdictions in which insurance contracts are issued, governed, or regulated. Source: pc.jurisdiction-code v0.4.1.'
 TBLPROPERTIES (
   'delta.appendOnly' = 'false',
   'delta.autoOptimize.autoCompact' = 'true',

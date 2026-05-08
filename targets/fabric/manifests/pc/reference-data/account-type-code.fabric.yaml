@@ -2,7 +2,7 @@ manifestVersion: 1.0.0
 contract:
   id: pc.account-type-code
   name: AccountTypeCode
-  version: 0.1.0
+  version: 0.1.1
   domain: property-and-casualty
   description: Canonical codeset for account classification values such as commercial-named-insured, household,
     parent, and subsidiary.
@@ -214,6 +214,6 @@ fabric:
 relationships: []
 generation:
   generatorVersion: 1.0.0
-  generatedAt: '2026-05-07T00:00:00Z'
+  generatedAt: '2026-05-08T00:00:00Z'
   sourceContractPath: references/odcs/pc/reference-data/account-type-code.odcs.yaml
-  sourceContractDigest: sha256:fb170188f6b76ed4dcb6390b6ae6683b13dca7e8dda8b763c460d9878fccf458
+  sourceContractDigest: sha256:4ffd5ddb01ccdcc1d54e98ed42efc7b6ac126a0e1cd326cb3c68bbe178935e7f

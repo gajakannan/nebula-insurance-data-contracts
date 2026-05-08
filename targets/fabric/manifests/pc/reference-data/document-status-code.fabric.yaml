@@ -2,7 +2,7 @@ manifestVersion: 1.0.0
 contract:
   id: pc.document-status-code
   name: DocumentStatusCode
-  version: 0.1.0
+  version: 0.1.1
   domain: property-and-casualty
   description: Canonical codeset for document lifecycle status values such as captured, indexed, validated,
     and archived.
@@ -214,6 +214,6 @@ fabric:
 relationships: []
 generation:
   generatorVersion: 1.0.0
-  generatedAt: '2026-05-07T00:00:00Z'
+  generatedAt: '2026-05-08T00:00:00Z'
   sourceContractPath: references/odcs/pc/reference-data/document-status-code.odcs.yaml
-  sourceContractDigest: sha256:fdc9bee2e4d59e887d263ee71ea9d553a99bb4c0c8f87d9adafcef0f8978481c
+  sourceContractDigest: sha256:ca8448032d1cf6573211c8a009951c8b619fbaa503adfd0e4a96520f782c7626

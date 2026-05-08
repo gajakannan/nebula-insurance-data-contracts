@@ -1,6 +1,6 @@
 -- Spark SQL DDL for nebula_pc_silver.silver_core.account_party_role
 -- Generated from targets/fabric/manifests/pc/core/account-party-role.fabric.yaml
--- Source: pc.account-party-role v0.1.1 (references/odcs/pc/core/account-party-role.odcs.yaml)
+-- Source: pc.account-party-role v0.1.2 (references/odcs/pc/core/account-party-role.odcs.yaml)
 -- Contract kind: entity
 -- Do not edit by hand. Regenerate via scripts/generation/generate-fabric-ddl.py.
 
@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS nebula_pc_silver.silver_core.account_party_role (
 )
 USING DELTA
 PARTITIONED BY (is_current_indicator)
-COMMENT 'Canonical contract for a party participating in an account context — account managers, billing contacts, key contacts, master-program administrators, and other account-scoped party participations. Source: pc.account-party-role v0.1.1.'
+COMMENT 'Canonical contract for a party participating in an account context — account managers, billing contacts, key contacts, master-program administrators, and other account-scoped party participations. Source: pc.account-party-role v0.1.2.'
 TBLPROPERTIES (
   'delta.appendOnly' = 'false',
   'delta.autoOptimize.autoCompact' = 'true',

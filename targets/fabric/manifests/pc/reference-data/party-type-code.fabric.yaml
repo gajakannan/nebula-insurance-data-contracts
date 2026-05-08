@@ -2,7 +2,7 @@ manifestVersion: 1.0.0
 contract:
   id: pc.party-type-code
   name: PartyTypeCode
-  version: 0.4.0
+  version: 0.4.1
   domain: property-and-casualty
   description: Canonical codeset for party classification values such as person, organization, household,
     and trust.
@@ -214,6 +214,6 @@ fabric:
 relationships: []
 generation:
   generatorVersion: 1.0.0
-  generatedAt: '2026-05-07T00:00:00Z'
+  generatedAt: '2026-05-08T00:00:00Z'
   sourceContractPath: references/odcs/pc/reference-data/party-type-code.odcs.yaml
-  sourceContractDigest: sha256:bc76f9a07f6e6e0d0c0bb4a4ff4485f7aac9e54cd7b57b87e106ac793d936984
+  sourceContractDigest: sha256:b701efe25cc3f219a14be2df0372b9711cea799118bb97470a01bf2276c497de

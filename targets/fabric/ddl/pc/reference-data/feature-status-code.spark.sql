@@ -1,6 +1,6 @@
 -- Spark SQL DDL for nebula_pc_silver.silver_reference_data.feature_status_code
 -- Generated from targets/fabric/manifests/pc/reference-data/feature-status-code.fabric.yaml
--- Source: pc.feature-status-code v0.1.0 (references/odcs/pc/reference-data/feature-status-code.odcs.yaml)
+-- Source: pc.feature-status-code v0.1.1 (references/odcs/pc/reference-data/feature-status-code.odcs.yaml)
 -- Contract kind: codeset
 -- Do not edit by hand. Regenerate via scripts/generation/generate-fabric-ddl.py.
 
@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS nebula_pc_silver.silver_reference_data.feature_status
 )
 USING DELTA
 PARTITIONED BY (is_current_indicator)
-COMMENT 'Canonical codeset for claim feature lifecycle status values such as open, closed, reopened, and waived. Source: pc.feature-status-code v0.1.0.'
+COMMENT 'Canonical codeset for claim feature lifecycle status values such as open, closed, reopened, and waived. Source: pc.feature-status-code v0.1.1.'
 TBLPROPERTIES (
   'delta.appendOnly' = 'false',
   'delta.autoOptimize.autoCompact' = 'true',

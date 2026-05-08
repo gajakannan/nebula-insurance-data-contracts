@@ -2,7 +2,7 @@ manifestVersion: 1.0.0
 contract:
   id: pc.assessment-type-code
   name: AssessmentTypeCode
-  version: 0.1.0
+  version: 0.1.1
   domain: property-and-casualty
   description: Canonical codeset for submission assessment type values such as risk score, eligibility,
     model output, and underwriter judgment.
@@ -214,6 +214,6 @@ fabric:
 relationships: []
 generation:
   generatorVersion: 1.0.0
-  generatedAt: '2026-05-07T00:00:00Z'
+  generatedAt: '2026-05-08T00:00:00Z'
   sourceContractPath: references/odcs/pc/reference-data/assessment-type-code.odcs.yaml
-  sourceContractDigest: sha256:5e866fb490a477ab4a8327c44ff9341ccd3ad50ec82ee70b5abbd48e9e5bea39
+  sourceContractDigest: sha256:ab43978f8cc941147c2cbfb7e365b594d53514f49e625a441ac2f273d4d54052

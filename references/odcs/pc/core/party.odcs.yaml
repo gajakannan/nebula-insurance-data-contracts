@@ -2,8 +2,8 @@ apiVersion: v3.0.2
 kind: DataContract
 id: pc.party
 name: Party
-version: 0.4.1
-status: draft
+version: 0.4.2
+status: proposed
 description: Canonical contract for a reusable person, organization, or group identity in Property and Casualty insurance.
 domain: property-and-casualty
 schema:
@@ -261,6 +261,7 @@ customProperties:
   - '0.3.0: Canonical hardening C3 — composite SCD2 PK on (uid, valid_from_datetime) per scd2-primary-key ADR.'
   - '0.4.0: Canonical hardening C5 — rename status_code field(s): status_code → party_status_code; bind 3 *_code field(s) to codeset(s) (C5.2); add codesetExempt to 2 field(s) (C5.2).'
   - '0.4.1: Canonical hardening C7 — rename created_datetime → source_created_datetime; updated_datetime → source_updated_datetime — capture source-system time, distinct from SCD2 system time (C7.4).'
+  - '0.4.2: Promoted from draft to proposed (M10.6, 2026-05-08).'
 relationships:
 - name: party_source_system_code_to_source_system_code
   description: Binds source_system_code to the canonical source-system-code codeset.

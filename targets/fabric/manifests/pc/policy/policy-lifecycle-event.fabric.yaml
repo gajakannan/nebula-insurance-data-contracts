@@ -2,7 +2,7 @@ manifestVersion: 1.0.0
 contract:
   id: pc.policy-lifecycle-event
   name: PolicyLifecycleEvent
-  version: 0.4.0
+  version: 0.4.1
   domain: property-and-casualty
   description: Canonical contract for meaningful lifecycle events in a Property and Casualty policy.
   classificationProfile: RESTRICTED
@@ -354,6 +354,6 @@ relationships:
   - code_value
 generation:
   generatorVersion: 1.0.0
-  generatedAt: '2026-05-07T00:00:00Z'
+  generatedAt: '2026-05-08T00:00:00Z'
   sourceContractPath: references/odcs/pc/policy/policy-lifecycle-event.odcs.yaml
-  sourceContractDigest: sha256:64d97597edcd4d65bafd8d59af6ab4aa8583e407538be8f8729e887843eb9ad4
+  sourceContractDigest: sha256:2f228ae54f1ac698fb0475ee78e2f5713633cc389725cf87eeb7178d221e4a95

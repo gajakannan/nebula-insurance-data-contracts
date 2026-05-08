@@ -1,6 +1,6 @@
 -- Spark SQL DDL for nebula_pc_silver.silver_reference_data.location_address
 -- Generated from targets/fabric/manifests/pc/reference-data/location-address.fabric.yaml
--- Source: pc.location-address v0.3.1 (references/odcs/pc/reference-data/location-address.odcs.yaml)
+-- Source: pc.location-address v0.3.2 (references/odcs/pc/reference-data/location-address.odcs.yaml)
 -- Contract kind: codeset
 -- Do not edit by hand. Regenerate via scripts/generation/generate-fabric-ddl.py.
 
@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS nebula_pc_silver.silver_reference_data.location_addre
 )
 USING DELTA
 PARTITIONED BY (is_current_indicator)
-COMMENT 'Canonical contract for address reference data associated with a geographic location in Property and Casualty insurance. Source: pc.location-address v0.3.1.'
+COMMENT 'Canonical contract for address reference data associated with a geographic location in Property and Casualty insurance. Source: pc.location-address v0.3.2.'
 TBLPROPERTIES (
   'delta.appendOnly' = 'false',
   'delta.autoOptimize.autoCompact' = 'true',
