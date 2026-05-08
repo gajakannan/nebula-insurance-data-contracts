@@ -166,6 +166,7 @@ Important starting points:
 - `docs/repository-and-architecture.md`
 - `docs/authoring-guide.md`
 - `docs/contract-inventory.md` — generated navigation page covering every canonical contract by kind, schema, version, and status
+- `CHANGELOG.md` — generated repository-level changelog aggregating per-contract changelog entries by version wave (`0.4.x` → `0.1.x`)
 - `docs/roadmap/pc-contract-backlog.md`
 - `references/odcs/pc/README.md`
 - `references/patterns/README.md`
