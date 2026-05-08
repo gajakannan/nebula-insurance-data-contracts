@@ -165,6 +165,7 @@ Important starting points:
 
 - `docs/repository-and-architecture.md`
 - `docs/authoring-guide.md`
+- `docs/contract-inventory.md` — generated navigation page covering every canonical contract by kind, schema, version, and status
 - `docs/roadmap/pc-contract-backlog.md`
 - `references/odcs/pc/README.md`
 - `references/patterns/README.md`
@@ -325,7 +326,8 @@ scripts/validation/validate-fabric-manifests.py  # manifest drift detection (--r
 The recommended starting points for a Fabric consumer:
 
 - `targets/fabric/README.md` — purpose, scope, persona flow, and coexistence with `microsoft/skills-for-fabric`.
-- `targets/fabric/examples/end-to-end-policy.md` — Policy + PolicyTerm + PolicyCoverage + PolicyStatusCode worked through the full six-persona flow.
+- `targets/fabric/examples/end-to-end-policy.md` — Policy + PolicyTerm + PolicyCoverage + PolicyStatusCode worked through the full six-persona flow (SCD2 entity merge + codeset SCD2 load).
+- `targets/fabric/examples/end-to-end-claims.md` — Claim + ClaimFeature + ClaimLifecycleEvent + ClaimFinancialTransaction + two codesets, exercising the append-only event family, append-only transaction with `lifecycle-event-link`, and the C4.5 commercial-lines spine.
 - `planning-mds/FABRIC_IMPLEMENTATION_PLAN.md` — authoritative plan for the Fabric target.
 
 Other targets (Databricks, Snowflake, Kafka, API, semantic projection) are deferred or out of scope for this milestone; see `planning-mds/IMPLEMENTATION_PLAN.md` and `targets/README.md` for the full posture.
