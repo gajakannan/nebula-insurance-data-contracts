@@ -77,6 +77,8 @@ python3 scripts/generation/generate-fabric.py
 
 The trailing step is equivalent to running `scripts/validation/validate-fabric-manifests.py --require-full-coverage` directly, and is the canonical drift check for the Fabric target. A manifest that disagrees with its source contract is fixed by re-running the generator, not by hand-editing the manifest. See `targets/fabric/README.md` and `planning-mds/FABRIC_IMPLEMENTATION_PLAN.md` §15.5 / §17 for the full Fabric generation flow.
 
+When opening or reviewing a pull request, run through `docs/review-checklist.md`. The checklist is structured by contract kind (entity / event / transaction / codeset) and covers the validator gates, the human-judgment gates, the status-promotion review path, and the Fabric impact a canonical change produces.
+
 ## Contract Naming
 
 Use clear, singular, business-meaningful names.
