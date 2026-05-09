@@ -7,17 +7,17 @@ metadata:
   version: "0.2.0"
   author: "Nebula Framework Team"
   tags: ["insurance", "data-contracts", "odcs", "canonical-modeling"]
-  last_updated: "2026-05-08"
+  last_updated: "2026-05-09"
 ---
 
 # Nebula Insurance Data Contracts
 
-## Current Repository State (post-Milestone 10)
+## Current Repository State (post-Milestone 10, post-M10.7)
 
-The canonical surface is at version 0.1.x–0.4.x with **85 P&C ODCS contracts** that pass the strengthened canonical validator with zero findings. Status distribution after M10.6:
+The canonical surface is at version 0.1.x–0.4.x with **85 P&C ODCS contracts** that pass the strengthened canonical validator with zero findings. Status distribution after M10.7:
 
-- **14 `approved`** — the four-contract policy walkthrough (`pc.policy`, `pc.policy-term`, `pc.policy-coverage`, `pc.policy-status-code`) plus the 10 codesets that cohort transitively references.
-- **71 `proposed`** — every other canonical contract.
+- **25 `approved`** — the M10.6 cohort (the four-contract policy walkthrough `pc.policy`, `pc.policy-term`, `pc.policy-coverage`, `pc.policy-status-code` plus the 10 codesets it transitively references) and the M10.7 cohort (the six-contract claims walkthrough `pc.claim`, `pc.claim-feature`, `pc.claim-lifecycle-event`, `pc.claim-financial-transaction`, `pc.claim-status-code`, `pc.financial-transaction-classification` plus the 5 codesets it transitively references — `pc.claim-type-code`, `pc.feature-status-code`, `pc.cause-of-loss-code`, `pc.lifecycle-event-type`, `pc.transaction-type`).
+- **60 `proposed`** — every other canonical contract.
 - **0 `draft`** — every contract has been promoted at least to `proposed` (M10.6).
 
 Kind distribution: 35 entity, 43 codeset, 3 event, 4 transaction. The full per-contract listing is generated at `docs/contract-inventory.md`; consult it before authoring a new contract or asking what already exists.
@@ -32,9 +32,9 @@ Documentation produced by Milestone 10:
 - `docs/contract-inventory.md` — generated navigation surface (regenerate via `scripts/generation/generate-contract-inventory.py`).
 - `CHANGELOG.md` — generated repo-level changelog (regenerate via `scripts/generation/generate-changelog.py`).
 - `docs/review-checklist.md` — structured PR review page; consult before opening or reviewing any canonical-layer PR.
-- `planning-mds/MILESTONE_10_PLAN.md` — authoritative plan for M10 (the milestone is now complete).
+- `planning-mds/MILESTONE_10_PLAN.md` — authoritative plan for M10 (M10.1–M10.6 complete; M10.7 follow-up resolved §5 open question 1 by promoting the claims walkthrough cohort to `approved` via `scripts/refactor/apply-milestone-10-7-status.py`).
 
-Active path drops to **deferred scope only**: risk-transfer family (W021), semantic projection (W009), targets beyond Fabric, and future status-promotion waves. None are on the immediate path.
+Active path drops to **deferred scope only**: risk-transfer family (W021), semantic projection (W009), targets beyond Fabric, and future status-promotion waves (the C4.5 commercial-lines spine is the next plausible cohort once a documented downstream consumer exists). None are on the immediate path.
 
 ## Operating Posture
 
