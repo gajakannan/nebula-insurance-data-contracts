@@ -2,7 +2,7 @@ manifestVersion: 1.0.0
 contract:
   id: pc.lifecycle-event-type
   name: LifecycleEventType
-  version: 0.4.2
+  version: 0.4.3
   domain: property-and-casualty
   description: Canonical contract for lifecycle event type reference data used across Property and Casualty
     business lifecycles.
@@ -349,6 +349,6 @@ relationships:
   - transaction_type_uid
 generation:
   generatorVersion: 1.0.0
-  generatedAt: '2026-05-08T00:00:00Z'
+  generatedAt: '2026-05-09T00:00:00Z'
   sourceContractPath: references/odcs/pc/reference-data/lifecycle-event-type.odcs.yaml
-  sourceContractDigest: sha256:4237fffc5aea0003716b2d126346c9d268ee95451b8005b641a75cb7376ff1b0
+  sourceContractDigest: sha256:1e86c74cb928ae8744e3b2c200121909662de5f0e1973a1152dab950c2731a49

@@ -44,9 +44,9 @@ Canonical hardening (Milestone 8.5, C1–C7) is complete: validator strengthenin
 
 Fabric target (Milestone 9, F1–F8) is complete: docs, manifest generator + drift validator, manifest fan-out, Purview manifests, Spark SQL DDL, parameterized notebook templates, worked end-to-end Policy walkthrough, and closeout (orchestrator + planning / README pointers) all shipped. The orchestrator at `scripts/generation/generate-fabric.py` runs the four sub-generators in order and ends with a `validate-fabric-manifests.py --require-full-coverage` drift check.
 
-Milestone 10 (W032, M10.1–M10.6) is complete: claims worked example, contract inventory generator + page, repo-level CHANGELOG generator + page, PR review checklist, versioning-policy extension covering manifest version + regeneration cadence + consumer pinning, and status promotion (every contract advanced from `draft` to at least `proposed`; 14-contract policy walkthrough cohort plus dependent codesets advanced to `approved`).
+Milestone 10 (W032, M10.1–M10.6) is complete: claims worked example, contract inventory generator + page, repo-level CHANGELOG generator + page, PR review checklist, versioning-policy extension covering manifest version + regeneration cadence + consumer pinning, and status promotion (every contract advanced from `draft` to at least `proposed`; 14-contract policy walkthrough cohort plus dependent codesets advanced to `approved`). The M10.7 follow-up (W033) advanced the 11-contract claims cohort (six walkthrough contracts + five transitively-referenced codesets) to `approved`, bringing the approved cohort to 25 and resolving MILESTONE_10_PLAN.md §5 open question 1.
 
-Remaining work: deferred-scope items only — risk-transfer contract family (W021), semantic projection (W009), additional targets beyond Fabric, and future status-promotion waves (claims walkthrough cohort to `approved`, C4.5 commercial-lines spine to `approved`).
+Remaining work: deferred-scope items only — risk-transfer contract family (W021), semantic projection (W009), additional targets beyond Fabric, and future status-promotion waves (C4.5 commercial-lines spine to `approved` once a documented downstream consumer exists; the rest of the proposed long tail stays at `proposed` pending a consumer).
 
 ## Source Review Posture
 
@@ -499,9 +499,9 @@ Milestone 8.5 — Canonical Hardening — is complete: C1 (validator-first enfor
 
 Milestone 9 — Microsoft Fabric Lakehouse target — is complete: F1 (docs) → F2 (manifest generator + golden Policy example) → F3 (85 manifests) → F4 (Purview manifests) → F5 (Spark SQL DDL) → F6 (notebook templates) → F7 (worked end-to-end Policy walkthrough) → F8 (orchestrator + planning / README pointers). Generation flow: `scripts/generation/generate-fabric.py` runs `generate-fabric-manifests.py` → `generate-fabric-purview.py` → `generate-fabric-ddl.py` → `generate-fabric-notebooks.py` and ends with `validate-fabric-manifests.py --require-full-coverage`.
 
-Milestone 10 — Examples, Docs, And Release Governance — is complete: M10.1 (claims walkthrough) → M10.2 (contract inventory) → M10.3 (repo-level CHANGELOG) → M10.4 (PR review checklist) → M10.5 (versioning-policy extension) → M10.6 (status promotion: 71 `proposed`, 14 `approved`).
+Milestone 10 — Examples, Docs, And Release Governance — is complete: M10.1 (claims walkthrough) → M10.2 (contract inventory) → M10.3 (repo-level CHANGELOG) → M10.4 (PR review checklist) → M10.5 (versioning-policy extension) → M10.6 (status promotion: 71 `proposed`, 14 `approved`) → M10.7 (W033: claims walkthrough cohort + 5 transitively-referenced codesets advanced to `approved`; 60 `proposed`, 25 `approved`).
 
-Remaining work: deferred scope only — risk-transfer family, litigation/arbitration as first-class entities, full assessment-subtype hierarchy, semantic projection, additional targets beyond Fabric, and future status-promotion waves (claims walkthrough cohort and C4.5 commercial-lines spine to `approved` once a real downstream consumer exists).
+Remaining work: deferred scope only — risk-transfer family, litigation/arbitration as first-class entities, full assessment-subtype hierarchy, semantic projection, additional targets beyond Fabric, and future status-promotion waves (C4.5 commercial-lines spine to `approved` once a real downstream consumer exists).
 
 ## Cross-Cutting Conventions (ADR-Backed)
 

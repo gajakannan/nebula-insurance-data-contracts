@@ -2,8 +2,8 @@ apiVersion: v3.0.2
 kind: DataContract
 id: pc.claim-financial-transaction
 name: ClaimFinancialTransaction
-version: 0.1.2
-status: proposed
+version: 0.1.3
+status: approved
 description: Canonical contract for claim-related financial activity such as reserves, payments, recoveries, salvage, subrogation, and expense activity.
 domain: property-and-casualty
 schema:
@@ -276,3 +276,4 @@ customProperties:
   - '0.1.0: Initial claim financial transaction contract per claims-modeling and event-and-transaction ADRs.'
   - '0.1.1: Canonical hardening C5 — bind 1 *_code field(s) to codeset(s) (C5.2); add codesetExempt to 2 field(s) (C5.2).'
   - '0.1.2: Promoted from draft to proposed (M10.6, 2026-05-08).'
+  - '0.1.3: Promoted from proposed to approved (M10.7, 2026-05-09).'

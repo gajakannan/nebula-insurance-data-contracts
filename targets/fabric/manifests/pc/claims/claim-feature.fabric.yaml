@@ -2,7 +2,7 @@ manifestVersion: 1.0.0
 contract:
   id: pc.claim-feature
   name: ClaimFeature
-  version: 0.3.2
+  version: 0.3.3
   domain: property-and-casualty
   description: Canonical contract for a claim feature, partitioning a claim into independent handling
     streams by coverage, peril, claimant, or other business dimension.
@@ -411,6 +411,6 @@ relationships:
   - code_value
 generation:
   generatorVersion: 1.0.0
-  generatedAt: '2026-05-08T00:00:00Z'
+  generatedAt: '2026-05-09T00:00:00Z'
   sourceContractPath: references/odcs/pc/claims/claim-feature.odcs.yaml
-  sourceContractDigest: sha256:5e21c67bb52f78fb95c6d930367f7bb5378eb172638146dfea5a293a80f3a1df
+  sourceContractDigest: sha256:94ad3e2933b9905ae83cd3e2511e47a0a9951916ee77845b37c7a19b390b8fbb

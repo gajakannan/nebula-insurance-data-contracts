@@ -26,21 +26,21 @@
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim_feature",
       "sourceContract": "pc.claim-feature",
-      "sourceContractVersion": "0.3.2",
+      "sourceContractVersion": "0.3.3",
       "classificationProfile": "CONFIDENTIAL",
       "purviewLabel": "Confidential"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim_financial_transaction",
       "sourceContract": "pc.claim-financial-transaction",
-      "sourceContractVersion": "0.1.2",
+      "sourceContractVersion": "0.1.3",
       "classificationProfile": "CONFIDENTIAL",
       "purviewLabel": "Confidential"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim_lifecycle_event",
       "sourceContract": "pc.claim-lifecycle-event",
-      "sourceContractVersion": "0.1.2",
+      "sourceContractVersion": "0.1.3",
       "classificationProfile": "CONFIDENTIAL",
       "purviewLabel": "Confidential"
     },
@@ -54,7 +54,7 @@
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim",
       "sourceContract": "pc.claim",
-      "sourceContractVersion": "0.4.3",
+      "sourceContractVersion": "0.4.4",
       "classificationProfile": "CONFIDENTIAL",
       "purviewLabel": "Confidential"
     },
@@ -327,21 +327,21 @@
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/cause_of_loss_code",
       "sourceContract": "pc.cause-of-loss-code",
-      "sourceContractVersion": "0.4.1",
+      "sourceContractVersion": "0.4.2",
       "classificationProfile": "PUBLIC",
       "purviewLabel": "Public"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/claim_status_code",
       "sourceContract": "pc.claim-status-code",
-      "sourceContractVersion": "0.4.1",
+      "sourceContractVersion": "0.4.2",
       "classificationProfile": "PUBLIC",
       "purviewLabel": "Public"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/claim_type_code",
       "sourceContract": "pc.claim-type-code",
-      "sourceContractVersion": "0.1.1",
+      "sourceContractVersion": "0.1.2",
       "classificationProfile": "PUBLIC",
       "purviewLabel": "Public"
     },
@@ -397,14 +397,14 @@
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/feature_status_code",
       "sourceContract": "pc.feature-status-code",
-      "sourceContractVersion": "0.1.1",
+      "sourceContractVersion": "0.1.2",
       "classificationProfile": "PUBLIC",
       "purviewLabel": "Public"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/financial_transaction_classification",
       "sourceContract": "pc.financial-transaction-classification",
-      "sourceContractVersion": "0.1.2",
+      "sourceContractVersion": "0.1.3",
       "classificationProfile": "PUBLIC",
       "purviewLabel": "Public"
     },
@@ -425,7 +425,7 @@
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/lifecycle_event_type",
       "sourceContract": "pc.lifecycle-event-type",
-      "sourceContractVersion": "0.4.2",
+      "sourceContractVersion": "0.4.3",
       "classificationProfile": "RESTRICTED",
       "purviewLabel": "Restricted"
     },
@@ -551,7 +551,7 @@
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/transaction_type",
       "sourceContract": "pc.transaction-type",
-      "sourceContractVersion": "0.4.2",
+      "sourceContractVersion": "0.4.3",
       "classificationProfile": "INTERNAL",
       "purviewLabel": "Internal"
     },
@@ -948,77 +948,77 @@
       "sensitivityLabel": "Internal",
       "regulatoryTags": [],
       "sourceContract": "pc.claim-feature",
-      "sourceContractVersion": "0.3.2"
+      "sourceContractVersion": "0.3.3"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim_feature/source_system_code",
       "sensitivityLabel": "Internal",
       "regulatoryTags": [],
       "sourceContract": "pc.claim-feature",
-      "sourceContractVersion": "0.3.2"
+      "sourceContractVersion": "0.3.3"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim_feature/source_natural_key",
       "sensitivityLabel": "Internal",
       "regulatoryTags": [],
       "sourceContract": "pc.claim-feature",
-      "sourceContractVersion": "0.3.2"
+      "sourceContractVersion": "0.3.3"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim_feature/claim_uid",
       "sensitivityLabel": "Internal",
       "regulatoryTags": [],
       "sourceContract": "pc.claim-feature",
-      "sourceContractVersion": "0.3.2"
+      "sourceContractVersion": "0.3.3"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim_feature/feature_number",
       "sensitivityLabel": "Internal",
       "regulatoryTags": [],
       "sourceContract": "pc.claim-feature",
-      "sourceContractVersion": "0.3.2"
+      "sourceContractVersion": "0.3.3"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim_feature/feature_status_code",
       "sensitivityLabel": "Internal",
       "regulatoryTags": [],
       "sourceContract": "pc.claim-feature",
-      "sourceContractVersion": "0.3.2"
+      "sourceContractVersion": "0.3.3"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim_feature/cause_of_loss_code",
       "sensitivityLabel": "Internal",
       "regulatoryTags": [],
       "sourceContract": "pc.claim-feature",
-      "sourceContractVersion": "0.3.2"
+      "sourceContractVersion": "0.3.3"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim_feature/policy_coverage_uid",
       "sensitivityLabel": "Internal",
       "regulatoryTags": [],
       "sourceContract": "pc.claim-feature",
-      "sourceContractVersion": "0.3.2"
+      "sourceContractVersion": "0.3.3"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim_feature/exposure_uid",
       "sensitivityLabel": "Internal",
       "regulatoryTags": [],
       "sourceContract": "pc.claim-feature",
-      "sourceContractVersion": "0.3.2"
+      "sourceContractVersion": "0.3.3"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim_feature/opened_date",
       "sensitivityLabel": "Internal",
       "regulatoryTags": [],
       "sourceContract": "pc.claim-feature",
-      "sourceContractVersion": "0.3.2"
+      "sourceContractVersion": "0.3.3"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim_feature/closed_date",
       "sensitivityLabel": "Internal",
       "regulatoryTags": [],
       "sourceContract": "pc.claim-feature",
-      "sourceContractVersion": "0.3.2"
+      "sourceContractVersion": "0.3.3"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim_feature/feature_description",
@@ -1027,91 +1027,91 @@
         "PII"
       ],
       "sourceContract": "pc.claim-feature",
-      "sourceContractVersion": "0.3.2"
+      "sourceContractVersion": "0.3.3"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim_feature/record_status_code",
       "sensitivityLabel": "Internal",
       "regulatoryTags": [],
       "sourceContract": "pc.claim-feature",
-      "sourceContractVersion": "0.3.2"
+      "sourceContractVersion": "0.3.3"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim_feature/valid_from_datetime",
       "sensitivityLabel": "Internal",
       "regulatoryTags": [],
       "sourceContract": "pc.claim-feature",
-      "sourceContractVersion": "0.3.2"
+      "sourceContractVersion": "0.3.3"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim_feature/valid_to_datetime",
       "sensitivityLabel": "Internal",
       "regulatoryTags": [],
       "sourceContract": "pc.claim-feature",
-      "sourceContractVersion": "0.3.2"
+      "sourceContractVersion": "0.3.3"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim_feature/is_current_indicator",
       "sensitivityLabel": "Internal",
       "regulatoryTags": [],
       "sourceContract": "pc.claim-feature",
-      "sourceContractVersion": "0.3.2"
+      "sourceContractVersion": "0.3.3"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim_financial_transaction/claim_financial_transaction_uid",
       "sensitivityLabel": "Internal",
       "regulatoryTags": [],
       "sourceContract": "pc.claim-financial-transaction",
-      "sourceContractVersion": "0.1.2"
+      "sourceContractVersion": "0.1.3"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim_financial_transaction/claim_uid",
       "sensitivityLabel": "Internal",
       "regulatoryTags": [],
       "sourceContract": "pc.claim-financial-transaction",
-      "sourceContractVersion": "0.1.2"
+      "sourceContractVersion": "0.1.3"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim_financial_transaction/claim_feature_uid",
       "sensitivityLabel": "Internal",
       "regulatoryTags": [],
       "sourceContract": "pc.claim-financial-transaction",
-      "sourceContractVersion": "0.1.2"
+      "sourceContractVersion": "0.1.3"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim_financial_transaction/claim_coverage_uid",
       "sensitivityLabel": "Internal",
       "regulatoryTags": [],
       "sourceContract": "pc.claim-financial-transaction",
-      "sourceContractVersion": "0.1.2"
+      "sourceContractVersion": "0.1.3"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim_financial_transaction/payee_party_role_uid",
       "sensitivityLabel": "Internal",
       "regulatoryTags": [],
       "sourceContract": "pc.claim-financial-transaction",
-      "sourceContractVersion": "0.1.2"
+      "sourceContractVersion": "0.1.3"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim_financial_transaction/transaction_type_code",
       "sensitivityLabel": "Internal",
       "regulatoryTags": [],
       "sourceContract": "pc.claim-financial-transaction",
-      "sourceContractVersion": "0.1.2"
+      "sourceContractVersion": "0.1.3"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim_financial_transaction/transaction_classification_code",
       "sensitivityLabel": "Internal",
       "regulatoryTags": [],
       "sourceContract": "pc.claim-financial-transaction",
-      "sourceContractVersion": "0.1.2"
+      "sourceContractVersion": "0.1.3"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim_financial_transaction/reserve_category_code",
       "sensitivityLabel": "Internal",
       "regulatoryTags": [],
       "sourceContract": "pc.claim-financial-transaction",
-      "sourceContractVersion": "0.1.2"
+      "sourceContractVersion": "0.1.3"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim_financial_transaction/transaction_amount",
@@ -1120,42 +1120,42 @@
         "FINANCIAL"
       ],
       "sourceContract": "pc.claim-financial-transaction",
-      "sourceContractVersion": "0.1.2"
+      "sourceContractVersion": "0.1.3"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim_financial_transaction/transaction_currency_code",
       "sensitivityLabel": "Internal",
       "regulatoryTags": [],
       "sourceContract": "pc.claim-financial-transaction",
-      "sourceContractVersion": "0.1.2"
+      "sourceContractVersion": "0.1.3"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim_financial_transaction/transaction_effective_date",
       "sensitivityLabel": "Internal",
       "regulatoryTags": [],
       "sourceContract": "pc.claim-financial-transaction",
-      "sourceContractVersion": "0.1.2"
+      "sourceContractVersion": "0.1.3"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim_financial_transaction/transaction_processed_datetime",
       "sensitivityLabel": "Internal",
       "regulatoryTags": [],
       "sourceContract": "pc.claim-financial-transaction",
-      "sourceContractVersion": "0.1.2"
+      "sourceContractVersion": "0.1.3"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim_financial_transaction/accounting_period_code",
       "sensitivityLabel": "Internal",
       "regulatoryTags": [],
       "sourceContract": "pc.claim-financial-transaction",
-      "sourceContractVersion": "0.1.2"
+      "sourceContractVersion": "0.1.3"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim_financial_transaction/lifecycle_event_uid",
       "sensitivityLabel": "Internal",
       "regulatoryTags": [],
       "sourceContract": "pc.claim-financial-transaction",
-      "sourceContractVersion": "0.1.2"
+      "sourceContractVersion": "0.1.3"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim_financial_transaction/transaction_narrative",
@@ -1164,77 +1164,77 @@
         "PII"
       ],
       "sourceContract": "pc.claim-financial-transaction",
-      "sourceContractVersion": "0.1.2"
+      "sourceContractVersion": "0.1.3"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim_financial_transaction/correction_indicator",
       "sensitivityLabel": "Internal",
       "regulatoryTags": [],
       "sourceContract": "pc.claim-financial-transaction",
-      "sourceContractVersion": "0.1.2"
+      "sourceContractVersion": "0.1.3"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim_financial_transaction/corrects_claim_financial_transaction_uid",
       "sensitivityLabel": "Internal",
       "regulatoryTags": [],
       "sourceContract": "pc.claim-financial-transaction",
-      "sourceContractVersion": "0.1.2"
+      "sourceContractVersion": "0.1.3"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim_lifecycle_event/claim_lifecycle_event_uid",
       "sensitivityLabel": "Internal",
       "regulatoryTags": [],
       "sourceContract": "pc.claim-lifecycle-event",
-      "sourceContractVersion": "0.1.2"
+      "sourceContractVersion": "0.1.3"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim_lifecycle_event/claim_uid",
       "sensitivityLabel": "Internal",
       "regulatoryTags": [],
       "sourceContract": "pc.claim-lifecycle-event",
-      "sourceContractVersion": "0.1.2"
+      "sourceContractVersion": "0.1.3"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim_lifecycle_event/claim_feature_uid",
       "sensitivityLabel": "Internal",
       "regulatoryTags": [],
       "sourceContract": "pc.claim-lifecycle-event",
-      "sourceContractVersion": "0.1.2"
+      "sourceContractVersion": "0.1.3"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim_lifecycle_event/lifecycle_event_type_code",
       "sensitivityLabel": "Internal",
       "regulatoryTags": [],
       "sourceContract": "pc.claim-lifecycle-event",
-      "sourceContractVersion": "0.1.2"
+      "sourceContractVersion": "0.1.3"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim_lifecycle_event/event_datetime",
       "sensitivityLabel": "Internal",
       "regulatoryTags": [],
       "sourceContract": "pc.claim-lifecycle-event",
-      "sourceContractVersion": "0.1.2"
+      "sourceContractVersion": "0.1.3"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim_lifecycle_event/effective_date",
       "sensitivityLabel": "Internal",
       "regulatoryTags": [],
       "sourceContract": "pc.claim-lifecycle-event",
-      "sourceContractVersion": "0.1.2"
+      "sourceContractVersion": "0.1.3"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim_lifecycle_event/actor_party_uid",
       "sensitivityLabel": "Internal",
       "regulatoryTags": [],
       "sourceContract": "pc.claim-lifecycle-event",
-      "sourceContractVersion": "0.1.2"
+      "sourceContractVersion": "0.1.3"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim_lifecycle_event/reason_code",
       "sensitivityLabel": "Internal",
       "regulatoryTags": [],
       "sourceContract": "pc.claim-lifecycle-event",
-      "sourceContractVersion": "0.1.2"
+      "sourceContractVersion": "0.1.3"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim_lifecycle_event/event_narrative",
@@ -1243,28 +1243,28 @@
         "PII"
       ],
       "sourceContract": "pc.claim-lifecycle-event",
-      "sourceContractVersion": "0.1.2"
+      "sourceContractVersion": "0.1.3"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim_lifecycle_event/triggering_transaction_uid",
       "sensitivityLabel": "Internal",
       "regulatoryTags": [],
       "sourceContract": "pc.claim-lifecycle-event",
-      "sourceContractVersion": "0.1.2"
+      "sourceContractVersion": "0.1.3"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim_lifecycle_event/correction_indicator",
       "sensitivityLabel": "Internal",
       "regulatoryTags": [],
       "sourceContract": "pc.claim-lifecycle-event",
-      "sourceContractVersion": "0.1.2"
+      "sourceContractVersion": "0.1.3"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim_lifecycle_event/corrects_claim_lifecycle_event_uid",
       "sensitivityLabel": "Internal",
       "regulatoryTags": [],
       "sourceContract": "pc.claim-lifecycle-event",
-      "sourceContractVersion": "0.1.2"
+      "sourceContractVersion": "0.1.3"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim_party_role/claim_party_role_uid",
@@ -1376,147 +1376,147 @@
       "sensitivityLabel": "Internal",
       "regulatoryTags": [],
       "sourceContract": "pc.claim",
-      "sourceContractVersion": "0.4.3"
+      "sourceContractVersion": "0.4.4"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim/source_system_code",
       "sensitivityLabel": "Internal",
       "regulatoryTags": [],
       "sourceContract": "pc.claim",
-      "sourceContractVersion": "0.4.3"
+      "sourceContractVersion": "0.4.4"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim/source_natural_key",
       "sensitivityLabel": "Internal",
       "regulatoryTags": [],
       "sourceContract": "pc.claim",
-      "sourceContractVersion": "0.4.3"
+      "sourceContractVersion": "0.4.4"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim/claim_number",
       "sensitivityLabel": "Internal",
       "regulatoryTags": [],
       "sourceContract": "pc.claim",
-      "sourceContractVersion": "0.4.3"
+      "sourceContractVersion": "0.4.4"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim/claim_status_code",
       "sensitivityLabel": "Internal",
       "regulatoryTags": [],
       "sourceContract": "pc.claim",
-      "sourceContractVersion": "0.4.3"
+      "sourceContractVersion": "0.4.4"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim/claim_type_code",
       "sensitivityLabel": "Internal",
       "regulatoryTags": [],
       "sourceContract": "pc.claim",
-      "sourceContractVersion": "0.4.3"
+      "sourceContractVersion": "0.4.4"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim/loss_type_code",
       "sensitivityLabel": "Internal",
       "regulatoryTags": [],
       "sourceContract": "pc.claim",
-      "sourceContractVersion": "0.4.3"
+      "sourceContractVersion": "0.4.4"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim/policy_uid",
       "sensitivityLabel": "Internal",
       "regulatoryTags": [],
       "sourceContract": "pc.claim",
-      "sourceContractVersion": "0.4.3"
+      "sourceContractVersion": "0.4.4"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim/policy_coverage_uid",
       "sensitivityLabel": "Internal",
       "regulatoryTags": [],
       "sourceContract": "pc.claim",
-      "sourceContractVersion": "0.4.3"
+      "sourceContractVersion": "0.4.4"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim/exposure_uid",
       "sensitivityLabel": "Internal",
       "regulatoryTags": [],
       "sourceContract": "pc.claim",
-      "sourceContractVersion": "0.4.3"
+      "sourceContractVersion": "0.4.4"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim/insurable_object_uid",
       "sensitivityLabel": "Internal",
       "regulatoryTags": [],
       "sourceContract": "pc.claim",
-      "sourceContractVersion": "0.4.3"
+      "sourceContractVersion": "0.4.4"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim/occurrence_uid",
       "sensitivityLabel": "Internal",
       "regulatoryTags": [],
       "sourceContract": "pc.claim",
-      "sourceContractVersion": "0.4.3"
+      "sourceContractVersion": "0.4.4"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim/account_uid",
       "sensitivityLabel": "Internal",
       "regulatoryTags": [],
       "sourceContract": "pc.claim",
-      "sourceContractVersion": "0.4.3"
+      "sourceContractVersion": "0.4.4"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim/loss_location_uid",
       "sensitivityLabel": "Internal",
       "regulatoryTags": [],
       "sourceContract": "pc.claim",
-      "sourceContractVersion": "0.4.3"
+      "sourceContractVersion": "0.4.4"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim/loss_date",
       "sensitivityLabel": "Internal",
       "regulatoryTags": [],
       "sourceContract": "pc.claim",
-      "sourceContractVersion": "0.4.3"
+      "sourceContractVersion": "0.4.4"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim/reported_datetime",
       "sensitivityLabel": "Internal",
       "regulatoryTags": [],
       "sourceContract": "pc.claim",
-      "sourceContractVersion": "0.4.3"
+      "sourceContractVersion": "0.4.4"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim/opened_date",
       "sensitivityLabel": "Internal",
       "regulatoryTags": [],
       "sourceContract": "pc.claim",
-      "sourceContractVersion": "0.4.3"
+      "sourceContractVersion": "0.4.4"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim/closed_date",
       "sensitivityLabel": "Internal",
       "regulatoryTags": [],
       "sourceContract": "pc.claim",
-      "sourceContractVersion": "0.4.3"
+      "sourceContractVersion": "0.4.4"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim/catastrophe_uid",
       "sensitivityLabel": "Internal",
       "regulatoryTags": [],
       "sourceContract": "pc.claim",
-      "sourceContractVersion": "0.4.3"
+      "sourceContractVersion": "0.4.4"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim/catastrophe_indicator",
       "sensitivityLabel": "Internal",
       "regulatoryTags": [],
       "sourceContract": "pc.claim",
-      "sourceContractVersion": "0.4.3"
+      "sourceContractVersion": "0.4.4"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim/litigation_indicator",
       "sensitivityLabel": "Internal",
       "regulatoryTags": [],
       "sourceContract": "pc.claim",
-      "sourceContractVersion": "0.4.3"
+      "sourceContractVersion": "0.4.4"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim/claim_description",
@@ -1525,49 +1525,49 @@
         "PII"
       ],
       "sourceContract": "pc.claim",
-      "sourceContractVersion": "0.4.3"
+      "sourceContractVersion": "0.4.4"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim/source_created_datetime",
       "sensitivityLabel": "Internal",
       "regulatoryTags": [],
       "sourceContract": "pc.claim",
-      "sourceContractVersion": "0.4.3"
+      "sourceContractVersion": "0.4.4"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim/source_updated_datetime",
       "sensitivityLabel": "Internal",
       "regulatoryTags": [],
       "sourceContract": "pc.claim",
-      "sourceContractVersion": "0.4.3"
+      "sourceContractVersion": "0.4.4"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim/record_status_code",
       "sensitivityLabel": "Internal",
       "regulatoryTags": [],
       "sourceContract": "pc.claim",
-      "sourceContractVersion": "0.4.3"
+      "sourceContractVersion": "0.4.4"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim/valid_from_datetime",
       "sensitivityLabel": "Internal",
       "regulatoryTags": [],
       "sourceContract": "pc.claim",
-      "sourceContractVersion": "0.4.3"
+      "sourceContractVersion": "0.4.4"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim/valid_to_datetime",
       "sensitivityLabel": "Internal",
       "regulatoryTags": [],
       "sourceContract": "pc.claim",
-      "sourceContractVersion": "0.4.3"
+      "sourceContractVersion": "0.4.4"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_claims/claim/is_current_indicator",
       "sensitivityLabel": "Internal",
       "regulatoryTags": [],
       "sourceContract": "pc.claim",
-      "sourceContractVersion": "0.4.3"
+      "sourceContractVersion": "0.4.4"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_claims/occurrence/occurrence_uid",
@@ -5931,210 +5931,210 @@
       "sensitivityLabel": "Public",
       "regulatoryTags": [],
       "sourceContract": "pc.cause-of-loss-code",
-      "sourceContractVersion": "0.4.1"
+      "sourceContractVersion": "0.4.2"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/cause_of_loss_code/code_value",
       "sensitivityLabel": "Public",
       "regulatoryTags": [],
       "sourceContract": "pc.cause-of-loss-code",
-      "sourceContractVersion": "0.4.1"
+      "sourceContractVersion": "0.4.2"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/cause_of_loss_code/code_label",
       "sensitivityLabel": "Public",
       "regulatoryTags": [],
       "sourceContract": "pc.cause-of-loss-code",
-      "sourceContractVersion": "0.4.1"
+      "sourceContractVersion": "0.4.2"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/cause_of_loss_code/code_description",
       "sensitivityLabel": "Public",
       "regulatoryTags": [],
       "sourceContract": "pc.cause-of-loss-code",
-      "sourceContractVersion": "0.4.1"
+      "sourceContractVersion": "0.4.2"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/cause_of_loss_code/external_standard_code",
       "sensitivityLabel": "Public",
       "regulatoryTags": [],
       "sourceContract": "pc.cause-of-loss-code",
-      "sourceContractVersion": "0.4.1"
+      "sourceContractVersion": "0.4.2"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/cause_of_loss_code/external_standard_name",
       "sensitivityLabel": "Public",
       "regulatoryTags": [],
       "sourceContract": "pc.cause-of-loss-code",
-      "sourceContractVersion": "0.4.1"
+      "sourceContractVersion": "0.4.2"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/cause_of_loss_code/record_status_code",
       "sensitivityLabel": "Public",
       "regulatoryTags": [],
       "sourceContract": "pc.cause-of-loss-code",
-      "sourceContractVersion": "0.4.1"
+      "sourceContractVersion": "0.4.2"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/cause_of_loss_code/valid_from_datetime",
       "sensitivityLabel": "Public",
       "regulatoryTags": [],
       "sourceContract": "pc.cause-of-loss-code",
-      "sourceContractVersion": "0.4.1"
+      "sourceContractVersion": "0.4.2"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/cause_of_loss_code/valid_to_datetime",
       "sensitivityLabel": "Public",
       "regulatoryTags": [],
       "sourceContract": "pc.cause-of-loss-code",
-      "sourceContractVersion": "0.4.1"
+      "sourceContractVersion": "0.4.2"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/cause_of_loss_code/is_current_indicator",
       "sensitivityLabel": "Public",
       "regulatoryTags": [],
       "sourceContract": "pc.cause-of-loss-code",
-      "sourceContractVersion": "0.4.1"
+      "sourceContractVersion": "0.4.2"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/claim_status_code/claim_status_code_uid",
       "sensitivityLabel": "Public",
       "regulatoryTags": [],
       "sourceContract": "pc.claim-status-code",
-      "sourceContractVersion": "0.4.1"
+      "sourceContractVersion": "0.4.2"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/claim_status_code/code_value",
       "sensitivityLabel": "Public",
       "regulatoryTags": [],
       "sourceContract": "pc.claim-status-code",
-      "sourceContractVersion": "0.4.1"
+      "sourceContractVersion": "0.4.2"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/claim_status_code/code_label",
       "sensitivityLabel": "Public",
       "regulatoryTags": [],
       "sourceContract": "pc.claim-status-code",
-      "sourceContractVersion": "0.4.1"
+      "sourceContractVersion": "0.4.2"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/claim_status_code/code_description",
       "sensitivityLabel": "Public",
       "regulatoryTags": [],
       "sourceContract": "pc.claim-status-code",
-      "sourceContractVersion": "0.4.1"
+      "sourceContractVersion": "0.4.2"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/claim_status_code/external_standard_code",
       "sensitivityLabel": "Public",
       "regulatoryTags": [],
       "sourceContract": "pc.claim-status-code",
-      "sourceContractVersion": "0.4.1"
+      "sourceContractVersion": "0.4.2"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/claim_status_code/external_standard_name",
       "sensitivityLabel": "Public",
       "regulatoryTags": [],
       "sourceContract": "pc.claim-status-code",
-      "sourceContractVersion": "0.4.1"
+      "sourceContractVersion": "0.4.2"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/claim_status_code/record_status_code",
       "sensitivityLabel": "Public",
       "regulatoryTags": [],
       "sourceContract": "pc.claim-status-code",
-      "sourceContractVersion": "0.4.1"
+      "sourceContractVersion": "0.4.2"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/claim_status_code/valid_from_datetime",
       "sensitivityLabel": "Public",
       "regulatoryTags": [],
       "sourceContract": "pc.claim-status-code",
-      "sourceContractVersion": "0.4.1"
+      "sourceContractVersion": "0.4.2"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/claim_status_code/valid_to_datetime",
       "sensitivityLabel": "Public",
       "regulatoryTags": [],
       "sourceContract": "pc.claim-status-code",
-      "sourceContractVersion": "0.4.1"
+      "sourceContractVersion": "0.4.2"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/claim_status_code/is_current_indicator",
       "sensitivityLabel": "Public",
       "regulatoryTags": [],
       "sourceContract": "pc.claim-status-code",
-      "sourceContractVersion": "0.4.1"
+      "sourceContractVersion": "0.4.2"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/claim_type_code/claim_type_code_uid",
       "sensitivityLabel": "Public",
       "regulatoryTags": [],
       "sourceContract": "pc.claim-type-code",
-      "sourceContractVersion": "0.1.1"
+      "sourceContractVersion": "0.1.2"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/claim_type_code/code_value",
       "sensitivityLabel": "Public",
       "regulatoryTags": [],
       "sourceContract": "pc.claim-type-code",
-      "sourceContractVersion": "0.1.1"
+      "sourceContractVersion": "0.1.2"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/claim_type_code/code_label",
       "sensitivityLabel": "Public",
       "regulatoryTags": [],
       "sourceContract": "pc.claim-type-code",
-      "sourceContractVersion": "0.1.1"
+      "sourceContractVersion": "0.1.2"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/claim_type_code/code_description",
       "sensitivityLabel": "Public",
       "regulatoryTags": [],
       "sourceContract": "pc.claim-type-code",
-      "sourceContractVersion": "0.1.1"
+      "sourceContractVersion": "0.1.2"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/claim_type_code/external_standard_code",
       "sensitivityLabel": "Public",
       "regulatoryTags": [],
       "sourceContract": "pc.claim-type-code",
-      "sourceContractVersion": "0.1.1"
+      "sourceContractVersion": "0.1.2"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/claim_type_code/external_standard_name",
       "sensitivityLabel": "Public",
       "regulatoryTags": [],
       "sourceContract": "pc.claim-type-code",
-      "sourceContractVersion": "0.1.1"
+      "sourceContractVersion": "0.1.2"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/claim_type_code/record_status_code",
       "sensitivityLabel": "Public",
       "regulatoryTags": [],
       "sourceContract": "pc.claim-type-code",
-      "sourceContractVersion": "0.1.1"
+      "sourceContractVersion": "0.1.2"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/claim_type_code/valid_from_datetime",
       "sensitivityLabel": "Public",
       "regulatoryTags": [],
       "sourceContract": "pc.claim-type-code",
-      "sourceContractVersion": "0.1.1"
+      "sourceContractVersion": "0.1.2"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/claim_type_code/valid_to_datetime",
       "sensitivityLabel": "Public",
       "regulatoryTags": [],
       "sourceContract": "pc.claim-type-code",
-      "sourceContractVersion": "0.1.1"
+      "sourceContractVersion": "0.1.2"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/claim_type_code/is_current_indicator",
       "sensitivityLabel": "Public",
       "regulatoryTags": [],
       "sourceContract": "pc.claim-type-code",
-      "sourceContractVersion": "0.1.1"
+      "sourceContractVersion": "0.1.2"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/coverage_basis_code/coverage_basis_code_uid",
@@ -6631,140 +6631,140 @@
       "sensitivityLabel": "Public",
       "regulatoryTags": [],
       "sourceContract": "pc.feature-status-code",
-      "sourceContractVersion": "0.1.1"
+      "sourceContractVersion": "0.1.2"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/feature_status_code/code_value",
       "sensitivityLabel": "Public",
       "regulatoryTags": [],
       "sourceContract": "pc.feature-status-code",
-      "sourceContractVersion": "0.1.1"
+      "sourceContractVersion": "0.1.2"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/feature_status_code/code_label",
       "sensitivityLabel": "Public",
       "regulatoryTags": [],
       "sourceContract": "pc.feature-status-code",
-      "sourceContractVersion": "0.1.1"
+      "sourceContractVersion": "0.1.2"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/feature_status_code/code_description",
       "sensitivityLabel": "Public",
       "regulatoryTags": [],
       "sourceContract": "pc.feature-status-code",
-      "sourceContractVersion": "0.1.1"
+      "sourceContractVersion": "0.1.2"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/feature_status_code/external_standard_code",
       "sensitivityLabel": "Public",
       "regulatoryTags": [],
       "sourceContract": "pc.feature-status-code",
-      "sourceContractVersion": "0.1.1"
+      "sourceContractVersion": "0.1.2"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/feature_status_code/external_standard_name",
       "sensitivityLabel": "Public",
       "regulatoryTags": [],
       "sourceContract": "pc.feature-status-code",
-      "sourceContractVersion": "0.1.1"
+      "sourceContractVersion": "0.1.2"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/feature_status_code/record_status_code",
       "sensitivityLabel": "Public",
       "regulatoryTags": [],
       "sourceContract": "pc.feature-status-code",
-      "sourceContractVersion": "0.1.1"
+      "sourceContractVersion": "0.1.2"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/feature_status_code/valid_from_datetime",
       "sensitivityLabel": "Public",
       "regulatoryTags": [],
       "sourceContract": "pc.feature-status-code",
-      "sourceContractVersion": "0.1.1"
+      "sourceContractVersion": "0.1.2"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/feature_status_code/valid_to_datetime",
       "sensitivityLabel": "Public",
       "regulatoryTags": [],
       "sourceContract": "pc.feature-status-code",
-      "sourceContractVersion": "0.1.1"
+      "sourceContractVersion": "0.1.2"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/feature_status_code/is_current_indicator",
       "sensitivityLabel": "Public",
       "regulatoryTags": [],
       "sourceContract": "pc.feature-status-code",
-      "sourceContractVersion": "0.1.1"
+      "sourceContractVersion": "0.1.2"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/financial_transaction_classification/financial_transaction_classification_uid",
       "sensitivityLabel": "Public",
       "regulatoryTags": [],
       "sourceContract": "pc.financial-transaction-classification",
-      "sourceContractVersion": "0.1.2"
+      "sourceContractVersion": "0.1.3"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/financial_transaction_classification/code_value",
       "sensitivityLabel": "Public",
       "regulatoryTags": [],
       "sourceContract": "pc.financial-transaction-classification",
-      "sourceContractVersion": "0.1.2"
+      "sourceContractVersion": "0.1.3"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/financial_transaction_classification/code_label",
       "sensitivityLabel": "Public",
       "regulatoryTags": [],
       "sourceContract": "pc.financial-transaction-classification",
-      "sourceContractVersion": "0.1.2"
+      "sourceContractVersion": "0.1.3"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/financial_transaction_classification/code_description",
       "sensitivityLabel": "Public",
       "regulatoryTags": [],
       "sourceContract": "pc.financial-transaction-classification",
-      "sourceContractVersion": "0.1.2"
+      "sourceContractVersion": "0.1.3"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/financial_transaction_classification/external_standard_code",
       "sensitivityLabel": "Public",
       "regulatoryTags": [],
       "sourceContract": "pc.financial-transaction-classification",
-      "sourceContractVersion": "0.1.2"
+      "sourceContractVersion": "0.1.3"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/financial_transaction_classification/external_standard_name",
       "sensitivityLabel": "Public",
       "regulatoryTags": [],
       "sourceContract": "pc.financial-transaction-classification",
-      "sourceContractVersion": "0.1.2"
+      "sourceContractVersion": "0.1.3"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/financial_transaction_classification/record_status_code",
       "sensitivityLabel": "Public",
       "regulatoryTags": [],
       "sourceContract": "pc.financial-transaction-classification",
-      "sourceContractVersion": "0.1.2"
+      "sourceContractVersion": "0.1.3"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/financial_transaction_classification/valid_from_datetime",
       "sensitivityLabel": "Public",
       "regulatoryTags": [],
       "sourceContract": "pc.financial-transaction-classification",
-      "sourceContractVersion": "0.1.2"
+      "sourceContractVersion": "0.1.3"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/financial_transaction_classification/valid_to_datetime",
       "sensitivityLabel": "Public",
       "regulatoryTags": [],
       "sourceContract": "pc.financial-transaction-classification",
-      "sourceContractVersion": "0.1.2"
+      "sourceContractVersion": "0.1.3"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/financial_transaction_classification/is_current_indicator",
       "sensitivityLabel": "Public",
       "regulatoryTags": [],
       "sourceContract": "pc.financial-transaction-classification",
-      "sourceContractVersion": "0.1.2"
+      "sourceContractVersion": "0.1.3"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/geographic_location/geographic_location_uid",
@@ -6990,126 +6990,126 @@
       "sensitivityLabel": "Internal",
       "regulatoryTags": [],
       "sourceContract": "pc.lifecycle-event-type",
-      "sourceContractVersion": "0.4.2"
+      "sourceContractVersion": "0.4.3"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/lifecycle_event_type/code_value",
       "sensitivityLabel": "Public",
       "regulatoryTags": [],
       "sourceContract": "pc.lifecycle-event-type",
-      "sourceContractVersion": "0.4.2"
+      "sourceContractVersion": "0.4.3"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/lifecycle_event_type/code_label",
       "sensitivityLabel": "Internal",
       "regulatoryTags": [],
       "sourceContract": "pc.lifecycle-event-type",
-      "sourceContractVersion": "0.4.2"
+      "sourceContractVersion": "0.4.3"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/lifecycle_event_type/code_description",
       "sensitivityLabel": "Internal",
       "regulatoryTags": [],
       "sourceContract": "pc.lifecycle-event-type",
-      "sourceContractVersion": "0.4.2"
+      "sourceContractVersion": "0.4.3"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/lifecycle_event_type/external_standard_code",
       "sensitivityLabel": "Internal",
       "regulatoryTags": [],
       "sourceContract": "pc.lifecycle-event-type",
-      "sourceContractVersion": "0.4.2"
+      "sourceContractVersion": "0.4.3"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/lifecycle_event_type/external_standard_name",
       "sensitivityLabel": "Internal",
       "regulatoryTags": [],
       "sourceContract": "pc.lifecycle-event-type",
-      "sourceContractVersion": "0.4.2"
+      "sourceContractVersion": "0.4.3"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/lifecycle_event_type/lifecycle_subject_code",
       "sensitivityLabel": "Internal",
       "regulatoryTags": [],
       "sourceContract": "pc.lifecycle-event-type",
-      "sourceContractVersion": "0.4.2"
+      "sourceContractVersion": "0.4.3"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/lifecycle_event_type/resulting_lifecycle_status_uid",
       "sensitivityLabel": "Internal",
       "regulatoryTags": [],
       "sourceContract": "pc.lifecycle-event-type",
-      "sourceContractVersion": "0.4.2"
+      "sourceContractVersion": "0.4.3"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/lifecycle_event_type/transaction_type_uid",
       "sensitivityLabel": "Internal",
       "regulatoryTags": [],
       "sourceContract": "pc.lifecycle-event-type",
-      "sourceContractVersion": "0.4.2"
+      "sourceContractVersion": "0.4.3"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/lifecycle_event_type/lifecycle_event_type_status_code",
       "sensitivityLabel": "Internal",
       "regulatoryTags": [],
       "sourceContract": "pc.lifecycle-event-type",
-      "sourceContractVersion": "0.4.2"
+      "sourceContractVersion": "0.4.3"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/lifecycle_event_type/effective_date",
       "sensitivityLabel": "Internal",
       "regulatoryTags": [],
       "sourceContract": "pc.lifecycle-event-type",
-      "sourceContractVersion": "0.4.2"
+      "sourceContractVersion": "0.4.3"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/lifecycle_event_type/expiration_date",
       "sensitivityLabel": "Internal",
       "regulatoryTags": [],
       "sourceContract": "pc.lifecycle-event-type",
-      "sourceContractVersion": "0.4.2"
+      "sourceContractVersion": "0.4.3"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/lifecycle_event_type/source_created_datetime",
       "sensitivityLabel": "Internal",
       "regulatoryTags": [],
       "sourceContract": "pc.lifecycle-event-type",
-      "sourceContractVersion": "0.4.2"
+      "sourceContractVersion": "0.4.3"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/lifecycle_event_type/source_updated_datetime",
       "sensitivityLabel": "Internal",
       "regulatoryTags": [],
       "sourceContract": "pc.lifecycle-event-type",
-      "sourceContractVersion": "0.4.2"
+      "sourceContractVersion": "0.4.3"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/lifecycle_event_type/record_status_code",
       "sensitivityLabel": "Internal",
       "regulatoryTags": [],
       "sourceContract": "pc.lifecycle-event-type",
-      "sourceContractVersion": "0.4.2"
+      "sourceContractVersion": "0.4.3"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/lifecycle_event_type/valid_from_datetime",
       "sensitivityLabel": "Internal",
       "regulatoryTags": [],
       "sourceContract": "pc.lifecycle-event-type",
-      "sourceContractVersion": "0.4.2"
+      "sourceContractVersion": "0.4.3"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/lifecycle_event_type/valid_to_datetime",
       "sensitivityLabel": "Internal",
       "regulatoryTags": [],
       "sourceContract": "pc.lifecycle-event-type",
-      "sourceContractVersion": "0.4.2"
+      "sourceContractVersion": "0.4.3"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/lifecycle_event_type/is_current_indicator",
       "sensitivityLabel": "Internal",
       "regulatoryTags": [],
       "sourceContract": "pc.lifecycle-event-type",
-      "sourceContractVersion": "0.4.2"
+      "sourceContractVersion": "0.4.3"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/lifecycle_status/lifecycle_status_uid",
@@ -8484,126 +8484,126 @@
       "sensitivityLabel": "Internal",
       "regulatoryTags": [],
       "sourceContract": "pc.transaction-type",
-      "sourceContractVersion": "0.4.2"
+      "sourceContractVersion": "0.4.3"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/transaction_type/code_value",
       "sensitivityLabel": "Public",
       "regulatoryTags": [],
       "sourceContract": "pc.transaction-type",
-      "sourceContractVersion": "0.4.2"
+      "sourceContractVersion": "0.4.3"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/transaction_type/code_label",
       "sensitivityLabel": "Internal",
       "regulatoryTags": [],
       "sourceContract": "pc.transaction-type",
-      "sourceContractVersion": "0.4.2"
+      "sourceContractVersion": "0.4.3"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/transaction_type/code_description",
       "sensitivityLabel": "Internal",
       "regulatoryTags": [],
       "sourceContract": "pc.transaction-type",
-      "sourceContractVersion": "0.4.2"
+      "sourceContractVersion": "0.4.3"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/transaction_type/external_standard_code",
       "sensitivityLabel": "Internal",
       "regulatoryTags": [],
       "sourceContract": "pc.transaction-type",
-      "sourceContractVersion": "0.4.2"
+      "sourceContractVersion": "0.4.3"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/transaction_type/external_standard_name",
       "sensitivityLabel": "Internal",
       "regulatoryTags": [],
       "sourceContract": "pc.transaction-type",
-      "sourceContractVersion": "0.4.2"
+      "sourceContractVersion": "0.4.3"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/transaction_type/transaction_category_code",
       "sensitivityLabel": "Internal",
       "regulatoryTags": [],
       "sourceContract": "pc.transaction-type",
-      "sourceContractVersion": "0.4.2"
+      "sourceContractVersion": "0.4.3"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/transaction_type/financial_transaction_indicator",
       "sensitivityLabel": "Internal",
       "regulatoryTags": [],
       "sourceContract": "pc.transaction-type",
-      "sourceContractVersion": "0.4.2"
+      "sourceContractVersion": "0.4.3"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/transaction_type/lifecycle_event_indicator",
       "sensitivityLabel": "Internal",
       "regulatoryTags": [],
       "sourceContract": "pc.transaction-type",
-      "sourceContractVersion": "0.4.2"
+      "sourceContractVersion": "0.4.3"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/transaction_type/transaction_type_status_code",
       "sensitivityLabel": "Internal",
       "regulatoryTags": [],
       "sourceContract": "pc.transaction-type",
-      "sourceContractVersion": "0.4.2"
+      "sourceContractVersion": "0.4.3"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/transaction_type/effective_date",
       "sensitivityLabel": "Internal",
       "regulatoryTags": [],
       "sourceContract": "pc.transaction-type",
-      "sourceContractVersion": "0.4.2"
+      "sourceContractVersion": "0.4.3"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/transaction_type/expiration_date",
       "sensitivityLabel": "Internal",
       "regulatoryTags": [],
       "sourceContract": "pc.transaction-type",
-      "sourceContractVersion": "0.4.2"
+      "sourceContractVersion": "0.4.3"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/transaction_type/source_created_datetime",
       "sensitivityLabel": "Internal",
       "regulatoryTags": [],
       "sourceContract": "pc.transaction-type",
-      "sourceContractVersion": "0.4.2"
+      "sourceContractVersion": "0.4.3"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/transaction_type/source_updated_datetime",
       "sensitivityLabel": "Internal",
       "regulatoryTags": [],
       "sourceContract": "pc.transaction-type",
-      "sourceContractVersion": "0.4.2"
+      "sourceContractVersion": "0.4.3"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/transaction_type/record_status_code",
       "sensitivityLabel": "Internal",
       "regulatoryTags": [],
       "sourceContract": "pc.transaction-type",
-      "sourceContractVersion": "0.4.2"
+      "sourceContractVersion": "0.4.3"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/transaction_type/valid_from_datetime",
       "sensitivityLabel": "Internal",
       "regulatoryTags": [],
       "sourceContract": "pc.transaction-type",
-      "sourceContractVersion": "0.4.2"
+      "sourceContractVersion": "0.4.3"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/transaction_type/valid_to_datetime",
       "sensitivityLabel": "Internal",
       "regulatoryTags": [],
       "sourceContract": "pc.transaction-type",
-      "sourceContractVersion": "0.4.2"
+      "sourceContractVersion": "0.4.3"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_reference_data/transaction_type/is_current_indicator",
       "sensitivityLabel": "Internal",
       "regulatoryTags": [],
       "sourceContract": "pc.transaction-type",
-      "sourceContractVersion": "0.4.2"
+      "sourceContractVersion": "0.4.3"
     },
     {
       "fullyQualifiedName": "Lakehouse://nebula_pc_silver/Tables/silver_submission/submission_assessment/submission_assessment_uid",

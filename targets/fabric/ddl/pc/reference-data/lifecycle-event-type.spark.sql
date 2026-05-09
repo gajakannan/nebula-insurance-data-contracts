@@ -1,6 +1,6 @@
 -- Spark SQL DDL for nebula_pc_silver.silver_reference_data.lifecycle_event_type
 -- Generated from targets/fabric/manifests/pc/reference-data/lifecycle-event-type.fabric.yaml
--- Source: pc.lifecycle-event-type v0.4.2 (references/odcs/pc/reference-data/lifecycle-event-type.odcs.yaml)
+-- Source: pc.lifecycle-event-type v0.4.3 (references/odcs/pc/reference-data/lifecycle-event-type.odcs.yaml)
 -- Contract kind: codeset
 -- Do not edit by hand. Regenerate via scripts/generation/generate-fabric-ddl.py.
 
@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS nebula_pc_silver.silver_reference_data.lifecycle_even
 )
 USING DELTA
 PARTITIONED BY (is_current_indicator)
-COMMENT 'Canonical contract for lifecycle event type reference data used across Property and Casualty business lifecycles. Source: pc.lifecycle-event-type v0.4.2.'
+COMMENT 'Canonical contract for lifecycle event type reference data used across Property and Casualty business lifecycles. Source: pc.lifecycle-event-type v0.4.3.'
 TBLPROPERTIES (
   'delta.appendOnly' = 'false',
   'delta.autoOptimize.autoCompact' = 'true',

@@ -2,7 +2,7 @@ manifestVersion: 1.0.0
 contract:
   id: pc.cause-of-loss-code
   name: CauseOfLossCode
-  version: 0.4.1
+  version: 0.4.2
   domain: property-and-casualty
   description: Canonical codeset for the cause of loss classification associated with a claim or claim
     feature.
@@ -214,6 +214,6 @@ fabric:
 relationships: []
 generation:
   generatorVersion: 1.0.0
-  generatedAt: '2026-05-08T00:00:00Z'
+  generatedAt: '2026-05-09T00:00:00Z'
   sourceContractPath: references/odcs/pc/reference-data/cause-of-loss-code.odcs.yaml
-  sourceContractDigest: sha256:d0934c31549cd8d78507bade043c4fda2649e1a5014fd1cdc8d62f6b19b8ae24
+  sourceContractDigest: sha256:d51b8ae965ac115972fdf00811972e1d0989f80a50b4c06a37a499e90ddb0f8d

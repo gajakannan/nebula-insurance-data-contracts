@@ -2,7 +2,7 @@ manifestVersion: 1.0.0
 contract:
   id: pc.transaction-type
   name: TransactionType
-  version: 0.4.2
+  version: 0.4.3
   domain: property-and-casualty
   description: Canonical contract for transaction type reference data used across Property and Casualty
     operational and financial activity.
@@ -304,6 +304,6 @@ fabric:
 relationships: []
 generation:
   generatorVersion: 1.0.0
-  generatedAt: '2026-05-08T00:00:00Z'
+  generatedAt: '2026-05-09T00:00:00Z'
   sourceContractPath: references/odcs/pc/reference-data/transaction-type.odcs.yaml
-  sourceContractDigest: sha256:88d666a39f342f18a8b6e78e8a36e5d1058c47a8c5bb0f52940fb8147d64486f
+  sourceContractDigest: sha256:bdd7e78bb857940319a1e820c1ebd86d84a21fb77f287c190510a6e29ef6505d

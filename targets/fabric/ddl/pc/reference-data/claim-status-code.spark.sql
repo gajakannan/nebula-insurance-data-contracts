@@ -1,6 +1,6 @@
 -- Spark SQL DDL for nebula_pc_silver.silver_reference_data.claim_status_code
 -- Generated from targets/fabric/manifests/pc/reference-data/claim-status-code.fabric.yaml
--- Source: pc.claim-status-code v0.4.1 (references/odcs/pc/reference-data/claim-status-code.odcs.yaml)
+-- Source: pc.claim-status-code v0.4.2 (references/odcs/pc/reference-data/claim-status-code.odcs.yaml)
 -- Contract kind: codeset
 -- Do not edit by hand. Regenerate via scripts/generation/generate-fabric-ddl.py.
 
@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS nebula_pc_silver.silver_reference_data.claim_status_c
 )
 USING DELTA
 PARTITIONED BY (is_current_indicator)
-COMMENT 'Canonical codeset for claim lifecycle status values such as open, closed, reopened, denied, and withdrawn. Source: pc.claim-status-code v0.4.1.'
+COMMENT 'Canonical codeset for claim lifecycle status values such as open, closed, reopened, denied, and withdrawn. Source: pc.claim-status-code v0.4.2.'
 TBLPROPERTIES (
   'delta.appendOnly' = 'false',
   'delta.autoOptimize.autoCompact' = 'true',
